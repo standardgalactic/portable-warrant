@@ -1,0 +1,20 @@
+\section{Warrant Algebra Reference Laws}
+This appendix collects the operational laws used by the reference implementation. They are deliberately weaker than a total algebra.
+
+\begin{center}
+\begin{tabular}{p{0.24\linewidth}p{0.30\linewidth}p{0.36\linewidth}}
+\toprule
+Operation & Form & Evidence requirement \\
+\midrule
+Restriction & $W'\preceq W$ & Mechanical proof that domain, time, consumers, or delegation scope only narrows. \\
+Widening & $W\prec W'$ & Fresh authenticated evidence for every newly admitted use. \\
+Delegation & $W\xrightarrow{c}W_c$ & Consumer and depth bindings; positive disposition is non-transitive. \\
+Composition & $W_2\odot_P W_1$ & Authenticated $P$ binding both parents, properties, domains, and transformation order. \\
+Join & $W_A\Join_J W_B$ & Relational artifact $J$ for the pair-domain and joined property. \\
+Refresh & $W_t\rightsquigarrow W_{t'}$ & Revalidation of every non-monotone premise; immutable premises may be reused. \\
+Replay & $(E,a)\mapsto d$ & Recorded epistemic state sufficient to recompute disposition $d$; no claim of world replay. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The absence of a derivation is represented as non-derivation rather than as a synthetic negative theorem. Implementations may map non-derivation to \textsc{null\_action}, \textsc{defer}, or \textsc{abort} according to the declared execution policy, but they must not silently widen the warrant to avoid the missing proof.

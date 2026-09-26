@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If you use this work, cite the paper and the bound SCC reference release."
+title: "The Portable Warrant: Evidence at the Boundary"
+type: article
+authors:
+  - name: Flyxion
+    affiliation: Independent Researcher
+version: 1.0.0
+date-released: 2026-09-25
+repository-code: "scc-reference 0.4.2 (Portable Kernel)"

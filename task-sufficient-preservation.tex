@@ -1,0 +1,485 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{microtype}
+
+
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+
+\newtheorem{definition}{Definition}
+\newtheorem{proposition}{Proposition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}
+
+\DeclareMathOperator{\Reach}{Reach}
+\DeclareMathOperator{\Dec}{Dec}
+\DeclareMathOperator{\Pres}{Preserves}
+
+\title{Task-Sufficient Preservation\\[4pt]
+\large Continuation, Compression, and the Limits of Equivalence}
+\author{Flyxion\\ \small Independent Researcher}
+\date{September 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Preservation is usually understood as keeping something unchanged. That understanding fails for systems whose ordinary operation consists of transformation. This essay argues that preservation is not an intrinsic property of an object, state, or representation, but a relation indexed to a claim, a family of admissible transformations, a reachability domain, and an evidentiary standard. Two recent papers anchor the argument from opposite directions. Desmaison and Bertolin's review of mitochondrial heterogeneity asks when a difference among organelles persists strongly enough, through fusion, fission, movement, remodeling, and turnover, to count as a class rather than a transient state. The Bellman Policy Optimization (BPO) paper asks how much intermediate information can be eliminated from a policy optimization objective while a specified optimum remains exactly preserved. The first is a problem of persistent distinction; the second is a problem of sufficient elimination. Between them lies a general account: four kinds of preservation (state, history, distinction, task) that do not imply one another; a factorization criterion for task-sufficient compression; a partial order of representations by the claims they leave decidable; a martingale condition under which an endpoint can certify an interior; and five substitution errors by which preservation claims are silently enlarged beyond what was shown.
+\end{abstract}
+
+\section{Preservation Without Stasis}
+
+The ordinary picture of preservation is archival. A thing is preserved when it is kept as it was: the document in the drawer, the specimen in the jar, the file on the disk. Change is the enemy, and the measure of preservation is how little has changed.
+
+This picture works for objects whose relevant properties are carried by an unchanging configuration. It works badly for anything whose normal operation is transformation. A mitochondrion fuses with its neighbors, divides, is transported along the cytoskeleton, remodels its cristae, exchanges matrix contents, shifts between metabolic regimes, is sometimes transferred to a neighboring cell, and is eventually degraded and replaced. Nearly nothing material about it is stable over the timescales that matter to the cell. Yet cell biologists still ask, and need to ask, whether meaningful mitochondrial populations persist within a cell or tissue.
+
+An autoregressive language model producing a response passes through thousands of intermediate states, one per token. A standard formulation of policy optimization assigns each of those states a value and each transition an advantage. Yet the BPO paper shows that for terminal rewards the intermediate value estimates can be removed entirely, leaving a trajectory-level objective with the same unique optimum as the statewise Policy Mirror Descent (PMD) objective from which it was derived \cite{bpo}.
+
+These cases share no subject matter. They share a question:
+\[
+\boxed{\text{What must survive a transformation for the relevant thing to count as preserved?}}
+\]
+The answer cannot be ``the state,'' since in the mitochondrial case the state does not survive and in the BPO case the intermediate states are deliberately discarded. The answer must instead be given relative to what is being claimed. The rest of this essay develops that relativity carefully enough that it becomes a constraint rather than an escape hatch.
+
+The first step is to separate four notions that ordinary usage collapses:
+\[
+\text{state preservation},\qquad
+\text{history preservation},\qquad
+\text{distinction preservation},\qquad
+\text{task preservation}.
+\]
+None of these implies all of the others, and most of the characteristic errors in reasoning about preservation come from treating evidence for one as evidence for another.
+
+\section{State Is Not Continuation}
+
+Let $X$ be a state space and $T:X\to X'$ a transformation. The archival criterion asks whether $T(x)=x$, or more weakly whether $x$ is recoverable from $T(x)$, meaning that $T$ is injective on the domain of interest.
+
+A less demanding criterion asks only whether some property $P$ survives:
+\[
+P(T(x)) = P(x).
+\]
+This is still too strict for systems in which the representation of the property itself changes. A cell that moves its mitochondria toward a region of high calcium demand does not preserve the spatial coordinates of those organelles; it preserves, or re-establishes, a relation between organelle and demand. The appropriate general form is a transport condition: there exists a map $g_T$ such that
+\[
+P_{X'}(T(x)) = g_T\bigl(P_X(x)\bigr).
+\]
+Invariance is the special case $g_T=\mathrm{id}$. Continuation therefore need not mean invariance. It can mean lawful transformation: the property after the change is a determinate function of the property before it, even when neither the state nor the property's surface representation stays fixed.
+
+This is the minimal vocabulary the rest of the argument uses. A \emph{claim} $c$ is a function on states (or on states together with context). A transformation \emph{carries} $c$ when a transport map $g_T$ exists for it. A transformation \emph{destroys} $c$ when no such map exists, which is to say when two states that $c$ distinguishes are sent to states from which the distinction can no longer be determined.
+
+\section{Four Kinds of Preservation}
+
+\begin{definition}[Four preservations]
+Let $T:X\to X'$ be a transformation, possibly applied as the last step of a sequence $T_1,\dots,T_k$.
+\begin{enumerate}[label=(\roman*)]
+\item $T$ is \emph{state-preserving} on $A\subseteq X$ if $T|_A$ is injective, so that $x$ is recoverable from $T(x)$.
+\item A sequence is \emph{history-preserving} if the sequence $(T_1,\dots,T_k)$, and not merely its composite, is recoverable from the final state together with whatever record accompanies it.
+\item $T$ is \emph{distinction-preserving} for an equivalence relation $\sim$ if $x\not\sim y$ implies that $T(x)$ and $T(y)$ remain distinguishable by some admissible observation.
+\item $T$ is \emph{task-preserving} for $\tau:X\to Y$ if there exists $g$ with $\tau = g\circ T$.
+\end{enumerate}
+\end{definition}
+
+The relations among these are asymmetric. Lossless state preservation implies task preservation for any task defined on that state, because an injective $T$ admits a left inverse $T^{-1}$ on its image and one may take $g=\tau\circ T^{-1}$. The converse fails: many non-injective maps preserve particular tasks. Distinction preservation for a relation $\sim$ is task preservation for the quotient map $X\to X/{\sim}$, so it is a special case of (iv), but one important enough to name separately, because in biology the relation $\sim$ is often the very thing under investigation rather than something given in advance.
+
+History is the most independent of the four. Two sequences can share an endpoint without sharing a path:
+\[
+T_k\circ\cdots\circ T_1 = S_m\circ\cdots\circ S_1
+\quad\not\Rightarrow\quad
+(T_1,\dots,T_k)=(S_1,\dots,S_m).
+\]
+An argument that infers the path from the endpoint needs something beyond the endpoint. Section~\ref{sec:endpoint} identifies what that something can be.
+
+These asymmetries organize a number of distinctions that recur in discussions of evidence: a compressed file that still supports a checksum but not an edit; a published figure that can be replotted from archived numbers but not rerun from the experiment that produced them; a reduced model that reproduces an aggregate statistic while no longer supporting causal questions. In each case one kind of preservation holds and another has quietly lapsed.
+
+\section{The Mitochondrial Case: Distinction Through Transformation}
+
+Desmaison and Bertolin's review \cite{desmaison} argues against the picture of mitochondria as a single homogeneous network within each cell. Heterogeneity appears at several scales at once: microdomains within an individual organelle, populations within a cell, and differences between cells and tissues. The review organizes this heterogeneity through an ``ecosystem'' framing in which morphology, metabolism, bioenergetics, spatial position, and interaction with other cellular structures jointly define the differences that matter.
+
+The central difficulty the review confronts is not whether mitochondria differ. Measured differences are everywhere. The difficulty is whether any given difference persists strongly enough to justify speaking of a \emph{subclass} rather than a momentary state that any mitochondrion might pass through. The review offers four criteria, framed as a checklist for admitting a subclass. First, the population must be reproducibly identified across multiple observations, using complementary approaches such as imaging, biochemical isolation, metabolite quantification, and molecular profiling. Second, it must display a coherent combination of structural, metabolic, spatial, and molecular characteristics rather than a single isolated feature. Third, it must be temporally stable: features that appear only during stress responses, nutrient fluctuations, or acute signalling are to be read as temporary functional states, while subclasses retain their defining characteristics over time and are maintained by identifiable regulatory mechanisms. Fourth, it must perform a distinct biological function, which the review treats as the strongest evidence of subclass identity; its examples are sustained ATP production by intermyofibrillar mitochondria in muscle, calcium buffering by synaptic mitochondria, and thermogenic roles of lipid-droplet-associated mitochondria in brown adipocytes.
+
+The review is also explicit about what would count against its own proposal. If high-resolution longitudinal analyses showed that mitochondrial states are fully interchangeable and rapidly homogenised through fusion and fission cycles, the ecosystem model would lose much of its explanatory power; if persistent, functionally specialised populations were identified regardless of mitochondrial dynamics, the model would be strongly supported. This is a preservation criterion stated as a falsification condition. The hypothesis stands or falls on whether a distinction is carried by the transformation family, not on whether differences can be observed at an instant.
+
+Read through the vocabulary above, these criteria amount to a demand that
+\[
+\text{observed difference} \neq \text{persistent distinction},
+\]
+and that the gap between them be closed by evidence about transformations. Let $D(x,y)$ be a candidate distinction between two mitochondria or two populations, and let the admissible transformation family be
+\[
+\mathcal T=\{T_{\mathrm{fusion}},\,T_{\mathrm{fission}},\,T_{\mathrm{transport}},\,T_{\mathrm{remodel}},\,T_{\mathrm{stress}},\,T_{\mathrm{turnover}}\}.
+\]
+A subclass exists, in the sense the review requires, when $D$ is carried by the members of $\mathcal T$ that the organelles actually undergo, and when the carrying is not accidental but maintained. Temporal stability is the requirement that $D$ survive composition of these maps over time. Regulatory maintenance is the requirement that when some $T\in\mathcal T$ would erode $D$, another process restores it. Coherence of multiple characteristics is the requirement that $D$ not be an artifact of a single projection, a point developed in Section~\ref{sec:projection}.
+
+The review supplies examples on both sides of the line. It notes that some context-induced heterogeneities appear to stabilise into long-lasting functional subclasses, while others do not: perinuclear clusters induced by extracellular matrix stiffening are reported to remain transient. The same observed feature, a perinuclear population, can therefore be a state or a class depending on whether the conditions that produced it continue to be carried forward. Snapshot identity cannot tell the two apart.
+
+History also enters in a way the four-way distinction predicts. In intestinal stem cells, mitochondria of different ages are associated with different metabolic states, and aged mitochondria producing more $\alpha$-ketoglutarate are reported to promote Paneth cell differentiation and niche renewal. Here the organelle's past is functionally relevant: two mitochondria with similar present composition but different ages can have different consequences. A classification that preserved state and discarded history would lose a distinction the tissue itself uses.
+
+Fusion is the instructive case. The review describes fusion, mediated by MFN1/2 and OPA1, as allowing the mixing and exchange of mitochondrial contents and functional complementation. Once matrix contents mix, the material provenance of individual molecules is, for most practical purposes, no longer tracked by anything in the system. If a subclass survives fusion, it does so not because its components are kept but because the relation defining the subclass is re-established in the fused product or its descendants. The subclass is preserved as a distinction while its material realization is not preserved as a state. This is exactly the separation of (i) from (iii) in the definition above, occurring in a system that performs the separation many times per hour.
+
+\section{Continuation Geometry}
+
+The mitochondrial case suggests a change in how classes are defined. The usual construction treats a class as a region in a static feature space,
+\[
+C=\{x\in X : P(x)\}.
+\]
+A class defined this way is a snapshot concept. It cannot distinguish two objects that are currently identical but will diverge under the transformations they are liable to undergo, and it cannot unify two objects that currently differ but will converge.
+
+An alternative defines a class partly through the transformations its members admit. Let $\mathcal T^*$ be the set of finite compositions of admissible transformations, and for a state $x$ and context $e$ let the \emph{continuation signature} be the map
+\[
+\Sigma_x : (e, T)\;\longmapsto\; F\bigl(T(x), e\bigr),\qquad T\in\mathcal T^*,
+\]
+where $F$ assigns to a state in context its functional role. Two states belong to the same \emph{continuation class} when their signatures agree up to the relevant tolerance.
+
+\begin{definition}[Continuation class]
+$x \approx y$ if $\Sigma_x = \Sigma_y$ on the admissible pairs $(e,T)$. A \emph{persistent class} is an equivalence class of $\approx$ whose members also satisfy a maintenance condition: for each $T\in\mathcal T$ that would carry a member outside the class, some admissible $T'$ returns it.
+\end{definition}
+
+A persistent class, on this definition, is not merely a cluster in state space. It has a characteristic continuation geometry: a characteristic way of being transformed and of recovering. Two objects that look identical at time $t_0$ can belong to different continuation classes if their admissible futures differ, and two objects that look different at $t_0$ can belong to the same class if the transformations they undergo preserve or restore their functional relation.
+
+Degeneracy makes this unavoidable rather than merely possible. Many states can realize the same function,
+\[
+x_1, x_2, \dots, x_n \longmapsto F,
+\]
+while a single state can realize different functions in different contexts,
+\[
+(x, e_1)\mapsto F_1,\qquad (x, e_2)\mapsto F_2.
+\]
+Under the first kind of degeneracy, identity by snapshot overcounts classes. Under the second, it undercounts them. Only a definition that includes transformations and contexts can get the count right.
+
+\section{Location, Context, and Continuable Suitability}
+
+The mitochondrial review offers an unusually concrete instance of context dependence. Interactions with the cytoskeleton relocate mitochondria to regions of high energy or calcium demand such as synapses and muscle contraction zones. Mitochondria near actin networks or the endoplasmic reticulum show increased respiration, while peripheral ones can be comparatively quiescent. Under hypoxia or mechanical stress, some cluster around the nucleus, forming a ROS-rich perinuclear network that can promote HIF-1$\alpha$-dependent transcription. In migrating cells, redistribution produces spatially specialised populations at the leading edge \cite{desmaison}. Function depends on where an organelle is and what it is next to, not only on what it is.
+
+Suitability is therefore not a property $S(x)$ of the organelle alone, nor even a property $S(x,e)$ of organelle and context at an instant. It is closer to
+\[
+S(x, e, \mathcal T),
+\]
+the capacity of $x$ in context $e$ to remain functional under the transformations that context will impose. This is the distinction between instantaneous and continuable suitability developed in earlier work \cite{continuable}: a state can be suitable now and unsuitable to continue, and the difference is invisible to any measurement that does not probe transformations.
+
+The same framing separates several relations that are often run together. A mitochondrion can \emph{arrive} at a region of demand without \emph{integrating} into the local energetic economy; a population can \emph{acquire} a phenotype without that phenotype being \emph{maintained}. Arrival, membership, acquisition, and integration are different relations, and evidence for one does not transfer to the others \cite{arrival}. The review's intercellular cases make the point concrete. Mitochondria transferred through tunnelling nanotubes between bladder cancer cells, or from neurons to cancer cells during metastasis, arrive in a new cellular context; the reported increases in respiration, invasiveness, or therapy resistance are claims about integration, and they require evidence beyond the transfer itself.
+
+\section{Reduced Spaces and Manufactured Classes}\label{sec:projection}
+
+Every measurement is a projection. Let the full state be $x=(x_1,\dots,x_n)$ and let an experiment retain only
+\[
+\pi(x) = (x_1, x_4).
+\]
+Clusters in $\pi(X)$ need not correspond to classes in $X$:
+\[
+\text{cluster in }\pi(X)\quad\not\Rightarrow\quad\text{persistent class in }X.
+\]
+Two things go wrong, and they go wrong in opposite directions. Projection can \emph{manufacture equivalence}: states that differ in $x_2$ and belong to different continuation classes are identified by $\pi$. Projection can also \emph{manufacture difference}: if $x_1$ and $x_4$ fluctuate on a fast timescale that is irrelevant to function, a snapshot of $\pi$ will separate states that are, in continuation terms, the same.
+
+The review states a scale version of the same problem directly. Variation observed at the level of a tissue or cell population does not by itself imply a stable subclass within individual cells, and locally defined clusters such as perinuclear or synaptic mitochondria may be undetectable at larger scales. Aggregation is a projection, and it can both average a real distinction away and assemble an apparent one from differences between cells.
+
+The review's insistence on multiple converging measurements, rather than accepting a single morphological or metabolic difference as sufficient, is a direct response to this problem. If $\pi_1,\dots,\pi_m$ are independent projections and a candidate distinction appears coherently in all of them and persists under $\mathcal T$, the probability that it is an artifact of any single projection falls. The criterion of coherent combinations is a defense against manufactured classes; the criterion of temporal stability is a defense against manufactured differences.
+
+\section{Bellman Policy Optimization: Preservation by Elimination}
+
+The second case study runs in the opposite direction. Where the mitochondrial problem is to show that something survives despite pervasive change, the BPO problem is to show that something survives despite deliberate removal.
+
+Consider autoregressive generation with a terminal reward. Following the notation of the BPO paper, a prompt $x$ defines the initial state $s_1=x$; the state at step $t$ is $s_t=(x,y_{<t})$; appending token $y_t$ yields the deterministic successor $s_{t+1}=(x,y_{\le t})$; and the complete response $y=(y_1,\dots,y_{|y|})$ receives a verifier reward $R(x,y)$ only at the end. Under a rollout policy $\mu$, statewise methods require the advantage
+\[
+A^\mu(s_t,y_t) = Q^\mu(s_t,y_t) - V^\mu(s_t)
+\]
+at every intermediate state, which in turn requires estimating $V^\mu$ at states that are visited once and never again.
+
+With deterministic transitions and no intermediate reward, the Bellman relation gives $Q^\mu(s_t,y_t)=V^\mu(s_{t+1})$, and at the terminal state $V^\mu(s_{|y|+1})=R(x,y)$. Hence
+\[
+A^\mu(s_t,y_t) = V^\mu(s_{t+1}) - V^\mu(s_t),
+\qquad
+\sum_{t=1}^{|y|} A^\mu(s_t,y_t) = R(x,y) - V^\mu(x).
+\]
+The intermediate values telescope away. What remains depends only on the terminal reward and the value of the prompt.
+
+The BPO paper builds on this relation, together with prior work that reparameterizes rewards and values through policy likelihood ratios, to reformulate the PMD update as a trajectory-level objective that never estimates intermediate state values, and proves that this objective has the same unique optimal solution as the original statewise PMD objective \cite{bpo}.
+
+It is worth seeing that the telescoping is not the only elimination. The PMD update with $f=A^\mu$ has the closed form $\pi^+(y_t\mid s_t)\propto\mu(y_t\mid s_t)\exp(\eta A^\mu(s_t,y_t))$, whose normalizer $Z^\mu(s_t)$ is itself a state-dependent quantity that would ordinarily need to be computed at every visited state. Taking the expectation of the optimality condition under $\mu$ and using the fact that advantages average to zero under the policy that defines them, the paper shows that $\log Z^\mu(s_t)=D_{\mathrm{KL}}(\mu(\cdot\mid s_t)\,\|\,\pi^+(\cdot\mid s_t))$. The normalizer is not estimated; it is re-expressed as a divergence between the two policies at that state. Summing the resulting condition along a response and applying the telescoping identity gives a single trajectory-level residual,
+\[
+\delta(x,y;\pi,\mu)=\eta\bigl(R(x,y)-V^\mu(x)\bigr)-\sum_{t=1}^{|y|}\Bigl[\log\frac{\pi(y_t\mid s_t)}{\mu(y_t\mid s_t)}+D_{\mathrm{KL}}\bigl(\mu(\cdot\mid s_t)\,\|\,\pi(\cdot\mid s_t)\bigr)\Bigr],
+\]
+and the critic-free objective is the expected squared residual under the rollout distribution, weighted by an arbitrary positive prompt weight $\phi(x)$. The residual contains the terminal reward, the prompt value, and quantities computable from the two policies. Nothing in it refers to $V^\mu$ at an intermediate state.
+
+Two features of the theorem's statement matter for what follows. Equivalence holds for \emph{any} positive weight $\phi$, so the weight is a free parameter of the exact objective. And uniqueness is stated in a specific sense: any optimal policy induces the same completion distribution $P_{\pi}(\cdot\mid x)$ as the PMD solution for every prompt. The preserved object is a distribution over completions, not a parameter vector and not a policy's behavior at states the rollout never reaches.
+
+The philosophically important point is easy to miss. The intermediate value estimates have been eliminated from the objective, but the constraint they encoded has not been eliminated from the problem:
+\[
+\text{eliminated representation} \neq \text{eliminated constraint}.
+\]
+Bellman consistency is still structurally operative. It is what licenses the telescoping, and it is what makes the reduced objective equivalent to the full one. The information that was discarded was information the optimum did not depend on, given a law that the discarded quantities were guaranteed to obey. This is the cleanest available instance of task-sufficient preservation: a transformation of the objective that is emphatically not state-preserving, since the intermediate values cannot be recovered from it, but that is exactly task-preserving for the task ``find the PMD optimum.''
+
+\section{Task-Sufficient Compression}
+
+The BPO case generalizes. Let $C:X\to Z$ be a compression, and suppose it is not invertible. In the archival sense, information has been lost. But preservation relative to a task $\tau:X\to Y$ asks a different question.
+
+\begin{definition}[Task sufficiency]
+$C$ is \emph{task-sufficient} for $\tau$ if there exists $g:Z\to Y$ with $\tau = g\circ C$.
+\end{definition}
+
+\begin{proposition}[Factorization criterion]\label{prop:factor}
+$C$ is task-sufficient for $\tau$ if and only if
+\[
+C(x_1)=C(x_2)\;\Rightarrow\;\tau(x_1)=\tau(x_2)\quad\text{for all }x_1,x_2\in X.
+\]
+\end{proposition}
+
+\begin{proof}
+If $\tau=g\circ C$ and $C(x_1)=C(x_2)$, then $\tau(x_1)=g(C(x_1))=g(C(x_2))=\tau(x_2)$. Conversely, suppose the implication holds. For $z$ in the image of $C$, choose any $x$ with $C(x)=z$ and set $g(z)=\tau(x)$; the implication guarantees this is independent of the choice. Define $g$ arbitrarily off the image. Then $g(C(x))=\tau(x)$ for every $x$.
+\end{proof}
+
+The criterion says that a compression may collapse any states the task does not distinguish, and must not collapse any states the task does distinguish. It yields a precise version of a slogan that is otherwise vague:
+\[
+\boxed{\text{Lossless task sufficiency does not require lossless state preservation.}}
+\]
+The value of BPO in this argument is that it supplies a theorem-backed instance with a nontrivial task, in a setting where one might have assumed the intermediate information was indispensable.
+
+The criterion also shows what task sufficiency cannot do. A compression that is sufficient for $\tau_1$ may be useless for $\tau_2$. The BPO objective is sufficient for locating the PMD optimum; it is not sufficient for answering which token in a failed response was most responsible for the failure, a question that statewise advantages would address directly. Nothing has gone wrong here. The compression was built for one task and has been shown sufficient for that task. The error would lie only in citing it as sufficient for the other.
+
+\section{When an Endpoint Can Certify an Interior}\label{sec:endpoint}
+
+A recurring argument in evaluation methodology holds that endpoint evidence cannot establish claims about trajectories: the same final answer can be reached by sound reasoning or by luck, the same benchmark score by generalization or by leakage. Schematically,
+\[
+\text{same endpoint}\;\not\Rightarrow\;\text{same trajectory}.
+\]
+BPO does not refute this. It illustrates the stronger conditional under which endpoint information \emph{does} constrain the interior:
+\[
+\text{endpoint condition} \;+\; \text{continuation law} \;+\; \text{support assumptions}
+\;\Rightarrow\; \text{specified interior property}.
+\]
+The mechanism is martingale structure, and it is worth stating in its general form.
+
+\begin{lemma}[Vanishing terminal residual]\label{lem:mart}
+Let $(\mathcal F_t)_{t=0}^{T}$ be a filtration and $r_1,\dots,r_T$ random variables with $r_t$ being $\mathcal F_t$-measurable, integrable, and $\mathbb E[r_t\mid\mathcal F_{t-1}]=0$. Let $S_t=\sum_{k=1}^{t}r_k$ with $S_0=0$. If $S_T=0$ almost surely, then $S_t=0$ and $r_t=0$ almost surely for every $t$.
+\end{lemma}
+
+\begin{proof}
+The zero conditional mean condition makes $(S_t)$ a martingale, so $S_t=\mathbb E[S_T\mid\mathcal F_t]=\mathbb E[0\mid\mathcal F_t]=0$ almost surely. Then $r_t=S_t-S_{t-1}=0$ almost surely.
+\end{proof}
+
+The BPO necessity proof has exactly this shape \cite{bpo}. The token-level residual is
+\[
+d_\pi(s_t,y_t)=\eta A^\mu(s_t,y_t)-\Bigl[\log\frac{\pi(y_t\mid s_t)}{\mu(y_t\mid s_t)}+D_{\mathrm{KL}}\bigl(\mu(\cdot\mid s_t)\,\|\,\pi(\cdot\mid s_t)\bigr)\Bigr],
+\]
+and its conditional expectation under $\mu$ is zero for any feasible $\pi$, because the advantage term averages to zero and the log-ratio term averages to exactly minus the KL term. The residuals, stopped at the termination time and summed, form a martingale over a horizon bounded by the maximum response length, and their total is the trajectory residual $\delta$. An optimal policy drives the objective to its minimum value of zero, so $\delta=0$ almost surely under the rollout distribution, and Lemma~\ref{lem:mart} forces every token residual to vanish on every reachable state and supported token.
+
+The argument does not end there, and the remaining step is instructive. Vanishing residuals for both the candidate optimum and the PMD solution imply only that their log-ratio at each reachable state differs by a quantity independent of the token. The two policies agree up to a state-dependent constant $c(s)$. What fixes $c(s)=1$ is normalization together with support: both policies are absolutely continuous with respect to $\mu$, so both place all their mass on the support of $\mu(\cdot\mid s)$, and both must sum to one there. The endpoint certifies the interior not by itself, and not by the continuation law alone, but by the endpoint condition, the law, and a structural constraint on where probability can go, jointly.
+
+The lesson for endpoint reasoning in general is exact. A final result becomes evidence about an interior only when there is an independently justified map from the final condition back to the internal property. Without such a map, $\text{same endpoint}\not\Rightarrow\text{same trajectory}$ holds in full force. With it, the implication can hold in the strongest possible sense. The two positions are not in tension; they are the two cases of one conditional, and the task in any particular argument is to say which case obtains and why.
+
+Note also what ``almost surely'' means in Lemma~\ref{lem:mart}. The conclusion holds on events of positive probability and says nothing about events of probability zero. That qualification is not a technicality. It is the subject of the next section.
+
+\section{Reachability Is Part of the Claim}
+
+The BPO theorem does not establish equivalence between the trajectory objective and PMD at every conceivable state. It establishes that the two objectives share the same unique optimal solution on states reachable under the rollout policy \cite{bpo}. Define
+\[
+\Reach_\mu(x)=\{\,s : P_\mu(s\mid x)>0\,\}.
+\]
+The result has the form
+\[
+\pi_{\mathrm{traj}} = \pi_{\mathrm{PMD}}\quad\text{on }\Reach_\mu(x),
+\]
+and it is silent about states the rollout policy never visits. This silence follows directly from the martingale argument: residuals are forced to zero only where there is probability mass to force them.
+
+This is continuation geometry appearing inside a theorem. The domain on which the equivalence holds is not fixed in advance; it is generated by the continuations the policy actually produces. Change $\mu$ and the domain changes. The same structure appears in the mitochondrial case, where a subclass is established only relative to the transformations the organelles are observed to undergo. A subclass that is stable under every perturbation in the experimental repertoire has not thereby been shown stable under perturbations outside it.
+
+The general rule is simple enough to state as a requirement on any equivalence claim:
+\[
+\boxed{\text{An equivalence claim is incomplete without its reachability domain.}}
+\]
+
+\section{Proof, Approximation, and Implementation}
+
+There is a further distinction in the BPO case that keeps the argument from becoming celebratory. The paper involves three objects, not two:
+\[
+\text{PMD}
+\;\overset{\text{proof}}{\equiv}\;
+\text{exact trajectory objective}
+\;\overset{\text{approximation}}{\longrightarrow}\;
+\text{practical BPO loss}.
+\]
+The theorem concerns the first relation. The practical loss is obtained from the exact objective in four steps \cite{bpo}. The squared-residual loss is linearized around $\pi=\mu$, which replaces the residual factor in the gradient by $R(x,y)-V^\mu(x)$. The prompt value $V^\mu(x)$ is estimated by the mean reward of the sampled group, and the free weight $\phi(x)$ is set to the inverse reward standard deviation, estimated by its empirical counterpart, which recovers the group-normalized advantage used in GRPO. The full reverse KL is replaced by a binary KL that splits the vocabulary into the sampled token and its complement; this is a lower bound on the full KL, and its gradient combines with the log-probability term to produce the multiplier $(1-\mu(y_t\mid s_t))/(1-\pi(y_t\mid s_t))$. Finally, this multiplier is additively smoothed with a constant $\epsilon$, capped at a constant $C$, and subjected to a GRPO-style clipping mask, and the result replaces GRPO's importance-sampling ratio.
+
+The weight $\phi$ is a small but telling detail. In the exact objective it is a free parameter that the equivalence theorem declares irrelevant to the optimum. In the practical loss it is spent: chosen so that the approximate gradient takes the familiar group-normalized form. A degree of freedom that is inert under exact optimization becomes active once the objective is linearized and estimated from finite groups, because the linearized loss is no longer minimized at a point where the weighting cannot matter.
+
+Writing $A$ for PMD, $B$ for the exact trajectory objective, and $C$ for the practical loss,
+\[
+A\equiv B,\qquad B\approx C\qquad\not\Rightarrow\qquad A\equiv C.
+\]
+The empirical results support $C$. On Qwen3-30B-A3B-Base trained on DAPO-Math-17k, the paper reports a peak average Avg@32 accuracy of 50.5\% across AIME 2024 to 2026, ahead of four baselines by 3.1 to 11.0 percentage points, with ablations on a smaller model showing little sensitivity to $\epsilon$ and $C$ across the tested ranges \cite{bpo}. The reported table uses, for each method, the checkpoint with the highest mean accuracy across the three benchmarks, so the headline figures are selected on the same scores they report; the paper also gives final-step accuracies (49.4\% for BPO against 45.5\% for the strongest baseline at that point), which are free of that selection. None of this bears on the theorem. The theorem certifies $B$. These are two different kinds of support for two different objects, and neither substitutes for the other. The approximations may be excellent in practice; the point is only that their quality is an empirical matter, established by experiment, and not a consequence of the equivalence proof. This is the difference between verification and obtaining a favorable result, and it is a difference the paper's own structure makes visible to a careful reader.
+
+\section{The Reversibility Gate}
+
+The preceding sections suggest replacing the binary ``lossy or lossless'' with an inventory. For any transformation $x\xrightarrow{T}z$, ask what remains recoverable from $z$, and partition the answer:
+\[
+R(T)\subseteq\{\text{state},\ \text{history},\ \text{distinction},\ \text{function},\ \text{task result},\ \text{witness}\}.
+\]
+Transformations differ in which members of this set they retain.
+
+\begin{itemize}[leftmargin=1.5em]
+\item The BPO reformulation loses intermediate value recoverability and retains the optimization target.
+\item Mitochondrial fusion loses component-level provenance and can retain cellular energetic function.
+\item Mitochondrial fission can retain material while separating the continuation fates of the daughters. The review reports that dysfunctional daughters may be excluded from subsequent fusion and targeted for mitophagy while healthier ones are reintegrated, and that the position of the division matters: peripheral fission is associated with dysfunction and degradation, midzone fission with mtDNA replication and biogenesis. Where the cut falls is a record of which future each fragment is headed for.
+\item A reduced measurement can retain a population statistic while destroying the distinctions needed for causal interpretation.
+\end{itemize}
+
+The question ``was information lost?'' has no useful answer until it specifies which information. The question that does have an answer is which elements of $R(T)$ are needed for the claim at hand, and whether those elements survive. Placed at the point where an irreversible step is taken, this question functions as a gate \cite{reversibility}: before committing to a transformation that cannot be undone, identify what the transformation must carry, and confirm that it does. Where earlier work asked what can be rebuilt after structure has been irreversibly externalized \cite{reconstruction}, the gate asks the prior question of what the irreversible step was obliged to carry.
+
+\section{Admissible Degradation}
+
+Preservation cannot mean maximizing retained structure. Let $\mathcal P$ be the set of properties of a system and $\mathcal P_\tau\subseteq\mathcal P$ those required for task $\tau$.
+
+\begin{definition}[Admissible degradation]
+A transformation $D$ is an \emph{admissible degradation} relative to $\tau$ on a domain $A$ if $D$ is task-preserving for $\tau$ on $A$, that is, $\tau|_A = g\circ D|_A$ for some $g$. It may destroy any properties in $\mathcal P\setminus\mathcal P_\tau$.
+\end{definition}
+
+By Proposition~\ref{prop:factor}, this is exactly the condition that $D$ collapse only states that $\tau$ does not distinguish. BPO performs an admissible degradation of the PMD objective: it removes intermediate value representations because, under the theorem's assumptions and on the reachable domain, the optimum does not depend on them. Mitochondrial quality control performs an admissible degradation of the organelle population: it removes damaged components because preserving every component would impair the continuation of the larger organization.
+
+The second case adds something the first does not make obvious. Sometimes degradation is not merely permitted but required. A cell that preserved every mitochondrion regardless of damage would preserve more state and less function. Continuation can demand destruction, and the right measure of a preservation mechanism is not how much it keeps but whether what it keeps and what it discards are correctly sorted relative to the task.
+
+\section{Verification After Irreversibility}
+
+Once a transformation is irreversible, verification changes character. If $x\xrightarrow{C}z$ and $x$ cannot be recovered, verification cannot consist of replaying $x$. What remains possible is certification by a record.
+
+\begin{definition}[Sufficient record]
+Let $c$ be a claim about the pre-transformation state or the transformation itself. A record $w$ and verifier $V$ are \emph{sound} for $c$ if $V(z,w)=1$ implies that $c$ holds, and \emph{complete} for $c$ if whenever $c$ holds some $w$ exists with $V(z,w)=1$.
+\end{definition}
+
+Such a record need not preserve the whole event. It must preserve exactly enough to evaluate the declared claim, and no more is required:
+\[
+\text{record sufficiency} \neq \text{history preservation}.
+\]
+A signed hash of a file is sound for the claim ``this file is unchanged since signing'' and useless for the claim ``this file is correct.'' An exactly-once disposition record for a destroyed item is sound for the claim that the item was disposed of once and useless for reconstructing what the item was. In each case the record is a compression that is task-sufficient for a verification task, and Proposition~\ref{prop:factor} governs what it can and cannot certify.
+
+The BPO case contains a record of this kind. The terminal reward, combined with the Bellman law and the zero-mean residual structure, is sound for the claim that the trajectory objective and PMD agree on reachable states. It is a small record doing a precise job because the law does the rest.
+
+\section{Preservation Relative to Claims}
+
+The pieces can now be assembled. Describe a system by
+\[
+\mathcal S = \langle X,\ \mathcal T,\ \mathcal R,\ \mathcal C,\ \mathcal W\rangle,
+\]
+where $X$ is the state space, $\mathcal T$ the admissible transformations, $\mathcal R$ the reachability structure, $\mathcal C$ the claims or tasks whose preservation matters, and $\mathcal W$ the available records and verifiers.
+
+\begin{definition}[Relative preservation]
+For $T\in\mathcal T$, $c\in\mathcal C$, reachable domain $\mathcal R$, and record class $\mathcal W$, write $\Pres(T,c,\mathcal W,\mathcal R)=1$ if there exists $g$ such that for every $x\in\mathcal R$ and some record $w\in\mathcal W$ accompanying the transformation, $c(x)=g\bigl(T(x),w\bigr)$.
+\end{definition}
+
+Preservation is then no longer a binary property of $T$. It is a relation with four further arguments, and a single transformation typically preserves some claims and destroys others. For the exact BPO objective under its stated assumptions,
+\[
+\Pres\bigl(T_{\mathrm{BPO}},\ \text{PMD optimum},\ \mathcal W,\ \Reach_\mu\bigr)=1,
+\qquad
+\Pres\bigl(T_{\mathrm{BPO}},\ \text{intermediate values},\ \mathcal W,\ \Reach_\mu\bigr)=0.
+\]
+For mitochondrial fusion, the review's description suggests the analogous pair: functional complementation and bioenergetic efficiency are carried, while the separate provenance of the contents is not.
+
+This formulation prevents preservation from floating free of what is supposedly being preserved. Any statement of the form ``$T$ preserves the system'' can be interrogated for its missing arguments, and it will usually turn out to have been true for some claims, some records, and some domain, and false elsewhere.
+
+\section{The Preservation Lattice}
+
+Representations are usually ranked on a single scale from lossy to lossless. The factorization criterion gives a better structure. For a representation $C:X\to Z$, define the set of tasks it leaves decidable,
+\[
+\Dec(C)=\{\tau : \tau = g\circ C\text{ for some }g\}.
+\]
+Order representations by
+\[
+B\preceq A\quad\Longleftrightarrow\quad\Dec(B)\subseteq\Dec(A).
+\]
+
+\begin{proposition}\label{prop:lattice}
+$B\preceq A$ if and only if the partition of $X$ into fibers of $A$ refines the partition into fibers of $B$. Consequently $\preceq$ is, up to equivalence of representations with the same fibers, the refinement order on partitions of $X$, which is a lattice.
+\end{proposition}
+
+\begin{proof}
+If the fibers of $A$ refine those of $B$, then $A(x_1)=A(x_2)$ implies $B(x_1)=B(x_2)$, so $B$ factors through $A$ by Proposition~\ref{prop:factor}, and any $\tau=g\circ B$ equals $(g\circ h)\circ A$ where $B=h\circ A$; hence $\Dec(B)\subseteq\Dec(A)$. Conversely, $B\in\Dec(B)\subseteq\Dec(A)$, so $B=h\circ A$ for some $h$, and the fibers of $A$ refine those of $B$. Partitions of a set ordered by refinement form a lattice, with meet given by the common coarsening and join by the common refinement.
+\end{proof}
+
+The consequence that matters is incomparability. Two representations can satisfy
+\[
+A\not\preceq B\qquad\text{and}\qquad B\not\preceq A,
+\]
+one retaining provenance but not function, the other function but not provenance. Neither is ``more lossless.'' Each is better for a different set of claims. This is why there is often no single best representation of a system, and why arguments about which representation is ``correct'' frequently dissolve once the tasks are made explicit.
+
+Two refinements connect this to the earlier sections. First, restricting to a reachable domain changes the lattice: two representations incomparable on $X$ may be comparable on $\Reach_\mu$, because distinctions that live only on unreachable states no longer count. BPO exploits exactly this. Second, projections of the kind discussed in Section~\ref{sec:projection} move a representation downward along some directions of the lattice while leaving others fixed, which is why a reduced measurement can remain perfectly adequate for one question while becoming useless for its neighbor.
+
+\section{Five Substitutions}
+
+The framework predicts a specific family of errors. Each consists of expanding a preservation claim beyond the relation actually demonstrated, by silently changing one of the arguments of $\Pres$.
+
+\begin{description}[leftmargin=1.5em, style=nextline]
+\item[Endpoint substitution.] Agreement of endpoints is taken as agreement of trajectories, without the continuation law that would license the inference (Section~\ref{sec:endpoint}).
+\item[Projection substitution.] Equality in a reduced space is taken as equality in the source space, manufacturing classes or erasing them (Section~\ref{sec:projection}).
+\item[Task substitution.] Sufficiency for task $\tau_1$ is cited as sufficiency for task $\tau_2$, although Proposition~\ref{prop:factor} holds task by task.
+\item[Domain substitution.] Equivalence on reachable states is generalized to all states, or stability under observed perturbations to stability under all perturbations.
+\item[Approximation substitution.] A theorem about an ideal object is credited to its practical approximation, collapsing $A\equiv B$ and $B\approx C$ into $A\equiv C$.
+\end{description}
+
+These are not five unrelated methodological mistakes. They are one mistake applied to five different arguments of the preservation relation: the claim, the representation, the task, the domain, and the object. Stating the relation in full is the corresponding remedy.
+
+\section{Two Directions, One Boundary}
+
+The two case studies approach a single boundary from opposite sides. The mitochondrial review asks:
+\[
+\text{When does a distinction survive transformation strongly enough to constitute a class?}
+\]
+BPO asks:
+\[
+\text{How much state information can disappear while a specified solution remains preserved?}
+\]
+The first seeks the minimum persistence necessary for meaningful difference. The second seeks the minimum representation necessary for meaningful equivalence. Put as a pair:
+\[
+\boxed{
+\begin{array}{c}
+\text{Mitochondria: what must survive for two things to remain different?}\\[4pt]
+\text{BPO: what may disappear while two procedures remain equivalent?}
+\end{array}}
+\]
+In the order of Proposition~
+ef{prop:lattice}, the biological question is a lower bound: a representation of the organelle population must be at least fine enough to separate the subclasses, or they will be manufactured away. The computational question is an upper bound on what is needed: a representation of the optimization need be no finer than the fibers of the optimum on the reachable domain, and anything finer is carried at a cost for no gain. Both are questions about where, in the partial order of representations, the claim of interest lives.
+
+\section{Conclusion: Preserve the Claim, Not the Snapshot}
+
+Preservation is not an intrinsic property of an object, a state, or a representation. It is a relation indexed to a claim, a family of admissible transformations, a reachability domain, and an evidentiary standard. Omitting any of these does not make a preservation claim more general. It makes it undefined, and undefined claims are routinely filled in with whichever reading is most flattering to the evidence at hand.
+
+The useful question after any transformation is therefore neither ``was information lost?'' nor ``did the system survive?'' but
+\[
+\boxed{\text{Which distinctions remain decidable after which transformations, for which tasks, and by what record?}}
+\]
+This formulation accommodates biological identity under turnover, lossy representations that are nonetheless exact for their purpose, optimization objectives that discard their own scaffolding, verification after irreversible steps, and degradation that continuation requires. It does so without reducing any of them to a metaphor for the others. A mitochondrial subclass and a trajectory-level objective are different things. What they share is that each is preserved exactly to the extent that the relevant claim remains decidable, and no further.
+
+\begin{thebibliography}{9}
+
+\bibitem{desmaison}
+P.-J. Desmaison and G. Bertolin.
+How mitochondrial heterogeneity fuels a dynamic organelle ecosystem.
+\emph{Communications Biology} 9, 1248 (2026).
+doi:10.1038/s42003-026-11029-7.
+
+\bibitem{bpo}
+Z. Song, H. Xu, X. Zhang, and L. Bing.
+Bellman Policy Optimization.
+arXiv:2609.15987 (2026).
+
+\bibitem{continuable}
+Flyxion.
+\emph{Continuable Suitability}.
+September 2026.
+
+\bibitem{arrival}
+Flyxion.
+\emph{Arrival Is Not Acquisition: AI Delegation and the Formation of Cognitive Paths}.
+2026.
+
+\bibitem{reversibility}
+Flyxion.
+\emph{The Reversibility Gate: Evidence, Delay, and Action Under Unsettled Claims}.
+September 2026.
+
+\bibitem{reconstruction}
+Flyxion.
+\emph{What Survives Reconstruction: Admissibility, Irreversibility, and the Architecture of Externalized Structure}.
+July 2026.
+
+\end{thebibliography}
+
+\end{document}

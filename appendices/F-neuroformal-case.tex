@@ -1,0 +1,27 @@
+\section{Machine-Readable Neuro-Formal Counterexample}
+The worked example in the main text can be encoded as the following finite vector. It is intentionally simple enough to reproduce in Python, BASIC, Forth, or by hand.
+
+\begin{verbatim}
+source-domain:
+  x0 = { origin: public,     destination: external }
+  x1 = { origin: restricted, destination: external }
+
+translation tau(x):
+  return x.destination
+
+source-property Phi(x):
+  return not (x.origin == restricted
+              and x.destination == external)
+
+observations:
+  tau(x0) = external
+  tau(x1) = external
+  Phi(x0) = true
+  Phi(x1) = false
+
+result:
+  FIBER VIOLATION
+  source warrant not reconstructible from tau(x) alone
+\end{verbatim}
+
+A conforming finite-domain checker should report at least one witness pair containing \texttt{x0} and \texttt{x1}. If the admitted domain is restricted so that only public-origin states remain, this particular counterexample disappears. That change does not certify every property of the translation; it establishes only that this witness no longer violates the declared property on the restricted domain.

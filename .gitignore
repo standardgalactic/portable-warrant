@@ -1,0 +1,32 @@
+# LaTeX build products
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.synctex.gz
+*.bbl
+*.blg
+*.bcf
+*.run.xml
+
+# Temporary files
+*.bak
+*.tmp
+*.orig
+*.rej
+*~
+
+# Editor / OS files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temporary directory inventories
+file-list.txt

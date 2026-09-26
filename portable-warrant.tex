@@ -1,0 +1,542 @@
+\documentclass[11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[margin=1.05in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{microtype}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\hypersetup{colorlinks=true,linkcolor=black,citecolor=black,urlcolor=blue!50!black}
+\newtheorem{proposition}{Proposition}
+\newtheorem{definition}{Definition}
+\newtheorem{corollary}{Corollary}
+\newcommand{\nullaction}{\textsc{null\_action}}
+\title{The Portable Warrant\\\large Evidence at the Boundary}
+\author{Flyxion\\\small Independent Researcher}
+\date{September 2026}
+\begin{document}
+\maketitle
+\begin{abstract}
+Modern software transports conclusions more readily than the conditions that justify them. A verifier returns success, an agent reports that a task is verified, or a theorem prover establishes a property of a translated representation; downstream components often receive only the conclusion. This paper develops Scope-Carrying Certificates (SCC) as an architecture for preserving the scope of such warrants across computational boundaries. The central criterion is property-relative: for a transformation $T:D\to Y$ to carry warrant for $\Phi:D\to\{0,1\}$, $\Phi$ must be constant on the relevant fibers of $T$. We use this criterion to place temporal history truncation, structural graph flattening, and neuro-formal translation under one account of warrant non-preservation. An implementation discipline, the Anti-Assertion Mandate, requires authorization to consume independently resolvable evidence objects rather than epistemically meaningful Boolean claims. A cross-representation implementation experiment then reconstructs the same kernel in typed Python, asynchronous orchestration, Unix-style byte streams and stores, constrained BASIC profiles, and Forth stack machines. The experiment does not establish universal correctness; it identifies a small interface that survives substantial changes in representation. The resulting principle is simple: a warrant should not cross a distinction-erasing transformation unless independently checkable evidence establishes that the erased distinction is irrelevant to the property being warranted.
+\end{abstract}
+
+\section{Introduction}
+Modern software engineering moves conclusions with extraordinary speed while often leaving behind the conditions that justified them. A verifier returns a green checkmark. An agent declares a task ``verified.'' A theorem prover discharges a proof over an abstract translation. A downstream system receives a Boolean. The representation travels across computational boundaries; its epistemic boundary does not necessarily travel with it.
+
+This asymmetry matters because verification is always verification of something, under some observation model, within some domain, using some proof obligation and trusted machinery. Once the conclusion is detached from those conditions, a locally justified statement can acquire an unjustified global reading. We call the operational pattern \emph{certainty laundering}: the progressive migration of a scoped conclusion beyond the evidence that warranted it.
+
+The Scope-Carrying Certificate (SCC) project began as an attempt to make this boundary explicit. It subsequently became an implementation experiment spanning a typed Python reference runtime, asynchronous multi-agent orchestration, Unix command-line filters and content-addressed stores, a deliberately fictional Research Unix/XENIX personality, constrained BASIC profiles, and Forth stack machines. These environments differ enough that conveniences available in one disappear in another. What survived was not a particular class hierarchy or serialization format. It was a smaller rule: a warrant may cross a transformation only where the transformation preserves the distinctions on which the warranted property depends.
+
+This paper develops that rule as an interface principle. The paper is explanatory rather than normative: the versioned SCC specifications in the accompanying software distribution define the software interface, while this text develops the calculus, rationale, limitations, and portability experiment.
+
+\section{Portable Certitude and the Fiber Criterion}
+Let $D$ be an admitted domain, let $\Phi:D\to\{0,1\}$ be a property of interest, and let $T:D\to Y$ be a transformation observed by a downstream component. The downstream component receives $T(z)$ rather than $z$ itself.
+
+\begin{definition}[Property-relative warrant preservation]
+A transformation $T$ preserves the observational information required for $\Phi$ on $D$ when
+\[
+\forall z_1,z_2\in D,\qquad T(z_1)=T(z_2)\Longrightarrow \Phi(z_1)=\Phi(z_2).
+\]
+\end{definition}
+
+Each $y\in Y$ induces a fiber $T^{-1}(y)=\{z\in D:T(z)=y\}$. The condition therefore says that $\Phi$ is constant on every relevant fiber. Equivalently, there exists a function $\widehat\Phi$ on the image of $T$ such that
+\[
+\Phi=\widehat\Phi\circ T
+\]
+on the admitted domain. The criterion is deliberately property-relative. A projection may erase distinctions irrelevant to one property and indispensable to another.
+
+This observation separates information loss from failure. Abstraction is useful precisely because it discards information. The problem begins when a system carries a conclusion across an abstraction without establishing that the discarded information is irrelevant to that conclusion.
+
+\section{The Warrant Reconstruction Limit}
+\begin{proposition}[Warrant Reconstruction Limit]
+Given $T:D\to Y$ and $\Phi:D\to\{0,1\}$, if there exist $z_1,z_2\in D$ such that $T(z_1)=T(z_2)$ and $\Phi(z_1)\neq\Phi(z_2)$, then no deterministic decision procedure whose only observation is $T(z)$ can correctly recover $\Phi(z)$ for every $z\in D$. A randomized procedure cannot be correct with probability one on both such inputs without additional information.
+\end{proposition}
+\begin{proof}
+Let $T(z_1)=T(z_2)=y$. A deterministic procedure receiving only $y$ must return the same value in both cases, while the required values differ; it therefore fails on at least one. A randomized procedure receives the same observational input and therefore induces the same output distribution in both cases. No single distribution can assign probability one to two different required outputs. Randomization may alter error rates, but it cannot reconstruct the erased distinction.
+\end{proof}
+
+The obstruction is informational rather than computational. Increasing downstream model capacity cannot recover a distinction absent from the observation unless additional evidence enters through another channel.
+
+\section{Three Ways to Lose a Distinction}
+The project encountered three failure classes that initially appeared unrelated.
+
+\subsection{Temporal truncation}
+A system compresses a history $H_{\le t}$ into an operational state $M_t$. If two histories produce the same retained state while a relevant property differs, then the retained state is insufficient:
+\[
+M(H_1)=M(H_2),\qquad \Phi(H_1)\ne\Phi(H_2).
+\]
+This includes cases where current behavior depends on trajectory, prior delegation, accumulated commitments, or historical context omitted by a rolling summary.
+
+\subsection{Structural flattening}
+Let a workflow be a directed labeled graph $G=(V,E,\lambda_V,\lambda_E)$. A monitor that preserves events while discarding incidence can map distinct workflows to the same flattened representation $\widehat G$. Reachability, cycles, delegation depth, fan-out, path multiplicity, and indirect flows are properties of relations among events, not merely of isolated event records. Local checks can therefore all succeed while a path-level invariant fails.
+
+\subsection{Representational translation}
+Suppose a translator maps a source object into a formal target,
+\[
+X\xrightarrow{\tau}Y.
+\]
+A terminal verifier may establish $P_Y(\tau(x))$. Migrating that result back to a source-language claim $P_X(x)$ requires an independently justified bridge, for example
+\[
+P_Y(\tau(x))\Longrightarrow P_X(x)
+\]
+over a declared source domain. Sound verification of $Y$ does not by itself establish faithful translation from $X$.
+
+The three axes can therefore be written
+\[
+H\to M,\qquad G\to\widehat G,\qquad X\to Y.
+\]
+Their mechanisms differ; their failure condition is the same. A transformation has identified states that the warranted property still needs to distinguish.
+
+\section{A Calculus of Warrant Preservation}
+The fiber criterion describes observational adequacy, but an operational system needs a vocabulary for the warrant that is being transported. We model a warrant at a boundary as a tuple
+\[
+W=\langle \Phi,T,D,E,P,C,t,\nu\rangle,
+\]
+where $\Phi$ is the property being relied upon, $T$ is the observation or transformation through which the consumer sees the source state, $D$ is the admitted domain, $E$ is a set of environmental assumptions, $P$ identifies independently checkable proof material, $C$ records compositional and delegation constraints, $t$ is the validity interval, and $\nu$ identifies the relevant implementation or specification version. The tuple is not intended to imply that every implementation must use this exact record layout. It identifies the semantic coordinates that disappear when a rich verification result is reduced to a bare success bit.
+
+A warrant is therefore not simply a proposition. It is a proposition together with an account of why a particular consumer may rely on it at a particular boundary. This distinction is useful because logical truth and operational admissibility need not coincide. A theorem may remain true while the certificate that once permitted a particular action has expired, crossed its delegation limit, or arrived at a consumer outside its declared scope.
+
+\begin{definition}[Boundary-relative warrant]
+Let $b$ be an execution boundary and $a$ a proposed action. A warrant $W$ is \emph{admissible at $b$ for $a$} only if its evidence is authentic, its current state lies in $D$, its assumptions $E$ are supported, its temporal and version constraints hold, and the derivation from its issuing boundary to $b$ is permitted by $C$.
+\end{definition}
+
+This makes explicit two implications that are often conflated. First, evidence may establish a proposition without establishing authorization to act on it at every later boundary. Second, failure to derive authorization says less than falsity of the proposition. The calculus is intentionally asymmetric: positive authorization requires a derivation; non-derivation requires no counter-proof.
+
+\subsection{Restriction and monotonicity}
+If $D'\subseteq D$, a proof of fiber constancy on $D$ also establishes fiber constancy on $D'$. Domain restriction can therefore repair an otherwise invalid transformation, provided the restriction is itself explicit and checkable. The reverse does not hold: a bridge proved only on $D'$ cannot be silently widened to $D$. This simple asymmetry is one reason SCC binds domain semantics into proof identity rather than treating a domain name as administrative metadata.
+
+The same principle applies to consumers and delegation depth. Attenuating scope is generally safe with respect to the certificate's own authority: a certificate valid for consumers $\{A,B\}$ can be restricted to $\{A\}$ without acquiring new authority. Widening the consumer set, extending validity, increasing delegation depth, or replacing the admitted domain requires a new derivation. SCC therefore treats scope widening as evidence-producing work rather than as record editing.
+
+\subsection{Composition is a new proof obligation}
+Suppose $T_1:D\to Y$ preserves $\Phi$ and $T_2:Y\to Z$ preserves some property $\Psi$. It does not follow merely from those two facts that $T_2\circ T_1$ preserves $\Phi$. The second proof may concern a different property or a domain that does not contain the image relevant to the first transformation. Composition requires compatibility among the property, domains, and bridge obligations.
+
+A sufficient condition is the existence of a property $\Phi_Y$ such that
+\[
+\Phi=\Phi_Y\circ T_1
+\]
+on $D$, together with a property $\Phi_Z$ satisfying
+\[
+\Phi_Y=\Phi_Z\circ T_2
+\]
+on $T_1(D)$. Then
+\[
+\Phi=\Phi_Z\circ T_2\circ T_1.
+\]
+The point is elementary but operationally important: compositional warrant is derived from compatible witnesses, not from the fact that two local checks independently returned success.
+
+\subsection{Joins and relational properties}
+Parallel workflows introduce another distinction. Certificates $W_A$ and $W_B$ can each justify local propositions while failing to justify a proposition about their combination. In general,
+\[
+W_A\models P,\qquad W_B\models Q
+\]
+does not by itself yield an authorization for a join whose required property is relational in the two branches. The join may depend on whether the branches share provenance, whether their outputs are mutually consistent, or whether combining them creates a path forbidden by a structural invariant. SCC therefore models a join as a fresh boundary rather than as bookkeeping around two already-approved actions.
+
+\section{From Claims to Evidence Objects}
+Implementation exposed a second-order form of laundering. Fields such as \texttt{proof\_verified=true}, \texttt{translation\_faithful=true}, or \texttt{composition\_valid=true} appear to attach assurance to an object, but each field is itself an epistemically meaningful assertion. If authorization trusts the field without resolving what established it, the original problem has merely moved into metadata.
+
+SCC therefore adopts the \emph{Anti-Assertion Mandate} as an architectural invariant:
+\[
+\boxed{\text{Authorization consumes evidence objects, not claims about evidence.}}
+\]
+
+A proof obligation resolves to an artifact binding a property identity, projection identity, admitted domain, verifier implementation, and proof material. A composition claim resolves to a composition artifact. A representational claim resolves through translation, terminal-proof, and property-relative bridge artifacts. A simplified neuro-formal chain is
+\[
+h(x)\xrightarrow{C_\tau}h(y)\xrightarrow{C_V}P_Y(y)\xrightarrow{P_{bridge}}P_X(x).
+\]
+The runtime authenticates the links rather than accepting a Boolean summary of them.
+
+This also motivates non-transitive positive authorization. A certificate sufficient for one consumer at one boundary does not automatically become sufficient for a downstream consumer. Delegation and joining are new transformations and may require new evidence.
+
+\section{The Three-Gate Runtime}
+The reference runtime separates three questions that are easy to collapse:
+\begin{enumerate}[label=\arabic*.]
+\item Is the proof artifact authentic and bound to the property, projection, domain, and verifier identity claimed by the certificate?
+\item Is the current state inside the admitted runtime domain and are declared environmental assumptions presently supported?
+\item Is the proposed delegation, join, or composition authorized by independently resolvable evidence?
+\end{enumerate}
+Only after these gates succeed is a positive disposition derivable. This matters because proof validity, current applicability, and compositional inheritance are different propositions.
+
+The runtime also records granular reasons for non-derivation, including domain mismatch, stale evidence, unauthorized consumer, delegation-depth exhaustion, missing composition evidence, and unverified translation faithfulness. Diagnostics are not merely ergonomic: they prevent distinct epistemic failures from being collapsed into an opaque rejection bit.
+
+\section{Evidence Lifecycle and Boundary Semantics}
+A scope-carrying certificate is useful only if its lifecycle is as explicit as its contents. The reference architecture distinguishes issuance, resolution, consumption, derivation, expiration, and replay. Each stage answers a different question.
+
+\paragraph{Issuance.} An issuer constructs a certificate that names already-existing evidence. Issuance does not make the evidence true. In particular, an issuer cannot create a valid proof merely by embedding the hash of a nonexistent or untrusted artifact. The trusted registry resolves the identifier and checks its semantic bindings.
+
+\paragraph{Resolution.} The consumer resolves proof, domain, translation, and composition identities against trusted stores. Content addressing is useful here because it turns accidental mutation into identity change, but hashing is not itself verification. A digest establishes byte identity relative to a hash function; it does not establish that those bytes prove the advertised theorem.
+
+\paragraph{Consumption.} Consumption occurs at a named boundary with a current state, consumer identity, clock, and environmental evidence. This is where a certificate can be authentic yet inapplicable. The distinction between authenticity and applicability is essential for stale certificates and domain escape.
+
+\paragraph{Derivation.} When a warrant is delegated or composed, the downstream certificate records parent identities and a derivation artifact. Positive dispositions are non-transitive by default. A downstream component may inherit data without inheriting the authority to rely on the upstream conclusion.
+
+\paragraph{Expiration and revocation.} Temporal validity is represented as an applicability condition rather than a metaphysical claim that a theorem stops being true. Expiration says that the evidence package no longer warrants this operational use without refresh. A production system may additionally support revocation; the reference calculus requires only that whatever revocation mechanism is declared become part of the evidence-resolution boundary rather than an invisible side channel.
+
+\paragraph{Replay.} A recorded decision is reproducible only to the extent that its relevant epistemic state was recorded. The Research Unix tools therefore distinguish replay of a decision from re-execution of the world that originally produced it. A ledger can demonstrate that the same recorded evidence yields the same gate result; it cannot prove that omitted external facts were unchanged.
+
+This lifecycle motivates a useful conservation rule: no stage may increase the semantic scope of a warrant merely by copying, serializing, renaming, or transporting it. Scope can be attenuated mechanically. Scope expansion requires evidence.
+
+\section{Threat Model and Non-Goals}
+SCC is designed against a family of architectural errors rather than against an omnipotent adversary. The relevant failures include stale or mismatched proof objects, certificates presented outside their admitted domain, downstream consumers treating local authorization as transitive, joins performed without relational evidence, lossy translations whose terminal proofs are migrated back to richer source claims, and metadata that asserts verification without making its basis resolvable.
+
+The framework assumes that the trusted checker, canonicalizer, cryptographic primitives, and configured roots of trust behave according to their specifications. It does not defend against arbitrary compromise of the entire trusted computing base. Nor does it infer the complete set of transformations occurring in a system. An undeclared preprocessing step can invalidate the analysis while remaining invisible to SCC. The architecture therefore improves the explicitness of trust; it does not abolish trust.
+
+SCC is also not a general hazard classifier. Its runtime can establish that an action lacks a declared warrant without deciding that the action is physically, morally, or legally unsafe. Conversely, a valid SCC establishes only the property encoded by its proof obligations. If the chosen property is too weak, the certificate can be perfectly valid and operationally inadequate. The specification of $\Phi$ is therefore part of the trusted problem statement.
+
+Finally, SCC is not intended to replace proof assistants, information-flow systems, capability mechanisms, policy engines, or provenance stores. It can consume evidence produced by such systems and constrain how conclusions derived from them cross later boundaries. Its target is the seam between verification contexts.
+
+\section{The Portable Kernel}
+The Python implementation uses typed models, registries, asynchronous execution, structured serialization, and cryptographic libraries. The portability exercise asked which of these facilities are essential. The resulting kernel can be summarized as
+\[
+\boxed{\text{canonicalize}\to\text{resolve}\to\text{check domain}\to\text{check ancestry}\to\text{derive}\to\text{act}\to\text{record}.}
+\]
+Hashing accompanies the sequence by binding identities to exact representations.
+
+\input{tables/porting-matrix}
+
+The table is not evidence that all environments provide equivalent assurance. It records what each reconstruction makes explicit. The BASIC profile, for example, deliberately refuses to simulate a missing cryptographic primitive. A constrained implementation can report:
+\begin{verbatim}
+CRYPTOGRAPHIC PRIMITIVE NOT RESIDENT
+EXTERNAL VERIFIER REQUIRED
+WARRANT NOT DERIVED
+NULL ACTION
+\end{verbatim}
+This is not a hidden deficiency. It is the intended epistemic behavior: an implementation unable to establish required evidence does not manufacture permission.
+
+\section{Forth and the Shape of Authorization}
+Forth makes the execution boundary unusually visible. The essential stack effect can be written
+\begin{verbatim}
+( certificate state -- warranted? reason )
+\end{verbatim}
+Verification words transform evidence into an authorization result; \texttt{EXECUTE} remains outside that pure derivation and is unreachable through the guarded path until the warrant succeeds. The port therefore strips away an object model while retaining the distinction between warrant derivation and action execution.
+
+The significance is methodological rather than nostalgic. Reconstructing the same semantics in a stack language tests whether SCC depends on conveniences of its reference representation. It does not prove universality, but it makes accidental dependencies easier to see.
+
+\section{The Operating-System Interpretation}
+The Research Unix personality organizes evidence beneath virtualized \texttt{/etc/scc}, \texttt{/var/lib/scc}, and \texttt{/var/log/scc} hierarchies and exposes inspection through filters such as \texttt{scc-check}, \texttt{scc-lint}, \texttt{scc-fsck}, \texttt{scc-dump}, and \texttt{scc-replay}. This suggests an operating-system analogy:
+\[
+\text{file descriptor}:\text{resource access}\quad::\quad\text{SCC}:\text{warranted action}.
+\]
+The analogy is limited. SCC is not a conventional operating-system capability. The useful resemblance is that a name or object is not identical to unrestricted authority; access is mediated by a scoped intermediary whose interpretation depends on context.
+
+The distribution also contains an explicitly fictional XENIX/386 personality. It is a presentation and compatibility metaphor, not a claim of derivation from Microsoft or SCO source code and not evidence of execution on historical XENIX. Its ``scope fault'' vocabulary treats a certificate as if it were a logical segment descriptor
+\[
+S=\langle base,limit,rights,generation\rangle,
+\]
+where the fields denote originating evidence, scope constraints, permitted use, and freshness. Crossing that logical boundary without a derivation produces a scope fault handled as warrant non-derivation rather than a processor exception.
+
+\section{NULL\_ACTION as Operational Abstention}
+Many safety architectures blur three propositions:
+\[
+\neg Warranted(a),\qquad Unsafe(a),\qquad \neg Execute(a).
+\]
+SCC separates them. In particular,
+\[
+\neg Warranted(a)\not\Rightarrow Unsafe(a),
+\]
+while an execution boundary may enforce
+\[
+\neg Warranted(a)\Rightarrow DoNotExecute(a).
+\]
+
+The distinction gives \nullaction{} a positive operational role. It can acquire telemetry, refresh expired evidence, request a composition proof, reconstruct missing history, obtain a richer representation, or wait for an assumption to become observable. The proposed action may then be reconsidered. Abstention is therefore a continuation under insufficient evidence, not necessarily a declaration of intrinsic danger.
+
+
+\section{Warrant Algebra}
+The preceding calculus treats a warrant as a structured object whose applicability depends on a property, transformation, domain, evidence basis, consumer, time, and implementation identity. That structure admits a small algebra. The purpose of the algebra is not to assign a scalar ``strength'' to evidence. It is to distinguish operations that can only reduce an existing scope from operations that create a genuinely new proof obligation.
+
+\begin{definition}[Scope preorder]
+For warrants $W_1$ and $W_2$ concerning the same underlying property family, write $W_1\preceq W_2$ when every use authorized by $W_1$ is also within the declared scope of $W_2$, and $W_1$ introduces no weaker evidence requirement than $W_2$. The relation compares authorization scope, not truth.
+\end{definition}
+
+The simplest operation is \emph{attenuation}. Restricting a domain, shortening a validity interval, reducing the permitted consumer set, or lowering the allowed delegation depth yields a warrant no broader than its parent:
+\[
+W'\preceq W.
+\]
+Such an operation may be mechanically checkable because it removes possible uses. By contrast, \emph{widening} is not derivable from possession of the narrower warrant alone. If a transformation proposes $W\prec W'$, some new evidence must justify the additional cases. Copying, serialization, renaming, or repeated delegation cannot supply that evidence.
+
+This gives SCC a conservation principle:
+\begin{proposition}[No authority by transport]
+Let $\mathcal{T}$ be a sequence consisting only of representation-preserving transport operations---copying, serialization, storage, retrieval, and identity-preserving forwarding. If no step introduces independently authenticated evidence, then $\mathcal{T}$ cannot soundly derive a warrant whose declared scope strictly contains that of its input warrant.
+\end{proposition}
+\begin{proof}
+The transport operations introduce no observation capable of distinguishing a newly admitted case from one previously outside scope. A strict scope expansion would therefore authorize at least one use not justified by the input evidence. The expansion requires an additional premise and cannot follow from transport alone.
+\end{proof}
+
+\subsection{Composition}
+Sequential composition is not ordinary transitivity. Suppose $T_1:D\to Y$ preserves $\Phi$ on $D$ and $T_2:Y\to Z$ preserves some target property on a domain $D_2\subseteq Y$. A downstream warrant for $T_2\circ T_1$ requires more than two independently valid certificates. The image of the first transformation must fall inside the admitted domain of the second, property identities must align, environmental assumptions must remain compatible, and the composition must preserve the distinctions required by the final claim.
+
+We write an authenticated composition operation as
+\[
+W_2\odot_P W_1 \Downarrow W_{21},
+\]
+where $P$ is the composition artifact. The notation is intentionally partial: the operation is undefined when the proof artifact is absent or its bindings do not match.
+
+\begin{proposition}[Property-aligned sequential composition]
+Let $T_1:D\to Y$ and $T_2:Y\to Z$. Suppose there exist functions $\Phi_1:D\to\{0,1\}$, $\Phi_2:Y\to\{0,1\}$, and $\Phi_3:Z\to\{0,1\}$ such that
+\[
+\Phi_1=\Phi_2\circ T_1
+\quad\text{and}\quad
+\Phi_2=\Phi_3\circ T_2
+\]
+on the admitted domains, with $T_1(D)\subseteq D_2$. Then
+\[
+\Phi_1=\Phi_3\circ(T_2\circ T_1)
+\]
+on $D$.
+\end{proposition}
+\begin{proof}
+For every $z\in D$, substitution gives $\Phi_1(z)=\Phi_2(T_1(z))=\Phi_3(T_2(T_1(z)))$.
+\end{proof}
+
+The proposition is deliberately elementary. Operational difficulty lies in establishing that the two certificates actually refer to these same functions and domains. SCC therefore treats the theorem as a condition to be evidenced rather than inferred from matching human-readable labels.
+
+\subsection{Joins}
+Joins are more dangerous because the property of a pair need not decompose into properties of its members. Let $W_A$ warrant $P(a)$ and $W_B$ warrant $Q(b)$. In general,
+\[
+W_A,W_B\not\vdash W_{A\Join B}
+\]
+for a relational property $R(a,b)$. Two individually admissible records can jointly disclose a restricted fact; two independently authorized actions can create a forbidden path; two harmless partial observations can identify a person when combined. The join is therefore itself a transformation with its own fibers.
+
+A join certificate must bind the parent warrants, the join operator, the relational property, and the admitted pair-domain. This is why SCC separates delegation proofs from join proofs: a certificate may be validly forwarded and still be invalidly combined.
+
+\subsection{Algebraic non-laws}
+Several tempting algebraic laws are intentionally absent. Warrant composition is not generally commutative because transformation order can matter. It is not generally idempotent because replay at a later time may change applicability. It is not total because missing evidence makes derivation undefined. And it is not globally transitive because consumer, domain, and property bindings can change at every boundary. These non-laws are not inconveniences to be optimized away; they encode where new evidence is required.
+
+\section{Temporal Warrant and Historical Extension}
+The temporal axis deserves separate treatment because time changes both the world and the evidence available about it. Let $H_{\le t}$ denote a history prefix and let $a$ be a proposed action. An operational warrant is a relation
+\[
+\mathcal{W}(H_{\le t},a,E_t)=1,
+\]
+where $E_t$ is the evidence package available at time $t$. A warrant at one prefix need not persist under extension:
+\[
+\mathcal{W}(H_{\le t},a,E_t)=1
+\not\Rightarrow
+\mathcal{W}(H_{\le t+\Delta},a,E_{t+\Delta})=1.
+\]
+The implication can fail even when every previously recorded fact remains true. A credential can expire, an environmental assumption can change, a delegation can be revoked, or a new event can make a previously irrelevant historical distinction operationally relevant.
+
+\subsection{Archival truth and operational sufficiency}
+SCC therefore distinguishes an archival proposition from its current operational use. A theorem proved yesterday does not become false merely because a certificate expires. Expiration instead says that the recorded proof package is no longer sufficient for this action under the declared freshness policy. The same distinction applies to telemetry. ``Sensor $s$ reported value $v$ at $t$'' can remain archivally true while ceasing to warrant an action at $t+\Delta$.
+
+This distinction prevents a common category error in revocation systems: revocation does not retroactively falsify history. It changes which historical evidence is admissible for a present decision.
+
+\subsection{Monotone and non-monotone evidence}
+Some evidence is monotone with historical extension. A content hash of an immutable artifact, once correctly computed, need not become stale merely because time passes. Other evidence is intrinsically non-monotone: current location, process ownership, resource availability, membership in a revocable role, or absence of a later contradictory event. A certificate should therefore not use a single undifferentiated timestamp as if all premises aged identically.
+
+Let $E=E^{+}\cup E^{\pm}$, where $E^{+}$ denotes premises whose applicability is monotone under the declared model and $E^{\pm}$ denotes premises requiring freshness or revalidation. Then historical extension may preserve $E^{+}$ while invalidating $E^{\pm}$. A temporal SCC can record these classes separately, making refresh obligations explicit.
+
+\subsection{Causal markers and sufficient summaries}
+A system need not retain complete history if it can prove that a summary is sufficient. Let $M_t=m(H_{\le t})$. The temporal fiber condition is
+\[
+m(H_1)=m(H_2)\Longrightarrow
+\Phi(H_1,a)=\Phi(H_2,a)
+\]
+for all admitted histories. When this holds, $M_t$ is a sufficient operational summary for the property. When it does not, the system may preserve selected causal markers rather than the entire trace. The design problem is therefore not ``store everything'' but ``retain or certify every distinction on which the declared action property depends.''
+
+\subsection{Replay}
+Replay has two meanings that should not be conflated. \emph{Decision replay} re-evaluates a recorded epistemic state and asks whether the same checker derives the same disposition. \emph{World replay} would require recreating the external conditions that generated that state. SCC's ledger supports the first. It cannot guarantee the second. Deterministic replay is consequently evidence about the implementation's treatment of recorded premises, not evidence that the premises were complete descriptions of the historical world.
+
+\section{A Worked Neuro-Formal Counterexample}
+The representational axis becomes clearest when the terminal proof is entirely correct. Consider a source language whose objects describe both a data origin and a destination:
+\[
+X=\{(o,d):o\in\{public,restricted\},\ d\in\{internal,external\}\}.
+\]
+The source property is
+\[
+P_X(o,d)=\neg(o=restricted\land d=external).
+\]
+Now define a deliberately lossy translator
+\[
+\tau(o,d)=d.
+\]
+The formal target remembers only whether the destination is internal or external. Let the target verifier prove the perfectly valid proposition
+\[
+P_Y(y)=(y=external).
+\]
+For
+\[
+x_0=(public,external),\qquad x_1=(restricted,external),
+\]
+we have
+\[
+\tau(x_0)=\tau(x_1)=external,
+\]
+but
+\[
+P_X(x_0)=1,\qquad P_X(x_1)=0.
+\]
+A proof assistant can prove $P_Y(external)$ with complete rigor. That proof does not select between $x_0$ and $x_1$, because the translation has erased the origin field before formal verification begins.
+
+The failure is not ``the theorem prover made a mistake.'' The theorem prover established exactly the proposition it was given. Nor is the failure necessarily ``the translator is bad.'' The translator may be adequate for properties depending only on destination. The failure occurs when a warrant about $P_Y$ is migrated into a claim about $P_X$ without a bridge theorem whose domain makes the implication valid.
+
+Suppose we restrict the admitted source domain to
+\[
+D_{public}=\{(public,internal),(public,external)\}.
+\]
+On this domain, origin is constant. A property such as
+\[
+P_X'(o,d)=(d=external)
+\]
+factors through $\tau$, and a bridge theorem can legitimately establish
+\[
+P_Y(\tau(x))\Longrightarrow P_X'(x),\qquad x\in D_{public}.
+\]
+The same translator has moved from inadequate to adequate because the property and admitted domain changed. Faithfulness is therefore neither an intrinsic Boolean attribute of $\tau$ nor a global endorsement of the translator. It is a relation among transformation, property, and domain.
+
+The SCC evidence chain makes these bindings explicit:
+\[
+h(x)\xrightarrow{C_{\tau}}h(y)
+\xrightarrow{C_V}P_Y(y)
+\xrightarrow{P_{bridge}}P_X(x).
+\]
+$C_{\tau}$ binds source and target hashes, translator identity and configuration, property identities, domain identity, and the faithfulness artifact. $C_V$ binds the target artifact to the terminal verifier and theorem. $P_{bridge}$ establishes the direction in which the target result may be reused. If any identity differs at consumption time, the source warrant is not derived even though the terminal proof remains valid.
+
+This example illustrates why ``formal verification after translation'' is not a single verification event. It is a chain containing at least two logically different obligations: correctness of the target proof and adequacy of the representation for transporting the source claim.
+
+\section{Evidence Is Not Truth}
+The Anti-Assertion Mandate can be misunderstood as saying that replacing booleans with authenticated artifacts turns evidence into truth. It does not. SCC distinguishes at least four notions:
+\[
+\text{authentic evidence}
+\neq
+\text{sound evidence}
+\neq
+\text{complete evidence}
+\neq
+\text{truth}.
+\]
+
+\emph{Authenticity} concerns identity and provenance: is this the artifact whose hash, issuer, verifier, and parentage are claimed? \emph{Soundness} concerns whether the inference encoded by the artifact is valid under its assumptions. \emph{Completeness} concerns whether the evidence captures every premise relevant to the requested conclusion. \emph{Truth} concerns the world described by those premises and conclusions. These relations can support one another, but none collapses automatically into the next.
+
+A signed sensor record can be authentic and false because the sensor is defective. A mechanically checked proof can be sound relative to axioms that poorly model the intended system. A complete derivation of a weak property can be irrelevant to the stronger property a consumer actually needs. A registry can faithfully resolve an artifact that was maliciously admitted as a root of trust.
+
+This hierarchy clarifies the role of content addressing. A cryptographic digest can establish that two parties refer to the same byte sequence with overwhelming practical confidence under the hash assumption. It cannot establish that the bytes are a correct specification, that the program they describe is free of defects, or that an observation encoded in them was true. Hashing stabilizes reference; it does not upgrade semantics.
+
+The same point applies to formal methods. A theorem prover can provide exceptionally strong evidence that a formal statement follows from formal premises. The remaining boundary is correspondence: whether those premises and statements represent the intended external system. SCC does not solve that correspondence problem universally. It makes the correspondence assumption nameable, bindable, and rejectable when absent.
+
+The practical consequence is a hierarchy of failure diagnostics. \texttt{UNVERIFIED\_PROOF\_OBLIGATION} means that the required proof artifact was not authenticated; it does not mean the proposition is false. \texttt{DOMAIN\_MISMATCH} means the presented state lies outside the admitted domain; it does not mean the action is unsafe. \texttt{UNVERIFIED\_TRANSLATION\_FAITHFULNESS} means the bridge is underived; it does not indict the terminal verifier. Precise failure language prevents the diagnostic layer from laundering uncertainty into a stronger negative claim.
+
+This is also why SCC's own evidence package cannot certify SCC universally. The package can authenticate a source tree, record a test run, and bind a paper to a particular reference release. It cannot turn finite tests into a proof of implementation correctness or turn implementation correctness into a proof that every real deployment has modeled every relevant transformation. The evidence is valuable precisely when its limits remain visible.
+
+\section{Sound Forgetting and Portable Warrant}
+\subsection{Abstraction as Disciplined Information Loss}
+Abstract interpretation provides the most developed mathematical precedent for reasoning soundly after deliberate loss of information. In its classical form, a concrete semantic domain $C$ is related to an abstract domain $A$ so that computations in $A$ conservatively approximate facts about computations in $C$ \cite{cousot1977abstract}. Useful abstractions normally erase concrete distinctions; the achievement is preservation of enough semantic structure to justify a declared class of conclusions.
+
+Writing $\alpha:C\rightarrow A$ for an abstraction map, the relevant question is property-relative. For a Boolean property $\Phi:C\rightarrow\{0,1\}$, the fiber criterion asks whether
+\[
+\alpha(c_1)=\alpha(c_2)\Longrightarrow \Phi(c_1)=\Phi(c_2)
+\]
+on the admitted domain. When this holds, $\Phi$ factors through the abstraction. Abstract interpretation supplies far richer machinery than this elementary criterion: Galois connections, fixpoint transfer, widening and narrowing, semantic approximation, and calculational derivation of analyzers. The SCC criterion should therefore not be read as a rediscovery or replacement of abstraction soundness. It is the deliberately small condition needed to state what an authorization boundary must know about a particular information-losing map.
+
+The breadth of the abstract-interpretation program makes this distinction important. Cousot's constructive hierarchy of transition-system semantics treats semantic descriptions themselves as systematically related abstractions \cite{cousot2002hierarchy}; program-transformation frameworks can likewise be derived by abstract interpretation \cite{cousot2002transformation}. Later work derives semantic dependency analyses from trace semantics \cite{cousot2019dependency}, applies abstract interpretation to analyses themselves in $A^2I$ \cite{cousot2019a2i}, and relates hybrid trajectory semantics whose temporal observations need not align synchronously \cite{cousot2023trajectories}. Recent work continues this calculational view into Event-B \cite{cousot2026eventb}. These results substantially precede SCC's use of transformation-relative preservation and constrain what novelty can reasonably be claimed here.
+
+\subsection{Where SCC Begins}
+SCC addresses a later boundary in the lifecycle of a result. Suppose an abstraction and analyzer soundly establish an abstract fact:
+\[
+C\xrightarrow{\alpha}A,\qquad A\models\widehat{\Phi}.
+\]
+The analysis may be impeccable. A distributed system can nevertheless destroy the warrant by exporting only a token such as \texttt{VERIFIED}, by changing the admitted domain, by delegating the conclusion to a consumer outside the certified scope, or by joining it with an independently derived conclusion whose relational preconditions were never established. The failure occurs after, or around, the sound analysis rather than inside it.
+
+It is useful to separate four stages:
+\[
+\underbrace{C\xrightarrow{\alpha}A}_{\text{abstraction}}\quad
+\underbrace{A\models\widehat{\Phi}}_{\text{analysis}}\quad
+\underbrace{E_A\rightarrow E_B\rightarrow E_C}_{\text{warrant transport}}\quad
+\underbrace{a}_{\text{authorization}}.
+\]
+Abstract interpretation principally supplies disciplined relationships for the first two stages. SCC principally specifies evidence obligations at the third stage and the conditions under which the fourth may consume the result. This is a division of labor, not a hierarchy of generality. A certified abstraction, simulation argument, refinement theorem, or abstract-interpretation proof can be exactly the evidence object that an SCC boundary resolves.
+
+This separation also explains why two consumers can receive the same sound abstract result yet differ in authorization status. Let $B=(T,D,\Phi,E,C,t,\nu)$ denote the boundary context introduced earlier. It is consistent to have the same abstraction and abstract result while
+\[
+W(B_1)=1,\qquad W(B_2)=0.
+\]
+The second boundary may be outside the certified domain, temporally stale, reached through an uncertified delegation, combined through an unproved join, or asking a different property of the same abstraction. Soundness of $\alpha$ has not failed. The scope in which its result may be reused has changed.
+
+\subsection{Sound Forgetting, Admissible Loss, and Warrant Transport}
+This gives a useful three-level vocabulary. \emph{Information loss} asks which distinctions disappeared. \emph{Sound abstraction} asks which conclusions remain justified despite that loss. \emph{Warrant-preserving transport} asks under what evidence, provenance, temporal, domain, and compositional conditions another component may reuse such a conclusion. The third question is contextual in a way that the abstraction relation alone need not be.
+
+The connection is especially close to admissible degradation. Degradation is not a defect merely because representation becomes poorer. A transformation may discard enormous amounts of concrete detail while preserving every distinction relevant to the declared operational property. Conversely, a nearly lossless transformation can erase the single distinction on which authorization depends. SCC therefore treats the amount of information lost as secondary to which fiber was formed relative to which property.
+
+This also sharpens the Anti-Assertion Mandate. An SCC need not reproduce an abstract-interpretation proof internally. It may identify and authenticate a proof artifact whose semantics establish the required relation. What it may not do is replace that artifact with the assertion that such a relation was checked. Abstraction soundness is a possible source of warrant; a Boolean report of abstraction soundness is not, by itself, a portable warrant.
+
+\subsection{Reflexive Analysis and the Trusted Boundary}
+$A^2I$ is particularly relevant because it makes analyses themselves objects of abstraction and analysis \cite{cousot2019a2i}. SCC's reflexive requirement has a related motivation but a different target: the canonicalizer, registry, certificate issuer, translator, and runtime are themselves transformations and evidence consumers. Their adequacy cannot be made universal merely by placing them inside the trusted computing base. Trust marks an assumption boundary; it does not convert the assumption into a theorem.
+
+The consequence is methodological. SCC should not claim novelty from the bare fact that transformations, analyzers, or abstractions can themselves be analyzed. Its contribution is the explicit treatment of the \emph{migration and consumption of warrant} as a versioned boundary protocol. The protocol records which property, domain, transformation, evidence, consumer, time interval, and implementation identity license reuse of an already established conclusion.
+
+The portability experiment can itself be read through this lens. The reconstruction
+\[
+I_{\mathrm{Python}}\rightarrow K_{\mathrm{portable}}\rightarrow I_{\mathrm{BASIC/Forth}}
+\]
+deliberately forgets implementation structure while testing whether the warrant-before-execute obligation survives. It is not a proof that the implementations are equivalent. It is an abstraction experiment over the implementation architecture, with shared conformance vectors acting as finite observations of the claimed correspondence.
+
+\section{Related Work}
+SCC sits near several established traditions without replacing them. Proof-carrying code associates untrusted code with proofs checked against a host safety policy \cite{necula1997proof}. Foundational and abstraction-carrying variants further investigate what evidence a consumer must check and how certificate information can be reconstructed efficiently. SCC borrows the broad architectural idea that acceptance should depend on checkable evidence, but moves the question outward: after one verifier has established a claim, what permits another component to transport that claim through a different observation, domain, consumer, or representation?
+
+Proof-carrying and code-carrying authorization are especially close neighbors. Code-Carrying Authorization moves part of authorization decision-making into dynamically verified code supplied at run time \cite{maffeis2008cca}, while proof-carrying authorization systems require requests to carry logical evidence. A Proof-Carrying File System combines proof verification with conditional capabilities for dynamic access policies whose consequences can depend on time and state \cite{garg2010pcfs}. SCC shares the insistence that authorization be justified by inspectable evidence, but concentrates on preservation across transformations and on the non-transitivity of a warrant whose observational basis changes.
+
+Information-flow control provides formal models for restricting flows among security classes \cite{denning1976lattice}. SCC asks a complementary question: if a monitor sees only a projection of a richer workflow, is that projection sufficient for the property being enforced? A graph can preserve every event label while erasing the reachability relation that makes an indirect flow visible. In that sense, SCC is concerned not only with which flows are permitted but with whether the enforcement representation retains enough structure to decide the declared policy.
+
+Capability-system literature emphasizes protected references, authority, attenuation, and mediation rather than a simple equation of possession with unconditional access \cite{saltzer1975protection}. SCC's scope objects are only analogous. A capability primarily conveys authority over an object; an SCC primarily conveys evidence that a particular conclusion may be relied upon under declared conditions. The analogy becomes useful at delegation boundaries, where both traditions resist authority silently becoming broader merely because a token was copied.
+
+Abstract interpretation is treated separately above because its relationship to SCC is foundational rather than incidental. Abstraction-carrying code makes an abstract model itself serve as a certificate whose validity can be checked by the consumer \cite{albert2011acc}. Work on certificate translation likewise studies preservation of certificates across program transformations \cite{barthe2011translation}. These traditions make clear that abstraction and transformation need not destroy assurance when appropriate simulation, reconstruction, or preservation results are available. SCC's fiber formulation is intentionally elementary: it isolates a property-relative observational condition and allows stronger mechanisms---including abstract-interpretation arguments---to supply the evidence establishing that condition in a concrete system.
+
+Provenance, refinement, proof assistants, authorization logics, and epistemic logic provide additional neighboring vocabularies. SCC's narrower contribution is to make the migration of a \emph{warrant} itself the object of analysis: what evidence permits a conclusion to survive a particular transformation and be consumed at a later boundary? The answer may be a formal proof, a certified abstraction, a provenance chain, a composition theorem, or a domain restriction. SCC is the boundary protocol around that evidence, not a replacement for the mechanism that produced it.
+
+\section{Methodology and Conformance}
+The reference distribution is a cross-representation implementation experiment, not a proof of the calculus by testing. The Python reference suite exercises root proof validation, domain escape, composition failure, environmental drift, stale evidence, fully certified chains, neuro-formal counterexamples, orchestration, Research Unix utilities, and portability fixtures. At the archival snapshot used for this paper, the Python suite reports 34 passing tests. The BASIC and Forth source profiles and shared conformance vectors are included as portability artifacts; native FreeBASIC and Gforth execution is not claimed by this paper unless separately recorded in the artifact manifest.
+
+The distinction between theory, specification, and implementation is deliberate:
+\[
+\text{theory}\longleftrightarrow\text{versioned specification}\longleftrightarrow\text{reference implementation}.
+\]
+The paper develops the first, the repository's \texttt{spec/} directory defines the normative software interface, and executable tests provide evidence about the third.
+
+\section{The System Must Certify Less Than It Knows}
+A framework concerned with scope must apply the same criticism to itself. SCC has a trusted computing base. Its canonicalizer may contain defects; a domain predicate may omit relevant states; a registry may be corrupted or misconfigured; a hash may faithfully identify an inadequately specified object; a transformation may occur that the model never declared.
+
+Consequently SCC does not establish that a system is safe, nor that certainty laundering has been eliminated universally. Its narrower claim is that, for declared transformations, admitted domains, specified properties, authenticated evidence mechanisms, and the assumptions of the trusted computing base, the architecture can refuse classes of warrant transfer for which the required preservation relationship is not established.
+
+This limitation is not ancillary. It is the framework applying its own rule to its own claims.
+
+\section{Conclusion}
+The Python runtime, asynchronous orchestrator, Unix filters, fictional XENIX personality, BASIC profiles, and Forth implementation function as experimental apparatus. Each reconstruction removes conveniences supplied by another environment. Much of the machinery changes; the preservation obligation remains recognizable.
+
+For a property $\Phi$, an information-losing transformation $T$ can carry the relevant warrant only where distinctions erased by $T$ are irrelevant to $\Phi$:
+\[
+\forall z_1,z_2\in D,\qquad T(z_1)=T(z_2)\Longrightarrow\Phi(z_1)=\Phi(z_2).
+\]
+Operationally: do not transport a warrant across a distinction-erasing transformation unless independently checkable evidence establishes that the erased distinction is irrelevant to the property being warranted.
+
+Everything else in the reference implementation---certificates, registries, proof objects, content-addressed stores, manual pages, scope faults, BASIC records, and Forth words---is machinery for making that constraint executable.
+
+The portable object is therefore not certainty. It is the boundary around what the evidence permits us to claim.
+
+\appendix
+\input{appendices/A-fiber-counterexamples}
+\input{appendices/B-evidence-chain}
+\input{appendices/C-portable-kernel}
+\input{appendices/D-conformance-results}
+\input{appendices/E-warrant-algebra}
+\input{appendices/F-neuroformal-case}
+
+\begin{thebibliography}{9}
+\bibitem{necula1997proof} G. C. Necula, ``Proof-Carrying Code,'' in \emph{Proc. 24th ACM SIGPLAN-SIGACT Symposium on Principles of Programming Languages}, pp. 106--119, 1997. doi:10.1145/263699.263712.
+\bibitem{denning1976lattice} D. E. Denning, ``A Lattice Model of Secure Information Flow,'' \emph{Communications of the ACM}, vol. 19, no. 5, pp. 236--243, 1976. doi:10.1145/360051.360056.
+\bibitem{saltzer1975protection} J. H. Saltzer and M. D. Schroeder, ``The Protection of Information in Computer Systems,'' \emph{Proceedings of the IEEE}, vol. 63, no. 9, pp. 1278--1308, 1975. doi:10.1109/PROC.1975.9939.
+\bibitem{cousot1977abstract} P. Cousot and R. Cousot, ``Abstract Interpretation: A Unified Lattice Model for Static Analysis of Programs by Construction or Approximation of Fixpoints,'' in \emph{Proc. 4th ACM SIGPLAN-SIGACT Symposium on Principles of Programming Languages}, pp. 238--252, 1977. doi:10.1145/512950.512973.
+\bibitem{maffeis2008cca} S. Maffeis, M. Abadi, C. Fournet, and A. D. Gordon, ``Code-Carrying Authorization,'' in \emph{Computer Security -- ESORICS 2008}, LNCS 5283, pp. 563--579, 2008.
+\bibitem{garg2010pcfs} D. Garg, L. Bauer, K. D. Bowers, F. Pfenning, and M. K. Reiter, ``A Proof-Carrying File System,'' in \emph{2010 IEEE Symposium on Security and Privacy}, 2010. doi:10.1109/SP.2010.28.
+\bibitem{albert2011acc} E. Albert, P. Arenas, G. Puebla, and M. Hermenegildo, ``Certificate Size Reduction in Abstraction-Carrying Code,'' \emph{Theory and Practice of Logic Programming}, 2011.
+\bibitem{barthe2011translation} G. Barthe and C. Kunz, ``An Abstract Model of Certificate Translation,'' \emph{ACM Transactions on Programming Languages and Systems}, 2011. doi:10.1145/1985342.1985344.
+\bibitem{cousot2002hierarchy} P. Cousot, ``Constructive Design of a Hierarchy of Semantics of a Transition System by Abstract Interpretation,'' \emph{Theoretical Computer Science}, vol. 277, nos. 1--2, pp. 47--103, 2002.
+\bibitem{cousot2002transformation} P. Cousot and R. Cousot, ``Systematic Design of Program Transformation Frameworks by Abstract Interpretation,'' in \emph{Proc. 29th ACM SIGPLAN-SIGACT Symposium on Principles of Programming Languages}, pp. 178--190, 2002.
+\bibitem{cousot2019a2i} P. Cousot, R. Giacobazzi, and F. Ranzato, ``$A^2I$: Abstract$^2$ Interpretation,'' \emph{Proceedings of the ACM on Programming Languages}, vol. 3, POPL, Article 42, 2019. doi:10.1145/3290355.
+\bibitem{cousot2019dependency} P. Cousot, ``Abstract Semantic Dependency,'' in \emph{Static Analysis}, LNCS 11822, pp. 389--410, Springer, 2019. doi:10.1007/978-3-030-32304-2\_6.
+\bibitem{cousot2023trajectories} P. Cousot, ``Asynchronous Correspondences Between Hybrid Trajectory Semantics,'' in \emph{Principles of Systems Design}, LNCS 13660, Springer, 2023.
+\bibitem{cousot2026eventb} P. Cousot, ``The Essence of Event-B from an Abstract Interpretation Perspective,'' in \emph{Gedenkschrift for Jean-Raymond Abrial}, Springer, 2026.
+\end{thebibliography}
+\end{document}

@@ -1,0 +1,486 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{principle}{Principle}
+\newtheorem{criterion}{Criterion}
+\newtheorem{proposition}{Proposition}
+
+\newcommand{\Iset}{\mathcal I}
+\newcommand{\Pset}{\mathcal P}
+\newcommand{\Tset}{\mathcal T}
+\newcommand{\Eset}{\mathcal E}
+\newcommand{\Cclaim}{\mathcal C}
+\newcommand{\Ball}{\mathcal B}
+
+\title{\textbf{Continuable Suitability}\\[0.4em]
+\large Output, Persistence, and Acquisition in the Attribution of Capacity}
+\author{Flyxion\\ \small Independent Researcher}
+\date{September 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+A favorable state, a correct output, or a momentary conjunction of conditions does not by itself establish that a system possesses the capacity attributed to it. This essay argues that a capacity term applies only when the mechanism producing a result remains valid across the inputs, perturbations, and durations that the term implicitly claims. The condition is called \emph{continuable suitability}. Three cases develop it. A quantum device that prepares one Gibbs state is not thereby a thermalizer; a recent information-theoretic proof of the Planckian bound obtains its universality only by requiring one fixed process to succeed across a neighborhood of Hamiltonians. A Hadean environment briefly compatible with biomolecules is not thereby an environment for cumulative prebiotic development; what matters is volume that is never subsequently sterilized. A buoy reached by wave energy is not thereby an absorber; a graded array achieves broadband capture through an ordered, multiply scattering conversion path. From these cases the essay builds a capacity tuple whose components the cases exercise in turn, separates robustness from the warrant for a capacity term, and states an evidential criterion for loss channels. A climate--carbon regime study extends the account to the perturbation class. For historical systems, continuability is often demonstrable only retrospectively.
+\end{abstract}
+
+
+%======================================================================
+\section{The Favorable Instant}
+%======================================================================
+
+Consider four capacity claims that sound reasonable on first hearing. A machine produced the correct thermal state, so it thermalizes. A region of early crust could preserve RNA, so it could support an RNA world. Wave energy reached an energy converter, so that energy was available for collection. A biosphere survived a climatic fluctuation of some magnitude, so fluctuations of that magnitude are tolerable.
+
+Each inference moves from an observed or modeled conjunction to a dispositional claim. What has been shown is that a result occurred, or could occur, under one arrangement. What is being asserted is that the system can reliably produce, preserve, or exploit that result across some class of conditions. The gap between the two is usually silent, because ordinary capacity words carry their scope implicitly.
+
+\subsection{State predicates and capacity predicates}
+
+A state predicate describes what holds at an instant:
+\begin{equation}
+S(x,t)=1 .
+\end{equation}
+The water is at a biomolecule-compatible temperature; the output is close to a Gibbs state; wave energy is present at the buoy.
+
+A capacity predicate ranges over alternatives, over time, or over both:
+\begin{equation}
+C(x;\Iset,\Tset)=1,
+\end{equation}
+where $\Iset$ is a declared class of variations and $\Tset$ a temporal horizon. To call something a thermalizer, a habitat, an absorber, a reserve, or a resilient system is to claim that its mechanism holds over some nontrivial $\Iset$ and $\Tset$. The basic methodological rule follows immediately: state evidence is not yet capacity evidence. Writing the capacity predicate as binary is a simplification. In practice one can report the measure of the declared class over which the claim holds, and several of the results below are graded in exactly this way; the binary form is kept because the argument concerns what the class must contain, not how much of it is covered.
+
+\begin{definition}[Continuable suitability]
+A system is \emph{continuably suitable} for an operation when the conditions that make the operation possible are reproduced, preserved, or appropriately transformed throughout the declared range of inputs, perturbations, and durations.
+\end{definition}
+
+Continuable suitability is not indefinite persistence, invulnerability, or invariance under every disturbance. A bridge need not survive an asteroid to count as a bridge. A thermalizer need not accommodate every mathematically possible Hamiltonian. The demand is only that the variation class be declared, because without it the capacity claim cannot fail and therefore cannot be evaluated.
+
+\subsection{Plan}
+
+The three principal cases isolate different dimensions along which suitability must continue: across alternatives (Section~\ref{sec:output}), across time (Section~\ref{sec:instant}), and across an ordered conversion path (Section~\ref{sec:contact}). They are not presented as instances of one physical mechanism. Their unity is evidential: in each, a capacity attribution becomes testable only once its continuation conditions are explicit.
+
+The choice of cases is not arbitrary. Each exercises one component of the capacity claim assembled in Section~\ref{sec:general}: the thermalizer tests the variation class of inputs, the Hadean crust tests the temporal horizon, and the buoy array tests the internal composition of the mechanism itself. The climate study in Section~\ref{sec:regime} tests the remaining component, the perturbation class. The list is not claimed to be exhaustive. Continuation across spatial or organizational scale, for instance, would need a case of its own, and nothing here settles how such a case would fit. Section~\ref{sec:general} assembles the general account, including the distinction between robustness and the warrant for a capacity term, and a criterion for loss channels. Section~\ref{sec:regime} treats a climate--carbon regime study as a limited extension. Sections~\ref{sec:objections} and~\ref{sec:method} address objections and methodological consequences.
+
+\paragraph*{Scope and attribution.} Quantitative results, model descriptions, and the vulnerability index $V_i$ come from the four source papers and are attributed to them where they appear. The formal apparatus is this essay's own: the capacity tuple and its trajectory semantics, the distinction between robustness and warrant, continuation closure, the loss-channel criterion, the single-mode reduction of the buoy paper's transfer-matrix formalism, the persistent-volume function, the reset condition, and the viability distance. None of these should be read as claims made by the papers. The persistent-volume function, in particular, only formalizes the Hadean paper's never-sterilized volume, whose idea is the paper's; what the formalization adds is the explicit dependence on a terminal time. ``Warrant'' is used throughout in a technical sense, defined in Section~\ref{sec:general}, rather than in its looser everyday meaning.
+
+%======================================================================
+\section{Output Is Not Operation}\label{sec:output}
+%======================================================================
+
+\subsection{The swap counterexample}
+
+The Planckian timescale,
+\begin{equation}
+\tau_{\mathrm{Pl}}=\frac{\hbar}{k_{\mathrm B}T},
+\end{equation}
+has long been proposed as a characteristic lower bound on thermalization and dissipation times. A simple counterexample seems to defeat any universal version. If a system's Hamiltonian is known in advance, an apparatus can hold an ancilla already prepared in the corresponding Gibbs state and swap it into place. With unconstrained coupling strength, the desired output appears as quickly as one likes. No universal time bound can follow from asking only how quickly a specified state can be produced.
+
+\subsection{A fixed routine over a Hamiltonian neighborhood}
+
+Abiuso and colleagues resolve this by changing what counts as the task \cite{abiuso}. A \emph{thermalization machine} runs one control routine, fixed independently of the particular system Hamiltonian, and must bring every system with Hamiltonian in a neighborhood
+\begin{equation}
+\Ball_\delta(\bar H_S)=\{\,H:\ \|H-\bar H_S\|\le\delta\,\}
+\end{equation}
+to within error $\varepsilon$ of its own Gibbs state. The reformulation refuses to identify one correct output with the operation of thermalizing. The task now contains a variation class, and the swap device fails it, because the stored answer is correct for only one member of the class. Here $\|\cdot\|$ is the spectral semi-norm, the difference between largest and smallest eigenvalue. The authors note that a weaker requirement already suffices for their argument: correct thermalization of just two distinct Hamiltonians. Two alternatives are therefore enough to separate thermalization from preparation.
+
+\subsection{The theorem: Hamiltonian sensitivity}
+
+The formal content of the result concerns distinguishability, and the argument has two steps. First, if the machine brings the outputs for $H_S^{(1)}$ and $H_S^{(2)}$ within Bures angle $\varepsilon$ of their respective Gibbs states, the triangle inequality forces the outputs themselves apart:
+\begin{equation}
+D\big(\rho_S(\tau,H_S^{(1)}),\rho_S(\tau,H_S^{(2)})\big)\ \ge\ D\big(\omega(\beta,H_S^{(1)}),\omega(\beta,H_S^{(2)})\big)-2\varepsilon .
+\end{equation}
+Second, because the routine is the same in both cases, quantum mechanics limits how far the outputs can have separated in time $\tau$:
+\begin{equation}
+D\big(\rho_S(\tau,H_S^{(1)}),\rho_S(\tau,H_S^{(2)})\big)\ \le\ \frac{\tau}{2\hbar}\,\big\|H_S^{(1)}-H_S^{(2)}\big\| .
+\end{equation}
+Combining the two and optimizing over pairs in $\Ball_\delta$, the paper obtains
+\begin{equation}
+\tau\ \ge\ \tau_{\mathrm{Pl}}\;\chi(\bar H_S,\delta,\varepsilon),
+\end{equation}
+where $\chi$ encodes the Hamiltonian range and tolerated error. The paper shows that $\chi\le\tfrac12-4\varepsilon/(\beta\delta)$, so the bound is nontrivial only when $\varepsilon<\beta\delta/8$. Beyond that threshold, the permitted error is too large for the argument to guarantee distinguishable target outputs, so the resulting time bound becomes trivial. In the locally exact limit ($\delta\to 0$ with $\varepsilon\ll\beta\delta$) the same argument becomes a statement in quantum metrology: the quantum Fisher information of the thermal state must be matched by the dynamical Fisher information of the output, which the generalized Heisenberg limit caps at order $\tau^2/\hbar^2$. When the thermal populations admit an approximately balanced bipartition, $p\approx 1/2$, and the thermalization error is small, the locally exact bound approaches $\chi\simeq 1/2$ (the paper's finite-error lower bounds sit somewhat below this value), giving
+\begin{equation}
+\tau\ \ge\ \frac{\hbar}{2k_{\mathrm B}T}.
+\end{equation}
+Near zero temperature the target concentrates on the ground state, temperature ceases to be the relevant scale, and the spectral gap $\Delta$ takes over:
+\begin{equation}
+\tau\ \gtrsim\ \frac{\hbar}{\Delta},
+\end{equation}
+consistent with the timescale of optimal adiabatic ground-state preparation.
+
+\subsection{An interpretation: information acquisition}
+
+It is natural to say that the machine must \emph{learn} which Hamiltonian it faces, and that the Planckian time is the cost of acquiring that information. This reading is useful, and it will be used below, but it is an interpretation of the theorem rather than its statement. The theorem constrains how fast the output state can become Hamiltonian-sensitive. Whether that sensitivity is best described as information stored anywhere, or as knowledge possessed by the device, is a further question the proof does not settle. The weaker formulation is sufficient for the present argument.
+
+The paper itself gives a reason not to push the learning reading too far. It places thermalization between two neighboring tasks. Gibbs state sampling, given an exact classical description of $H$, can in principle be instantaneous. Hamiltonian discrimination, given only oracle access to $H$, requires time $\pi\hbar/\|H^{(1)}-H^{(2)}\|$, which diverges for nearby Hamiltonians. Thermalization shares the input of the second task and the output of the first, and its minimum time lies strictly between them. The authors show the bound can be saturated by a machine that runs a discrimination protocol only partway and then maps the partially distinguished states to purifications of the two Gibbs states. So a thermalizer need not learn which Hamiltonian it faces. It needs exactly as much Hamiltonian sensitivity as the distinguishability of the targets demands, and no more. That is a sharper statement of the principle below than ``it must know the answer.''
+
+The learning reading might invite a comparison with the thermodynamics of information, in which acquiring and erasing information carries an energetic cost. That comparison should be resisted here. The Planckian result bounds time through distinguishability; it says nothing about heat dissipated or work consumed. Whether a thermalizer's Hamiltonian sensitivity also carries a minimum thermodynamic cost is a separate question the theorem does not address. The learning language is offered here only as a heuristic for Hamiltonian sensitivity, not as a bridge to that literature.
+
+\subsection{Scope}
+
+The bound is universal only relative to the stronger task. It does not forbid arbitrarily fast preparation of a single known state. An apparatus specialized to one Hamiltonian evades it by never needing Hamiltonian-sensitive dynamics. The coefficient depends on the accuracy demanded and on how distinguishable the admitted targets are; if $\varepsilon$ is large relative to the spread of Gibbs states over $\Ball_\delta$, the bound becomes trivial. The lower bounds hold even when the machine is required to thermalize only commuting, effectively classical Hamiltonians. None of this weakens the result. It shows that the result is a statement about an operation, and that the operation is defined by its variation class.
+
+\begin{principle}[Output and operation]
+An output is evidence of an operation only relative to the alternatives across which the output-generating procedure remains correct.
+\end{principle}
+
+This separates three things that a single output cannot distinguish: accidental correctness, stored correctness, and operational correctness. The swap device and the thermalization machine can emit identical states on a given run. They differ in whether the output would have tracked the correct answer had the input been otherwise. Requiring correctness across a variation class is therefore not an extra certificate added after production. It changes which process must have occurred.
+
+A consequence worth isolating here, since it recurs in Section~\ref{sec:general}: the swap device's output is \emph{invariant}. It is the same state on every run, regardless of which Hamiltonian is present. That invariance is precisely what disqualifies it, because Hamiltonian identity is not a disturbance the output should ignore but an input it must follow. The operation requires output that is \emph{covariant} with the input.
+
+%======================================================================
+\section{A Biocompatible Instant Is Not a Persistent Niche}\label{sec:instant}
+%======================================================================
+
+The Planckian case concerns continuation across alternatives. The Hadean case concerns continuation through time: whether a favorable environment preserves what it enables.
+
+\subsection{Biocompatibility and persistence}
+
+Abramov and colleagues model when parts of the Hadean crust became thermally compatible with biomolecular preservation \cite{abramov}. The paper draws its own distinction between two terms. An environment is \emph{biocompatible} when biomolecules remain available and stable enough for prebiotic chemistry to proceed, whether or not life arises, and \emph{habitable} when a functioning organism could survive in it; the reaction space, on this framing, had to stay biocompatible long enough to become habitable. The persistence requirement developed here is therefore already present in the paper's premises. What this section adds is a formalization of it and an account of what the modeled timeline does and does not license. At any instant, a region below a chosen temperature threshold can be called biocompatible. Prebiotic development, however, requires reactions to leave products that persist long enough to participate in later reactions. An environment that repeatedly produces favorable niches and then sterilizes them can have substantial instantaneous biocompatibility while offering almost no cumulative continuity.
+
+\subsection{A reset-dominated early Hadean}
+
+The model represents late-accretion bombardment from about 4.5 to 3.5\,Ga using a three-dimensional thermal representation of crust and upper mantle, tracking impact heating, crustal melting, geothermal gradients, zircon age resetting, biomolecule-specific temperature thresholds, and hydrothermal regions. Early in this interval, large impacts and steep geothermal gradients repeatedly destroy or thermally degrade near-surface organization.
+
+The obstacle these events pose is not merely hostility. They erase state. Whatever chemical differentiation accumulates in a niche may be removed before it can become a condition for the next stage. The relevant failure is recurrent loss of inheritance.
+
+\subsection{Never-sterilized volume, and a formalization}
+
+The paper's most useful quantity for present purposes is \emph{never-sterilized volume}: regions of the upper 300\,m of crust that, after initial cooling, at no later time in the simulation exceed 110\,$^\circ$C. In the baseline run this volume is zero until about 4.4\,Ga and exceeds half the crust by 4.25\,Ga, whereas instantaneous biocompatible volume is already large much earlier. The following formalization is this essay's, not the paper's.
+
+Let $\Theta(v,s)$ be the temperature at location $v$ and time $s$, and $\theta^{*}$ a stability threshold for the molecules in question. Define instantaneous biocompatible volume
+\begin{equation}
+B(t)=\operatorname{vol}\{\,v:\ \Theta(v,t)<\theta^{*}\,\},
+\end{equation}
+and persistent volume relative to a terminal time $t_{\mathrm{end}}$,
+\begin{equation}
+P(t;t_{\mathrm{end}})=\operatorname{vol}\{\,v:\ \Theta(v,s)<\theta^{*}\ \ \forall s\in[t,t_{\mathrm{end}}]\,\}.
+\end{equation}
+Clearly $P(t;t_{\mathrm{end}})\le B(t)$, and a large $B(t)$ can coexist with a small or vanishing $P$. The difference $B(t)-P(t;t_{\mathrm{end}})$ measures favorable space whose suitability is temporary. The paper's never-sterilized volume is an instance of $P$ with $\theta^{*}=110\,^\circ$C (chosen as a loose upper limit for hyperthermophiles, well above most biomolecular stability thresholds), depth restricted to 300\,m, and $t_{\mathrm{end}}$ the end of the simulation at 3.5\,Ga.
+
+The explicit dependence on $t_{\mathrm{end}}$ is deliberate. $P$ cannot be computed at time $t$ from the state at time $t$. It requires the trajectory through $t_{\mathrm{end}}$, which is available only in a completed simulation or a completed historical record. Continuability in this case is therefore demonstrated retrospectively. Section~\ref{sec:objections} returns to what this concession costs.
+
+\subsection{\texorpdfstring{The transition near 4.4\,Ga}{The transition near 4.4 Ga}}
+
+In the simulations, potentially ocean-vaporizing impacts (400--500\,km impactors) occur six or seven times per 10\,Myr bin at the start and fall to zero or one per bin after about 4.43\,Ga. Near-surface biocompatible volume rises from about 4.45\,Ga to more than 90 percent of its equilibrium value by 4.3\,Ga. The hydrothermal indicators peak at different times, and they should not be conflated. Hydrothermal \emph{volume} (below 110\,$^\circ$C with gradients above 140\,$^\circ$C/km) peaks near 4.4\,Ga and falls to about a fifth of its maximum by 4.3\,Ga; the \emph{number} of distinct hydrothermal clusters peaks near 4.3\,Ga; and the mean geothermal gradient drops below twice its equilibrium value, marking a shift from impact-dominated to conduction-dominated heating, at 4.33\,Ga. (The paper's concluding section describes hydrothermal activity as peaking around 4.33\,Ga, which matches the cluster count rather than the volume.) Averaging these criteria, the authors identify about 4.33\,Ga as a favorable window for an RNA world, some 130 million years before their approximate mean date for the last universal common ancestor, near 4.2\,Ga within a cited molecular-clock range of 4.09--4.33\,Ga.
+
+The date depends on the assumed late-accretion mass. The baseline, 0.57 percent of Earth's mass, is a deliberately conservative upper-end scenario; at 0.13 percent the favorable window moves about 70\,Myr earlier, to about 4.4\,Ga, and doubling the mass beyond the baseline is estimated to move it only a few tens of Myr later. The conclusion the authors call robust across delivered masses is therefore the weaker one: persistent near-surface niches were established some time after about 4.4\,Ga.
+
+The model's limits bear directly on what it can support. The grid spacing is roughly 300\,km horizontally and 4\,km vertically, so conditions in the upper 300\,m are interpolated. Hydrothermal circulation is not explicitly modeled, distal heating by ejecta and condensed rock vapour is incompletely represented, and bombardment chronology, delivered mass, permeability, and degradation thresholds remain uncertain. The authors' own zircon comparison shows that impact resetting alone predicts older zircons than are observed, so other crust-forming and crust-destroying processes must have mattered.
+
+\subsection{A chain of non-implications}
+
+The model shows most directly that a thermal obstruction to persistent prebiotic chemistry weakened under a particular bombardment scenario. It does not show that an RNA world appeared at 4.33\,Ga, although the abstract states its conclusion in those terms. The needed distinctions are
+\begin{equation}
+\text{thermal admissibility}\ \not\Rightarrow\ \text{chemical supply}\ \not\Rightarrow\ \text{replication}\ \not\Rightarrow\ \text{evolutionary persistence}.
+\end{equation}
+The environment stopped globally vetoing certain continuations. That the relevant continuation began is a separate claim.
+
+\subsection{Closure of the reset channel}
+
+The conceptual threshold is not the first moment at which favorable chemistry becomes possible. It is the period in which a recurrent \emph{global} reset loses the power to erase every local accumulation. Let $\tau_{\mathrm{reset}}(t)$ be the waiting time, at epoch $t$, until the next globally sterilizing event, and $\tau_{\mathrm{cont}}$ the interval needed for the relevant chemistry to preserve or reproduce its organization. A first-order necessary condition for closure of the reset channel is
+\begin{equation}
+\mathbb E\big[\tau_{\mathrm{reset}}(t)\big]\ >\ \tau_{\mathrm{cont}} .
+\end{equation}
+Expectation alone is not enough. The waiting times may be highly variable, and what matters is the chance of an uninterrupted interval long enough to use, which depends on the tail of the distribution. A stronger condition, for a declared tolerance $\alpha$, is
+\begin{equation}
+\Pr\big(\tau_{\mathrm{reset}}(t)>\tau_{\mathrm{cont}}\big)\ \ge\ 1-\alpha .
+\end{equation}
+Even this addresses only global thermal interruption. It says nothing about whether surviving niches are spatially connected, chemically provisioned, or able to pass products from one local environment to the next. All of these quantities, and both conditions, are this essay's constructions.
+
+Restricting the condition to global events matters: local sterilization continues after closure. What a positive $P(t;t_{\mathrm{end}})$ then establishes is a persistent \emph{thermal refuge}, crust that stays below threshold from $t$ onward. It does not establish that any lineage or chemical system occupies that refuge, that products reach it, or that it remains chemically useful. Thermal persistence is a precondition for inherited organization, not evidence of it. A system can become evolutionarily viable before it becomes safe.
+
+\begin{principle}[Instant and interval]
+Suitability for a cumulative process must be measured over the persistence of inherited state, not by the instantaneous availability of favorable conditions.
+\end{principle}
+
+The principle applies wherever a process depends on accumulation, learning, repair, or inheritance. Each requires an interval in which prior work remains available to subsequent work.
+
+%======================================================================
+\section{Contact Is Not Acquisition}\label{sec:contact}
+%======================================================================
+
+The Hadean case shows conditions that are favorable without preserving what they enable. The buoy case shows the converse difficulty: an input can persist and repeatedly meet a device, yet fail to be acquired, because the interaction path does not convert contact into capture.
+
+\subsection{The narrow-band problem}
+
+A resonant heaving buoy absorbs efficiently near its tuned frequency. Real seas distribute energy across many frequencies and directions. A single buoy, or a uniform array, may therefore be exposed to abundant energy while capturing only the portion matching its resonance. The resource is present and reaches the device; much of it is reflected, transmitted, or converted into motion outside the useful range. Availability at an interface is not acquisition by a system.
+
+\subsection{Grading}
+
+Westcott and colleagues arrange heaving buoys in rows whose power-take-off (PTO) spring constants decrease along the direction of propagation \cite{westcott}. Row resonances run from about 0.65 down to 0.3\,rad/s, roughly 10 to 21\,s wave periods, and are placed so that each row's resonance lies inside the local bandgap of the next row; reaching the lower resonances requires negative PTO stiffness. Different rows resonate with different parts of the spectrum, so different frequencies penetrate to different depths before meeting the row that arrests them, a form of rainbow reflection. Damping is then chosen to convert that localized reflection into absorption. The design is guided by Bloch-wave analysis and by the positions of reflection poles and zeros in the complex-frequency plane: spring constants establish a broad effective bandgap with low transmission, and damping moves reflection zeros toward the real-frequency axis, so that energy which would have been reflected is captured instead.
+
+\subsection{A transfer-matrix abstraction}
+
+The mechanism cannot be represented as a forward cascade in which each row acts once on what the previous row passed along. Rainbow reflection depends on back-scattering: energy reflected by a later row travels back toward earlier rows and scatters again. A forward-only map would omit exactly the multiple scattering that produces the effect.
+
+The paper's own solution method preserves it. Each row's scattering is summarized by reflection and transmission matrices over a truncated set of plane-wave modes, evanescent ones included; a unit cell is given a transfer matrix whose eigenvalues define the Bloch wavenumbers; and the array's overall reflection and transmission are assembled recursively, row by row, with phase-change matrices for the spacing between rows. What follows is a single-mode reduction of that formalism. Its purpose is to isolate, in closed form, the one feature the argument needs: composition that couples forward and backward amplitudes and does not commute. The full formalism has the same feature, but there it is buried under mode bookkeeping; the reduction makes it visible without being responsible for any of the paper's numbers. Fix a frequency $\omega$, restrict attention to normal incidence and a single propagating mode, and let $\psi=(a^{+},a^{-})^{\mathsf T}$ collect forward and backward wave amplitudes. Row $j$ acts by a $2\times 2$ transfer matrix $\mathsf M_j(\omega)$, and free propagation over row spacing $\ell$ by
+\begin{equation}
+D(\omega)=\begin{pmatrix} e^{ik\ell} & 0\\ 0 & e^{-ik\ell}\end{pmatrix}.
+\end{equation}
+The array as a whole is
+\begin{equation}
+\mathsf M_{\mathrm{array}}(\omega)=\mathsf M_n\,D\,\mathsf M_{n-1}\,D\cdots D\,\mathsf M_1 ,
+\qquad \psi_{\mathrm{right}}=\mathsf M_{\mathrm{array}}\,\psi_{\mathrm{left}} .
+\end{equation}
+Writing $M_{ab}$ for the entries of $\mathsf M_{\mathrm{array}}$, with unit amplitude incident from the left and nothing incident from the right, $\psi_{\mathrm{left}}=(1,r)^{\mathsf T}$ and $\psi_{\mathrm{right}}=(t,0)^{\mathsf T}$, which gives
+\begin{equation}
+r=-\frac{M_{21}}{M_{22}},\qquad t=\frac{\det\mathsf M_{\mathrm{array}}}{M_{22}} .
+\end{equation}
+With equal depth on both sides, the absorbed fraction is
+\begin{equation}
+A(\omega)=1-|r(\omega)|^{2}-|t(\omega)|^{2}.
+\end{equation}
+For lossless rows $A=0$; PTO damping is what makes $A$ positive.
+
+Two consequences follow. First, because each $\mathsf M_j$ couples forward and backward amplitudes, the product retains every path by which energy returns through earlier rows. Second, the factors do not in general commute,
+\begin{equation}
+\mathsf M_i\,D\,\mathsf M_j\ \neq\ \mathsf M_j\,D\,\mathsf M_i ,
+\end{equation}
+since rows with different spring constants scatter each frequency differently. So $r$, $t$, and $A$ depend on the order of the rows and not only on which rows are present. A set of resonators is not the same absorber under permutation. The array's capacity belongs to the ordered product, not to any factor.
+
+The reduction discards what the paper keeps. The authors retain evanescent modes and complex scattering angles precisely to capture resonant interaction between rows accurately. Over the target band the in-row spacing is small relative to the wavelength, so only one mode propagates, which is why the reduction does not mislead about how $r$, $t$, and $A$ behave; the numbers reported below come from the full calculation, not from the $2\times 2$ picture.
+
+\subsection{Low transmission is not absorption}
+
+The energy balance makes one distinction exact. A graded structure without damping can produce broadband reflection, $|t|^{2}\to 0$ with $|r|^{2}\to 1$, and absorb nothing:
+\begin{equation}
+|t|^{2}\approx 0\ \not\Rightarrow\ A\approx 1 .
+\end{equation}
+Energy missing from the transmitted wave may simply have been sent back. The array earns the word ``absorber'' only when the PTO accounts for the missing energy. In the paper's terms, the spring grading determines where each frequency is arrested; the damping determines whether the arrested energy is harvested.
+
+\subsection{Results within the model class}
+
+In the paper's idealized three-dimensional linear calculations with infinite rows, arrays of five or six rows absorb more than 94 percent of incident energy averaged over wave periods of 10--20\,s at normal incidence, and ten rows approach 98 percent. Mean absorption stays above 90 percent over a broad range of incident directions. Truncated to a finite array of sixty buoys in six rows of ten, the broadband behavior largely survives, with interior buoys closely matching the infinite-row behavior. (Edge buoys respond more strongly, so the finite array's relative capture width can exceed one.) Across directionally spread irregular spectra with peak periods in the design range, the fixed graded array captures on average 33.45 percent more of broad spectra and 33.01 percent more of narrow spectra than a uniform array retuned to each spectrum's peak period. The paper does not say whether these are relative gains or differences in absorbed fraction; the plotted absorption fractions suggest the latter, but that reading is an inference. None of these designs uses an optimization algorithm.
+
+These figures establish performance within linear potential-flow theory, with buoy excursions small enough that bodies stay in the water. They do not establish field-scale capacity under nonlinear waves, viscous drag, mooring and end-stop constraints, structural loading, fatigue, or maintenance conditions, and the authors themselves anticipate lower absorption under nonlinear conditions. This qualification illustrates the thesis rather than weakening the paper: the declared model class sets the strength of the capacity claim.
+
+\begin{principle}[Contact and acquisition]
+A resource is acquired only when the receiving architecture converts its arrival into a state that is retained or used across the declared input range.
+\end{principle}
+
+Contact is an event at a boundary. Acquisition is a successful transformation through an architecture.
+
+%======================================================================
+\section{A General Account}\label{sec:general}
+%======================================================================
+
+\subsection{The capacity tuple}
+
+The weak synthesis, that outcomes depend on input, state, order, and context, is true of nearly everything and therefore useless. What is needed is a form in which a capacity claim can fail.
+
+\begin{definition}[Capacity claim]
+A capacity claim is a tuple
+\begin{equation}
+\Cclaim=\langle M,\ \Iset,\ \Pset,\ \Tset,\ \Eset\rangle,
+\end{equation}
+where $M$ is the proposed mechanism, $\Iset$ the admitted input or variation class, $\Pset$ the perturbation class, and $\Tset$ the temporal horizon. Writing $M[x,p]$ for the trajectory the mechanism produces from input $x$ under perturbation $p$, with values in an outcome space $\mathcal Y$, the success criterion $\Eset$ assigns to each input a set of acceptable trajectories over the horizon,
+\begin{equation}
+\Eset(x)\ \subseteq\ \mathcal Y^{\Tset}.
+\end{equation}
+The claim is \emph{satisfied} when
+\begin{equation}
+\forall x\in\Iset,\ \forall p\in\Pset:\qquad M[x,p]\big|_{\Tset}\in\Eset(x).
+\end{equation}
+\end{definition}
+
+The criterion, not the quantifier, decides which parts of a trajectory matter. A thermalization criterion constrains the state only at the completion time $\tau$. The Hadean criterion constrains temperature throughout an interval. The absorption criterion concerns a stationary frequency-domain response rather than any instantaneous state. A capacity, on this account, is not always a predicate applied repeatedly to instantaneous outputs; it may be a predicate of a terminal result, a sustained interval, a recurrence pattern, or a steady response. A recurrence criterion shows the range. For an oscillator claimed to keep a daily rhythm, $\Eset(x)$ would be the set of trajectories whose successive peaks stay within a tolerance of twenty-four hours over the horizon, whatever the waveform between peaks; no instantaneous state is required, only a relation among states at different times.
+
+Two clarifications keep the tuple from being either trivial or too strict. First, $M$ is the physical process, or the model of it, that maps an input and perturbation to a trajectory. The distinction matters when the evidence is a model. In the Hadean case $M$ is a simulated bombardment--cooling process, so what the evidence supports is a claim about the model, and its transfer to the Hadean crust is a further claim that inherits the model's limits. Second, approximation belongs in $\Eset$, not in the quantifier. A buoy array absorbing 94 percent of incident energy satisfies an absorption criterion whose threshold is below 94 percent; the 6 percent reflected and transmitted is a contained loss, not a partial failure of the claim. What the universal quantifier forbids is silent exceptions within $\Iset$. If the array fails for some directions inside the declared band, the honest options are to narrow $\Iset$, or to report the measure of $\Iset\times\Pset$ over which the criterion holds and let that graded figure be the claim.
+
+The dependence of $\Eset$ on $x$ is essential. For thermalization, the acceptable outcome for Hamiltonian $H$ is the $\varepsilon$-ball around the Gibbs state of $H$, which differs across $\Ball_\delta$. A fixed target set would reinstate the swap device as a thermalizer.
+
+\begin{center}
+\footnotesize\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}>{\raggedright}p{2.1cm}>{\raggedright}p{2.1cm}>{\raggedright}p{2.2cm}>{\raggedright}p{2.5cm}>{\raggedright}p{1.7cm}>{\raggedright\arraybackslash}p{2.2cm}@{}}
+\toprule
+Case & $M$ & $\Iset$ & $\Pset$ & $\Tset$ & $\Eset(x)$ \\
+\midrule
+Thermal\-ization & Fixed quantum routine & Hamiltonians in $\Ball_\delta(\bar H_S)$ & None beyond $\Iset$ & $[0,\tau]$ & Within $\varepsilon$ of the Gibbs state of $x$ at $t=\tau$ \\
+Hadean continuity & Bombardment--\allowbreak cooling dynamics of the crust & Locations, depth ranges, and thermal-stability thresholds & Subsequent impacts and thermal excursions & $[t,t_{\mathrm{end}}]$ & Temperature below threshold throughout the horizon (persistent thermal admissibility) \\
+Wave absorption & Ordered graded array with PTO damping & Frequency and direction band & Modeled spectral and directional spreading not encoded in $x$; nonlinear effects out of scope & Stationary (frequency domain) & Steady-state absorbed fraction $A(\omega)$ above a stated threshold \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The tuple is general enough to express nearly any dispositional claim, and that is intended: it is a form, not a thesis. What makes continuable suitability a substantive position is what the account then demands of the form. The success criterion must be indexed to the input, so that stored or invariant answers cannot pass. It must be a criterion on trajectories, so that the temporal shape of success is declared rather than assumed. The loss channels within scope must be accounted for, not presumed contained (Section~\ref{sec:losses}). And the classes must be fixed before the evidence is examined (Section~\ref{sec:burden}).
+
+\subsection{Robustness and the warrant for a capacity term}
+
+Robustness and continuable suitability are easily conflated. The distinction needs a definition of robustness broad enough to match its use in engineering, control, and biology, where a robust controller may act differently under different disturbances and a robust developmental process may alter its intermediate path. What stays fixed is successful performance, not the literal output.
+
+\begin{definition}[Robustness]
+A result is \emph{robust} over a variation class $\mathcal Q$ when a specified performance relation remains satisfied under every $q\in\mathcal Q$, whether through invariant output, compensating response, or recovery.
+\end{definition}
+
+\begin{definition}[Warrant]
+A capacity term $\kappa$ is \emph{warranted} for $M$ when the claim $\Cclaim_\kappa$ that ordinary use of $\kappa$ implies, with its performance relation, variation class, temporal scope, and mechanism, is satisfied by $M$.
+\end{definition}
+
+Robustness concerns the preservation of a specified performance relation under specified variations. Warrant concerns whether that performance relation, variation class, temporal scope, and mechanism are sufficient for applying a particular capacity word. Robustness may be necessary for some capacity claims and irrelevant to others. It is never sufficient on its own, because the word being applied may carry further requirements about inputs, mechanism, duration, or acquisition that the robustness report does not address.
+
+This definition locates warrant in the claim that ordinary use implies, and so it owes an account of where that implied claim comes from. The account offered here is inferential. A capacity term earns its place by licensing further inferences: calling a device a thermalizer licenses the prediction that it will bring to equilibrium a system whose Hamiltonian was not supplied to it in advance, and that prediction is the point of the word. The continuation burden of a term is the smallest claim that supports the inferences the term is used to license. Convention fixes which inferences a community relies on; physics, and the engineering and biology built on it, then fix which mechanisms can support them. The swap device fails the term not because a definition was stipulated against it, but because it cannot support the prediction the word exists to make. This does not remove every normative question. Communities can disagree about which inferences a term should carry, and such disagreements are resolved by argument about use, not by the framework. The framework is diagnostic rather than adjudicative: it makes explicit which inferences are at stake in a dispute and whether a given mechanism supports them, but it does not settle which inferences a term ought to carry.
+
+The swap device shows the most common way the two come apart. Its output is invariant across the Hamiltonian family, and invariance can look like robustness. But Hamiltonian identity is not a disturbance the thermalizer should absorb; it is an input the thermalizer must track. The swap device's constancy is not robustness of thermalization. It is failure to follow the task-relevant input. A robustness report therefore answers a capacity question only once it is settled which variations the capacity term asks the result to withstand and which it asks the result to follow.
+
+These distinctions sit near existing work. Cartwright treats capacities as stable contributions established under special arrangements and asks what licenses exporting them beyond those arrangements \cite{cartwright}; continuable suitability is a version of that export question. Where Cartwright asks what licenses carrying a capacity from the arrangement in which it was measured to others, the present account answers by requiring that the target arrangements be named in advance, as $\Iset$, $\Pset$, and $\Tset$, and that the evidence be shown to cover them. Mumford and Anjum treat dispositions as tendencies that can be counteracted rather than guarantees \cite{mumford}, which fits the containment criterion: a capacity survives interfering loss channels so long as they do not defeat the declared criterion. In biology, robustness is standardly understood as maintenance of function under perturbation, often through active compensation rather than invariance \cite{kitano}, which is the sense adopted in the definition above.
+
+\subsection{Continuation closure}
+
+\begin{definition}[Continuation closure]
+A mechanism has \emph{continuation closure} for a claim $\Cclaim$ when its ordinary operation reproduces, within $\Iset$, $\Pset$, and $\Tset$, the conditions required by its next relevant stage, and does not consume or destroy those conditions faster than it produces the claimed result.
+\end{definition}
+
+For thermalization, the dynamics generate enough Hamiltonian sensitivity to select the correct output. For prebiotic continuity, surviving niches carry products into later reaction cycles. For broadband absorption, the ordered array routes each frequency to the rows and damping that can take it. Closure need not be perfect or indefinite; it must hold over the declared scope.
+
+The relation between the two notions is this. Continuable suitability is the property a satisfied capacity claim attributes; continuation closure is a mechanism-level explanation of how that property is sustained. Closure matters most where operation is sequential or cumulative. In the buoy array, each row must leave the field in a form the next row can take up, and in the Hadean case each interval must leave its products available to the next. For a one-shot operation such as thermalization it is nearly degenerate: the relevant stage is the completion time, and closure reduces to the requirement that the dynamics build Hamiltonian sensitivity rather than consume it. Closure is therefore not a separate condition to be checked alongside satisfaction. It is where to look for the reason a satisfied claim is satisfied, and for the point at which it would stop being so.
+
+\subsection{Loss-channel containment}\label{sec:losses}
+
+Every case contains losses that do not disappear. Thermalization leaves a finite error. Local sterilization continues after the reset channel closes. Some reflection and transmission remain in the best graded array. The question is not whether these channels exist but whether they defeat the success criterion.
+
+\begin{definition}[Disqualifying loss channel]
+A loss channel is any process active within $\Pset\times\Tset$ that diverts, degrades, or erases the product of $M$. It is \emph{disqualifying} for $\Cclaim$ if, for some $x\in\Iset$, it drives $M[x,p]|_{\Tset}$ outside $\Eset(x)$.
+\end{definition}
+
+If a capacity claim is satisfied, then trivially no loss channel within its scope is disqualifying. Stated that way the point is a tautology. Its value is evidential: it says what a demonstration has to account for, not merely what must be true if the capacity exists.
+
+\begin{criterion}[Loss channels]
+Evidence of productive transformation warrants a continuable capacity only when the loss channels operating within the declared scope are also measured or bounded well enough to show that they do not defeat the success criterion. Schematically,
+\begin{multline}
+\text{continuable capacity}\ =\ \text{productive transformation}\\
++\ \text{demonstrated closure or containment of disqualifying loss channels}.
+\end{multline}
+\end{criterion}
+
+\noindent Productive transformation is usually what is demonstrated; containment is usually what is assumed. The criterion moves the second from assumption to burden. ``Containment'' rather than ``elimination'' is the right word, because the channels persist. In the three cases:
+\begin{itemize}[leftmargin=1.4em]
+\item the thermalization error persists, and must be bounded within $\varepsilon$ for every Hamiltonian in the neighborhood;
+\item local sterilization persists, and global erasure must have ceased or become sufficiently improbable, with a persistent thermal refuge remaining;
+\item reflection and transmission persist, and both must be included in the energy balance that shows $A(\omega)$ above threshold across the declared band.
+\end{itemize}
+A loss channel counts against a capacity only when it crosses the line the claim itself draws.
+
+\subsection{Four failure modes}
+
+The account distinguishes four ways an apparent capacity can be overstated. These are not kinds of bad result; each is a way of claiming more than a good result warrants. Each corresponds to a component of the tuple. Specialization failure is success confined to part of $\Iset$; persistence failure is success not maintained over $\Tset$; conversion failure is a mechanism $M$ that receives its input without transforming it into anything $\Eset$ accepts; scope failure is a mismatch between the declared classes and the classes the evidence covers. The correspondence explains why these four appear, though it does not show that no other kind of overstatement exists. The modes are not exclusive: the strong chronological reading of the Hadean model, for instance, combines persistence and scope failure.
+
+\begin{description}[leftmargin=1.4em,style=nextline]
+\item[Specialization failure] Success is confined to one preselected input. The swap device prepares one state and thermalizes nothing.
+\item[Persistence failure] Favorable conditions arise, but later events erase their products. Early Hadean niches are locally compatible and globally noncontinuable.
+\item[Conversion failure] A resource reaches the system but is reflected, transmitted, or left unusable. A broadband reflector without damping is exposed to energy without acquiring it.
+\item[Scope failure] A capacity shown within a narrow model is attributed across a wider domain. Linear potential-flow results cannot alone establish storm-scale performance.
+\end{description}
+
+\subsection{The continuation burden and falsifiability}\label{sec:burden}
+
+Every capacity word carries an implicit continuation burden: the smallest variation class over which its ordinary use would reasonably be expected to hold. ``Thermalizes'' requires correctness across relevant systems. ``Habitable'' requires persistence long enough for the specified processes. ``Absorbs'' requires conversion rather than obstruction. Disputes about capacity frequently turn on an unstated burden.
+
+Declared, the burden makes the claim falsifiable. A capacity claim fails if a variation inside $\Iset$ moves the outcome outside $\Eset(x)$; if the required state disappears before the next stage can use it; if the resource is present but does not cross the conversion interface; or if the claimed mechanism turns out to be replaced by prior knowledge, external preparation, or post hoc selection.
+
+Formal falsifiability is not practical falsifiability. A claim with a well-defined tuple can still be protected if its classes are fitted after the fact. If the radius $\delta$ of the Hamiltonian neighborhood is chosen to cover whatever the device happened to handle, the claim is satisfied by construction and says nothing. The remedy is procedural: the variation class, perturbation class, horizon, and criterion must be fixed by the inferences the capacity term is meant to support, and declared before the evidence is examined. A class chosen to fit the result is a description of the result, not a claim about the capacity.
+
+%======================================================================
+\section{Extension: Regime Position and Conditional Tolerance}\label{sec:regime}
+%======================================================================
+
+\subsection{The climate--carbon regimes}
+
+Sudakow and colleagues combine carbon- and oxygen-isotope records over roughly the last 539 million years, using recurrence analysis, joint recurrence plots, and early-warning indicators, and identify five long-lived regimes separated by comparatively sharp transitions \cite{sudakow}. A conceptual climate--carbon model with multiple stable equilibria supplies a dynamical interpretation in which slowly changing forcing reshapes the equilibrium landscape until a finite perturbation, such as large igneous province volcanism, switches the system between attractors. Because $p\mathrm{CO_2}$ reconstructions reach back only about 420\,Myr, the model is calibrated separately within the four most recent regimes; the oldest has no model counterpart. At each time the model assigns a discrete equilibrium-branch label, A1 to A5, which the authors stress indexes dynamical branch rather than a temperature category.
+
+The paper defines a biospheric vulnerability index from genus-level standing diversity $D_i$ and turnover, origination $p_i$ plus extinction $q_i$:
+\begin{equation}
+V_i=\ln\!\left(\frac{p_i+q_i}{D_i/\bar D}\right).
+\end{equation}
+Here $D_i$ is standing genus-level diversity of marine invertebrates and $\bar D$ its mean; two independent rate estimations give congruent patterns. Turnover $p_i+q_i$ measures how fast taxa enter and leave the standing biota, whether by loss, replacement, or recovery, and dividing by diversity relative to its mean scales that churn against the size of the pool. Positive values indicate unusually high reorganization relative to standardized diversity; every interval of elevated extinction except the smallest, in the mid-Pliocene, has $V_i>0$. Vulnerability is generally elevated near inferred regime boundaries and around many major extinction intervals. Temperature and vulnerability are positively associated across the Phanerozoic, but the relation varies considerably within regimes, which the authors interpret hierarchically: the regime sets a background susceptibility, and shorter perturbations probe it.
+
+\subsection{Distance to the boundary}
+
+The following is this essay's construction and is not a quantity in the paper. Let $V$ be a viability region in some state space and $d(x,\partial V)$ the distance from the current state $x$ to its boundary. A perturbation of magnitude $\eta$ is tolerable only relative to that distance and to the direction in which it pushes the state. In the simplest case,
+\begin{equation}
+\eta\ <\ d(x,\partial V)
+\end{equation}
+is sufficient for remaining viable. It is not a physical law, and the state space for a biosphere is not specified. Its role is to name the point that identical forcing can be harmless deep within a regime and consequential near its edge.
+
+$V_i$ is not a measure of $d(x,\partial V)$. It records realized turnover relative to standing diversity. One could hypothesize that elevated $V_i$ is a symptom of reduced distance to a regime boundary, but that is a proposed reading requiring its own test, not something the paper establishes.
+
+\subsection{Relation to continuable suitability}
+
+The case is included for what it adds to the tuple. The three principal cases vary the inputs, the horizon, and the mechanism's internal path. This one concerns the perturbation class, and it shows that a perturbation class cannot be specified by magnitude alone: whether a disturbance of given size belongs among those a system tolerates depends on where the system currently sits. A biosphere can look intact by standing diversity while occupying a high-turnover or transition-adjacent regime. The same contrast as in the Hadean case appears: being viable now versus retaining enough structural reserve to carry present organization through the next ordinary disturbance. Tolerance of a perturbation is a capacity claim, and it inherits the continuation burden.
+
+\subsection{Why the case remains secondary}
+
+The regimes are inferred partitions, supported by recurrence structure, early-warning statistics, and a conceptual model, not directly observed attractors. Deep-time proxies are heterogeneous, irregularly sampled, and uncertain in age; early-warning statistics depend on assumed timescale separation; and, as the authors themselves state, the framework does not imply that every extinction pulse was caused by a state transition. The three principal cases each supply a clean contrast between weak and strong task definitions. This one supplies a qualification on background state, and it should not carry the main argument.
+
+%======================================================================
+\section{Objections}\label{sec:objections}
+%======================================================================
+
+\paragraph{``All capacities depend on context.''} The thesis is not that context matters. It is that the claimant must say which contextual variations fall inside the claim. ``This buoy array absorbs waves'' is underdetermined. ``This fixed array absorbs more than 90 percent of incident energy across the stated band and directional range within linear potential-flow theory'' is evaluable.
+
+\paragraph{``No real capacity survives every perturbation.''} Continuable suitability does not ask it to. It rejects only the silent expansion from a demonstrated domain to an undeclared wider one. A match ignites paper and fails underwater, and nobody thinks this refutes its capacity, because underwater operation lies outside the ordinary burden of the word. The task is to locate such boundaries, not to abolish them.
+
+\paragraph{``A single success can still prove possibility.''} It can. One success establishes
+\begin{equation}
+\exists x\in\Iset:\ M[x]\big|_{\Tset}\in\Eset(x),
+\end{equation}
+which is often worth knowing. It does not establish
+\begin{equation}
+\forall x\in\Iset,\ \forall p\in\Pset:\ M[x,p]\big|_{\Tset}\in\Eset(x).
+\end{equation}
+The argument protects demonstrations of possibility from being promoted, without comment, into capacity claims.
+
+\paragraph{``Persistence and generalization are different properties.''} They are, and the essay keeps them apart. The thermalization case concerns correctness across alternatives, the Hadean case preservation across time, the buoy case transformation along an ordered path. ``Continuable'' names their shared evidential structure: in each, the question is whether the relation that supported the first success continues along the dimension the claim includes.
+
+\paragraph{``The framework is retrospective.''} In part, this must be conceded. For historical systems, continuability is often demonstrable only after the fact. The persistent volume $P(t;t_{\mathrm{end}})$ is defined over a trajectory that must already be complete, whether in the geological record or in a simulation run to its end. At epoch $t$ itself, nothing in the local state distinguishes a niche that will persist from one that will be sterilized next. A prospective version is available only in weaker form: an expected persistent volume under a stated bombardment model, which inherits every uncertainty of that model.
+
+The concession has limits. For designed systems, the framework guides testing before the fact. One declares the tuple, then organizes evidence around the boundaries of $\Iset$ and $\Pset$ rather than around representative demonstrations. For the buoy array this means probing spectral and directional edges, nonlinear amplitudes, and failure conditions; for thermalization, choosing Hamiltonians whose Gibbs states are well separated relative to $\varepsilon$. The framework is retrospective where the system is historical, and prospective where the system is built.
+
+%======================================================================
+\section{Methodological Consequences}\label{sec:method}
+%======================================================================
+
+\paragraph{Continuation tests instead of snapshots.} A snapshot asks whether a desired state exists. A continuation test asks whether that state remains available to the process that allegedly uses it. The observables change accordingly: persistent rather than instantaneous biocompatible volume; outputs across a family of Hamiltonians rather than one; absorbed, reflected, and transmitted energy accounted separately across a band rather than local buoy motion.
+
+\paragraph{The variation class belongs in the result.} A tested domain reported as a later limitation invites the reader to supply a wider one. Reported with the result, it is constitutive of the capacity being claimed.
+
+\paragraph{Continuation costs are part of the mechanism.} The time needed to make outputs Hamiltonian-sensitive, the stable interval needed for chemical inheritance, and the spatial extent needed for spectral grading can look like delays or overheads. In these cases they are what makes the operation real. A faster thermalizer, a Hadean crust stable sooner, or a shorter array would not be a more efficient version of the same capacity; below certain limits it would be a different and weaker one.
+
+%======================================================================
+\section{Conclusion: Capacity as a Maintained Relation}
+%======================================================================
+
+The opening examples can now be restated with their scope made explicit.
+
+The thermalization machine does not have its capacity because a Gibbs state appears at its output. It has it insofar as one fixed process becomes, within the time the theorem allows, correctly sensitive to a class of Hamiltonians, with residual error contained within tolerance.
+
+The Hadean environment does not become suitable for cumulative prebiotic development when part of the crust first reaches a mild temperature. It becomes suitable when favorable niches cease to be globally erased before their products can take part in later organization, while local losses continue.
+
+The buoy array does not absorb because waves reach it. It absorbs because an ordered, back-scattering architecture routes a broad incident spectrum into localized motion that damping can take up, leaving a contained remainder of reflection and transmission.
+
+Across the cases, one lesson about capacity language recurs. A capacity word is a compressed commitment: it packs into a single term a set of inferences about situations not yet observed, and its meaning is largely the scope of those inferences. Evidence for a capacity is therefore always partial with respect to the word, and the question is never simply whether the evidence is good but whether its scope matches the scope the word carries. The failures examined here are failures of that match, not of measurement.
+
+Capacity, on this account, is not the coincidence of an input with a favorable state. It is a maintained relation through which relevant differences are followed, useful transformations are preserved, disqualifying losses are contained, and the conditions of subsequent operation remain available.
+
+Continuable suitability is not a demand for permanence. It is a demand for honest scope. A system need continue only as far as the attributed capacity says it can. What it rules out is the conversion of an instant into an interval, an output into an operation, or an arrival into an acquisition, without naming the mechanism that carries one into the other.
+
+%======================================================================
+\begin{thebibliography}{9}
+\small
+\bibitem{abiuso} P.~Abiuso, A.~Rolandi, J.~Calsamiglia, P.~Sekatski, and M.~Perarnau-Llobet, ``An information-theoretic proof of the Planckian bound for thermalization,'' \emph{Nature Physics} (2026), doi:10.1038/s41567-026-03397-y.
+\bibitem{abramov} O.~Abramov, A.~Medvegy, B.~Kremer, and S.~J.~Mojzsis, ``A Hadean timeline for the emergence of the RNA World,'' \emph{Nature Communications} 17, 9790 (2026), doi:10.1038/s41467-026-76978-3.
+\bibitem{sudakow} I.~Sudakow, C.~Myers, A.~Spiridonov, R.~Stankevi\v{c}, G.~Feulner, and V.~Livina, ``Transitions between persistent climate--carbon regimes coincide with elevated Phanerozoic biosphere vulnerability,'' \emph{Nature Communications} 17, 7559 (2026), doi:10.1038/s41467-026-75655-9.
+\bibitem{westcott} A.-R.~Westcott, L.~G.~Bennetts, N.~Y.~Sergiienko, B.~S.~Cazzolato, and M.~A.~Peter, ``Broadband absorption of ocean wave energy using a graded array of heaving buoys in three dimensions,'' \emph{Journal of Fluid Mechanics} 1043, A23 (2026), doi:10.1017/jfm.2026.12015.
+\bibitem{cartwright} N.~Cartwright, \emph{Nature's Capacities and Their Measurement} (Oxford: Clarendon Press, 1989).
+\bibitem{kitano} H.~Kitano, ``Biological robustness,'' \emph{Nature Reviews Genetics} 5, 826--837 (2004).
+\bibitem{mumford} S.~Mumford and R.~L.~Anjum, \emph{Getting Causes from Powers} (Oxford: Oxford University Press, 2011).
+\end{thebibliography}
+
+\end{document}

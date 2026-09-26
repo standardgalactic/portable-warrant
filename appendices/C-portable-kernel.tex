@@ -1,0 +1,4 @@
+\section{Portable Kernel}
+The portable kernel contains seven conceptual operations: canonicalize an object into a stable byte representation; hash or otherwise bind that representation; resolve referenced evidence; test current domain membership and assumptions; validate ancestry and composition; derive a disposition; and append an audit record. Execution remains outside the pure derivation step.
+
+Profiles may delegate unavailable primitives to a trusted external service, but they must expose that dependency. A constrained implementation that cannot verify a cryptographic binding cannot replace verification with a local Boolean. It must return warrant non-derivation or explicitly invoke the external verifier under a declared interface.

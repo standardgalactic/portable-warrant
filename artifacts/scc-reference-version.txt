@@ -1,0 +1,4 @@
+scc-reference 0.4.2 — Portable Kernel
+Tested: 2026-09-25
+Tests: 34 passed
+Source archive: scc-reference-v0.4.2.zip
