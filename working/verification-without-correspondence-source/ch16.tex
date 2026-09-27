@@ -1,0 +1,103 @@
+\chapter{The Non-Discharge Principle}
+\label{ch:nondischarge}
+
+The three judgments of a verification instance, kernel acceptance $K(V)$, statement correspondence $C(V)$, and argument correspondence $A(V)$, are distinct relations, and a principal claim of the monograph is that none of the first two entails the next. This chapter proves the separation results in a form that can be verified from the definitions of Appendix~\ref{app:formal}. The results are elementary, and the care that they require lies in stating exactly which features of an instance each judgment depends on. The chapter closes by connecting the separation to the computability barrier of Chapter~10, where the gap between $K$ and $C$ is shown to lie beyond $\Delta^0_2$, in a precise sense and under stated conventions.
+
+\section{Kernel acceptance does not entail correspondence}
+
+The key observation is that $K(V)$ does not mention most of the instance. By definition $K(V) \Longleftrightarrow \Gamma \vdash \pi : F$, and this predicate is a function of $(\Gamma, \pi, F)$ alone. It is invariant under any change to the originating specification $N$, the purported argument $P$, and the interpretation $\mathcal{I}$. The judgment $C(V)$, by contrast, is a relation between $\llbracket N \rrbracket_{\mathcal{I}}$ and $\llbracket F \rrbracket_{\mathcal{I}}$ and so depends on $N$ and $\mathcal{I}$ in an essential way.
+
+\begin{theorem}[RV-001]
+\label{thm:rv001}
+Suppose there are specifications $N_1, N_2$ and a formal proposition $F$ with $\Gamma \vdash \pi : F$ such that $\llbracket N_1 \rrbracket_{\mathcal{I}} \equiv_{\mathcal{I}} \llbracket F \rrbracket_{\mathcal{I}}$ and $\llbracket N_2 \rrbracket_{\mathcal{I}} \not\equiv_{\mathcal{I}} \llbracket F \rrbracket_{\mathcal{I}}$. Then, writing $V_j = (N_j, P_j, \mathcal{I}, \Gamma, F, \pi)$, one has $K(V_1) \wedge C(V_1)$ and $K(V_2) \wedge \neg C(V_2)$. In particular there is no function $g$ with $C(V) = g(K(V))$.
+\end{theorem}
+
+\begin{proof}
+Both instances share $(\Gamma, \pi, F)$, so $K(V_1) \Longleftrightarrow K(V_2)$, and both hold by the hypothesis $\Gamma \vdash \pi : F$. The correspondence judgments differ by the choice of $N_j$. If $C = g \circ K$ then $C(V_1) = g(\text{true}) = C(V_2)$, contradicting $C(V_1) \wedge \neg C(V_2)$.
+\end{proof}
+
+The hypothesis is satisfied whenever the semantic domain contains two inequivalent denotations and one of them is the denotation of a provable formal proposition. For a concrete instance, let $F$ be the Lean proposition expressing that there are infinitely many odd numbers, let $N_1$ be the sentence ``there are infinitely many odd numbers'', and let $N_2$ be ``there are infinitely many primes''. Both sentences are true, and both have proofs that compile. For $F$ to correspond to the first and not the second, $\equiv_{\mathcal{I}}$ must be an intensional relation, for example identity of the quantified dependencies in the sentence, since under logical equivalence of true sentences the two correspond equally. The example is offered under that choice, which Appendix~\ref{app:formal} allows. Example 4.4 of the source supplies the corresponding substitution of ``prime'' for ``odd'': the altered sentence is a different true sentence that compiles equally well. Kernel acceptance of $F$ is blind to which of the two was meant.
+
+\section{Statement fidelity and argument fidelity are independent}
+
+\begin{theorem}[RV-002]
+\label{thm:rv002}
+Call an argument-correspondence relation \emph{strict} if it requires each justified inferential step of $P$ to have a counterpart in $\pi$, a counterpart being a step of $\pi$ that performs the same inference. Under any strict relation $\mathcal{A}_{\mathcal{I}}$ for which a change of basis and a rewrite using symmetry are different inferences, there is an instance with $K(V) \wedge C(V) \wedge \neg A(V)$.
+\end{theorem}
+
+\begin{proof}
+The instance is Example 2.2 of the source. For a real symmetric matrix $A$ the specification $N$ asserts $\operatorname{tr}(A^2) \ge 0$. The supplied argument $P$ diagonalizes $A$ in an orthonormal eigenbasis, so that $\operatorname{tr}(A^2) = \sum_i \lambda_i^2 \ge 0$. The Lean proof $\pi$ omits the change of basis and uses the symmetry $A = A^{\mathsf{T}}$ to write $\operatorname{tr}(A^2) = \sum_{i,j} a_{ij}^2$, a sum of squares. Both arguments are correct, so $K(V)$ holds, and the formal proposition expresses $N$, so $C(V)$ holds. The diagonalization step of $P$ has no counterpart in $\pi$ in the sense just stated, so $A(V)$ fails under the stated requirement. The facts that both proofs are accepted by the kernel and that the Lean proof takes the stated route are as reported by the source and have not been checked here. A more liberal relation that identified the two computations after a change of basis would give $A(V)$, and the theorem is stated for the stricter family.
+\end{proof}
+
+The theorem is conditional on the choice of $\mathcal{A}_{\mathcal{I}}$, and the condition is not a loophole. A relation that identified arguments with the same conclusion would make $A$ collapse into $C$ and would render the notion of a faithful formalization of a proof empty, since any proof of the same statement would count. The requirement on steps is one natural structure under which the question of fidelity to an argument is meaningful, and the theorem is a theorem about the strict family and not about every conceivable relation. The two proofs of the example are both correct, and the lesson of the example is that correctness of both does not make them the same argument. This case is not an instance of error, and the monograph does not treat it as one.
+
+\section{Strengthened hypotheses and substituted tasks}
+
+Two further separation results describe how a valid proof can fail to settle the original question. They are stated here for the substitution of statements and tasks, which Chapter~7 develops in detail.
+
+\begin{proposition}[RV-004]
+\label{prop:rv004}
+Let $\models_{\mathcal{I}}$ satisfy the deduction property, $X \cup \{a\} \models_{\mathcal{I}} b$ if and only if $X \models_{\mathcal{I}} (a \to b)$, and let $H, H'$ be propositions with $H' \models_{\mathcal{I}} H$ and $H \not\models_{\mathcal{I}} H'$ (so $H'$ is strictly stronger than $H$). Then:
+\begin{enumerate}[label=(\roman*)]
+\item for every $G$, a derivation of $H \to G$ yields a derivation of $H' \to G$;
+\item the converse fails in general: for $G := H'$, the implication $H' \to G$ is derivable while $H \to G$ is not.
+\end{enumerate}
+Consequently a derivation of $H' \to G$ settles $H \to G$ only for those $G$ for which $H \to G$ is separately derivable, for instance by a restoring lemma.
+\end{proposition}
+
+\begin{proof}
+(i) From $H \to G$ and $H' \models H$, the premises $\{H \to G, H'\}$ derive $G$ by cut and the deduction property, so $H \to G \models H' \to G$. (ii) $H' \to H'$ is derivable by reflexivity and the deduction property. By the deduction property again, $H \to H'$ is derivable from the empty premise set if and only if $H \models_{\mathcal{I}} H'$, which is excluded by hypothesis (relative to the certified background, so that the claim is non-derivability and not falsity). The final sentence is a restatement: since the conclusion $H' \to G$ is the weaker of the two, derivability of $H\to G$ is not determined by it.
+\end{proof}
+
+The proposition is stated for the consequence relation of Appendix~\ref{app:formal}, with the deduction property added as a hypothesis on $\mathcal{L}$, since the appendix does not assume a connective. An informal reading is that the strengthened-hypothesis theorem is the weaker theorem, and proving it leaves the stronger one open.
+
+Proposition RV-015 (Proposition~\ref{prop:rv015}), proved in Chapter~\ref{ch:substitution}, states the substitution result for acceptance-only certification: acceptance of a candidate $s$ as a solution to a substituted task $T'$ establishes $s \in \mathrm{Sol}(T)$ for every acceptable $s$ if and only if $\mathrm{Sol}(T') \subseteq \mathrm{Sol}(T)$, under soundness and completeness of the certifier for $T'$, and the values of the certifier do not determine the inclusion, which must be separately justified.
+
+When $T \equiv_{\mathcal{I}} T'$ the inclusion holds trivially, so for a sound and complete certifier equivalence of tasks is sufficient for transfer. It is not necessary, since the inclusion suffices. In the statement-level model of Chapter~\ref{ch:substitution}, a task whose statement is stronger than the intended one is restricting and transfers, and a task whose statement is weaker is enlarging and does not, which is Proposition~\ref{prop:rv004} read in that model: a theorem with a strengthened hypothesis is the weaker theorem. The favorable direction cannot be read off from acceptance.
+
+\begin{proposition}[Partial discharge, RV-016]
+\label{prop:rv016}
+Suppose discharge certificates are sound, in that a discharged obligation has true content; that kernel acceptance is a discharge certificate for $O_{\mathrm{formal}}$ and that a true statement or argument obligation is dischargeable by some authority; that the class of instances contains those of Theorems~\ref{thm:rv001} and~\ref{thm:rv002} under a strict relation; and that discharge of each of the three baseline obligations $O_{\mathrm{formal}}$, $O_{\mathrm{statement}}$, $O_{\mathrm{argument}}$ requires a certificate of its own, so that no rule discharges one from another. Then discharge of $O_{\mathrm{formal}}$ does not entail discharge of $O_{\mathrm{statement}}$ or of $O_{\mathrm{argument}}$.
+\end{proposition}
+
+\begin{proof}
+By Theorem~\ref{thm:rv001} there is an instance with $K(V)$ and $\neg C(V)$. The content of $O_{\mathrm{formal}}$ is true, so it can be discharged; the content of $O_{\mathrm{statement}}$ is false, so by soundness it cannot be discharged. By Theorem~\ref{thm:rv002} there is an instance with $K(V)$, $C(V)$ and $\neg A(V)$, in which the first two can be discharged and, by soundness, the third cannot.
+\end{proof}
+
+The proposition is a consequence of the two preceding theorems and is recorded because it is the form in which the separation enters the ledger: it licenses recording different statuses for the three obligations of one event.
+
+\section[The gap is not computable]{The gap is not computable at level two: kernel acceptance versus correspondence}
+
+The separation results above exhibit single instances. A stronger statement concerns whole families, and it is available because the source constructs a family in which kernel acceptance is uniformly trivial while statement correspondence, under the convention stated below, is $\Sigma^0_2$-complete as a set of indices.
+
+Fix $k \ge 9$ and a computable enumeration $(p_e)_{e \in \mathbb{N}}$ of integer-coefficient polynomials in $k+1$ variables. Let $B_e(n)$ be the predicate that $p_e(n, x_1, \dots, x_k) \ne 0$ for every $(x_1, \dots, x_k) \in \mathbb{N}^k$, and let $n_e$ denote the least $n$ with $B_e(n)$ when one exists. The specification $N_e$ introduces $r_e = 1/(n_e+1)$ and asserts the identity $(r_e+1)^2 = r_e^2 + 2r_e + 1$. The formal proposition $F_e$ defines $n_e$ as the infimum of $\{n : B_e(n)\}$ in a library whose infimum on the empty set is $0$, so that $F_e$ is defined for every $e$ and, when no such $n$ exists, assigns the default $n_e = 0$ and $r_e = 1$. The identity is a polynomial identity and the proof $\pi_e$ closes by ring normalization for every $e$.
+
+The proof of the theorem below needs one fact about the formal representation that kernel acceptance of $\pi_e$ does not supply. The proof $\pi_e$ establishes the polynomial identity for whatever value $n_e$ takes, and it is silent on whether that value is the least $n$ of the specification. That fact is a separate lemma.
+
+\begin{lemma}[Faithful denotation under nonemptiness]
+\label{lem:sinf}
+Let $S_e = \{n \in \mathbb{N} : B_e(n)\}$. If $S_e \neq \varnothing$, then the formal term $\inf S_e$ denotes the least element of $S_e$, so that $\llbracket F_e \rrbracket_{\mathcal{I}}$ assigns to $n_e$ the same natural number as $\llbracket N_e \rrbracket_{\mathcal{I}}$ and, consequently, assigns to $r_e$ the same rational number $1/(n_e+1)$.
+\end{lemma}
+
+\begin{proof}
+Every nonempty set of natural numbers has a least element, by well-ordering, and the infimum operation on subsets of $\mathbb{N}$ is characterized by the two properties that, for nonempty $S$, $\inf S \in S$ and $\inf S \le s$ for every $s \in S$. These are the library facts that the formal development must cite, and in Lean's Mathlib they are \texttt{Nat.sInf\_mem} and \texttt{Nat.sInf\_le}. The element of $S$ that is below every element of $S$ is unique, so $\inf S_e$ is the least element. The step from $n_e$ to $r_e = 1/(n_e+1)$ is the application of the same function to equal arguments.
+\end{proof}
+
+The lemma is conditional on nonemptiness. For empty $S_e$ the library convention assigns $\inf \varnothing = 0$, which is the silent default, and the lemma is silent. The names of the library facts are those of the source's setting and are to be checked against the library version in use when the development is written.
+
+\begin{theorem}[Hidden existence]
+\label{thm:hidden}
+Adopt the convention that a specification whose defining term is undefined is equivalent to no formal proposition. Then $K(V_e)$ holds for every $e$ and is decidable uniformly in $e$, whereas $\{e : C(V_e)\} = d$, where $d = \{e : \exists n\, B_e(n)\}$. By Theorem A.3 of the source, $d$ is $\Sigma^0_2$-complete under many-one reductions. In particular no total computable procedure decides $C(V_e)$ uniformly in $e$, even with an oracle for the Halting problem.
+\end{theorem}
+
+\begin{proof}
+Kernel acceptance holds for every $e$ because the identity is polynomial and its proof does not depend on $n_e$. This fact alone says nothing about correspondence, which is why Lemma~\ref{lem:sinf} is needed below. Suppose $e \in d$. Then $n_e$ exists and the specification $N_e$ is defined. By Lemma~\ref{lem:sinf} the formal definition denotes the same least $n$, and hence the same $r_e$, so the two denotations agree and $\llbracket N_e \rrbracket_{\mathcal{I}} \equiv_{\mathcal{I}} \llbracket F_e \rrbracket_{\mathcal{I}}$. Suppose $e \notin d$. Then $N_e$ is undefined, while $F_e$ is defined with value $n_e = 0$, so by the convention the denotations are not equivalent. The set of $e$ satisfying $C(V_e)$ is therefore exactly $d$. The completeness of $d$ is Theorem A.3 of the source, proved there by reduction from the set of indices of non-total partial computable functions using the nine-unknown refinement of the DPRM theorem and Post's theorem. A $\Sigma^0_2$-complete set is not decidable relative to $\emptyset'$ and so is not decidable.
+\end{proof}
+
+The convention in the statement is not innocent and is stated openly. It identifies the question of correspondence with the question of well-definedness, and it is the stated position of the source that a faithful translation of an undefined term must refrain from assigning it a value. A reader who preferred a convention under which undefined specifications correspond to everything, or to a partial formal object, would obtain a different set, and the theorem would be correspondingly different. What the theorem shows is conditional in exactly this respect. Given the convention, there is a family of instances on which the kernel is trivially satisfied and the set of indices at which the correspondence judgment holds is $\Sigma^0_2$-complete. The convention makes $\equiv_{\mathcal{I}}$ an equivalence only on the defined denotations, as recorded in Appendix~\ref{app:formal}. A statement of the same kind at every level $l \ge 2$, using the alternating-quantifier constructions of Theorem A.4, would need a level-$l$ analogue of this theorem for the total-default formalization, which I do not state here. Theorem~\ref{thm:rv005} of Chapter~\ref{ch:sci} concerns the different question of well-definedness and trustworthy autoformalizers.
+
+The theorem does not say that correspondence is undecidable for mathematical texts as they occur in practice. The family is constructed, the reductions are effective, and a restriction of the specification class to texts that do not embed the least-number construction may admit reliable checking. That qualification is the subject of RV-006 and the source establishes no decidability result for fewer than nine unknowns. The theorem should be read as showing that, on unrestricted specification classes of this kind, statement correspondence is not decidable even relative to $\emptyset'$, a level-two barrier, while kernel acceptance is uniformly decidable. Whether the barrier rises with the level, as it does for well-definedness (Theorem~\ref{thm:rv005}), is not established here for correspondence itself.
+
+\section{A candidate non-discharge principle}
+
+The results above suggest a general principle that the monograph adopts as a guide and does not claim as a theorem. For a verification system that reports acceptance, there is a nonempty set of obligations whose status cannot be determined from acceptance, and for sufficiently expressive specification classes no total computable procedure can determine all of them. The first half is proved by Theorem~\ref{thm:rv001}. The second half is proved on the hidden-existence family by Theorem~\ref{thm:hidden}, and its extension to arbitrary classes requires a reduction from the hidden-existence construction into the class, which must be exhibited class by class. The principle is therefore a research agenda with two proved instances, and the remainder of the part is concerned with what can be done about it. The answer developed in the next chapter is that the obligations that cannot be discharged can nevertheless be preserved.

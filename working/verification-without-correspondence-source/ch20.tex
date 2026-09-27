@@ -1,0 +1,54 @@
+\chapter[Publication Under Abundance]{Mathematical Publication Under Conditions of Abundance}
+\label{ch:abundance}
+
+The results of the preceding parts concern single verification events. This chapter asks what happens to the verification residue when the number of events grows faster than the capacity of anyone to interpret them. The question is institutional, and the chapter treats it with the same discipline as the rest of the monograph: the formal content is stated as what it is, an accounting argument, and the empirical reports on which the discussion relies are marked as reports at one remove.
+
+\section{Reports at one remove}
+
+Section 5.1 of Bastounis, Circelli, and Hansen~\cite{BCH26} reports several developments of 2026, and the chapter was written without reviewing any of the primary sources. A later reading of some of them is recorded in Appendix~\ref{app:nsaudit}, which confirms the Meta paper's headline figures and the two quoted passages of the declarations and leaves the community thread, the Fermat's Last Theorem report and the attribution of the September declaration unverified. Everything not confirmed there is recorded here as the source's account, and nothing in the argument below depends on their accuracy. The source reports that in spring 2026 Meta claimed to have translated 26 mathematics textbooks into Lean, yielding about 45,000 verified declarations and roughly 500,000 lines, citing Rammal and coauthors~\cite{Rammal26}, arXiv:2605.29955. It reports that the claim was disputed in a Lean community Zulip thread, quoting Jack McCarthy, Brian Nugent, and Christian Merten, and that the project's semantic verification was mainly performed by other AI systems. It further cites a formalization of Fermat's Last Theorem attributed to Anthropic at 13 million lines of Lean~\cite{Buzzard26}, the Leiden Declaration of June 2026, and a September 2026 declaration titled ``A Severe Misalignment of AI in Mathematics'' initiated by 25 Fields medalists. Before any of these is relied on in an argument, the Meta paper, the Zulip thread, and the two declarations must be read in the original. Until then they serve only to indicate the scale of the phenomenon the chapter analyzes, and every figure above is the source's report of the cited material.
+
+\section{The accounting argument}
+
+Let artifacts be produced over time, and let each artifact $X$ carry a finite set of semantic obligations, those of Chapter~\ref{ch:obligations} that are not settled by the kernel, namely the statement, argument, dependency, and interpretive obligations. Write $a(t)$ for the number of semantic obligations introduced up to time $t$ and $b(t)$ for the number discharged with currently warranted discharge. The residue of the collection at time $t$ is, as in Appendix~\ref{app:formal}, the set of obligations whose status is not discharged, which includes the open, supported, refuted, and defeated ones, and I count an obligation as discharged only while its discharge is currently warranted. With that convention $|\mathrm{Res}(t)| = a(t) - b(t)$, and since $b$ can decrease when a defeater is recorded, $b$ is not monotone.
+
+\begin{proposition}[Residue growth]
+\label{prop:growth}
+Suppose the rate of introduction of semantic obligations is at least $\alpha > 0$ per unit time over an interval, and the net rate of warranted discharge, which is the rate of new warranted discharges less the rate at which warrants are lost, is at most $\beta < \alpha$. Then $|\mathrm{Res}(t)|$ grows by at least $(\alpha - \beta)$ per unit time over that interval, and in particular is unbounded if the condition persists.
+\end{proposition}
+
+The proposition is an identity of accounting and is stated to make a point explicit that discussion of abundance often leaves implicit. Kernel verification scales with computation, so the rate of introduction of artifacts can be made as large as the computation allows. Semantic discharge requires interpretation, and the capacity for it does not scale in the same way. A regime in which production is cheap and interpretation is expensive is a regime in which the residue grows, regardless of how reliable the kernel is. The size of the verified corpus is then not a measure of what has been settled. It is, if the semantic obligations are not discharged, a measure of what has been produced.
+
+The argument is not an argument against automated production, and it is silent on the rates. If the rate of automated discharge, by sound certifiers of the kind described in Chapter~\ref{ch:futility}, keeps pace with the rate of introduction, the residue does not grow. What the proposition asserts is that the question of whether it does is an empirical question about rates and not something verified by the kernel's acceptance of each artifact.
+
+A related observation concerns the means of discharge. If the semantic verification of a corpus is performed mainly by other automated systems, as the source reports for the Meta project, then the discharge certificates carry the authority of those systems and their dependency sets include the systems' own interpretive steps. By the definition of independence in Chapter~\ref{ch:provenance}, certificates produced by systems that share training, data, or architecture may be correlated, and a discharge supported only by such certificates has the warrant that a single source would have, to the extent that the correlation is high. The ledger does not decide whether this is acceptable. It records the dependency structure so that the question can be asked.
+
+\section{Volume is a poor measure of contribution}
+
+Automated generation can produce many valid but redundant propositions. The notion of redundancy can be made precise with the consequence relation of Appendix~\ref{app:formal}, which is derivability from a certified background $\mathcal{B}$.
+
+\begin{definition}[Redundancy and increment]
+A proposition $\psi$ is \emph{redundant relative to $\mathcal{B}$} if $\mathcal{B} \models \psi$. The \emph{content} of a set $\Psi$ of propositions relative to $\mathcal{B}$ is the class of propositions derivable from $\mathcal{B} \cup \Psi$ modulo mutual derivability, and the \emph{increment} of $\Psi$ is the extent to which this class exceeds the class derivable from $\mathcal{B}$ alone.
+\end{definition}
+
+\begin{proposition}[Redundant output has zero increment]
+\label{prop:redundant}
+If every member of $\Psi$ is redundant relative to $\mathcal{B}$, then $\Psi$ has zero increment: the propositions derivable from $\mathcal{B} \cup \Psi$ are exactly those derivable from $\mathcal{B}$.
+\end{proposition}
+
+\begin{proof}
+If $\mathcal{B} \models \psi$ for every $\psi \in \Psi$, then by cut (C3) any proposition derivable from $\mathcal{B} \cup \Psi$ is derivable from $\mathcal{B}$. The reverse inclusion is monotonicity.
+\end{proof}
+
+The proposition shows that the number of verified declarations bears no fixed relation to the increment in what is known. A collection of declarations may be large and have zero increment, and a collection of one declaration may have a large one. The measure of contribution is the increment, and it is relative to a background, so that the same declaration can be redundant in one setting and novel in another. The remedy is not to count less but to report the quantities that matter, each independently.
+
+\section{Five things that should not be confused}
+
+The chapter separates five activities that a single count of verified results tends to merge. \emph{Discovery} is the production of a new mathematical fact or idea. \emph{Verified theorem production} is the production of a formal artifact whose statement the kernel accepts. \emph{Expository understanding} is the production of an account from which a reader comes to understand why a result holds. \emph{Research usefulness} is the extent to which a result enables further work. \emph{Institutional recognition} is the acceptance of a result by the bodies that confer standing on it. They are logically independent. A discovery may be unverified, a verified artifact may be a redundant restatement, a verified theorem may carry no exposition, a useful result may be unrecognized, and a recognized one may be of no further use.
+
+In the vocabulary of Chapter~\ref{ch:obligations}, each corresponds to a different set of obligations and a different set of certifiers. The multidimensional status of Chapter~\ref{ch:system} has its own components (kernel, statement, argument, dependency, and review), and the activities listed here are not mapped one to one onto them; what is retained is that assessments along separate dimensions are kept separate. Proposition~\ref{prop:scalar} applies: because the components are incomparable in general, no scalar ranking of artifacts by their combined merit is faithful to the order, and any such ranking embeds a weighting that should be stated.
+
+\section{A publication architecture}
+
+The proposal of the chapter is a publication architecture in which formal validity, semantic fidelity, novelty, provenance, and interpretive value are reported independently. Formal validity is the kernel status, recorded with the environment in which acceptance occurred. Semantic fidelity is the status of the statement and argument obligations, with the certificates that support it and their independence. Novelty is the increment relative to a stated background. Provenance is the ledger of Chapter~\ref{ch:provenance}. Interpretive value is the record of expository and usefulness judgments by identified authorities, which are certificates like any other and can be defeated.
+
+A publication in this architecture does not carry a verdict of accepted or rejected. It carries a profile, and consumers of the profile may weigh the components according to their purposes. The architecture does not remove the need for human interpretation. It makes the allocation of interpretive effort visible, so that a corpus that is large and mostly open on its semantic components is reported as such. The aim is to prevent a regime of abundance from being read as a regime of settled results.

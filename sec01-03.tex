@@ -1,0 +1,381 @@
+%======================================================================
+\section{Completion and Its Presumed Priority}
+%======================================================================
+
+An unfinished thing is usually interpreted through the completed thing it has failed to become. Exposed reinforcing bars anticipate another storey. A blank chapter condemns a manuscript by referring the reader to the absent chapter that ought to occupy its place. A temporary patch is understood not through the work it presently performs but through the proper repair for which it waits. A protocol without an implementation, a building without cladding, a road terminating in gravel, and an institution operating under provisional rules appear to share a subordinate ontological condition. Each is described as a deficient version of an intelligible future object. The completed object supplies the measure, and the unfinished object receives its identity as a distance from that measure. Even when the future object never arrives, it governs the interpretation of what exists.
+
+This ordinary interpretation contains a concealed ordering relation. Let $X$ denote an artifact and let $x_t$ denote its state at time $t$. Suppose an observer possesses a terminal specification $g$, the state the artifact is intended to reach. The incompletion of $x_t$ is represented by a distance
+\begin{equation}\label{eq:distance}
+d(x_t,g)\ \geq\ 0,
+\end{equation}
+where $d(x_t,g)=0$ signifies completion and larger values signify greater deficiency. The metric may concern missing physical components, unsatisfied requirements, incomplete arguments, unimplemented functions, unresolved cases, or any combination of these. What matters is that the meaning of $x_t$ is derived from $g$. The present state is not evaluated primarily by what it permits, supports, or preserves. It is evaluated by what remains to be done before the terminal specification is satisfied.
+
+The model seems innocent because many tasks genuinely possess identifiable terminal conditions. A bridge must connect its banks and sustain specified loads. A proof must establish its conclusion. A medicine must have a determinate formulation before it can be administered responsibly. Yet the model incorporates two assumptions that cease to be innocent when generalized. The first is that the terminal state $g$ is uniquely specified, or at least uniquely authoritative. The second is that movement toward $g$ is monotonically beneficial, so that a reduction in $d(x_t,g)$ constitutes an improvement independently of the alternatives removed by that movement. Together these assumptions convert one possible continuation into the criterion by which all present continuations are judged.
+
+\subsection{Continuation sets and continuational breadth}
+
+To make the suppressed alternatives visible, let $\Omega$ be a state space containing the configurations the artifact might occupy, and let $A(x)\subseteq\Omega$ be the set of states reachable from $x$ through admissible transformations. Admissibility is not identical to physical possibility. A wall can physically be demolished, a database can physically be replaced, and a statute can physically be repealed, but these transformations may be financially prohibitive, institutionally forbidden, informationally inaccessible, or destructive of the very object one hopes to revise. The continuation set $A(x)$ contains only those states reachable under the material, legal, epistemic, and organizational constraints that actually obtain. Section~\ref{sec:inert} makes these constraints explicit; here it suffices that $A(x)$ is a measurable subset of $\Omega$.
+
+The conventional account evaluates $x$ principally through its distance from $g$. A continuational account asks instead about the structure of $A(x)$. The cardinality $|A(x)|$ is a crude measure of how many states remain accessible, and it is insufficient, because a large set of trivial variations may matter less than a small set containing substantively different futures. Equip $\Omega$ with a measurable, symmetric, nonnegative \emph{distinction function} $\delta:\Omega\times\Omega\to[0,\infty)$ with $\delta(y,y)=0$, where larger values indicate more consequential differences between states, and fix a reference measure $\nu$ on $\Omega$.
+
+\begin{definition}[Continuational breadth]\label{def:breadth}
+The continuational breadth of a state $x$ is
+\begin{equation}\label{eq:breadth}
+B(x)\ =\ \int_{A(x)}\int_{A(x)}\delta(y,z)\,d\nu(y)\,d\nu(z).
+\end{equation}
+\end{definition}
+
+Two features of the definition should be made explicit. First, $\delta$ is not an objective distance. It is a declared distinction regime, formally a pseudometric chosen for the inquiry, and much of the normative work of the framework is done in declaring it: a room arrangement can be physically distant from another yet politically inconsequential, while two visually identical records can confer very different legal standing. Continuational breadth is always breadth relative to a declared distinction regime. Second, $B$ combines two properties that are worth separating. Writing $\mathsf{m}(x)=\nu(A(x))$ for the \emph{continuation mass} and, whenever $0<\mathsf{m}(x)<\infty$,
+\begin{equation}\label{eq:mean-diff}
+\bar\delta(x)\ =\ \frac{1}{\mathsf{m}(x)^2}\int_{A(x)}\int_{A(x)}\delta(y,z)\,d\nu(y)\,d\nu(z)
+\end{equation}
+for the \emph{mean differentiation}, one has $B(x)=\mathsf{m}(x)^2\,\bar\delta(x)$. The decomposition distinguishes the loss of many similar continuations, which lowers $\mathsf{m}$, from the loss of a few radically different ones, which lowers $\bar\delta$. It also shows that breadth depends on the scale of the reference measure, since replacing $\nu$ by $c\nu$ multiplies $B$ by $c^2$. Comparisons of breadth are therefore meaningful only under a fixed $\nu$, and the choice of $\nu$ is itself normative: a measure assigns weight to possible futures, and in an institutional setting it may encode whose futures count. Breadth is also purely descriptive. It measures how differentiated the reachable future is, not whether that future is desirable, so a system with more dangerous failure modes has, other things equal, a larger $B$. Nothing in the argument treats breadth as a good in itself. Valuation enters separately in Section~\ref{sec:option}, through signed, agent-indexed utilities computed over admissible continuations only.
+
+The quantity $B(x)$ does not count mere motion. It estimates the \emph{differentiated} future retained by the present configuration: it vanishes when $A(x)$ is a $\nu$-null set or when all reachable states are mutually indistinguishable, and it is monotone under inclusion, since $A(x')\subseteq A(x)$ implies $B(x')\leq B(x)$ because the integrand is nonnegative. An artifact with a thousand cosmetic settings but a single permitted institutional purpose may therefore have high superficial variability and low continuational breadth, while an artifact with only a few attachment points may have greater breadth if those points support transformations of ownership, use, interpretation, or governance.
+
+Completion can now be represented as a transformation $C:x\mapsto x'$ whose image satisfies a terminal predicate $G(x')$. Nothing in this definition entails $B(x')\geq B(x)$, and completion frequently produces the opposite inequality. A permanent wall may improve the present fitness of a dwelling while eliminating several future spatial arrangements. A published technical standard may permit interoperable implementation while making incompatible conceptual distinctions increasingly costly to introduce. A fixed database schema may make current queries reliable while excluding kinds of evidence unanticipated when its fields were chosen. A policy may resolve an immediate dispute while narrowing the vocabulary through which later claimants can become administratively visible. In each case completion adds a determinate capacity while removing a plurality of indeterminate ones.
+
+Let $F(x,e_t)$ denote the fitness of state $x$ relative to the environment $e_t$.
+
+\begin{proposition}\label{prop:fitness-breadth}
+A completion transformation may increase the present fitness of an artifact while strictly decreasing its continuational breadth.
+\end{proposition}
+
+\begin{proof}
+Let $C:x\mapsto x'$ satisfy $F(x',e_t)>F(x,e_t)$. Suppose $C$ fixes some component $q$ which previously admitted values in a set $Q$, replacing $Q$ with a singleton $\{q^\ast\}$, and suppose no other admissible transformations are created, so that $A(x')\subseteq A(x)$. Let $Y_q\subseteq A(x)$ be the set of states reachable only through a value $q\neq q^\ast$, and suppose $\nu(Y_q)>0$ and $\nu(A(x'))>0$, with $\delta(y,z)>0$ for $y\in Y_q$, $z\in A(x')$ (the lost branches are substantively distinct from the retained ones). If no admissible transformation from $x'$ restores $Y_q$ at comparable cost, then $Y_q\cap A(x')=\emptyset$, and
+\[
+B(x)-B(x')\ \geq\ 2\int_{Y_q}\int_{A(x')}\delta(y,z)\,d\nu(y)\,d\nu(z)\ >\ 0 .
+\]
+Hence fitness rises while breadth strictly falls.
+\end{proof}
+
+The proposition is elementary, but its implications are obscured by the language of progress. If completion is represented only as a decrease in $d(x,g)$, the contraction of $A(x)$ disappears from view. The object has moved closer to its goal, and the branches lost during that movement are classified as irrelevant because they do not terminate at $g$. The conclusion has been embedded in the metric: completion appears unambiguously productive because the accounting system recognizes the acquired state but not the extinguished option set.
+
+\subsection{Present fitness and retained continuability}
+
+A more adequate evaluation must consider both realized fitness and retained continuability. Let $\vartheta\in[0,1]$ discount future adaptive value, and let $H(x)\geq 0$ denote the present cost of maintaining the artifact's openness. Define
+\begin{equation}\label{eq:value}
+V(x)\ =\ F(x,e_t)\ +\ \vartheta\,\E\!\left[\max_{y\in A(x)}F(y,e_{t+1})\right]\ -\ H(x).
+\end{equation}
+The second term is the expected value of being able to select a later state after more information about the future environment $e_{t+1}$ has become available. It is analogous to real option value, but the relevant uncertainty is not exclusively economic. It may concern future needs, newly recognized persons, revised scientific distinctions, altered ecological conditions, emergent hazards, or purposes not yet articulable within the existing institutional vocabulary.
+
+Under \eqref{eq:value}, completion $x'=C(x)$ is justified only when its gain in present fitness exceeds both the adaptive value it forecloses and the costs it displaces:
+\begin{equation}\label{eq:completion-justified}
+F(x',e_t)-F(x,e_t)\ >\
+\vartheta\left(\E\!\left[\max_{y\in A(x)}F(y,e_{t+1})\right]-\E\!\left[\max_{z\in A(x')}F(z,e_{t+1})\right]\right)
++\ \big(H(x')-H(x)\big)\ +\ \Delta T,
+\end{equation}
+where $\Delta T$ measures costs displaced to successors rather than eliminated. The first two terms on the right follow directly from requiring $V(x')>V(x)$ in \eqref{eq:value}; the maintenance term $H(x')-H(x)$ is negative when completion reduces upkeep, which is the precise sense in which saved maintenance can justify closure. When $A(x')\subseteq A(x)$ the bracketed option term is nonnegative, so a completion that saves maintenance must still pay for the options it destroys. The inequality is more demanding than ordinary project criteria because it refuses to identify the producer's closure with the artifact's total success. A building can be complete for the developer while remaining costly to alter for its occupants. A software release can be complete for the development schedule while transferring unresolved incompatibilities to users and support workers. A statute can be complete as legislation while producing appeals, exceptions, discretionary workarounds, and private injuries that never appear in the legislative account. The declaration of completion often marks the moment at which one agent ceases to bear responsibility for indeterminacy and others begin to bear its consequences.
+
+\subsection{The declaration boundary}
+
+Let the relevant agents be indexed by $i\in I$, and let $k_i(x\to y)\geq 0$ denote the cost borne by agent $i$ when the artifact is transformed from $x$ to $y$. Let $\mathsf{P}\subset I$ be the producers authorized to declare completion, and $\mathsf{S}=I\setminus\mathsf{P}$ the successors, users, maintainers, and affected parties. The producer-side cost of a completion $C$ is
+\begin{equation}
+K_{\mathsf{P}}(C)\ =\ \sum_{i\in\mathsf{P}}k_i(x\to x'),
+\end{equation}
+whereas its social cost is
+\begin{equation}\label{eq:social-cost}
+K_{\mathrm{all}}(C)\ =\ K_{\mathsf{P}}(C)\ +\ \sum_{j\in\mathsf{S}}\E\!\left[\min_{y\in A(x')\cap G_j}k_j(x'\to y)\right],
+\end{equation}
+where $G_j\subseteq\Omega$ is the set of states that successor $j$ will in fact need to reach, and the minimum over an empty set is taken to be the cost of replacement. An evaluation confined to $K_{\mathsf{P}}$ will systematically favor terminal forms that are inexpensive to deliver and expensive to inhabit, maintain, reinterpret, or reopen. The omission is not an accidental measurement error. It follows from the institutional boundary that determines when the project ends and whose work counts as part of it.
+
+\begin{observation}\label{obs:boundary}
+If the authority that declares completion is evaluated only on costs incurred before declaration, it can improve its measured performance by transferring unresolved transformation costs beyond the declaration boundary.
+\end{observation}
+
+\begin{proof}
+Suppose the producer chooses between $C_1$, which preserves an accessible attachment point at present cost $a>0$ and leaves successors with expected adaptation cost $0$, and $C_2$, which omits the attachment point at no present cost and imposes expected successor adaptation cost $b>a$. Then $K_{\mathsf{P}}(C_2)=0<a=K_{\mathsf{P}}(C_1)$, while $K_{\mathrm{all}}(C_2)=b>a=K_{\mathrm{all}}(C_1)$. An evaluator minimizing $K_{\mathsf{P}}$ selects $C_2$. Measured performance improves while total expected cost rises by $b-a$.
+\end{proof}
+
+This explains why apparently finished systems so often accumulate unofficial margins. Residents enclose balconies, cut paths across lawns, convert garages into bedrooms, and rearrange spaces designated for a single function. Workers construct spreadsheets beside enterprise systems because the official schema cannot represent the distinctions required by actual work. Users write scripts around applications that advertise completeness. Readers annotate printed arguments whose fixed surfaces cannot respond to later objections. These practices are usually described as misuse, workaround, customization, or technical debt. They are better understood as \emph{continuational labor}: they restore branches that completion eliminated, or they construct attachment points where the official artifact supplied none. The quantity $b$ in Observation~\ref{obs:boundary} is, in practice, paid in exactly this labor.
+
+The resulting picture reverses the presumed priority of completion. Incompletion is not necessarily a measurable distance from a privileged terminal object. Completion is one operation within a larger field of continuations, and its value depends on the capacities it realizes, the alternatives it extinguishes, the costs it redistributes, and the agents authorized to decide that no further recognized continuation belongs to the object. We may therefore state the working definition that the rest of the essay refines.
+
+\begin{definition}[Completion]\label{def:completion}
+Let $\mathfrak{D}$ be a declared \emph{scope}: a responsibility domain specifying which transformations of the artifact are at issue, whether structural, functional, semantic, jurisdictional, or some combination. The predicate $\operatorname{Complete}(x_t,\mathsf{P},t,\mathfrak{D})$ holds when the authority $\mathsf{P}$ withdraws recognition from every transformation of $x_t$ within $\mathfrak{D}$ other than those admitted by a stated maintenance or reopening procedure, maintenance being understood under a declared equivalence relation. Completion is thus not a property of a state but a relation among a state, an authority, a time, and a scope.
+\end{definition}
+
+The scope parameter is not a technicality. Authorities rarely withdraw recognition from every continuation of an artifact. A completed software release still admits patches, a completed building admits renovation, a decided case admits appeal. What is completed is usually a phase, a version, a claim, or an assignment of responsibility. Scope also sharpens the declaration boundary: the boundary in Observation~\ref{obs:boundary} is the boundary of $\mathfrak{D}$, and a producer can displace costs precisely by choosing a scope that excludes the transformations successors will need. An artifact can be complete within one scope and open within another, which is why the scope belongs in every declaration.
+
+The central question is consequently not whether an artifact is finished but whether the closure it embodies is proportionate to the knowledge and authority available at the time of closure. The unfinished thing can still be defective. It may be dangerous, unintelligible, or abandoned, and nothing in the formalism converts absence into virtue. The formalism does, however, prevent closure from functioning as its own justification. A polished terminal state is not superior merely because its contingency has become difficult to see. An exposed joint may signify neglect; it may also preserve an intelligible site at which a future participant can enter. Distinguishing these cases requires a more exact taxonomy of incompletion.
+
+\subsection{The core model and the plan of the essay}
+
+Definition~\ref{def:completion} is the essay's primary contribution, and the remainder is organized as its consequences. Continuational breadth describes what an authority withdraws when it completes. The declaration boundary describes who escapes the resulting costs. Option value describes what the withdrawal loses under uncertainty. Dependency ideals describe which withdrawals can nonetheless be justified. Continuation rights describe who may reopen what has been closed. To keep these consequences within one frame, every artifact studied below is treated as an instance of a \emph{continuation structure}
+\begin{equation}\label{eq:core}
+\mathcal{C}\ =\ \big(\Omega,\ A,\ \Sigma,\ \mathcal{K},\ \mathcal{W},\ \sim_{\mathcal{R}}\big),
+\end{equation}
+where $\Omega$ is the state space, $A$ the recognized continuation relation, $\Sigma$ the information required to interpret states, $\mathcal{K}$ the cost structure of transformations, $\mathcal{W}$ the allocation of authority to perform them, and $\sim_{\mathcal{R}}$ the equivalence relation under which the artifact's identity is preserved.
+
+Sections~1 through~4 develop the general theory: breadth and the declaration boundary (Section~1), the distinction between inert and latent incompletion (Section~\ref{sec:inert}), option value (Section~\ref{sec:option}), and the selection of closures over a dependency structure (Section~\ref{sec:selective}). Sections~\ref{sec:development} through~\ref{sec:reopening} are domain models rather than extensions of a single calculus. Each instantiates \eqref{eq:core} with its own state, continuation, information, cost, authority, and identity variables, stated at the start of the section, and each uses a deliberately stylized model to expose one mechanism. Together they demonstrate the portability of the core definitions; they do not constitute a unified quantitative theory of unfinishedness, and they are not offered as one. Section~\ref{sec:asymmetric} assembles a decision rule, Section~\ref{sec:objections} takes up objections and boundary conditions, and the final section concludes. Standard results are identified as such where they appear, and results that follow directly from a chosen specification are labeled observations rather than propositions. The conclusion relates the framework to a companion account, admissible degradation, which asks what must survive when capacity contracts rather than what must remain open when a project declares success.
+
+%======================================================================
+\section{Inert and Latent Incompletion}\label{sec:inert}
+%======================================================================
+
+Not every unfinished artifact preserves possibility. Some unfinished buildings admit rain until reinforcement corrodes and floors become unsafe. Some provisional institutions persist without acquiring either legitimacy or an orderly procedure for revision. Some abandoned programs contain thousands of lines of source code but no recoverable account of their invariants, dependencies, or intended behavior. In such cases the absence of closure does not preserve a useful future; it consumes one. Time acts on the unfinished artifact, degrading the materials, knowledge, trust, and coordination on which any later continuation would depend. An adequate theory must therefore distinguish an unfinished state that retains accessible alternatives from one that merely has not reached an announced terminus.
+
+\subsection{The situated artifact}
+
+Represent an artifact at time $t$ by the tuple
+\begin{equation}\label{eq:tuple}
+\mathcal{X}_t\ =\ \big(x_t,\ \Sigma_t,\ \mathcal{T}_t,\ \mathcal{K}_t,\ \mathcal{W}_t\big),
+\end{equation}
+where $x_t$ is the observable state, $\Sigma_t$ is the information available for interpreting that state, $\mathcal{T}_t$ is the set of technically possible transformations, $\mathcal{K}_t$ assigns agent-relative costs to those transformations, and $\mathcal{W}_t$ records the agents authorized or practically able to perform them. The representation separates properties usually collapsed into the single judgment that something remains unfinished. An artifact may be materially alterable but epistemically opaque. It may be intelligible but legally closed. It may admit a physically simple modification that no relevant agent can afford. It may preserve many possible transformations, all of which destroy the capacities that made it worth continuing. Physical incompletion is therefore neither necessary nor sufficient for practical openness.
+
+Identity preservation is specified by a declared set $\mathcal{R}$ of retained properties, which may include physical fabric, recorded evidence, functional capacity, institutional memory, semantic identity, or relations of trust, together with the induced equivalence $\sim_{\mathcal{R}}$: $x\sim_{\mathcal{R}}y$ when $x$ and $y$ agree on every property in $\mathcal{R}$. For an agent $i$, an epistemic tolerance $\tau$, and a resource bound $\kappa$, define the agent-relative continuation set
+\begin{equation}\label{eq:Ai}
+A_i(x;\tau,\kappa,\mathcal{R})=\left\{\,y\in\Omega\ :\
+\begin{array}{l}
+\exists\ \text{a path } x\to y \text{ in } \mathcal{T}_t \text{ performable by } i \text{ under } \mathcal{W}_t,\\
+\text{interpretable from } \Sigma_t \text{ with error at most } \tau,\\
+\text{of cost to } i \text{ at most } \kappa \text{ under } \mathcal{K}_t,\\
+\text{and with } y\sim_{\mathcal{R}}x
+\end{array}\right\}.
+\end{equation}
+The last condition is essential. If a program can be altered only by rewriting it from the beginning, or a building adapted only by demolition, change remains possible in a trivial physical sense, but the artifact does not supply a continuation. It supplies material, land, or information for a replacement. Continuation requires that significant structure survive the transformation. Write $B_i(x)$ for the breadth \eqref{eq:breadth} computed over $A_i$.
+
+Because different artifacts preserve different organization, $\mathcal{R}$ cannot be universal. A repaired bridge may preserve little original material while preserving its load path, location, and public function. A scientific archive may preserve its files while losing provenance, rendering its physical survival epistemically inadequate. A constitution may retain its text while changes in enforcement destroy the continuity the text nominally represents. Preservation is always preservation under a declared equivalence relation, and the choice of $\mathcal{R}$ must be stated, defended, and made available to criticism. Where the retained properties admit a defensible aggregation rule, the relation may be relaxed to a graded one: a function $P(x,y)\in[0,1]$ measuring the proportion of relevant organization preserved, with continuation requiring $P(x,y)\geq r_{\min}$. The graded form is optional. Fabric, function, provenance, memory, and trust are not naturally commensurable, and a scalar $P$ should be used only where a particular inquiry supplies the weights. The requirement prevents ``continuability'' from becoming an ornamental synonym for change.
+
+\subsection{Two forms of incompletion}
+
+Let $G$ be the completion predicate and $\varepsilon>0$ a materiality threshold.
+
+\begin{definition}[Inert incompletion]
+An artifact is \emph{inertly incomplete} for agent $i$ at time $t$ when $\neg G(x_t)$ and $B_i(x_t;\tau,\kappa,\mathcal{R})\leq\varepsilon$.
+\end{definition}
+
+\begin{definition}[Latent incompletion]
+An artifact is \emph{latently incomplete} for agent $i$ at time $t$ when $\neg G(x_t)$ and $B_i(x_t;\tau,\kappa,\mathcal{R})>\varepsilon$.
+\end{definition}
+
+The distinction does not depend on whether the artifact looks unfinished. A rough concrete structure is inert if its load paths are undocumented, its materials have degraded, and no agent has the authority or resources to intervene. A visually finished building can remain latently incomplete if its service cavities are accessible, its partitions alterable, and its structural system permits later reconfiguration. Habraken's distinction between support and infill treats the built environment as a hierarchy of control rather than a terminal composition: a stable support can be highly finished at one level while retaining incompletion at another, allowing occupants rather than distant producers to determine internal arrangements \cite{habraken1972}. Brand's account of buildings adapting through layers that change at different rates similarly shows that endurance often depends on parts remaining independently revisable rather than on the structure achieving a final form \cite{brand1994}.
+
+Latent incompletion is therefore structured rather than absolute. It requires closure at some levels so that openness remains usable at others. A door is useful because its frame is stable. A programming interface supports unanticipated implementations because its syntax is determinate. A scientific disagreement remains productively open only if evidence, methods, and disputed interpretations are preserved precisely enough for later investigators to reconstruct it. Total fluidity does not maximize continuability, because a state that cannot be identified cannot serve as the origin of a reliable transformation.
+
+\subsection{The continuability functional}
+
+Let $L(x)\in[0,1]$ denote the legibility of the present state, $E(x)\in[0,1]$ the accessibility of its intervention points, and $D(x)\geq 0$ the substantive diversity of the states reachable through them (for instance $D=B$ normalized). Adopt the Cobb--Douglas specification
+\begin{equation}\label{eq:Gamma}
+\Gamma(x)\ =\ L(x)^{\alpha_L}\,E(x)^{\alpha_E}\,D(x)^{\alpha_D},\qquad \alpha_L,\alpha_E,\alpha_D>0.
+\end{equation}
+The multiplicative form expresses complementarity: if any factor vanishes, $\Gamma=0$. It is one useful specification rather than a uniquely motivated one; in logarithms it imposes fixed elasticities and a particular form of substitutability among the factors, and the arguments below rely only on its complementarity. A perfectly documented artifact with no accessible intervention point cannot be continued by the relevant agent. An accessible artifact whose state cannot be interpreted invites alteration without responsible continuation. A legible and accessible artifact that permits only one predetermined successor is \emph{deferred}, not open: its future has been delayed rather than pluralized.
+
+\begin{proposition}\label{prop:malleability}
+Unconstrained malleability does not maximize continuability.
+\end{proposition}
+
+\begin{proof}
+Index designs by a malleability parameter $m\geq 0$, with $L,E,D$ differentiable and positive. Suppose $D'(m)>0$ throughout, $E'(m)\geq 0$ and bounded, and that beyond some $m_0$ components no longer remain stable long enough to establish dependable relations, so that $L'(m)<0$ for $m>m_0$. Then
+\[
+\frac{\Gamma'(m)}{\Gamma(m)}\ =\ \alpha_L\frac{L'(m)}{L(m)}+\alpha_E\frac{E'(m)}{E(m)}+\alpha_D\frac{D'(m)}{D(m)}.
+\]
+If the elasticity of legibility loss dominates, that is, if $\alpha_L|L'/L|>\alpha_E E'/E+\alpha_D D'/D$ on some interval $(m_1,\infty)$ with $m_1\geq m_0$, then $\Gamma$ is strictly decreasing there. In particular, if $L(m)\to 0$ as $m\to\infty$ while $D$ and $E$ grow at most polynomially and $L$ decays exponentially, $\Gamma(m)\to 0$. Hence the supremum of $\Gamma$ is not attained at maximal malleability.
+\end{proof}
+
+The result identifies a central error in celebrations of flexibility. Flexibility is frequently measured by the number of configurations an artifact can assume, without asking whether transitions among them remain intelligible, affordable, and identity preserving. A system in which every component can change at once may possess a large formal state space but little practical capacity for directed continuation. The user cannot isolate causes, predict consequences, or preserve functioning relations while intervening. Such a system is mutable but not governably unfinished.
+
+\subsection{Nominal and effective openness}
+
+The distinction between formal possibility and admissible continuation explains why source availability, transparency, or legal permission cannot by themselves establish openness. Let $T(x)$ be the set of states reachable by transformations not prohibited by formal rules. Ordinarily $A_i(x)\subseteq T(x)$, and the inclusion may be strict. A repository may license modification while requiring tacit knowledge held by a vanished team. A law may grant a right of appeal while imposing procedural costs beyond the claimant's means. A building may technically permit alteration while concealing utilities behind surfaces that must be destroyed to locate them.
+
+\begin{definition}[Openness gap]
+The openness gap for agent $i$ is $\Delta_i(x)=B_T(x)-B_i(x)\geq 0$, where $B_T$ is the breadth of $T(x)$.
+\end{definition}
+
+A large $\Delta_i$ indicates that the artifact's advertised revisability is not available to the agent whose freedom supposedly justifies it. Because costs, knowledge, and authority are unevenly distributed, the same artifact may be latently incomplete for one agent and inertly incomplete for another. An undocumented codebase may remain continuable for its original author but inert for every successor. A planning regime may be revisable for landowners with legal counsel but effectively final for tenants affected by its classifications. The unit of analysis is therefore the relation between an artifact and a situated continuer.
+
+\subsection{Epistemic, operational, and jurisdictional closure}
+
+The situated tuple \eqref{eq:tuple} separates three ways in which a continuation can be withdrawn, and the openness gap decomposes accordingly. Fix an agent $i$ and consider the chain
+\[
+T(x)\ \supseteq\ T^{\Sigma}_i(x)\ \supseteq\ T^{\Sigma\mathcal{K}}_i(x)\ \supseteq\ A_i(x),
+\]
+where $T^{\Sigma}_i$ retains the formally permitted, identity-preserving states whose paths $i$ can interpret from $\Sigma_t$, $T^{\Sigma\mathcal{K}}_i$ further retains those within $i$'s resources under $\mathcal{K}_t$, and $A_i$ further retains those $i$ is able and authorized to select under $\mathcal{W}_t$.
+
+\begin{definition}[Three kinds of closure]\label{def:three-closures}
+A continuation $y\in T(x)$ is \emph{epistemically closed} for $i$ if $y\notin T^{\Sigma}_i(x)$: it has ceased to be represented in a form $i$ can interpret. It is \emph{operationally closed} if $y\in T^{\Sigma}_i(x)\setminus T^{\Sigma\mathcal{K}}_i(x)$: it is represented but cannot be executed within $i$'s means. It is \emph{jurisdictionally closed} if $y\in T^{\Sigma\mathcal{K}}_i(x)\setminus A_i(x)$: it is intelligible and affordable, but no authority recognizes $i$ as entitled to select it.
+\end{definition}
+
+Because breadth is monotone under inclusion, the openness gap telescopes into nonnegative parts,
+\begin{equation}\label{eq:gap-decomp}
+\Delta_i\ =\ \underbrace{\big(B_T-B^{\Sigma}_i\big)}_{\Delta_i^{\Sigma}}\ +\ \underbrace{\big(B^{\Sigma}_i-B^{\Sigma\mathcal{K}}_i\big)}_{\Delta_i^{\mathcal{K}}}\ +\ \underbrace{\big(B^{\Sigma\mathcal{K}}_i-B_i\big)}_{\Delta_i^{\mathcal{W}}},
+\end{equation}
+and, when the intermediate breadths are positive, the ratio $B_i/B_T$ factors as a product of three ratios, one for each kind of closure. The attribution depends on the order of filtering: a state that is both unintelligible and forbidden is counted here as epistemically closed. The order used follows the sequence in which a continuer typically meets the obstacles, first understanding, then means, then permission. The decomposition explains why transparency alone does not produce revisability. Transparency reduces $\Delta_i^{\Sigma}$ and leaves $\Delta_i^{\mathcal{K}}$ and $\Delta_i^{\mathcal{W}}$ untouched. A deprecated interface can be fully documented and no longer supported. A building's walls can be opened by anyone with a saw while its concealed utilities remain unmapped. A record can be legible and cheap to amend yet amendable only by an office the affected party cannot reach. Continuation rights, the subject of Section~\ref{sec:political}, are claims on $\mathcal{W}$, and their absence is jurisdictional closure even where epistemic and operational openness are high.
+
+\begin{definition}[Public continuability]\label{def:public}
+Let $w_i\geq 0$ be normative weights over a population $I=\{1,\dots,n\}$, $\Ineq$ an inequality index on $\mathbb{R}^n_{\geq 0}$ (for example a Gini coefficient scaled by the mean), and $\xi\geq 0$ a concentration penalty. Then
+\begin{equation}\label{eq:Gamma-pub}
+\Gamma_{\mathrm{pub}}(x)\ =\ \sum_{i\in I}w_i\Gamma_i(x)\ -\ \xi\,\Ineq\big(\Gamma_1(x),\dots,\Gamma_n(x)\big).
+\end{equation}
+\end{definition}
+
+The inequality term matters because a system can possess abundant continuation paths while reserving all of them for a proprietor. Proprietary extension interfaces, discretionary waivers, closed standards, and prohibitively expensive appeals preserve revisability at the system's center while presenting finality at its edges. Such a system is not simply closed. It is \emph{asymmetrically unfinished}: those who govern it may treat its current form as provisional, while those governed by it must treat the same form as complete.
+
+\begin{proposition}\label{prop:aggregate-public}
+An increase in aggregate technical extensibility can coincide with a decrease in public continuability.
+\end{proposition}
+
+\begin{proof}
+Let a transformation $x\mapsto x'$ add many private transformation paths for a controlling agent $j$, so that $|T(x')|>|T(x)|$ and $\Gamma_j$ increases by $a>0$, while each noncontrolling agent $i\neq j$ loses $b_i>0$ (for example because the new paths are coupled to the removal of a public interface). Let $\Delta\Ineq\geq 0$ be the induced change in concentration. Then
+\[
+\Gamma_{\mathrm{pub}}(x')-\Gamma_{\mathrm{pub}}(x)\ =\ w_ja-\sum_{i\neq j}w_ib_i-\xi\,\Delta\Ineq,
+\]
+which is negative whenever $w_ja<\sum_{i\neq j}w_ib_i+\xi\Delta\Ineq$, although the technically reachable set has grown.
+\end{proof}
+
+\subsection{The decay of latent incompletion}
+
+The difference between inert and latent incompletion is also temporal. Even a well-structured unfinished artifact loses continuability if it is not maintained. Suppose
+\begin{equation}\label{eq:decay}
+\frac{d\Gamma}{dt}\ =\ M_t-\eta_x-\eta_\Sigma-\eta_W,
+\end{equation}
+where $M_t$ is the continuability restored by maintenance, $\eta_x$ material degradation, $\eta_\Sigma$ loss of interpretive information, and $\eta_W$ attrition in the community capable of continuing the artifact. If $M_t<\eta_x+\eta_\Sigma+\eta_W$ on an interval, $\Gamma$ declines there, and if the deficit is bounded below by some $\eta^\ast>0$ the artifact reaches $\Gamma(x_{t^\ast})=\varepsilon$ no later than $t^\ast=t_0+(\Gamma(x_{t_0})-\varepsilon)/\eta^\ast$. At $t^\ast$ latent incompletion crosses into inert incompletion. The crossing need not involve conspicuous failure. File formats become unreadable, contributors disperse, oral knowledge disappears, replacement components cease to exist, procedural exceptions accumulate, and the artifact remains visibly present while its future contracts.
+
+Preservation must therefore include more than retention of the current state. It must preserve the conditions under which a future agent can understand and enter that state. Documentation, provenance, replaceable components, exposed assumptions, test suites, appeal procedures, institutional memory, and interoperable formats are not ancillary conveniences. They are \emph{continuation infrastructure}, the terms of $M_t$ that keep the difference between unfinished and abandoned from being decided by decay. Studies of repair make the same point from the side of practice: maintenance is not a residue of production but a standing condition under which technical systems continue to function at all \cite{jackson2014}.
+
+This account yields an evaluative test for claims that an unfinished artifact is valuable because it remains open. Is its state legible? Are intervention points practically accessible? Does more than one substantively different continuation remain viable? Does transformation preserve the organization that makes the artifact worth continuing? Is this capacity distributed beyond the original author? Is maintenance sufficient to prevent the option set from expiring? These are not independent virtues to be accumulated without limit; they constrain one another. Excessive closure suppresses diversity, excessive plasticity destroys legibility, excessive preservation immobilizes, and insufficient preservation converts alteration into replacement. Latent incompletion occupies a bounded region between premature closure and disintegrative openness. It is not the absence of decision but a designed relation between what has been decided and what remains available for later determination. That relation must now be priced.
+
+%======================================================================
+\section{The Option Value of the Unfinished}\label{sec:option}
+%======================================================================
+
+The ordinary economics of completion begins with a project whose benefits remain unavailable until a terminal condition is satisfied. Construction in progress does not shelter, an uncompiled program does not execute, and an unresolved application does not confer the right it requests. Delay therefore appears primarily as a cost. Let $V_g$ be the value of the terminal state once realized, $c_t$ the cost of continued work, and $r>0$ a discount rate. The project is worth completing at time $T$ when
+\begin{equation}
+e^{-rT}V_g\ >\ \int_0^Te^{-rt}c_t\,dt.
+\end{equation}
+Within this representation incompletion has no positive term. It appears only as foregone use, continuing expenditure, and exposure to the possibility that $g$ is never reached, and the rational actor completes as quickly as resources permit.
+
+This model is appropriate when the terminal state is known, when its desirability is stable, when completion can be reversed without significant loss, and when future information would not alter the preferred design. These conditions often fail. The environment at $T$ may differ from the one anticipated at $0$. Those who inherit the artifact may value states its producer never considered. Later evidence may reveal an attractive terminal form to be hazardous, exclusionary, or difficult to maintain. And completion is frequently irreversible in the strong sense studied by the literature on increasing returns: once a design accumulates users, complementary assets, and learning effects, the cost of departing from it grows with its adoption, so that an early and possibly accidental choice becomes locked in \cite{arthur1989}. Pierson extends the same mechanism to political institutions, where coordination effects, adaptive expectations, and the asymmetric power conferred by early settlements make paths self-reinforcing \cite{pierson2000}. Under such conditions waiting does not merely postpone benefit. It may preserve the right to choose after uncertainty has diminished and before increasing returns have hardened the choice.
+
+\subsection{Deferral as an option}
+
+Let $S=\{s_1,\dots,s_n\}$ be possible future environments with probabilities $p_1,\dots,p_n$, and let $Y=\{y_1,\dots,y_m\}$ be terminal states reachable from the present unfinished state $x$. Write
+\begin{equation}
+Z_j(s_k)\ =\ U(y_j,s_k)-C_k(x,y_j),
+\end{equation}
+where $U(y_j,s_k)$ is the value of completed state $y_j$ in environment $s_k$ and $C_k$ the cost of reaching it, allowed to depend on the environment. If completion requires selecting $y_j$ now, the best expected value of immediate completion is
+\begin{equation}
+V_{\mathrm{now}}(x)\ =\ \max_{j}\sum_{k}p_kZ_j(s_k).
+\end{equation}
+If the artifact can remain latently incomplete until the environment is revealed, deferred selection yields
+\begin{equation}
+V_{\mathrm{defer}}(x)\ =\ \sum_kp_k\max_jZ_j(s_k)\ -\ H(x),
+\end{equation}
+with $H(x)$ the maintenance cost of the unfinished state. The option value of retained incompletion is
+\begin{equation}\label{eq:option}
+O(x)\ =\ V_{\mathrm{defer}}(x)-V_{\mathrm{now}}(x).
+\end{equation}
+$O(x)$ does not imply that deferral is always preferable. Maintenance may be costly, delay may withhold urgently needed benefits, and paths may disappear. The point is that incompletion contributes a value which conventional project accounting sets to zero before evaluation begins.
+
+\begin{proposition}\label{prop:option}
+If maintaining latent incompletion is costless, all present continuation paths remain available after uncertainty is resolved, and completion is irreversible, then $O(x)\geq 0$, with equality if and only if a single continuation is optimal in every environment of positive probability.
+\end{proposition}
+
+\begin{proof}
+With $H=0$, for every fixed $j$ and every $k$, $\max_\ell Z_\ell(s_k)\geq Z_j(s_k)$. Multiplying by $p_k$ and summing gives $\sum_kp_k\max_\ell Z_\ell(s_k)\geq\sum_kp_kZ_j(s_k)$ for each $j$, hence $\geq\max_j\sum_kp_kZ_j(s_k)$, so $O(x)\geq 0$. If some $j^\ast$ maximizes $Z_\cdot(s_k)$ for every $k$ with $p_k>0$, both sides equal $\sum_kp_kZ_{j^\ast}(s_k)$. Conversely, if equality holds, let $j^\ast$ attain $V_{\mathrm{now}}$; then $\sum_kp_k[\max_\ell Z_\ell(s_k)-Z_{j^\ast}(s_k)]=0$ with nonnegative summands, so $Z_{j^\ast}(s_k)=\max_\ell Z_\ell(s_k)$ whenever $p_k>0$.
+\end{proof}
+
+Proposition~\ref{prop:option} is a standard value-of-information inequality, included to fix notation rather than as a new result. Its role in the economics of irreversible choice is well established. Arrow and Fisher and, independently, Henry showed that when a development decision is irreversible and information will arrive, the option of preservation carries a value, often called quasi-option value, that expected-value comparisons omit \cite{arrowfisher1974,henry1974}; Dixit and Pindyck developed the general theory of investment under irreversibility and uncertainty \cite{dixitpindyck1994}. What the present framework adds is the reinterpretation of the retained option as a property of an unfinished artifact and of the authority that may withdraw it.
+
+The assumptions are deliberately strict in order to isolate the value of preserved choice. Once maintenance cost, foregone use, and expiring opportunities enter, deferral remains rational only while the marginal informational benefit exceeds the marginal cost of waiting. Let $O(t)$ be the expected option value retained by remaining unfinished until $t$, $H(t)$ cumulative maintenance cost, and $L_{\mathrm{use}}(t)$ cumulative loss from delayed use. If these are differentiable and $O$ is concave, an interior optimal completion time $t^\ast$ satisfies
+\begin{equation}\label{eq:stopping}
+O'(t^\ast)\ =\ H'(t^\ast)+L_{\mathrm{use}}'(t^\ast).
+\end{equation}
+Before $t^\ast$ another interval of incompletion produces more expected informational value than it costs; after $t^\ast$ delay consumes more value than it preserves.
+
+The condition clarifies why pressure to complete is rational in one domain and destructive in another. When an unfinished bridge withholds a necessary crossing and its engineering requirements are well understood, $L_{\mathrm{use}}'$ is large and $O'$ small, so prompt completion is justified. When a classification system will determine eligibility for decades while the represented population and the consequences of categorization remain poorly understood, $O'$ may be substantial, and premature closure imposes durable costs exceeding the convenience of immediate finalization.
+
+\subsection{Postponing a decision versus preserving a decision space}
+
+Uncertainty alone does not create option value; the present artifact must preserve the capacity to act on later information. Let $q_j(t)\in[0,1]$ be the probability that continuation $y_j$ remains admissible at $t$. Then
+\begin{equation}\label{eq:defer-decay}
+V_{\mathrm{defer}}(t)\ =\ \sum_kp_k(t)\max_j\big[q_j(t)U(y_j,s_k)-C_{jk}(t)\big]-H(t)-L_{\mathrm{use}}(t),
+\end{equation}
+where $p_k(t)$ is the posterior available at $t$. If information improves while the $q_j$ decay, knowledge arrives after it can be used. Documentation, reversible joints, replaceable modules, interoperable formats, preserved evidence, and living communities of practice all act on $q_j(t)$; they are the expenditures that keep the option from expiring, which is to say they are the maintenance term $M_t$ of \eqref{eq:decay} viewed from the side of valuation.
+
+The model reveals the difference between postponing a decision and preserving a decision space. A committee may defer a decision while allowing all but one alternative to disappear. A software project may postpone a release while accumulating dependencies that make architectural revision increasingly costly. A government may call a classification provisional while building benefits, obligations, and databases around it until reversal becomes politically implausible, which is precisely Pierson's mechanism operating under a label of provisionality \cite{pierson2000}. Let $Y_t$ be the continuation set at $t$. \emph{Pure postponement} holds the declaration open while permitting $Y_{t+1}\subsetneq Y_t$. \emph{Structured incompletion} preserves a designated subset $Y^\ast\subseteq Y_t$ such that $Y^\ast\subseteq Y_{t+\Delta}$ throughout the interval in which later information is expected to matter. An institution can advertise openness merely by withholding a terminal announcement while its material and procedural commitments eliminate the alternatives the announcement would supposedly decide among.
+
+\subsection{Completion as a sequence of commitments}
+
+Completion is better represented as a sequence of commitments than as a single terminal event. Let $x_0\to x_1\to\dots\to x_T$ be a development path. Each transition eliminates some continuations and enables others. Define the foreclosure at step $t$ by
+\begin{equation}
+f_t\ =\ B(x_t)-B(x_{t+1})+N_t,
+\end{equation}
+where $N_t\geq 0$ is the breadth of genuinely new continuations created by the transition, so that the gross contraction $B(x_t)-B(x_{t+1})+N_t$ counts what was removed rather than the net change. The cumulative foreclosure of the path is
+\begin{equation}
+F^{\mathrm{cum}}_T\ =\ \sum_{t=0}^{T-1}\max(0,f_t).
+\end{equation}
+Two paths may reach the same nominal terminal state with very different $F^{\mathrm{cum}}_T$ and, more importantly, with foreclosure distributed differently in time. One path may preserve revisability until late, when more information is available; another may fix consequential choices early and devote the remaining period to polishing their consequences. Both appear equally complete at $T$, but the second has exposed the project to greater error under uncertainty. The following proposition makes this precise using the standard representation of information as a filtration.
+
+\begin{proposition}[Delayed irreversible commitment]\label{prop:delay}
+Let $(\mathcal{F}_t)$ be a filtration representing the information available at time $t$, and let $Z_1,\dots,Z_m$ be integrable payoffs of mutually exclusive designs. Suppose two development paths have equal direct cost and differ only in the time at which the design is irreversibly fixed, $t_1<t_2$, and that preserving the choice until $t_2$ eliminates no design. Then the expected value of fixing at $t_2$ weakly exceeds that of fixing at $t_1$.
+\end{proposition}
+
+\begin{proof}
+The expected value of committing at $t$ with the best available choice is $W_t=\E\big[\max_j\E[Z_j\mid\mathcal{F}_t]\big]$. For each $j$, by the tower property and monotonicity of conditional expectation,
+\[
+\E[Z_j\mid\mathcal{F}_{t_1}]\ =\ \E\big[\E[Z_j\mid\mathcal{F}_{t_2}]\,\big|\,\mathcal{F}_{t_1}\big]\ \leq\ \E\Big[\max_\ell\E[Z_\ell\mid\mathcal{F}_{t_2}]\,\Big|\,\mathcal{F}_{t_1}\Big].
+\]
+Taking the maximum over $j$ on the left and expectations on both sides yields $W_{t_1}\leq W_{t_2}$. Equality holds when the information arriving between $t_1$ and $t_2$ almost surely does not change the optimal design.
+\end{proof}
+
+Proposition~\ref{prop:delay} is the dynamic form of the same inequality and a special case of Blackwell's comparison of experiments, under which a more informative signal, here a refinement of the filtration, is weakly more valuable for every decision problem \cite{blackwell1953}.
+
+Proposition~\ref{prop:delay} supplies a formal basis for \emph{selective} completion. Components whose early fixation enables all later work may need stabilizing; components whose fixation primarily restricts future use should remain open when preserving them is cheap. The problem is not solved by maximizing delay globally but by ordering commitments according to dependency and reversibility. For components $c_1,\dots,c_n$ let $a_i$ be the enabling value of fixing $c_i$, $f_i$ its expected foreclosure cost, and $r_i$ its reversal cost, and define the commitment priority
+\begin{equation}\label{eq:priority}
+\pi_i\ =\ \frac{a_i}{f_i+r_i},
+\end{equation}
+with the convention $\pi_i=+\infty$ when $f_i+r_i=0$, so that costless commitments are made as soon as they enable anything. Components with large enabling value and small foreclosure and reversal consequences should be fixed earlier; components with small enabling value and large irreversible consequences later. The ratio is a heuristic, not a decision rule. Its terms may resist precise quantification, and ratio rules fail under dependencies, because a valuable bundle of prerequisites cannot be selected component by component. Section~\ref{sec:selective} replaces it with an exact optimization over the dependency structure. Its purpose here is to show that ``finish the foundation before the walls'' is not merely a physical sequence. It is a general principle of commitment architecture: stabilize what makes other work possible, and delay what unnecessarily determines the purposes for which that work may later be used.
+
+\subsection{Who owns the option}
+
+Option value becomes politically significant when those who receive present benefits differ from those who bear future foreclosure costs. Let immediate completion yield benefits $b_{\mathsf{P}}$ to the producer and $b_U$ to current users while imposing expected cost $c_F$ on future users through the lost continuation set. A social evaluation compares $b_{\mathsf{P}}+b_U-c_F$ with the value of maintaining incompletion. If the decision rule contains only the producer's utility, or discounts future users at an extreme rate, completion is chosen whenever $b_{\mathsf{P}}>0$ regardless of $c_F$. The institution then behaves as though future continuability had no owner.
+
+The option model above hides the same problem inside its maximum. Writing $\max_jZ_j(s_k)$ assumes that whoever exercises the option is informed, competent, and aligned with the valuation being computed, which is exactly what cannot be assumed politically. An option controlled by a monopolist can be valuable to the controller and harmful to everyone it affects. The primitive should therefore index option value by the affected agent and by the controller.
+
+Let $\mathfrak{A}\subseteq\Omega$ be the set of \emph{presently admissible} states: those not excluded by declared safety constraints, binding legal constraints, or other limits that the present valuation is not authorized to override. Catastrophic continuations are removed here, before breadth or value is computed. Admissibility is itself relative to a level of authority. A legal constraint binding on the present valuation may be a revisable closure at another institutional level, so $\mathfrak{A}$ is fixed for the purposes of one decision without being placed beyond revision altogether. Let $u_i(y,s)$ be the value of state $y$ to agent $i$ in environment $s$, with no sign restriction, and let $A^j(x)\subseteq\mathfrak{A}$ be the admissible continuations that agent $j$ is able and authorized to select from $x$. When $j$ selects according to its own valuation after observing the environment, write $y^j(x,s)\in\argmax_{y\in A^j(x)}u_j(y,s)$.
+
+\begin{definition}[Control-indexed option value]\label{def:Oij}
+The value to agent $i$ of the option on $x$ controlled by agent $j$ is
+\begin{equation}\label{eq:Oij}
+O_i^j(x)\ =\ \E_s\big[u_i\big(y^j(x,s),s\big)\big]\ -\ \max_{y\in A^j(x)}\E_s\big[u_i(y,s)\big],
+\end{equation}
+the difference between what $i$ receives when $j$ chooses after learning the environment and what $i$ would receive if the continuation best for $i$ in expectation were fixed now.
+\end{definition}
+
+\begin{proposition}[Whose option]\label{prop:whose-option}
+For every agent $j$, $O_j^j(x)\geq 0$. For $i\neq j$, $O_i^j(x)$ is nonnegative whenever $u_i$ and $u_j$ induce the same ordering of $A^j(x)$ in every environment, and it can be negative otherwise.
+\end{proposition}
+
+\begin{proof}
+$O_j^j\geq 0$ is Proposition~\ref{prop:option} applied to the payoffs $u_j(y,\cdot)$, $y\in A^j(x)$, with zero maintenance cost. If $u_i$ and $u_j$ are ordinally aligned on $A^j(x)$ in every environment, then $y^j(x,s)$ also maximizes $u_i(\cdot,s)$, so $O_i^j=O_i^i\geq 0$. For negativity, take two admissible states with $u_i(y_1,\cdot)=1$ and $u_i(y_2,\cdot)=0$ in every environment, while $u_j(y_2,s)>u_j(y_1,s)$ in every environment. Then $j$ always selects $y_2$, and $O_i^j=0-1=-1$.
+\end{proof}
+
+Separating descriptive breadth from valuation removes a sign ambiguity that would otherwise run through the essay. Breadth is unsigned and says nothing about desirability. Option value is signed, is computed only over admissible states, and depends on who controls the choice. A foreclosure that shrinks $A^j(x)$ to $A^j(x')$ costs agent $i$ the amount $\E_s[u_i(y^j(x,s),s)]-\E_s[u_i(y^j(x',s),s)]$, which is nonnegative when $j=i$ and may be negative when the controller is misaligned with $i$: removing a branch from a misaligned controller's option can benefit those it affects. Several later results are statements about the distribution of $O_i^j$ across the index pair. Proposition~\ref{prop:aggregate-public} describes gains to a controlling agent accompanied by losses to others, and Proposition~\ref{prop:revision-capacity} in Section~\ref{sec:political} describes the same pattern for authority over institutions. The producer-side accounting boundary of Observation~\ref{obs:boundary} is the restriction of a social evaluation $\sum_iw_iO_i^j$ to agents $i$ and controllers $j$ inside the producing authority.
+
+The asymmetry is common because present completion is visible while future foreclosure is counterfactual. The completed building can be photographed, the standardized database generates reports, the resolved case can be counted. The alternative room arrangement, the unrecorded category, the later claimant excluded by the finished system leave no corresponding object. Their absence does not appear as a loss because it never becomes actual enough to enter the ledger. Let $M(z)\in[0,1]$ be the probability that consequence $z$ enters institutional evaluation, with realized outputs $Z_{\mathrm{real}}$ and lost continuations $Z_{\mathrm{lost}}$. The measured value of completion is
+\begin{equation}
+\widehat V(C)\ =\ \sum_{z\in Z_{\mathrm{real}}}M(z)v(z)-\sum_{w\in Z_{\mathrm{lost}}}M(w)v(w),
+\end{equation}
+whereas the true value sets $M\equiv 1$. When $M\approx 1$ on realized outputs and $M\approx 0$ on lost continuations, completion acquires an evidentiary advantage: it produces countable achievements, while foreclosure produces structured nonoccurrences.
+
+\begin{observation}\label{obs:measurability}
+If realized gains are measured more reliably than foreclosed alternatives, an institution acting on measured net benefit will systematically overselect completion.
+\end{observation}
+
+\begin{proof}
+Let true gain be $G>0$ and true foreclosure loss $L>0$, measured as $\widehat G=m_GG$ and $\widehat L=m_LL$ with $1\geq m_G>m_L\geq 0$. The institution completes when $m_GG>m_LL$, that is when $G/L>m_L/m_G$. Completion is truly beneficial only when $G/L>1$. Since $m_L/m_G<1$, every project with $G/L\in(m_L/m_G,1)$ is completed at a true loss, and this interval is nonempty. Its width $1-m_L/m_G$ grows as the measurability gap widens.
+\end{proof}
+
+Retained openness therefore requires representation. If an alternative cannot be described, its loss cannot be evaluated; if a future claimant cannot be represented in present procedure, the narrowing of that claimant's options appears costless. Maintaining latent incompletion requires a \emph{ledger of possibilities} beside the ledger of achievements. Such a ledger need not enumerate every future use, which would reproduce the fantasy of complete anticipation. It must record where commitments are made, which branches they remove, who is authorized to make them, what evidence would justify reopening them, and what infrastructure keeps reopening possible. Its function in the terms of Observation~\ref{obs:measurability} is to raise $m_L$.
+
+\subsection{An incompletion diagnostic}
+
+The unfinished artifact is not valuable because delay is virtuous. Its value arises from the conjunction of uncertainty, irreversibility, and preserved choice. When uncertainty is negligible, commitment loses little. When reversal is cheap, premature completion can be corrected. When no meaningful alternatives remain, unfinishedness is mere delay. Let $\sigma$, $R$, and $D_{\mathfrak{A}}$ be relevant uncertainty, irreversibility, and the diversity of admissible continuations (states in $\mathfrak{A}$ only), and let $H$ and $L_{\mathrm{use}}$ be the costs of maintaining openness and of delayed use over the horizon in question, all normalized to $[0,1]$ so that the ratio is dimensionless. Define
+\begin{equation}\label{eq:Lambda}
+\Lambda(x)\ =\ \frac{\sigma\,R\,D_{\mathfrak{A}}}{H+L_{\mathrm{use}}+\epsilon},\qquad\epsilon>0.
+\end{equation}
+The delayed-use term is essential. Without it, a medically necessary but highly irreversible intervention would score as a strong candidate for remaining unfinished even when delay is itself catastrophic. $\Lambda$ is an ordinal heuristic, not a measurement. Large $\Lambda$ indicates a strong prima facie case for preserving latent incompletion; small $\Lambda$ indicates that closure is unlikely to destroy valuable optionality. The multiplicative numerator is not arbitrary. Proposition~\ref{prop:option} shows that option value vanishes when one design dominates in every environment (no effective uncertainty, $\sigma=0$) or when only one admissible design exists ($D_{\mathfrak{A}}=0$), and the option has no value to protect when an error can be undone at no cost ($R=0$), since one may then complete now and switch later. The expression is diagnostic rather than mechanical. Its contribution is to show why uncertainty without irreversibility, irreversibility without alternatives, and alternatives without affordable preservation do not independently justify delay.
+
+Completion should consequently be understood as the exercise of an option, not the natural disappearance of deficiency. Once exercised, the option may cease to exist. The normative issue is not whether decisions must be made, since action always selects among futures, but whether each decision occurs at a time, scale, and level of abstraction appropriate to the evidence available. The next problem is architectural in the broadest sense: how an artifact can stabilize enough structure to function while withholding precisely those commitments that later agents have the strongest claim to determine for themselves.

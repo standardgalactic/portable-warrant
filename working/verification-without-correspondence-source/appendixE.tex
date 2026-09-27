@@ -1,0 +1,158 @@
+\chapter{Navier--Stokes Source Audit}
+\label{app:nsaudit}
+
+\begin{center}
+\fbox{\parbox{0.92\textwidth}{\textbf{Status of this appendix: provisional, text-level audit.} Prepared on 8~October 2026 by a single reviewer (an AI agent). Artifacts were read as text. No Lean code was compiled, no mathematics was independently re-derived, and no claim below is a refereed verification. The appendix separates what was confirmed by reading a primary artifact, what remains the report of the source paper, what the monograph interprets, and what is unverified together with the source that would resolve it.}}
+\end{center}
+
+\section{Purpose, and what counts as primary}
+
+Chapters~\ref{ch:derivative} to~\ref{ch:establishes} were written from Bastounis, Circelli, and Hansen \cite{BCH26}, without access to the artifacts it describes. Chapter~\ref{ch:abundance} likewise reports material from its Section~5.1 at one remove. This appendix records what changed when some of those artifacts became readable.
+
+Two levels of source must be kept apart. For the claims about OpenAI's announced proof, the primary artifacts are OpenAI's natural-language paper, its Lean repository, and the program outputs the repository contains. The paper of Bastounis, Circelli, and Hansen is a secondary account of those artifacts, and is primary only for its own claims: its theorems, its own arguments, and its forecasts. For the 2026 developments of Chapter~\ref{ch:abundance}, the primary artifacts are the cited paper, thread, declarations and blog post.
+
+Each statement below carries one of four marks.
+
+\begin{description}[leftmargin=1.4cm,labelwidth=1.2cm,font=\normalfont\bfseries]
+\item[P] Confirmed by reading the primary artifact during this audit. The reading is of text, by one reader.
+\item[S] The report of the source paper \cite{BCH26}, not confirmed here.
+\item[I] An interpretation or classification made in the monograph, with its stated status.
+\item[U] Unverified. The resolving source is named.
+\end{description}
+
+Two rules govern the register. An artifact that could not be reached is not evidence against the claims made about it: its claims stay marked S or U and are neither supported nor weakened by the failure of access. A secondary description is not promoted: when a source paper says a primary artifact contains something, the claim stays S until the artifact is read, and reading it changes the mark only for the passage actually read.
+
+\section{Artifacts consulted}
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{@{}p{0.31\textwidth}p{0.62\textwidth}@{}}
+\toprule
+Artifact & Identification and reading \\
+\midrule
+OpenAI, \emph{Finite time blowup for Navier--Stokes} \cite{OpenAI26NS} & PDF, 166 pages, linked from the repository README at \path{cdn.openai.com/pdf/32d9f210-8b73-45e0-91bc-82a30aef8a9a/navier-stokes.pdf}; retrieved 8~October 2026; SHA-256 begins \texttt{0e779481c4da}. The PDF carries no version field. Read: Lemma~8.6 with (8.19) and its proof; Lemma~10.5 with (10.15) to (10.19) and the following energy estimate. Nothing else was read. \\
+\path{openai/NavierStokesAndEuler} \cite{OpenAI26Lean} & Cloned read-only; HEAD is commit \texttt{f9e8bc5b38b6e212696e8a30e3e91517af887bbd}, the commit cited by the source. Declared toolchain \texttt{leanprover/lean4:v4.34.0-rc2}; Mathlib revision \texttt{85e3a25e006c35636f0e53b0e9296caca2685bc0} per \path{lake-manifest.json}. Read as text: the declarations named in Table~\ref{tab:nsaudit}. \\
+Rammal et al., \emph{Formalizing mathematics at scale} \cite{Rammal26} & arXiv:2605.29955, PDF retrieved 8~October 2026; SHA-256 begins \texttt{a2bcbf8cf4e4}. Abstract, Section~3, the table of per-book results and Appendix~G were read; the remaining sections were not. \\
+\path{facebookresearch/atlas-lean} & Cloned read-only; HEAD is commit \texttt{99cc25d8ba4a63e69844131ec508bb46ad526694} (7~October 2026). The root now describes a version~2 in preparation and keeps the original release in \path{v1/}. Only the README files and the review guidelines were read. \\
+Leiden Declaration \cite{Leiden26} & Zenodo record 20302944, PDF retrieved 8~October 2026; SHA-256 begins \texttt{f6c545ebfd69}. Searched for the quoted passage. \\
+\emph{A Severe Misalignment of AI in Mathematics} \cite{Avila26} & Zenodo record 22737750 (version 22737751), 2-page PDF retrieved 8~October 2026; SHA-256 begins \texttt{32e3afcefd9a}. Read in full. \\
+\bottomrule
+\end{tabular}
+\caption{Artifacts consulted in this audit, with retrieval details. The hash prefixes permit a later reader to check that the same files are being discussed.}
+\end{table}
+
+Buzzard's blog post \emph{FLT: Anthropic has beaten me to it} \cite{Buzzard26} was read on 8~October 2026 through a page-fetching tool that returns summaries and quotations truncated to a fixed length, so only the passages quoted in item~32 were seen, and the full text was not read. The Anthropic announcement and the formalization's own repository, to which the post links, were not read.
+
+Not consulted: the Euler paper and the Euler directory of the repository; the Lean community discussion thread concerning the Meta project; and the experiment linked in Remark~3.4 of the source. An attempt to reach the thread failed. The community chat page loads only through a script and returned no messages, and the public archive of that chat lists no autoformalization stream and shows a last-update date of 28~February 2026, which precedes the thread. These failures say nothing about the thread's contents. The figures of the source that reproduce chatbot output were not reproduced and carry no evidential weight here.
+
+\section{Audit of the two documented discrepancies}
+
+\setlength{\LTpre}{6pt}\setlength{\LTpost}{6pt}
+\begin{longtable}{@{}p{0.04\textwidth}p{0.50\textwidth}p{0.06\textwidth}p{0.34\textwidth}@{}}
+\caption{Claims about the Lean formalization and the natural-language paper. Line numbers are those of the repository at the pinned commit.\label{tab:nsaudit}}\\
+\toprule
+No. & Claim & Mark & Basis or resolving source \\
+\midrule
+\endfirsthead
+\toprule
+No. & Claim & Mark & Basis or resolving source \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+\multicolumn{4}{@{}l}{\emph{Derivative case (Chapter~\ref{ch:derivative})}}\\
+1 & Lemma 8.6 of the natural-language paper states $\|N^{-1}F\|_{C^m_y}\le C_m\|F\|_{C^{m+4}_y}$ as (8.19) and its proof says that four more derivatives than the output leave a summable bound $(1+|k|)^{-3}$. & P & Text of the PDF, Section~8. \\
+2 & The proof invokes the divisor bound (6.7) in the form $|v_t\cdot k|^{-1}\le C(1+|k|)$. & P & Text of the PDF. \\
+3 & Lean \path{norm_derivativeWord_inverse_le} (line 1059 of \path{NavierStokes/SmoothFamilyTorusInverse.lean}) assumes sup-norm bounds on \path{xJet (w.length + 5)} of the function and of its swap, and concludes a bound with constant \path{mixedLossConstant w.length * C}. & P & Text of the declaration. \\
+4 & That proof applies \path{coefficient_seminorm_bound} with order \path{w.length + 1}; that lemma (line 368 of \path{SmoothFourierData.lean}) takes jets of order $p+4$ and bounds by $\sum_k (\mathrm{weight}\,k)^{-4}$, with $\mathrm{weight}\,k=1+|k_1|+|k_2|$. & P & Text of both declarations and of \path{weight} in \path{TorusInverse.lean}. \\
+5 & Hence the count is $(m+1)+4=m+5$ for this declaration, against $m+4$ in (8.19). & P, I & The arithmetic is read off the text. Chapter~\ref{ch:derivative} uses it as its explanation and marks it as the monograph's reconstruction. \\
+6 & \path{inverse_finiteJets} and \path{mixedJet_inverse_bound} also require order $n+5$, respectively \path{w.length + 5}. & P & Lines 865 to 868 of \path{SmoothFamilyTorusInverse.lean}, and \path{ParametricTorusInverse.lean} line 654 onward. A second \path{mixedJet_inverse_bound} appears at line 1082 of \path{SmoothFamilyTorusInverse.lean} and was not read. \\
+7 & No declaration in the repository establishes (8.19) with $m+4$ derivatives. & U & A textual search of three files found no such variant; the search is not exhaustive. Resolving source: a search of the whole repository together with a compiled dependency analysis. \\
+8 & The Lean estimate is strictly weaker than (8.19), so the transition is a weakening. & S, I & The source asserts it after taking a supremum over multi-indices, an operation it notes is not done in the declaration. Chapter~\ref{ch:derivative} types the transition as a weakening, provisional. What is confirmed is the difference in hypotheses (items 1 and 3). Non-entailment of (8.19) from the Lean estimate relative to the certified development is not confirmed. \\
+9 & The extra derivative is harmless, or harmful, for the rest of the argument. & U & Neither the source nor the monograph settles it. Resolving source: the places in Section~8 and following of the natural-language paper at which (8.19) is applied, read against the places at which the Lean declarations are applied. \\
+\midrule
+\multicolumn{4}{@{}l}{\emph{Pressure-flux case (Chapter~\ref{ch:pressure})}}\\
+10 & Equation (10.19) of the natural-language paper bounds $\bigl|\int \pi\,w\cdot\nabla\chi_R\bigr|$ by $C_T R^{-1}\bigl[(B_R+1)B_R^{1/2}+R^{-3/4}B_R^{3/4}\bigr]$, for almost every $t\in(0,T)$, in the proof of Lemma 10.5. & P & Text of the PDF. \\
+11 & $B_R=\|\varphi_R^4 w\|_{6}$, $A_R=(\int\chi_R|\nabla w|^2)^{1/2}$, $\chi_R=\varphi_R^8$, and (10.17) bounds $B_R\le C(A_R+R^{-1}\|w\|_2)$. & P & Text of the PDF. \\
+12 & Lean \path{exists_uniform_actual_pressure_flux_bound} (line 576 of \path{NavierStokes/R3/PressureFlux.lean}) gives, for $R\ge1$ and all $t\in(0,T)$, a bound in terms of \path{cutoffL6}, \path{dissipationRoot} and $R^{-7/4}$, in the form displayed in Chapter~\ref{ch:pressure}. & P & Text of the declaration. \\
+13 & \path{cutoffL6 φ w t} is $\|\varphi^4 w\|_6$ and \path{dissipationRoot φ w t} is $\bigl(\int\varphi^8|\nabla w|^2\bigr)^{1/2}$, so that they play the roles of $B_R$ and $A_R$. & P & Definitions in \path{R3/ComparisonSetup.lean}. That \path{ComparisonCutoffs.cutoff R} is $\varphi_R$ and \path{ComparisonCutoffs.weight R} is $\chi_R$ was not checked (U, minor). \\
+14 & The Lean bound depends on $A_R$ and holds for every $t$; the natural-language bound is in $B_R$ alone and holds almost everywhere. & P & Items 10 and 12. \\
+15 & The Lean statement uses $(p-q)$ and $(u-v)$, opposite to $\pi=P-p$, $w=v-u$ in the paper, and the product is unaffected. & P & Text of both. The sign claim about the surrounding definitions beyond the statement was not checked. \\
+16 & The Lean bound is not comparable with (10.19), so the transition is lateral. & S, I & Chapter~\ref{ch:pressure} types it lateral, provisional. Items 10 to 14 confirm the textual difference. Non-entailment in both directions is not confirmed. \\
+17 & After (10.19) the natural-language text uses (10.17) to convert powers of $B_R$ into powers of $A_R$, noting that every power of $A_R$ in the flux bounds is at most $3/2<2$. & P & Text of the PDF following (10.19). This is a fact about the natural-language argument that Chapter~\ref{ch:pressure} does not discuss. Whether a bound of the Lean form could take the place of (10.19) in that absorption step is unexamined (U). \\
+18 & The two proofs differ as the source describes: factoring $\varphi_R^4$ against $\varphi_R^2$; $L^{3/2}$ boundedness of Riesz transforms against Sobolev embedding with $L^2$ boundedness; Hölder exponents; an interpolation at $12/5$ in the Lean proof only. & P (NL side), S (Lean side) & The natural-language side is present in the text (the $L^{3/2}$ bound and the $\varphi_R^4$ commutator identity (10.18)). The Lean proof route was not traced lemma by lemma. \\
+19 & A related Lean bound \path{regularized_flux_bound} exists and is not used in the proof of the main theorem. & P (existence), S (non-use) & Declared at line 38 of \path{R3StressPressureEstimate.lean}. Non-use requires a dependency analysis of the compiled development. \\
+\midrule
+\multicolumn{4}{@{}l}{\emph{Statements about the repository as a whole}}\\
+20 & The repository states that it contains Lean 4 formalizations of the two papers. & P & Its README. This is the repository's own claim about itself, and is not evidence of fidelity. \\
+21 & The development compiles, with no \path{sorry} and no added axioms. & U & A textual search for \path{sorry} and \path{axiom} lines in the Navier--Stokes and Euler source directories returned no matches; this is not a kernel check. Resolving source: \texttt{lake build} with the declared toolchain and revision, and \path{#print axioms} on the main theorems. \\
+22 & Other mistranslations exist beyond the two documented (Remark 3.4 of the source). & U & Resolving source: the experiment linked in that remark; a systematic comparison. The monograph's Chapter~\ref{ch:establishes} treats the remainder as unexamined, and that stands. \\
+23 & The Euler formalization is likely to contain substantial mistranslations. & S (forecast) & The source labels this a prediction from preliminary examination. The Euler artifacts were not read. Resolving source: the Euler paper and the Euler directory, compared as in items 1 to 19. \\
+24 & The natural-language proof is correct, or incorrect. & U & No part of this audit bears on it. \\
+\end{longtable}
+
+\section{What the audit changes in the main text}
+
+The audit confirms the textual facts on which Chapters~\ref{ch:derivative} and~\ref{ch:pressure} rest: the statements compared there are the statements in the artifacts, and the exponents the source reports are present in the declarations. It does not confirm the classifications. The weakening and lateral typings remain interpretations (items 8 and 16) because each is a claim of non-entailment relative to a certified background, and no certificate of non-entailment has been produced by the source or by this audit. The change in epistemic standing is therefore the following. The rows of Table~\ref{tab:standing} that rest on the content of the cited declarations are now supported by a reading of those declarations, while the row recording kernel acceptance is not, and the rows recording the classification are not.
+
+The audit also exposes two points that Chapters~\ref{ch:derivative} and~\ref{ch:pressure} did not state. First, the natural-language paper itself converts its flux bound into a bound in $A_R$ immediately after (10.19) (item 17), so that the apparent difference in the variables used by the two estimates is less sharp as a difference in what the surrounding argument needs than as a difference in what each estimate says. Whether that matters is open. Second, the paper's own lemma depends on a particular absorption (powers below $2$), and a downstream check of the Lean bound should be made against that step and not against (10.19) as a free-standing inequality.
+
+\section{Audit of the claims of Chapter~\ref{ch:abundance}}
+
+Chapter~\ref{ch:abundance} reports Section~5.1 of the source. The items are marked below.
+
+\begin{longtable}{@{}p{0.04\textwidth}p{0.50\textwidth}p{0.06\textwidth}p{0.34\textwidth}@{}}
+\caption{Claims of Chapter~\ref{ch:abundance} about the Meta project, the declarations and the Fermat's Last Theorem formalization.\label{tab:abundaudit}}\\
+\toprule
+No. & Claim & Mark & Basis or resolving source \\
+\midrule
+\endfirsthead
+\toprule
+No. & Claim & Mark & Basis or resolving source \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+25 & A paper by Rammal and coauthors (arXiv:2605.29955) reports translating 26 open-access textbooks into Lean 4, producing a library of over 45,000 declarations and about 500 thousand lines. & P & Abstract and conclusion of the paper. These are the paper's own reports of its output. \\
+26 & The paper reports 2,855 of 4,007 target statements formalized (71.3\%) over the 26 books, and 40 of 72 (55.6\%) for \emph{Geometry of Manifolds}. & P & Table of per-book results. The figure of 56\% quoted in the community thread matches the second entry. Whether the quoted page number is correct was not checked. \\
+27 & The paper describes statement-level grading by three ``independent'' LLM judges, and states that the harness ``should not a priori be fully trusted''. & P & Section~3 and Section~5.1 of the paper. The paper's use of ``independent'' has the same limitation as the use in the Preface of this monograph. \\
+28 & The semantic verification was mainly performed by other AI systems. & P (as a description of the harness), I (as a characterization) & The harness also includes mechanical checks (structural tags, dependency analysis). ``Mainly'' is the source's word; the paper's own division of labour was not measured here. \\
+29 & The paper reports a human expert inspection of one example book (Stanley's \emph{Algebraic Combinatorics}, 37 of 39 targets) and states that the formalization is mostly solid, that two statements depend on explicitly added axioms, and that the hardest statements are not formalized faithfully. & P & Appendix~G. This is a report by the project, on a single book, and bears on the claim of item 31 in both directions. \\
+30 & Three named members of the Lean community expressed the views quoted in the source. & U (secondary-source quotation) & These are quotations as reproduced by the source paper, not quotations read from the original messages; their wording and context are unverified, and they are strong allegations that should not be treated as primary evidence until the original is read. The source cites the thread as ``Atlas (Meta)'' in the Autoformalization channel, accessed 18 September 2026. Searches on the title and on the quoted sentences found nothing, which is expected for a chat that search engines do not index.  Resolving source: the discussion thread in the Autoformalization channel of the community chat, accessed by the source on 18 September 2026. Not reachable here: the chat page returned no messages and the public archive does not cover the period. The statement that the claims were ``swiftly refuted'' is the source's characterization of three individual opinions; Chapter~\ref{ch:abundance} reports it only as a dispute, and this appendix keeps that wording. \\
+31 & The project's claims were in fact refuted. & U & Not established by items 26 to 30. Item 29 reports a mixed outcome on the book inspected by the project itself. A judgment requires inspection of the library's statements by qualified reviewers. The project's repository preserves its original release under \path{v1/}, with a per-book \path{report.json} for each source book, which is an independent route to the mathematical criticism that does not depend on the thread. Only the README files of that repository were read, and the reports were not examined. \\
+32 & A formalization of Fermat's Last Theorem attributed to Anthropic comprises about 13 million lines of Lean. & P (partly), U & The post of 4~September 2026 (modified 5~September) states that the proof is ``over 13.4 million lines of code'', that the announcement was made by Anthropic (``officially announced by Anthropic''), and that its author compiled the code base and ran the \texttt{comparator} tool on it with a positive result (``it checks out''). These sentences were seen only as truncated quotations. The post also qualifies the scope of the result, in a formula given as an image that was not read. The blog byline shows the blog account and not a personal name; the identification of the author as K.~Buzzard is the source paper's. Not confirmed: the size as measured by anyone else, the compilation result, the scope qualification, and the Anthropic announcement itself. A separate, earlier human-led formalization project of the same theorem exists at Imperial College; it was not read and is not evidence for this claim. \\
+33 & The Leiden Declaration of June 2026 contains the quoted passage about plausible but unreliable arguments and about formalizations. & P & Zenodo record dated 2 June 2026; the passage occurs verbatim as the first numbered statement of the declaration text. \\
+34 & A September 2026 declaration titled \emph{A Severe Misalignment of AI in Mathematics} contains the quoted passage on conceptual understanding and ``true/false'' statements. & P & Zenodo record dated 11 September 2026; the passage is present verbatim. \\
+35 & That declaration was initiated by 25 Fields medalists. & U (partly P) & The record lists 25 authors, and the text of the declaration marks each with a Fields Medal and a year. The word ``initiated'' does not occur in the declaration text. Whether each listed Fields Medal is correctly stated was not checked. \\
+\end{longtable}
+
+\section{Register of unverified claims and their resolving sources}
+
+\begin{longtable}{@{}p{0.07\textwidth}p{0.43\textwidth}p{0.42\textwidth}@{}}
+\caption{Unverified items with the source needed to resolve each. Items that were not accessible are not evidence against the claims.\label{tab:unverified}}\\
+\toprule
+Items & Precise unverified claim & Required source \\
+\midrule
+\endfirsthead
+\toprule
+Items & Precise unverified claim & Required source \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+7, 21 & The cited declarations, and the whole development, are accepted by the Lean kernel without \path{sorry} or added axioms; no declaration proves (8.19) at order $m+4$. & A build with the repository's declared toolchain and Mathlib revision, \path{#print axioms} output, and a whole-repository dependency analysis. \\
+8, 16 & Non-entailment relative to the certified development: (8.19) is not derivable from the Lean estimate, and the two pressure-flux bounds are mutually non-entailing. & A mathematical argument or a countermodel in a stated certified background; the typing of Chapters~\ref{ch:derivative} and~\ref{ch:pressure} cannot be upgraded without it. \\
+9, 17 & Whether the extra derivative, and the form of the Lean flux bound, can be absorbed by the downstream argument. & A trace of every use of (8.19) and (10.19) in the natural-language paper, read against the corresponding uses in the Lean development. \\
+13 & Identification of \path{ComparisonCutoffs.cutoff R} and \path{weight R} with $\varphi_R$ and $\chi_R$. & The definitions in the \path{R3} directory of the repository. \\
+18, 19 & The lemma-by-lemma route of the Lean pressure-flux proof; non-use of \path{regularized_flux_bound}. & A tracing of the proof terms and the compiled dependency graph. \\
+22, 23 & Further mistranslations in the Navier--Stokes case; the forecast for the Euler case. & The experiment cited in Remark 3.4 of the source; the Euler paper and Euler directory compared as in items 1 to 19. \\
+24 & Correctness of the natural-language proof. & Refereeing of OpenAI's paper. Not addressed by this monograph. \\
+30, 31 & The community thread; whether the Meta project's claims were refuted. & The thread itself; independent inspection of the library by qualified reviewers. \\
+32 & The scope qualification stated in the post, the compilation result, and the size, as measured independently of the post's author. & The Anthropic announcement, the formalization's own repository, and a build with the declared toolchain. \\
+35 & That the September declaration was initiated by 25 Fields medalists, and each medal. & The declaration's provenance statement, if any, and the list of Fields Medal recipients. \\
+\end{longtable}
+
+\section{Limits of this audit}
+
+The audit was made by one reviewer, once, from text. The text of a PDF produced by a text-extraction tool may differ from its typeset form in a symbol or a line, and line numbers cited are those of the repository as cloned. Declarations were read, not elaborated: a theorem whose statement reads as in Table~\ref{tab:nsaudit} may still differ in what its implicit arguments and notation mean, which is a statement-correspondence question of exactly the kind this monograph is about. The audit did not ask whether the natural-language mathematics is right, and no part of it should be read as support for or against OpenAI's theorem. It did not cover anything in the repository beyond the declarations named. The reproduction details in Table~\ref{tab:nsaudit} and the artifact table are given so that a second reviewer can repeat the readings and mark any disagreement against the same item numbers.

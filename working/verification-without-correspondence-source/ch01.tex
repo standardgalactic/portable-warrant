@@ -1,0 +1,36 @@
+\part{The Verification Problem}
+
+\chapter{The Proof That Was Not the Proof}
+\label{ch:proofnot}
+
+A formal verification is an event with a definite outcome: a program called a kernel has checked a term against a type and found that the term inhabits it. The outcome is reliable in the sense that matters to the engineering of proof assistants, and the monograph does not dispute it. What it examines is the distance between that outcome and the sentences that are written about it. A formal proof of a statement, a published argument for a theorem, and an answer to a question posed in ordinary mathematical language are three different things, and a verification event bears directly on only the first. This chapter opens the subject with two small cases, taken from the paper of Bastounis, Circelli, and Hansen~\cite{BCH26} that supplies the principal documented material of the monograph, in which every step is elementary and in which the distance can be seen without any technical machinery.
+
+\section{A verified proof of a correct theorem}
+
+The first case is Example 2.1 of the source. The theorem to be proved is that the polynomial $p(x) = x^3 - x^2 - x + 1$ is nonnegative for $x \ge -1$. The supplied natural-language argument proceeds by factorization. It asserts that $p(x) = (x-1)(x+1)^2$, with the root $-1$ of multiplicity two and the root $1$ of multiplicity one, and then concludes from the sign pattern of the factors. The factorization is wrong. Expanding $(x-1)(x+1)^2$ gives $x^3 + x^2 - x - 1$, which is not $p$, and the correct factorization is
+\[
+p(x) = (x+1)(x-1)^2,
+\]
+with the root $-1$ of multiplicity one and the root $1$ of multiplicity two. The theorem is nevertheless true: for $x \ge -1$ the factor $x+1$ is nonnegative and $(x-1)^2$ is nonnegative, so the product is nonnegative.
+
+(For the programme of computer-checked mathematics in general, see \cite{Barendregt05}; for Lean and its library, \cite{Lean4,LeanMathlib20}.) A chatbot asked to translate the supplied argument into Lean returned a proof that compiles. In the course of the translation it found the correct multiplicities, and the proof that Lean accepted follows the correct factorization. The formal proof is valid, it proves the intended theorem, and the kernel accepts it. It does not validate the supplied argument, because the supplied argument is not valid and the formal proof is not a formalization of it. A faithful translation of the argument as written would have failed to compile, and it is the success of the translation that conceals the discrepancy.
+
+A reader who is told only that the translation succeeded learns three things correctly and a fourth incorrectly. The reader learns that a Lean proof of the theorem exists, that it compiles, and that the theorem is true. The reader is also invited to infer that the original argument was sound, and that inference is false. Nothing in the kernel's judgment bears on it.
+
+\section{A verified proof by a different argument}
+
+The second case, Example 2.2 of the source, is the complementary one. For a real symmetric matrix $A$ the theorem is that $\operatorname{tr}(A^2) \ge 0$. The natural-language proof diagonalizes $A$ in an orthonormal eigenbasis, so that $\operatorname{tr}(A^2) = \sum_i \lambda_i^2 \ge 0$. The Lean proof that was returned omits the change of basis. It uses the symmetry of $A$ directly to write $\operatorname{tr}(A^2) = \sum_{i,j} a_{ij}^2$, a sum of squares, from which nonnegativity is immediate.
+
+Both proofs are correct. The theorem is the same, the formal statement expresses it, and the kernel accepts the proof. What differs is the argument, and the difference is not an error. The Lean proof is arguably more direct. A verification of the intended theorem has been obtained and the supplied argument has not been formalized, since the diagonalization, which is the central step of that argument, has no counterpart in the formal proof.
+
+\section{Five situations that must not be merged}
+
+The two cases, with the others that the source documents, separate five situations that are easily assimilated to a single category of machine error. A \emph{false theorem} is a statement that is not true, and no proof of it exists. An \emph{invalid proof of a true theorem} is an argument with an error whose conclusion happens to hold, as in the first case. A \emph{valid alternative proof} is a correct argument that differs from the one supplied, as in the second. A \emph{mistranslated theorem} is a formal statement that is provable and that is not the intended statement, as in the hidden-existence example of Chapter~\ref{ch:hidden}, where a library default silently replaces an undefined quantity. A \emph{verified statement weaker than the original} is a formal result that implies less than the claim it stands in for, as in the derivative estimate of Chapter~\ref{ch:derivative}.
+
+The consequences of the five differ. A false theorem should be detected by the failure of any proof attempt. An invalid proof of a true theorem is repaired by replacing the argument, and the repair is evidence about the theorem and not about the original argument. A valid alternative proof is a gain and not a defect. A mistranslation and a weakening are failures of fidelity that the kernel does not see, and they are the failures that matter for the monograph. Treating them as instances of one thing, called an AI error, loses the information that determines what should be done in each case. The remedies are different, the evidence needed to detect them is different, and the claims that survive are different.
+
+\section{What remains to be established}
+
+The cases lead to the question that organizes the rest of the monograph. After a proof checker accepts a derivation, what remains to be established? A partial answer is already available from the two examples. It remains to be established that the formal statement expresses the intended statement, which is the statement correspondence of Chapter~\ref{ch:nondischarge}. It remains to be established that the formal proof follows the argument that was supplied, which is argument correspondence. And it remains to be established that the definitions, imports, and conventions on which the formal statement depends mean what they were taken to mean, which is the dependency question of Chapter~\ref{ch:preservation}.
+
+Each of these is a question that can be asked of any verification, and none has the status of an optional refinement. The first part of the monograph argues that they are distinct from kernel acceptance, the second that they are the content of autoformalization, the third that no total procedure can settle them in general, the fourth that a documented case exhibits them concretely, and the fifth that they can be represented and preserved even when they cannot be settled. The sixth and seventh parts turn to objectives and institutions and to the design of a system that keeps the questions visible. The thesis of the work is that a verification should be reported together with its residue, the precise list of what remains to be established, and that the habit of reporting only the acceptance gives an account that is correct about the kernel and silent about nearly everything else.

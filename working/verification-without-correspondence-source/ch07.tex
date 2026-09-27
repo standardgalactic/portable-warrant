@@ -1,0 +1,117 @@
+\chapter{The Substitution Problem}
+\label{ch:substitution}
+
+A verification can succeed on a problem other than the one that was posed. The phenomenon has three features that are separate in the literature and are separated here: the posed problem and the solved problem differ in content, the success criterion is satisfied for the solved problem, and the satisfaction is reported as success on the posed problem. The chapter gives a model of tasks and certifiers in which these features can be stated, proves the basic result (RV-015), classifies the operators that produce substitution, and states what an answer-based check can and cannot see.
+
+\section{Tasks and certifiers}
+
+\begin{definition}[Task]
+\label{def:task}
+A \emph{task} $T$ is a pair $(Q_T, \mathrm{Sol}(T))$, where $Q_T$ is a question, specified in some language, and $\mathrm{Sol}(T) \subseteq \mathcal{S}$ is the set of candidates in a fixed candidate space $\mathcal{S}$ that count as solving $Q_T$. Candidates may be numerical answers, truth values, proofs, or formal terms, according to the task.
+\end{definition}
+
+A task is thus identified with the pair of its question and its solution set, and two tasks with the same solution set over the same candidate space can have different questions. The model deliberately retains $Q_T$, since the substitution problem is that the questions differ while a check that sees only candidates cannot tell.
+
+\begin{definition}[Certifier]
+\label{def:certifier}
+A \emph{certifier for $T'$} is a function $\kappa_{T'} : \mathcal{S} \to \{0,1\}$. It is \emph{sound for $T'$} if $\kappa_{T'}(s) = 1$ implies $s \in \mathrm{Sol}(T')$, and \emph{complete for $T'$} if the converse holds. It is \emph{answer-based} if $\kappa_{T'}(s)$ depends on $s$ only through a map $\alpha : \mathcal{S} \to \mathcal{A}$ to a space of final answers.
+\end{definition}
+
+A certifier is constructed for the task its designer has in mind, which is $T'$, the task actually specified in the check. The task the designer or the user intends is $T$. The question of the chapter is what acceptance by $\kappa_{T'}$ says about membership in $\mathrm{Sol}(T)$.
+
+\section{Acceptance does not transfer: RV-015}
+
+\begin{proposition}[RV-015, substitution under acceptance-only certification]
+\label{prop:rv015}
+Let $T$ and $T'$ be tasks over the same candidate space, and let $\kappa_{T'}$ be a certifier for $T'$ that is sound for $T'$. Acceptance by $\kappa_{T'}$ establishes membership in $\mathrm{Sol}(T)$ for every candidate that $\kappa_{T'}$ can accept if and only if $\mathrm{Acc}\subseteq\mathrm{Sol}(T)$, where $\mathrm{Acc}$ is the set of accepted candidates. If $\kappa_{T'}$ is also complete for $T'$, this holds if and only if $\mathrm{Sol}(T') \subseteq \mathrm{Sol}(T)$. Without completeness, the inclusion $\mathrm{Sol}(T')\subseteq\mathrm{Sol}(T)$ is sufficient and not necessary. In either case, apart from degenerate certifiers, the values of $\kappa_{T'}$ do not determine whether the inclusion holds, and it must be separately justified.
+\end{proposition}
+
+\begin{proof}
+Let $\mathrm{Acc} = \{s : \kappa_{T'}(s) = 1\}$. Soundness gives $\mathrm{Acc} \subseteq \mathrm{Sol}(T')$. If $\mathrm{Sol}(T') \subseteq \mathrm{Sol}(T)$ then $\mathrm{Acc} \subseteq \mathrm{Sol}(T)$, which is the sufficiency. Suppose now that $\kappa_{T'}$ is complete, so that $\mathrm{Acc} = \mathrm{Sol}(T')$, and suppose the inclusion fails. Choose $s \in \mathrm{Sol}(T') \setminus \mathrm{Sol}(T)$. Then $\kappa_{T'}(s) = 1$ and $s \notin \mathrm{Sol}(T)$, so acceptance does not establish membership in $\mathrm{Sol}(T)$ for every acceptable candidate, which is the necessity. Without completeness the inclusion is not necessary: let $\kappa_{T'}$ accept only a proper subset of $\mathrm{Sol}(T')$ that lies in $\mathrm{Sol}(T)$ while $\mathrm{Sol}(T')\not\subseteq\mathrm{Sol}(T)$. For the last sentence: the function $\kappa_{T'}$ is fixed once $T'$ and the certifier are fixed, while the truth of $\mathrm{Sol}(T')\subseteq\mathrm{Sol}(T)$ varies with $T$ over tasks sharing the candidate space and $\kappa_{T'}$, so the values of $\kappa_{T'}$ cannot determine it.
+\end{proof}
+
+The proposition has the shape of Proposition~\ref{prop:rv004} for statements, and it is stated for solution sets because the substitution can occur at the level of an answer, a statement, or an argument. The cases are recorded in the form that practice needs. If $\mathrm{Sol}(T')=\mathrm{Sol}(T)$, acceptance transfers, and the substitution is harmless for this candidate space even though $Q_T \ne Q_{T'}$. If $\mathrm{Sol}(T')\subsetneq\mathrm{Sol}(T)$, so that $T'$ asks more of a candidate, acceptance transfers and some solutions of $T$ are rejected. If $\mathrm{Sol}(T)\subsetneq\mathrm{Sol}(T')$, so that $T'$ asks less, acceptance can be a false accept for $T$. The correspondence between these cases and the changes to a statement is given below for statement-level tasks.
+
+\section{The error of an unvetted substitution}
+
+The proposition is qualitative. A quantitative form is available when the candidates are drawn from a distribution, and it shows exactly where an answer-based reading is blind.
+
+\begin{proposition}[Error of reading acceptance as success]
+\label{prop:subserr}
+Let $\mu$ be a probability measure on $\mathcal{S}$ for which the solution sets are measurable, let $\kappa_{T'}$ be sound and complete for $T'$, and consider the claim ``$s$ solves $T$'' made whenever $\kappa_{T'}(s)=1$ and denied otherwise. The probability that the claim is wrong is $\mu(\mathrm{Sol}(T)\,\triangle\,\mathrm{Sol}(T'))$. The false-accept mass is $\mu(\mathrm{Sol}(T')\setminus\mathrm{Sol}(T))$ and the false-reject mass is $\mu(\mathrm{Sol}(T)\setminus\mathrm{Sol}(T'))$.
+\end{proposition}
+
+\begin{proof}
+The claim is wrong at $s$ iff exactly one of $s\in \mathrm{Sol}(T')$ and $s\in \mathrm{Sol}(T)$ holds, that is, iff $s$ lies in the symmetric difference. The two components are the two parts of that set.
+\end{proof}
+
+The proposition says that the claim is wrong exactly on the symmetric difference of the two solution sets and right on its complement, so the check can fail only there. It also says that substituting a task does not matter at all when the symmetric difference has measure zero under the distribution the candidates are drawn from, and may matter greatly when the distribution is concentrated on the difference. The latter occurs when candidates are produced by an optimizer that is searching for acceptance by $\kappa_{T'}$, which places mass where acceptance is easy and not necessarily where $T$ is solved. Chapter~\ref{ch:reward} returns to this in connection with selection by an optimizer.
+
+\subsection*{Answer collisions}
+
+For an answer-based certifier, the blindness is more extreme. Suppose $\kappa(s)=\beta(\alpha(s))$ for fixed $\alpha$ and $\beta$. This is one function, and it is the same function whichever task was intended, so its verdict on each candidate is identical for any two tasks that it is used to certify. Whether the verdict is correct for either depends only on the solution sets, and the check itself cannot register a difference between the questions. The simplest case is a task whose answer is a truth value. Let $T$ ask whether $\sum_{n\ge 1} n^{-2}$ converges and $T'$ ask whether $\sum_{n\ge 1} n^{-3}$ converges. Both have the answer ``yes'', and an answer-based check cannot tell whether the question that was answered is the one that was asked. For a task with a two-element answer space, a random substitution agrees on the answer with substantial probability, and for a task with a numerical answer, agreement on the answer can still be produced by distinct questions that were selected to share it.
+
+This is the structure of the failure that practitioners of reinforcement learning on mathematical problems describe: the final answer is checked, the model restates the problem in a different form, solves the restated problem correctly, and obtains the reward. The posed problem and the solved problem differ in content, and their answers coincide. The monograph does not rely on a particular report of this behavior, and its analysis does not depend on frequency. The proposition shows that an answer-based reward is blind to the substitution on the entire set where the answers agree, whatever the frequency.
+
+\section{Levels of substitution}
+
+The substitution can occur at different levels of the instance of Chapter~\ref{ch:proofnot}. The classification is by the component of the instance that is replaced.
+
+\begin{center}
+\small
+\begin{tabular}{@{}p{2.4cm}p{4.3cm}p{5.6cm}@{}}
+\toprule
+Level & Replaced component & Illustration \\
+\midrule
+Statement & The proposition $F$ is replaced by $F'$ & The exponent of a weight is weakened by one in a hypothesis of a lemma (Chapter~\ref{ch:derivative}) \\
+Assumption & A hypothesis is strengthened, weakened, or added & A standing assumption of a section is dropped or silently added in the formalization (Chapter~\ref{ch:natural}) \\
+Domain & The set on which a claim holds is changed & The time quantifier of an estimate is changed from a.e.\ $t$ to all $t$, and a dependence on a further quantity is added (Chapter~\ref{ch:pressure}) \\
+Definition & A term is bound to a different meaning, including a total default for a partial term & Infimum on the empty set (Chapter~\ref{ch:hidden}) \\
+Argument & The proof is replaced by another proof of the same conclusion & The symmetric-matrix example (Chapter~\ref{ch:proofnot}, Theorem~\ref{thm:rv002}) \\
+Objective & The success condition is replaced by a proxy & A scorer checking a final value in place of a derivation (Chapter~\ref{ch:reward}) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Statement, assumption, domain, and definition substitutions all alter $\llbracket F \rrbracket_\I$ and so alter $\mathrm{Sol}$ for tasks whose candidates are proofs of $F$. Argument substitution leaves the statement unchanged and alters the argument obligation. Objective substitution leaves the posed task intact and replaces the criterion by which candidates are scored, so it alters $\kappa$ rather than $T'$; it is the form that the training chapters take up.
+
+\section{Operators and their observable consequences}
+
+A substitution operator is a map $\sigma$ from tasks to tasks. The classification by the relation of $\mathrm{Sol}(\sigma(T))$ to $\mathrm{Sol}(T)$ gives four classes, loosely parallel to the four transition types of Appendix~\ref{app:formal}.
+
+\begin{center}
+\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+Class & Relation of solution sets & Consequence of acceptance by $\kappa_{\sigma(T)}$ \\
+\midrule
+Equivalent & $\mathrm{Sol}(\sigma T)=\mathrm{Sol}(T)$ & Transfers \\
+Restricting & $\mathrm{Sol}(\sigma T)\subsetneq\mathrm{Sol}(T)$ & Transfers; false rejects possible \\
+Enlarging & $\mathrm{Sol}(\sigma T)\supsetneq\mathrm{Sol}(T)$ & Does not transfer; false accepts \\
+Crossing & neither inclusion & Does not transfer; both errors \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The table's verdicts on transfer assume that $\kappa_{\sigma(T)}$ is sound and complete for $\sigma(T)$. Without completeness, the first two rows still transfer by soundness, and the last two rows may or may not transfer depending on the accepted set.
+
+\subsection*{Statement-level tasks}
+
+For tasks whose candidates are derivations, the model of Definition~\ref{def:task} needs a convention, because derivations of different statements are different objects. Fix $\models_\I$ as in Appendix~\ref{app:formal}. For a formal statement $F$ let $T_F$ be the task with $\mathrm{Sol}(T_F)=\{\pi : \mathrm{concl}(\pi)\models_\I F\}$, the derivations whose conclusion is at least as strong as $F$. This is the reading under which a proof of a stronger theorem is a proof of a weaker one.
+
+\begin{lemma}[Direction at the statement level]
+\label{lem:direction}
+If $F\models_\I F'$ then $\mathrm{Sol}(T_F)\subseteq \mathrm{Sol}(T_{F'})$.
+\end{lemma}
+
+\begin{proof}
+If $\mathrm{concl}(\pi)\models_\I F$ and $F\models_\I F'$ then $\mathrm{concl}(\pi)\models_\I F'$ by cut.
+\end{proof}
+
+Assume further that $F'$ has a derivation in the candidate space and that $F'\not\models_\I F$. Then the inclusion is strict, and replacing the intended statement $F$ by the strictly weaker $F'$ is an enlarging substitution, and acceptance for $T_{F'}$ does not transfer to $T_F$ in general, while replacing it by a strictly stronger $F'$ is restricting and acceptance transfers. A theorem with a strengthened hypothesis, $H'\to G$ for $H'$ stronger than $H$, is weaker than $H\to G$, so it is an enlarging substitution, which is the content of Proposition~\ref{prop:rv004}. A weakened conclusion is likewise enlarging, given the deduction property used in Proposition~\ref{prop:rv004}, since $G\models G'$ then gives $(H\to G)\models(H\to G')$. For the statement-level model the kernel accepts only derivations whose conclusion is the stated one, so it is sound and not complete for $T_{F'}$; the verdict that an enlarging substitution does not transfer then needs the accepted set itself to leave $\mathrm{Sol}(T_F)$, which holds under the strictness assumption. The two operations are not opposites at this level: both enlarge. The classification of the Navier--Stokes cases remains that of Part~IV, source-supported and provisional, and under this lemma and subject to the source's non-entailment and to derivability of the Lean estimate, the derivative case, in which the Lean estimate is weaker, is enlarging, and this too is provisional.
+
+The observable consequence of each class is the error structure of Proposition~\ref{prop:subserr}. Under the completeness assumption, equivalent and restricting substitutions produce no false accepts. Enlarging and crossing substitutions produce them, and the mass depends on the distribution of candidates. This is the quantity that an audit should estimate if the audit is allowed to sample.
+
+\section{What follows}
+
+Three conclusions are used later. Acceptance by a sound check for $T'$ is evidence about $T$ only through a separately justified relation between $T$ and $T'$, which is a content-level claim and is the subject of $O_{\mathrm{statement}}$. The error of an unvetted reading is concentrated on the symmetric difference of the solution sets and is therefore worst exactly when candidates are selected for acceptance. And an answer-based reward is blind to every substitution that preserves the answer. Chapter~\ref{ch:backtrans} turns to a natural proposal for detecting substitution, which is to translate the formal object back into prose and compare, and shows why the comparison inherits the same difficulty.

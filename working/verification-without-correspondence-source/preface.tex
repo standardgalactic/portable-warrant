@@ -1,0 +1,50 @@
+\chapter*{Preface}
+\addcontentsline{toc}{chapter}{Preface}
+
+A formal proof that a proof assistant accepts is a strong object. It has been checked by a small trusted kernel against a stated environment, and no further argument is needed to know that the term has the type it is said to have. This monograph is about what is not settled by that fact. The type may not be the proposition the author meant, the term may not follow the argument the author gave, and the report of success may therefore assert something that the check never examined. The three questions are kept apart throughout: whether the kernel accepts, whether the formal statement corresponds to the intended one, and whether the formal argument corresponds to the intended one.
+
+The occasion is the account by Bastounis, Circelli, and Hansen~\cite{BCH26} of the Lean verification of an AI-assisted natural-language proof concerning the Navier--Stokes equations, which documents discrepancies between natural-language estimates and the Lean statements that stand in for them. The monograph takes no position on whether the underlying mathematics is correct, and neither does the source. It asks what follows about the standing of a verified artifact when a translation step has not itself been verified, and it answers with definitions, a small number of theorems, and a discipline for reporting.
+
+\section*{What is claimed}
+
+The claims are of four kinds, and the text marks which kind each is.
+
+\emph{Proved results.} Separation results show that the three judgments above are distinct (Chapter~\ref{ch:nondischarge}). A formal specification of obligations, certificates, and ledgers is given in Appendix~\ref{app:formal}, with a traceability theorem and a compositional theorem about preservation. Computability results, due to the source and reconstructed in Appendix~\ref{app:computability}, show that the question of whether a defining term is well defined is hard at every level of the arithmetical hierarchy on classes of specifications that embed a particular family of constructions.
+
+\emph{Conditional results.} Several statements depend on conventions that are stated and can be changed, for instance that a specification with an undefined term corresponds to no formal proposition, or that the consequence relation is derivability from a certified background. The text gives the dependence each time.
+
+\emph{Source-reported claims.} What the Lean statements are, and in what respect they differ from the natural-language ones, is taken from the source. A later text-level reading of the cited passages and declarations, recorded in Appendix~\ref{app:nsaudit}, confirmed the displayed estimates and the exponents, but nothing was compiled and the classification below was not confirmed. The classification of the two documented discrepancies as a weakening and a lateral change is marked source-supported and provisional wherever it occurs.
+
+\emph{Proposals.} The architecture of Part~VII and the reporting practices are design proposals. They are argued for and are not proved to work.
+
+\section*{What is not claimed}
+
+The monograph does not claim that formal verification is unreliable, that the Navier--Stokes argument is wrong, that automated translation is hopeless, or that any particular system has misreported its results. It does not claim a decision procedure for correspondence, and its main negative result is that none exists for unrestricted classes. It does not claim that the restricted classes encountered in practice are hard, and says in several places that they may not be. The preprints on language-model training that are used as illustrations in Part~VI are used for the structure they exhibit, their reported figures are not reproduced beyond what the argument needs, and none of them has been independently checked here.
+
+\section*{How the book is organized}
+
+Part~I states the problem through two small cases and separates the senses in which a result can be said to succeed. Part~II treats natural language as a specification, autoformalization as constrained translation, substitution of one task for another, and the limits of back-translation. Part~III gives the computability results and what survives them. Part~IV applies the framework to the documented Navier--Stokes discrepancies. Part~V develops the theory of obligations, preservation, and discharge, proves the separation theorems, and treats provenance and the immutability of the record. Part~VI turns to reward functions as a source of substitution and to publication under abundance. Part~VII describes a residue-aware verification system and closes with the limits of certification. Appendix~\ref{app:formal} is the formal specification on which Part~V depends, Appendix~\ref{app:computability} collects the computability background, Appendix~\ref{app:counterexamples} catalogues the counterexamples, Appendix~\ref{app:lean} documents an uncompiled Lean prototype, and Appendix~\ref{app:nsaudit} audits the source claims about the Navier--Stokes formalization and the developments of Chapter~\ref{ch:abundance}, marking each as confirmed, reported, interpreted, or unverified.
+
+A reader who wants only the argument can read Chapters~\ref{ch:proofnot}, \ref{ch:success}, \ref{ch:authority}, and~\ref{ch:substitution}, the statement of RV-001 in Chapter~\ref{ch:nondischarge}, and Chapter~\ref{ch:system}. A reader who wants the mathematics should begin with Appendix~\ref{app:formal}.
+
+\section*{Conventions and status}
+
+Results are identified by labels of the form RV-nnn, which are stable across the text and the appendices. A result stated in one chapter and restated in another is proved once. Throughout, \emph{preserved} and \emph{discharged} are different words for different things: preservation is an entailment relation among contents along a chain of transformations, and discharge is a status of an obligation backed by a certificate that may later lose its warrant. Appendix~\ref{app:formal} fixes both.
+
+\section*{Review passes and AI assistance}
+
+\emph{Review procedure.} The mathematical development, meaning Appendix~\ref{app:formal} and the chapters that depend on it, was put through three review passes. Each was carried out by an AI agent given the text and a written brief to look for false statements, proofs that do not establish the advertised conclusion, hidden assumptions, and cross-reference defects. The passes were run in sequence. The second and third read the text as revised after the preceding pass, and their briefs named the earlier findings. The agents did not have access to the source papers, so claims attributed to them were checked only for internal consistency. Their reports are retained with the manuscript sources. The first pass reported four findings that it classed as serious, the second three, and the third none. Every finding was reviewed by the author and the assistant that drafted the text, and the corrections made are in the text.
+
+\emph{What ``independent'' means here.} The word is used only in the sense that the three passes were distinct runs, each with a fresh context that did not contain the drafting conversation. It does not mean epistemic independence. The agents are probably instances of the same family of model as the assistant that drafted the text, and the manuscript does not record the identity of any of them. They read the same text, were given overlapping briefs, and may share training, blind spots and assumptions with each other and with the drafter. Agreement among them is therefore weak evidence of correctness, and the absence of findings in the third pass is not evidence that no errors remain. The passes were not a substitute for refereeing by specialists in logic and proof assistants, and the proofs should be treated as unrefereed.
+
+\emph{Role of AI assistance.} A substantive part of this work was done with an AI assistant, and the distinctions below are those the book itself urges.
+\begin{itemize}[leftmargin=1.5em]
+\item \emph{Drafting.} The prose and the \LaTeX{} source of the chapters and appendices were written by the assistant, working from the author's direction and outline. This is the largest contribution.
+\item \emph{Mathematical discovery.} The thesis, the choice of problem, the list of results RV-001 to RV-021 in outline form, and the editorial decisions are the author's. The assistant proposed formulations, proofs, counterexamples and corrections within that frame, and some statements changed during drafting in response to the review findings (for example the statement of RV-004, which the first pass showed to be false as originally stated). Where a result was first formulated is not recorded precisely, and the author should be consulted before any attribution of a result is made.
+\item \emph{Proof checking.} No proof in the manuscript has been checked by a proof assistant. The Lean prototype of Appendix~\ref{app:lean} is uncompiled and contains placeholders. Proof checking has consisted of the three AI review passes above and of the assistant's own re-reading.
+\item \emph{Independent validation.} None has been done. No specialist has refereed the mathematics, no source claim in Appendix~\ref{app:nsaudit} has been checked by anyone other than the single AI reviewer who prepared it, and no result has been reproduced by a party outside this process.
+\end{itemize}
+
+\bigskip
+\noindent Flyxion\\
+October 2026

@@ -1,0 +1,124 @@
+\chapter{Computability Background and Derivations}
+\label{app:computability}
+
+This appendix collects the computability-theoretic facts that Chapters~\ref{ch:hidden}, \ref{ch:sci}, \ref{ch:futility} and~\ref{ch:nondischarge} use, and separates what is proved here from what is imported. Three kinds of statement appear and are marked. A result marked \emph{standard} is a textbook fact of recursion theory and is cited and not proved. A result marked \emph{source} is a theorem of Bastounis, Circelli, and Hansen~\cite{BCH26} that is reported and not reproved. A result marked \emph{derived} is proved in this appendix from the other two kinds. The aim is that no step in the main text that appeals to the arithmetical hierarchy rests on an unmarked claim.
+
+\section{Standard facts}
+
+Write $W_e$ for the $e$-th recursively enumerable set and $\emptyset'$ for the Halting set. The following are standard.
+
+\begin{enumerate}[label=(S\arabic*), leftmargin=2.6em]
+\item \emph{Normal form.} A set $A\subseteq\mathbb{N}$ is $\Sigma^0_l$ if $A=\{e:\exists z_1\forall z_2\cdots Q z_l\,R(e,\vec z)\}$ for a decidable $R$, and $\Pi^0_l$ if its complement is $\Sigma^0_l$. A set is $\Sigma^0_1$ exactly when it is recursively enumerable.
+\item \emph{Post's theorem}~\cite{Soare87,Rogers67}. $A$ is $\Sigma^0_{l+1}$ if and only if it is recursively enumerable relative to $\emptyset^{(l)}$, and $A$ is $\Delta^0_{l+1}=\Sigma^0_{l+1}\cap\Pi^0_{l+1}$ if and only if it is computable relative to $\emptyset^{(l)}$.
+\item \emph{Hierarchy theorem}~\cite{Soare87}. For every $l\ge1$ there is a $\Sigma^0_l$ set that is not $\Pi^0_l$. In particular $\Sigma^0_l\neq\Pi^0_l$ and $\Delta^0_l\subsetneq\Sigma^0_l$.
+\item \emph{Completeness}~\cite{Soare87}. The set $\mathrm{NTOT}=\{e:\exists n\ \varphi_e(n)\uparrow\}$ is $\Sigma^0_2$-complete under many-one reductions.
+\item \emph{DPRM}~\cite{DPR61,Matiyasevich70}\emph{, nine unknowns (Jones}~\cite{Jones82}\emph{).} Every recursively enumerable relation $S(\vec a)$ has a polynomial $q$ with integer coefficients such that $S(\vec a)\iff\exists x_1,\dots,x_9\in\mathbb{N}\ q(\vec a,x_1,\dots,x_9)=0$. The number of unknowns, nine, is what the main text calls the bound $k\ge9$; padding with dummy unknowns gives all larger $k$.
+\end{enumerate}
+
+\begin{lemma}[Derived: a complete set is outside the lower classes]
+\label{lem:outside}
+If $A$ is $\Sigma^0_l$-complete under many-one reductions, then $A\notin\Pi^0_l$, hence $A\notin\Delta^0_l$, and $A$ is not computable relative to $\emptyset^{(l-1)}$. In particular a $\Sigma^0_2$-complete set is neither recursively enumerable nor co-recursively enumerable.
+\end{lemma}
+
+\begin{proof}
+By (S3) choose a $\Sigma^0_l$ set $C$ that is not $\Pi^0_l$. Since $A$ is complete, $C\le_m A$ by a computable $g$ with $e\in C\iff g(e)\in A$. If $A$ were $\Pi^0_l$, then $C=g^{-1}(A)$ would be $\Pi^0_l$, because $\Pi^0_l$ is closed under computable preimages, a contradiction. Hence $A\notin\Pi^0_l\supseteq\Delta^0_l$. By (S2) the sets computable relative to $\emptyset^{(l-1)}$ are $\Delta^0_l$, so $A$ is not among them. For $l=2$: a $\Sigma^0_1$ set and a $\Pi^0_1$ set are both in $\Delta^0_2\subseteq\Sigma^0_2\cap\Pi^0_2$, and a $\Sigma^0_2$-complete set is not $\Pi^0_2$, so it is not $\Sigma^0_1$ or $\Pi^0_1$, the latter since $\Pi^0_1\subseteq\Pi^0_2$.
+\end{proof}
+
+\section{The set $d$}
+
+Fix $k\ge9$ and a computable enumeration $(p_e)_{e\in\mathbb{N}}$ of the integer-coefficient polynomials in $k+1$ variables. As in Chapter~\ref{ch:hidden}, put $B_e(n)\iff\forall\vec x\in\mathbb{N}^k\ p_e(n,\vec x)\neq0$ and $d=\{e:\exists n\ B_e(n)\}$.
+
+\begin{proposition}[Derived: $d$ is $\Sigma^0_2$]
+\label{prop:dsigma2}
+The set $d$ is $\Sigma^0_2$.
+\end{proposition}
+
+\begin{proof}
+The relation $p_e(n,\vec x)\neq0$ is decidable in $(e,n,\vec x)$, since $p_e$ is computed from $e$ and evaluated on natural numbers. The set $\{(e,n):\forall\vec x\,p_e(n,\vec x)\neq0\}$ is therefore $\Pi^0_1$, as a universal quantifier over the computable bijective image of $\mathbb{N}^k$ in $\mathbb{N}$ can be absorbed into one quantifier. Prefixing $\exists n$ gives a $\Sigma^0_2$ set.
+\end{proof}
+
+\begin{theorem}[Source, Theorem A.3, with the derivation made explicit]
+\label{thm:dcomplete}
+For $k\ge9$ the set $d$ is $\Sigma^0_2$-complete under many-one reductions.
+\end{theorem}
+
+\begin{proof}[Derivation from (S4) and (S5)]
+By Proposition~\ref{prop:dsigma2} the set is $\Sigma^0_2$. For hardness, let $S=\{(e,n):\varphi_e(n)\downarrow\}$, which is recursively enumerable. By (S5) there is a polynomial $q(e,n,x_1,\dots,x_9)$ with $\varphi_e(n)\downarrow\iff\exists\vec x\,q(e,n,\vec x)=0$. For each $e$ the polynomial $q(e,\cdot)$ in the variables $(n,\vec x)$ occurs in the enumeration, at an index $f(e)$ that can be found effectively, after padding to $k$ unknowns if $k>9$. Then $\varphi_e(n)\uparrow\iff\forall\vec x\,q(e,n,\vec x)\neq0\iff B_{f(e)}(n)$, so $e\in\mathrm{NTOT}\iff\exists n\,B_{f(e)}(n)\iff f(e)\in d$. Thus $\mathrm{NTOT}\le_m d$ and (S4) completes the argument.
+\end{proof}
+
+The derivation is the one the source gives, and the cited ingredients are (S4) and (S5). The appendix therefore adds no new content to the source's proof of this theorem and records that it rests on those two facts.
+
+\begin{corollary}[Derived]
+\label{cor:dconsequences}
+For $k\ge9$: (i) $d$ is not computable relative to $\emptyset'$, so no total procedure decides $e\in d$ even with an oracle for the Halting problem; (ii) $d$ is neither recursively enumerable nor co-recursively enumerable; (iii) every sound certification scheme whose set of accepted indices is recursively enumerable accepts a proper subset of $d$.
+\end{corollary}
+
+\begin{proof}
+(i) and (ii) are Lemma~\ref{lem:outside} with $l=2$. (iii) Let $\mathrm{Acc}\subseteq d$ be the accepted set and suppose it is recursively enumerable. If $\mathrm{Acc}=d$ then $d$ would be recursively enumerable, contradicting (ii).
+\end{proof}
+
+\section{What the corollary does not say}
+
+Three limits of the result are recorded because they are easily misread.
+
+First, the hardness is uniform. For a single fixed $e$ the statement $e\in d$ is a fact, either true or false, and nothing here says that a proof of it cannot be found. The corollary concerns the absence of a single procedure that works for all $e$ and, in part (iii), the absence of a single recursively enumerable certificate scheme that is both sound and complete. Chapter~\ref{ch:futility} draws the practical consequence that such schemes can be sound and partial, and no more.
+
+Second, the bound $k\ge9$ is the state of the literature on (S5). The results do not assert decidability for fewer unknowns, and the absence of a hardness proof for $k=8$ is not evidence of decidability there.
+
+Third, the corollary concerns the set $d$ and not, without a further convention, the set of indices at which statement correspondence holds. The step from one to the other is the subject of the next section.
+
+\section{From $d$ to statement correspondence}
+
+\begin{proposition}[Derived: the hidden-existence family under the convention]
+\label{prop:hiddenderive}
+Let, for each $e$, $V_e=(N_e,P_e,\mathcal{I},\Gamma,F_e,\pi_e)$ be the instance of Chapter~\ref{ch:hidden}. Assume (a) $\Gamma\vdash\pi_e:F_e$ for every $e$, uniformly in $e$; (b) the convention that a specification whose defining term is undefined corresponds to no formal proposition; and (c) Lemma~\ref{lem:sinf}, that for $e\in d$ the formal term denotes the least $n$ with $B_e(n)$. Then $\{e:K(V_e)\}=\mathbb{N}$, $K(V_e)$ is decidable uniformly in $e$, and $\{e:C(V_e)\}=d$.
+\end{proposition}
+
+\begin{proof}
+By (a), $K(V_e)$ holds for every $e$, and a uniform proof-checking procedure decides it. If $e\in d$ then by (c) the denotations of $N_e$ and $F_e$ agree, since the identity $(r_e+1)^2=r_e^2+2r_e+1$ is then stated of the same rational $r_e=1/(n_e+1)$ in both. So $C(V_e)$ holds. If $e\notin d$ then $N_e$ has an undefined defining term, so by (b) it corresponds to no formal proposition, and $C(V_e)$ fails. Hence $\{e:C(V_e)\}=d$.
+\end{proof}
+
+\begin{corollary}[Derived: a gap beyond $\Delta^0_2$, conditional]
+\label{cor:gap}
+Under the hypotheses of Proposition~\ref{prop:hiddenderive}, and for $k\ge9$, there is no total computable function, and no function computable relative to $\emptyset'$, that decides $C(V_e)$ uniformly in $e$, while $K(V_e)$ is decidable. The set $\{e:C(V_e)\}$ is neither recursively enumerable nor co-recursively enumerable.
+\end{corollary}
+
+\begin{proof}
+Combine Proposition~\ref{prop:hiddenderive} with Corollary~\ref{cor:dconsequences}.
+\end{proof}
+
+The corollary is conditional on three things that the main text states: the uniform provability (a), the convention (b), and the faithful denotation of the library term on nonempty sets (c). The convention is the source's and a reader who adopts a different one, for instance that undefined specifications correspond to the default value, obtains a different set and a different theorem.
+
+\section{Trustworthy autoformalizers}
+
+Chapter~\ref{ch:sci} defines a trustworthy autoformalizer with refusal for a class $\mathcal{S}$. The following derivation records the reduction used in Theorem~\ref{thm:rv005}.
+
+\begin{proposition}[Derived: RV-005 at level $l$]
+\label{prop:rv005derive}
+Let $\mathcal{S}$ effectively embed the least-number constructions at level $l\ge2$, that is, there is a computable $e\mapsto N^{(l)}_e\in\mathcal{S}$ with $N^{(l)}_e$ well defined iff $e\in d_l$, and suppose $d_l\notin\Delta^0_l$ (Theorem~\ref{thm:A4} of the source). If $T$ is a trustworthy autoformalizer with refusal for $\mathcal{S}$, then $T$ is not computable relative to $\emptyset^{(l-1)}$.
+\end{proposition}
+
+\begin{proof}
+Suppose $T$ is computable relative to $\emptyset^{(l-1)}$. Trustworthiness gives $T(N)\neq\bot\iff N$ is well defined: if $T(N)\neq\bot$ then $N$ is well defined by the first condition, and if $N$ is well defined then $T(N)\ne\bot$ by the second. Hence $e\in d_l\iff T(N^{(l)}_e)\ne\bot$, and $d_l$ would be computable relative to $\emptyset^{(l-1)}$, so $d_l\in\Delta^0_l$ by (S2), a contradiction.
+\end{proof}
+
+The proposition is relative to the source's Theorem~A.4 for the hardness of $d_l$, which is not reproved here. For $l=2$ it is a consequence of Theorem~\ref{thm:dcomplete} and Lemma~\ref{lem:outside}. The statement that the combined problem over all $l$ has $\mathrm{SCI}=\infty$ follows from the equivalence of $\mathrm{SCI}_A$ with the arithmetical hierarchy recorded by the source, together with the fact that for each $l$ the problem $d_l$ is a subproblem requiring index at least $l$.
+
+\section{Summary of dependencies}
+
+\begin{center}
+\small
+\begin{tabular}{@{}p{3.6cm}p{5.4cm}p{3.2cm}@{}}
+\toprule
+Claim & Rests on & Status \\
+\midrule
+$d\in\Sigma^0_2$ & Definition of $d$ & Derived \\
+$d$ is $\Sigma^0_2$-complete & (S4), (S5) & Source, derivation recorded \\
+No decider with $\emptyset'$ oracle & Lemma~\ref{lem:outside} & Derived \\
+No complete r.e.\ certificate scheme & Corollary~\ref{cor:dconsequences}(iii) & Derived \\
+$\{e:C(V_e)\}=d$ & (a), (b), (c) & Derived, conditional \\
+RV-005 at level $l$ & Theorem A.4 of the source & Source, reduction derived \\
+$\mathrm{SCI}=\infty$ & Equivalence of $\mathrm{SCI}_A$ with the hierarchy & Source \\
+\bottomrule
+\end{tabular}
+\end{center}

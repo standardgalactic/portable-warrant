@@ -1,0 +1,89 @@
+\chapter{A Catalogue of Counterexamples}
+\label{app:counterexamples}
+
+The separation results of the monograph are proved by exhibiting instances, and this appendix collects them in one place with the properties each instance has and lacks. Each entry states what is being separated from what, gives the construction in enough detail to be checked, and records the status of the entry. Three statuses are used, and an entry may carry two. \emph{Verified} means that the claims about the construction are checked in the entry itself by elementary computation or argument. \emph{Source-reported} means that a feature of a real artifact is taken from the account of Bastounis, Circelli, and Hansen and has not been checked here. \emph{Toy} means a deliberately small instance that exhibits the structure and carries no empirical content.
+
+\section{Instances that separate the three judgments}
+
+\subsection*{C1. A correct proof of a true theorem by a different argument than the one supplied (Chapter~\ref{ch:proofnot})}
+
+\emph{Separates} kernel acceptance and statement correspondence from validity of the supplied argument. \emph{Construction.} The theorem is $p(x)=x^3-x^2-x+1\ge0$ for $x\ge-1$. The supplied argument asserts $p(x)=(x-1)(x+1)^2$. Expanding gives $(x-1)(x^2+2x+1)=x^3+x^2-x-1\neq p(x)$, so the factorization is wrong. The correct factorization is $(x+1)(x-1)^2=(x+1)(x^2-2x+1)=x^3-x^2-x+1$, and nonnegativity follows for $x\ge-1$ from $x+1\ge0$ and $(x-1)^2\ge0$. \emph{Status.} The arithmetic is verified. That a model's Lean translation corrected the multiplicities and compiled is source-reported.
+
+\subsection*{C2. A faithful statement proved by a route without counterparts (Chapter~\ref{ch:nondischarge}, RV-002)}
+
+\emph{Separates} $K\wedge C$ from $A$. \emph{Construction.} For real symmetric $A$, the claim is $\operatorname{tr}(A^2)\ge0$. One argument diagonalizes, giving $\sum\lambda_i^2$. The other uses symmetry, $\operatorname{tr}(A^2)=\sum_{i,j}a_{ij}a_{ji}=\sum_{i,j}a_{ij}^2$. Both are correct. \emph{Status.} The two computations are verified. That the Lean proof takes the second route is source-reported. The separation holds under a strict argument-correspondence relation that counts a change of basis and a symmetry rewrite as different inferences, and a liberal relation would not separate them.
+
+\subsection*{C3. Two true statements, one proof (RV-001)}
+
+\emph{Separates} $K$ from $C$. \emph{Construction.} The formal statement says there are infinitely many odd numbers. The specifications $N_1$, ``there are infinitely many odd numbers'', and $N_2$, ``there are infinitely many primes'', are both true. The kernel judgment is identical for both. Correspondence distinguishes them only under an intensional equivalence relation, since under logical equivalence of true sentences they correspond equally. \emph{Status.} Verified, with that hypothesis on $\equiv_\I$ stated.
+
+\subsection*{C4. A total default for a partial term (Chapters~\ref{ch:hidden} and~\ref{ch:nondischarge})}
+
+\emph{Separates} $K$, which holds uniformly, from $C$, which holds exactly on the set $d$. \emph{Toy instance.} The real family needs $k\ge9$ unknowns. The structure can be seen with one unknown. Let $B(n)\iff\forall x\ x^2-2\neq0$, which holds for every $n$ over the natural numbers, so the least $n$ is $0$ and the term is well defined. Let instead $B(n)\iff\forall x\ x\neq n$, which fails for every $n$, so no least $n$ exists, the specification's term is undefined, and a library infimum on the empty set returns the default $0$. In both cases the closing identity $(r+1)^2=r^2+2r+1$ is a ring identity and the proof is the same. \emph{Status.} The toy instance is verified and is a toy. The hardness of the real family is Appendix~\ref{app:computability}, with the source's Theorem~A.3.
+
+\section{Instances for the ledger}
+
+\subsection*{C5. A chain that preserves an open obligation (RV-018, part i; RV-009)}
+
+\emph{Separates} preservation from discharge. \emph{Construction.} One obligation $o_0$ with content $p$ and status open. At each step the single successor has content $p$ and status open, and $\Delta_i=\Theta_i=\varnothing$. Then $\Ctx_i(o_{i-1})=\{p\}\ent p$ by reflexivity, so every step is preserving, and nothing is ever discharged. \emph{Status.} Verified.
+
+\subsection*{C6. A discharge that does not secure preservation elsewhere (RV-018, part ii)}
+
+\emph{Separates} discharge of one obligation from preservation of another. \emph{Construction.} Contents $p,q,r$ with $\{p,q\}\nent r$. Obligations $d$ with content $q$ and $o$ with content $r$. The transition discharges $d$, gives $o$ the single successor of content $p$, and assumes nothing. Then $\Ctx_1(o)=\{p,q\}\nent r$, so the transition is non-preserving at $o$, although $d$ is discharged. The discharged $d$ is preserved at its own step, since $q\in\Ctx_1(d)$. \emph{Status.} Verified, given a consequence relation with $\{p,q\}\nent r$, for instance derivability from three independent atoms.
+
+\subsection*{C7. Premises that sum to the claim without any one implying it (RV-019)}
+
+\emph{Separates} weaker successors from failure of preservation. \emph{Construction.} A meet $m$ of $p$ and $q$ with $\{p,q\}\ent m$, $m\ent p$, $m\ent q$, $\{p\}\nent m$ and $\{q\}\nent m$. A model is $\Lang=\{p,q,m\}$ with derivability from the rules $p,q\Rightarrow m$, $m\Rightarrow p$, $m\Rightarrow q$. The obligation $o$ with content $m$ has two successors with contents $p$ and $q$, each strictly weaker, and the transition is nevertheless preserving. \emph{Status.} Verified, with the existence of a meet as a hypothesis on the content language.
+
+\section{Instances for substitution and translation}
+
+\subsection*{C8. An answer-based check that cannot tell two questions apart (Chapter~\ref{ch:substitution})}
+
+\emph{Illustrates} an answer collision. \emph{Construction.} Task $T$: does $\sum_{n\ge1}n^{-2}$ converge? Task $T'$: does $\sum_{n\ge1}n^{-3}$ converge? Both answers are yes. A certifier that maps an answer of yes to acceptance accepts a correct solution of $T'$ as a solution of $T$ and could not accept it otherwise. \emph{Status.} Verified. The tasks are different questions with the same solution set over the answer space.
+
+\subsection*{C9. A proof of a weaker theorem (RV-004)}
+
+\emph{Illustrates} the enlarging direction. \emph{Construction.} Take $H'$ strictly stronger than $H$ and $G:=H'$. The implication $H'\to H'$ is derivable, while $H\to H'$ is derivable if and only if $H\ent H'$, which is excluded. \emph{Status.} Verified, under the deduction property.
+
+\subsection*{C10. A reward that cannot distinguish two trajectories (RV-010)}
+
+\emph{Separates} the reward from the task predicate. \emph{Construction.} The posed task is $x^2=9$ with $x>0$. The trajectory $h_1$ solves it directly and ends at $3$. The trajectory $h_2$ restates the problem as $x^3=27$, solves that over the reals, and also ends at $3$. A reward that checks only the final answer gives $R(h_1)=R(h_2)$, while the task predicate gives $Q(h_1)=1$ and $Q(h_2)=0$, since $h_2$ solved a different problem. By Theorem~\ref{thm:rv010} no classifier of the form $g\circ R$ is correct on both. \emph{Status.} Toy: the trajectories and their task values are stipulated so that the answers coincide.
+
+\subsection*{C11. A round trip that agrees and is wrong in both directions (RV-007)}
+
+\emph{Separates} round-trip agreement from fidelity. \emph{Construction.} $D=\{$``$n$ is even'', ``$n$ is odd''$\}$. The forward translation exchanges the two formal predicates and the reverse translation exchanges them back. The round trip is the identity on $D$, and both translations are unfaithful at both inputs. \emph{Status.} Verified. The real-world analogue, a shared library convention that both directions inherit, is the silent default of C4 and is not an instance of this construction.
+
+\section{Instances from the Navier--Stokes formalization}
+
+\subsection*{C12. A derivative shifted by one (Chapter~\ref{ch:derivative})}
+
+\emph{Illustrates} a weakening. \emph{Construction.} The natural-language estimate (8.19) controls the derivative with $m+4$ derivatives on the right, and the Lean statement uses $m+5$. The Lean statement is the weaker one. \emph{Status.} Source-reported and provisional. The classification as a weakening depends on the source's claim that the Lean estimate does not entail the original. The monograph's reconstruction of the exponents, $(1+|k|)^{-3}$ against $(1+|k_1|+|k_2|)^{-4}$ with a lattice-sum threshold of $s>2$, is verified arithmetic and does not show that the proofs differ in strategy.
+
+\subsection*{C13. A pressure-flux estimate with a changed quantifier (Chapter~\ref{ch:pressure})}
+
+\emph{Illustrates} a lateral change. \emph{Construction.} The natural-language estimate (10.19) holds in $B_R$ for almost every $t$. The Lean estimate also depends on a further quantity $A_R$ and holds for all $t$. Neither estimate is reported to entail the other. \emph{Status.} Source-reported and provisional, for the same reason as C12.
+
+\section{Summary}
+
+\begin{center}
+\small
+\begin{tabular}{@{}llll@{}}
+\toprule
+Entry & Separates & Chapter & Status \\
+\midrule
+C1 & Proof validity from kernel acceptance & 1 & Verified, translation reported \\
+C2 & $K\wedge C$ from $A$ & 16 & Verified, route reported \\
+C3 & $K$ from $C$ & 16 & Verified, intensional $\equiv$ \\
+C4 & $K$ from $C$, uniformly & 9, 16, App.~B & Toy; family from source \\
+C5 & Preservation from discharge & App.~A & Verified \\
+C6 & Discharge from preservation elsewhere & App.~A & Verified \\
+C7 & Weaker successors from failure & App.~A & Verified \\
+C8 & Questions with one answer & 7 & Verified \\
+C9 & Stronger from weaker theorem & 16 & Verified \\
+C10 & Reward from task & 19 & Toy \\
+C11 & Round trip from fidelity & 8 & Verified \\
+C12 & Statement strength & 12 & Source-reported \\
+C13 & Quantifier and dependence & 13 & Source-reported \\
+\bottomrule
+\end{tabular}
+\end{center}

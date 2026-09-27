@@ -1,0 +1,95 @@
+\part{Architectures of Responsible Verification}
+
+\chapter{A Residue-Aware Verification System}
+\label{ch:system}
+
+The preceding chapters define the objects and prove the properties of a theory of verification residue. This chapter specifies a system that implements the theory, in the sense of a design whose components correspond to the definitions and whose guarantees correspond to the theorems. The specification is the constructive culmination of the monograph, and it is written with the discipline that has governed the rest: the system verifies what can be verified mechanically, records what cannot, and does not claim to solve unrestricted semantic equivalence.
+
+\section{Proof checking as one component}
+
+In the system, a proof checker is one component of a larger process. A claim retains its natural-language formulation and its argument as received. It retains the explicit interpretation $\mathcal{I}$ under which correspondence is to be assessed, the formal representations offered for it, the proof artifacts accepted for them, the dependency information linking declarations, and the unresolved correspondence obligations. The system supports independent formalization attempts of the same claim by different parties, the comparison of the resulting theorem statements, and the detection of strengthened hypotheses and weakened conclusions among them. It records discrepancies explicitly, with the type of Definition~\ref{def:typing} where a certificate for the type is supplied, and with the status of an open obligation otherwise.
+
+The comparison of statements is the point at which the system most visibly relies on the framework. Given two formalizations $F_1, F_2$ of one claim, the system does not decide equivalence. It accepts a certificate of entailment in either direction, checks it with the kernel against the certified background, and reports one of four outcomes: equivalent, $F_1$ stronger, $F_2$ stronger, or unrelated by available certificates. The last outcome is an abstention in the sense of Chapter~\ref{ch:futility} and not a claim of incomparability. A strengthened hypothesis and a weakened conclusion both produce a weaker statement, so both appear as a certified entailment from the intended statement to the formalized one without the converse. The two are distinguished by which component differs, the hypothesis sets or the conclusions, and the system reports that component alongside the direction. A direction of entailment alone does not identify the kind of change.
+
+\section{The multidimensional status}
+
+Each claim has a status with its own components, each carrying its own evidential and adjudicative semantics:
+\[
+\mathcal{S} = (s_{\mathrm{kernel}},\ s_{\mathrm{statement}},\ s_{\mathrm{argument}},\ s_{\mathrm{dependency}},\ s_{\mathrm{review}}).
+\]
+The kernel component records acceptance in a stated environment. The statement and argument components record the status of the corresponding obligations, with the certificates that support them. The dependency component records the status of the obligations on which the claim relies through the dependency graph, and by Proposition~\ref{prop:rv013} it is the place where an unresolved definition enters the residue of the statements that use it. The review component records human adjudication as certificates with identified authorities. A kernel-verified theorem does not imply that the statement or argument components are satisfied, and the system cannot be configured to report it as though it did.
+
+The question of whether the five components can be summarized by one ranking has a definite answer under stated assumptions. Take each component to range over a finite chain of evidence levels with at least two elements, and order statuses componentwise. By Proposition~\ref{prop:scalar}, if two statuses are incomparable, which occurs whenever one has stronger kernel evidence and the other stronger statement evidence, then no map into the reals both preserves and reflects the order. The following companion statement gives the minimum number of coordinates.
+
+\begin{proposition}[RV-014, dimension]
+\label{prop:dimension}
+The product of $d$ chains, each with at least two elements, ordered componentwise, has order dimension $d$. Consequently a faithful order embedding of the status order $\mathcal{S}$ with five component chains into a product of real lines requires at least five real coordinates, and five suffice.
+\end{proposition}
+
+The statement is a standard fact of order theory, the order dimension of a product of $d$ nontrivial chains being $d$. The upper bound $d$ is immediate: embed each chain order-isomorphically into $\mathbb{R}$. For the lower bound, take $0<1$ in each chain and let $a_i$ be the element with $1$ in coordinate $i$ and $0$ elsewhere, and $b_j$ the element with $0$ in coordinate $j$ and $1$ elsewhere. Then $a_i \le b_j$ if and only if $i \ne j$. Suppose an order embedding into $(\mathbb{R}^m,\le)$ exists. Since $a_i \not\le b_i$, some coordinate $c(i)$ has $a_i(c(i)) > b_i(c(i))$. If $c(i)=c(j)=c$ for $i\neq j$, then $a_i \le b_j$ and $a_j\le b_i$ give $a_i(c)\le b_j(c)<a_j(c)\le b_i(c)<a_i(c)$, a contradiction. So $c$ is injective on $\{1,\dots,d\}$ and $m\ge d$. This is the standard example of Dushnik and Miller~\cite{DM41}. The proposition is the precise sense in which a status structure with five independent components cannot be compressed into fewer numbers without loss of the ordering, and it is the reason the system reports the components separately. A scalar may still be presented as a convenience, and when it is, the system labels it as a lossy summary and states the weighting.
+
+A concrete instance is available in a recent report on recovery of ultra-low-bit language models. Wang et al.\ \cite{Wang26} (arXiv:2610.09346) compare their method OnlineQAT with ReasoningQAT on Qwen3-1.7B at two-bit weights over six benchmarks, and report the unweighted mean over the six as the headline score. Their per-task scores at W2A16 are as follows.
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{@{}lccccccc@{}}
+\toprule
+ & GSM8K & MMLU-R & MATH & IFEval & LCB & GPQA-D & AVG \\
+\midrule
+ReasoningQAT & 56.60 & 43.80 & 37.80 & 33.80 & 5.30 & 15.20 & 32.08 \\
+OnlineQAT & 59.82 & 46.33 & 36.00 & 32.49 & 4.83 & 15.66 & 32.52 \\
+\bottomrule
+\end{tabular}
+\caption{Per-task scores at W2A16, as reported by Wang et al.}
+\label{tab:onlineqat}
+\end{table}
+
+Under the componentwise order on the six scores, neither method dominates the other: OnlineQAT is higher on three benchmarks and lower on three. The two are incomparable in the sense required by Proposition~\ref{prop:scalar}, and the mean ranks OnlineQAT above ReasoningQAT by $0.44$, so the map to the mean does not reflect the order, since the inequality of the means would require ReasoningQAT to be componentwise below OnlineQAT. The same holds at W3A16 with a single task, IFEval, on which OnlineQAT is lower by $0.8$. The authors' own text is exact about this: the gain at two bits is described as modest and task-dependent, and a scope statement notes that the comparison covers one model without multiple training seeds or an offline reverse-KL control, that it changes both the prefix distribution and the divergence direction so does not isolate either, and that it supports an empirical comparison and not a causal or compute-efficiency claim. The statement is an instance of recording the residue of a result next to the result. The point of the example is not that the mean is a poor summary, which the authors do not claim, but that the status order of any multi-task comparison contains incomparable pairs, and that a scalar summary resolves them by an implicit weighting that the report should state.
+
+Cheng et al.\ \cite{Cheng26} (arXiv:2610.02462) state the same structure in their introduction as a design requirement: a compression configuration that preserves overall performance may still degrade a required capability. Their measurements on twelve public models show that the loss change under pruning and under quantization differs in sign and in magnitude across mathematics, code, and question answering, with the ordering of capabilities changing from one model family to another. A single score cannot represent this, and the report accordingly presents the three capabilities separately and makes the selection of a method depend on the capability and the budget.
+
+\section{The ledger and the guarantees it supports}
+
+The core of the system is an obligation ledger kept apart from the proof assistant's environment. It stores obligations, certificates, transition certificates, versions, and events as in Chapters~\ref{ch:obligations}, \ref{ch:preservation}, and~\ref{ch:provenance}. Its guarantees are of two layers, as the theory requires.
+
+The syntactic layer is checked mechanically. The ledger verifies that every transition records a disposition for every inherited obligation, which is well-formedness, and it computes the successor sets and ancestry discharges, from which Theorem~\ref{thm:trace} yields that no obligation leaves the ledger without a recorded disposition. It verifies that the dependency graph is acyclic, and that every permitted assumption is either authorized or tracked, which are the admissibility conditions of Definition~\ref{def:admissible}. It verifies that the append-only discipline is respected and that hash chains are intact. All of these are decidable by inspection of finite structures, and none of them depends on the semantics of the contents.
+
+The semantic layer is recorded as conditional. The ledger stores the entailment certificates of transition certificates and checks them with the kernel when they are formal. It does not decide whether the certificates are sound for the intended interpretation, and a preservation result such as Theorem~\ref{thm:compose} is reported with its hypotheses listed, notably the soundness of the certificates and the tracked assumptions that remain in the residue. The ledger can therefore verify that an unresolved question has been preserved without answering the question. This is the system's central capability, and its limits are the limits of the theory: it prevents silent loss, and it does not supply the missing semantics.
+
+\section{A Lean 4 prototype}
+\label{sec:leanproto}
+
+An experimental implementation in Lean 4 is specified here. The specification is a design. A first set of declarations has been written and is documented in Appendix~\ref{app:lean}, but it has not been compiled, no proof has been checked, and two theorem statements carry the placeholder \texttt{sorry}; the prototype is therefore not a formal verification of any result of this monograph. The data structures follow Appendix~\ref{app:formal}. The following sketch indicates the intended shape, and it should be read as unchecked pseudocode in Lean syntax; the declarations of Appendix~\ref{app:lean} differ from it in detail.
+
+\begin{verbatim}
+inductive Status | open | supported | discharged | refuted | defeated
+
+structure Obligation (L : Type) where
+  id      : Nat
+  kind    : ObligationKind        -- formal | statement | argument |
+                                  -- dependency | assumption | ...
+  content : L
+  status  : Status
+  deps    : List Nat
+
+structure Transition (L : Type) where
+  succ    : List (Nat x Nat)      -- Q_i
+  disch   : List Nat              -- Delta_i
+  assumed : List L                -- Theta_i
+
+def WellFormed (inp : List (Obligation L)) (t : Transition L) : Prop :=
+  forall o in inp, o.id in t.disch or exists p in t.succ, p.1 = o.id
+
+theorem trace (chain : List (Transition L)) ... :
+  -- every originating obligation has a discharge in its ancestry
+  -- or a nonempty successor set at the final artifact
+\end{verbatim}
+
+The theorem \texttt{trace} is Theorem~\ref{thm:trace} and is the natural first target, since its proof is a finite induction independent of the semantics of $L$. Acyclicity of the dependency graph and the admissibility conditions would follow as further checked predicates. The semantic layer would be represented by a type of entailment witnesses indexed by a parameter standing for the consequence relation, with the soundness assumption carried as an explicit hypothesis of the preservation theorem.
+
+The experiment is designed with a narrow criterion. The prototype is not expected to solve semantic equivalence and no result of the monograph suggests it could. The criterion is whether recording obligations and transition certificates improves the reliability of certification claims, measured as the detection or preservation of known unresolved obligations. A test suite follows from the cases of the monograph: the polynomial example with the incorrect factorization, in which the argument obligation is refuted; the symmetric-matrix example, in which statement correspondence holds and argument correspondence fails; the hidden-existence case with the silent default, in which the hypothesis-carrying representation is expected to leave an assumption obligation in the residue; and the derivative and pressure-flux cases, in which the expected outputs are a weakening and a lateral transition, each marked source-supported. A pass is a ledger whose residue contains the seeded obligation with the expected status. A failure is a report that shows the seeded obligation settled. The suite tests whether the system refuses to report as settled what is known to be unsettled, and it can say nothing about unknown discrepancies.
+
+\section{What the system does not claim}
+
+The system does not decide correspondence, and by the results of Chapter~\ref{ch:sci} no system of this form can on unrestricted classes. It does not certify the soundness of the certificates it stores. It does not replace human interpretation, which it records as certificates with identified authorities. It does not guarantee that the kernel's environment matches the one the ledger records, a dependence the system exposes by storing the environment. It claims that the layers of a verification are separated and tracked, that the syntactic layer is checked mechanically, and that the semantic layer is reported honestly as conditional. These are modest claims and they are the ones the theory supports.

@@ -1,0 +1,49 @@
+\setcounter{part}{2}
+\part{The Computational Limits of Interpretation}
+
+\chapter{Undecidability and Hidden Presuppositions}
+\label{ch:hidden}
+
+This part turns from the logic of verification to its computational limits. The question is whether the gap between a verified formal statement and the specification it was meant to express can be closed by a procedure, and the answer developed over this chapter and the next is that on unrestricted classes of specifications it cannot. The argument begins with a small example in which the obstruction is visible without any machinery. A textbook identity so trivial that a proof assistant closes it by ring normalization presupposes that a certain quantity exists, and whether that quantity exists is a question of unbounded arithmetical difficulty. The example is Example 4.1 of Bastounis, Circelli, and Hansen~\cite{BCH26}. The reconstruction below follows their Section 4, and the statements are theirs unless attributed otherwise.
+
+\section{The example}
+
+Fix an integer $k \ge 1$ and a computable enumeration $(p_e)_{e \in \mathbb{N}}$ of integer-coefficient polynomials in $k+1$ variables. For each $e$ and $n \in \mathbb{N}$ let $B_e(n)$ be the predicate
+\[
+B_e(n) \iff \forall (x_1, \dots, x_k) \in \mathbb{N}^k \;\; p_e(n, x_1, \dots, x_k) \neq 0 .
+\]
+When the set $S_e = \{n : B_e(n)\}$ is nonempty let $n_e$ denote its least element, and put $r_e = 1/(n_e + 1)$. A textbook author who has fixed the enumeration, defined $n_e$ as the least $n$ for which $p_e(n, x_1, \dots, x_k) = 0$ has no solution in natural numbers, and defined $r_e$ as above, may then assert that the identity
+\[
+(r_e + 1)^2 = r_e^2 + 2 r_e + 1
+\]
+is obvious. As a statement about numbers it is obvious: it is the expansion of a square, valid for every value of $r_e$. What the sentence does not make explicit is the presupposition that $r_e$ is a well-defined rational number. That depends on whether $n_e$ exists, and so on whether $S_e$ is empty. The hidden question is thus a question about $S_e$, and the apparent triviality of the identity gives no information about it.
+
+The structure of the example is worth stating abstractly, because it recurs. A mathematical sentence has a part that carries its claim, here the identity, and a part that introduces the objects the claim is about, here the definition of $n_e$. The claim is verified or verifiable independently of the introduction, since the identity holds for any value. The introduction is where fidelity is decided, and it can be very hard to check: for well-definedness the difficulty rises with the level of the arithmetical hierarchy.
+
+\section{The silent default}
+
+Section 4.2 of the source makes the danger concrete. Take $k = 2$ and $p_e(n, x_1, x_2) = x_1 + x_2 - n$. For every $n$ the pair $(x_1, x_2) = (n, 0)$ is a solution, so $B_e(n)$ fails for all $n$, the set $S_e$ is empty, and $r_e$ is undefined. A formalizer that translates the textbook sentence into Lean may nevertheless define \texttt{n\_e} as the infimum of the set \texttt{\{n | B\_e n\}}. Lean accepts the definition, and the tactic \texttt{ring} closes the goal. The reason is that the library's \texttt{Nat.sInf} returns $0$ on the empty set. The formalization has silently set $n_e = 0$ and $r_e = 1$, and the identity holds of $r_e = 1$ as it holds of any value. The translation compiles, the proof is accepted, and the statement that was verified is about an object that the original text never defined.
+
+This is a case of the phenomenon that gives the monograph its title. Every judgment the kernel is asked to make is answered correctly. The failure lies entirely in the correspondence between the formal term and the quantity it was meant to denote, and kernel acceptance cannot reveal it. Remark 4.2 of the source draws the consequence for translation. A semantics-preserving autoformalizer must refrain from translating when $r_e$ is undefined, and to refrain correctly it must know, for the given $e$, whether $S_e$ is empty.
+
+\section{Three ways to represent a partial definition}
+
+The example separates three ways in which a formalization can treat a definition whose well-definedness is not settled, and the distinction is the one that Part~V makes precise.
+
+The first is the \emph{total default}. The formal language supplies a total function that returns a conventional value outside the domain, as \texttt{Nat.sInf} does. The resulting term is always defined and the translation always compiles. It is faithful where the original is defined and unfaithful elsewhere, and nothing in the artifact marks which case obtains. The defect is silent, and a total default is a form of assigning a value to an undefined object.
+
+The second is the \emph{partial representation}. The formal object is given an explicit type that records partiality, for example an optional value or a subtype carrying a proof of nonemptiness. Statements about $r_e$ must then either handle the undefined case or be conditional on the proof. The partiality of the original is represented as partiality and not erased.
+
+The third is the \emph{hypothesis-carrying representation}. The formal statement is conditional: for every $e$, if $S_e$ is nonempty then the identity holds for $r_e = 1/(n_e+1)$. The hypothesis of nonemptiness is an explicit assumption. In the vocabulary of Part~V it is an assumption obligation, recorded in the ledger at the moment of translation and remaining in the residue until it is discharged. Such a translation is preserving in the sense of Chapter~17, since the assumption is tracked and the original sentence, which presupposed existence, is entailed by the conditional together with the assumption. The residue contains exactly the question the original text left unasked.
+
+The monograph's position is not that the third representation is always available or always desirable. It is that the first is unfaithful in a manner the kernel cannot detect, and that the other two are faithful because they leave the open question visible.
+
+\section{Acceptance loops and the elementary analogue}
+
+Example 4.3 of the source asks what a guess-and-check loop does with such an example. A loop that generates a candidate translation, submits it to the proof assistant, and halts when the assistant accepts will halt on the silent-default translation, since that translation is accepted. The loop therefore terminates exactly on the mistranslation in this instance. The point generalizes, and Chapter~14 treats it as the mechanism by which acceptance loops convert unfaithful translations into reported successes: acceptance is a test of the formal artifact and carries no information about the artifact's relation to the source.
+
+Example 4.4 gives an elementary analogue in which no computability theory is involved. Replacing ``odd'' by ``prime'' in the sentence ``there are infinitely many odd numbers'' yields a different true sentence, and the altered sentence is as formalizable and as provable as the original. A translation that makes this substitution compiles equally well. The example is useful as a calibration. The hidden-existence construction is not required to exhibit the phenomenon, which is already present in the simplest substitutions, and what the construction adds is a demonstration that detecting the phenomenon is in general beyond any bounded computational level. That is the subject of the next chapter.
+
+\section{What the example does and does not show}
+
+The example shows that a trivial identity can conceal a question about the existence of an object appearing in it. It shows that a formal library's totalizing conventions can erase that question without trace. It does not show that mathematical texts as they occur in practice contain such constructions with any frequency, nor that every definition of the form ``the least $n$ such that $\dots$'' is dangerous. Many such definitions are accompanied by a proof of existence or sit in a context where existence is obvious. The example is a worst case chosen to expose the structure, and the claims of the next chapter are about the structure and not about frequency.

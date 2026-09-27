@@ -1,0 +1,712 @@
+[
+ {
+  "idx": 6,
+  "decl": "DeRhamConcrete.cohomology_isomorphism",
+  "passed": false,
+  "kind": "corollary",
+  "sorry_here": false,
+  "sorry_report": false,
+  "axioms_here": "propext, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "None \u2014 fully proved, no sorry in depende"
+ },
+ {
+  "idx": 65,
+  "decl": "DiracOperator",
+  "passed": false,
+  "kind": "definition",
+  "sorry_here": false,
+  "sorry_report": false,
+  "axioms_here": "propext, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "None \u2014 fully proved, no sorry in depende"
+ },
+ {
+  "idx": 57,
+  "decl": "Donaldson.donaldson_proposition_1_book",
+  "passed": false,
+  "kind": "proposition",
+  "sorry_here": true,
+  "sorry_report": true,
+  "axioms_here": "propext, sorryAx, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "- Donaldson.cauchy_l2_to_cr_estimates (t"
+ },
+ {
+  "idx": 61,
+  "decl": "FiberSum",
+  "passed": false,
+  "kind": "definition",
+  "sorry_here": false,
+  "sorry_report": false,
+  "axioms_here": "propext, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "None \u2014 fully proved, no sorry in depende"
+ },
+ {
+  "idx": 42,
+  "decl": "IsEllipticOperatorOnManifold",
+  "passed": false,
+  "kind": "definition",
+  "sorry_here": false,
+  "sorry_report": false,
+  "axioms_here": "propext, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "None \u2014 fully proved, no sorry in depende"
+ },
+ {
+  "idx": 56,
+  "decl": "LefschetzFibrationMathlib",
+  "passed": false,
+  "kind": "definition",
+  "sorry_here": false,
+  "sorry_report": false,
+  "axioms_here": "propext, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "None \u2014 fully proved, no sorry in depende"
+ },
+ {
+  "idx": 25,
+  "decl": "SymplecticLinearAlgebra.compatible_forms_convex_linear",
+  "passed": false,
+  "kind": "proposition",
+  "sorry_here": false,
+  "sorry_report": false,
+  "axioms_here": "propext, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "None \u2014 fully proved, no sorry in depende"
+ },
+ {
+  "idx": 19,
+  "decl": "almost_complex_structure_criterion",
+  "passed": false,
+  "kind": "theorem",
+  "sorry_here": true,
+  "sorry_report": true,
+  "axioms_here": "propext, sorryAx, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "None \u2014 fully proved, no sorry in depende"
+ },
+ {
+  "idx": 23,
+  "decl": "chern_number_formula",
+  "passed": false,
+  "kind": "corollary",
+  "sorry_here": true,
+  "sorry_report": true,
+  "axioms_here": "propext, sorryAx, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "- hirzebruch_signature_axiom (theorem, t"
+ },
+ {
+  "idx": 66,
+  "decl": "clifford_isomorphisms_exist",
+  "passed": false,
+  "kind": "lemma",
+  "sorry_here": true,
+  "sorry_report": true,
+  "axioms_here": "propext, sorryAx, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "None \u2014 fully proved, no sorry in depende"
+ },
+ {
+  "idx": 58,
+  "decl": "donaldson_holomorphic_approximation_exp_bound",
+  "passed": false,
+  "kind": "proposition",
+  "sorry_here": false,
+  "sorry_report": false,
+  "axioms_here": "propext, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "None \u2014 fully proved, no sorry in depende"
+ },
+ {
+  "idx": 59,
+  "decl": "donaldson_theorem3_axiom",
+  "passed": false,
+  "kind": "theorem",
+  "sorry_here": true,
+  "sorry_report": true,
+  "axioms_here": "propext, sorryAx, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "None \u2014 fully proved, no sorry in depende"
+ },
+ {
+  "idx": 32,
+  "decl": "elliptic_fredholm",
+  "passed": false,
+  "kind": "theorem",
+  "sorry_here": true,
+  "sorry_report": true,
+  "axioms_here": "propext, sorryAx, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "- elliptic_cokernel_finite_dim (theorem,"
+ },
+ {
+  "idx": 31,
+  "decl": "elliptic_regularity",
+  "passed": false,
+  "kind": "corollary",
+  "sorry_here": false,
+  "sorry_report": false,
+  "axioms_here": "propext, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "None \u2014 fully proved, no sorry in depende"
+ },
+ {
+  "idx": 20,
+  "decl": "firstChernClassRep",
+  "passed": false,
+  "kind": "definition",
+  "sorry_here": false,
+  "sorry_report": false,
+  "axioms_here": "propext, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "None \u2014 fully proved, no sorry in depende"
+ },
+ {
+  "idx": 67,
+  "decl": "gauge_action_preserves_solutions",
+  "passed": false,
+  "kind": "proposition",
+  "sorry_here": false,
+  "sorry_report": false,
+  "axioms_here": "propext, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "None \u2014 fully proved, no sorry in depende"
+ },
+ {
+  "idx": 18,
+  "decl": "hirzebruch_signature_theorem",
+  "passed": false,
+  "kind": "theorem",
+  "sorry_here": true,
+  "sorry_report": true,
+  "axioms_here": "propext, sorryAx, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "- hirzebruch_signature_axiom (theorem, d"
+ },
+ {
+  "idx": 38,
+  "decl": "isIntegrable_of_hasHolomorphicCoords",
+  "passed": false,
+  "kind": "proposition",
+  "sorry_here": false,
+  "sorry_report": false,
+  "axioms_here": "propext, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "None \u2014 fully proved, no sorry in depende"
+ },
+ {
+  "idx": 60,
+  "decl": "kodaira_thurston_first_betti",
+  "passed": false,
+  "kind": "lemma",
+  "sorry_here": false,
+  "sorry_report": false,
+  "axioms_here": "propext, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "None \u2014 fully proved, no sorry in depende"
+ },
+ {
+  "idx": 12,
+  "decl": "lagrangian_intersection_c1_close",
+  "passed": false,
+  "kind": "theorem",
+  "sorry_here": true,
+  "sorry_report": true,
+  "axioms_here": "propext, sorryAx, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "- evt_ge_two_critical_points (theorem, d"
+ },
+ {
+  "idx": 49,
+  "decl": "lemma2_L2_adjointness",
+  "passed": false,
+  "kind": "lemma",
+  "sorry_here": false,
+  "sorry_report": false,
+  "axioms_here": "propext, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "None \u2014 fully proved, no sorry in depende"
+ },
+ {
+  "idx": 15,
+  "decl": "local_moser_theorem4_book",
+  "passed": false,
+  "kind": "theorem",
+  "sorry_here": true,
+  "sorry_report": true,
+  "axioms_here": "propext, sorryAx, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "- contractionSurjective_of_injective (th"
+ },
+ {
+  "idx": 68,
+  "decl": "positive_scalar_curvature_vanishing",
+  "passed": false,
+  "kind": "theorem",
+  "sorry_here": true,
+  "sorry_report": true,
+  "axioms_here": "propext, sorryAx, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "- no_reducibles_axiom (theorem, direct)\n"
+ },
+ {
+  "idx": 24,
+  "decl": "sections_principle_Mathlib",
+  "passed": false,
+  "kind": "corollary",
+  "sorry_here": true,
+  "sorry_report": true,
+  "axioms_here": "propext, sorryAx, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "None \u2014 fully proved, no sorry in depende"
+ },
+ {
+  "idx": 70,
+  "decl": "spinc_connections_affine",
+  "passed": false,
+  "kind": "proposition",
+  "sorry_here": true,
+  "sorry_report": true,
+  "axioms_here": "propext, sorryAx, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "None \u2014 fully proved, no sorry in depende"
+ },
+ {
+  "idx": 69,
+  "decl": "spinc_theorem3_complete",
+  "passed": false,
+  "kind": "theorem",
+  "sorry_here": true,
+  "sorry_report": true,
+  "axioms_here": "propext, sorryAx, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "None \u2014 fully proved, no sorry in depende"
+ },
+ {
+  "idx": 62,
+  "decl": "sw_moduli_space_theorem1",
+  "passed": false,
+  "kind": "theorem",
+  "sorry_here": true,
+  "sorry_report": true,
+  "axioms_here": "propext, sorryAx, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "- sw_moduli_compactness_axiom (theorem, "
+ },
+ {
+  "idx": 5,
+  "decl": "symplectomorphism_fixed_points",
+  "passed": false,
+  "kind": "theorem",
+  "sorry_here": true,
+  "sorry_report": true,
+  "axioms_here": "propext, sorryAx, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "- weinstein_identification_bridge (theor"
+ },
+ {
+  "idx": 53,
+  "decl": "thurston_symplectic_fibration",
+  "passed": false,
+  "kind": "theorem",
+  "sorry_here": true,
+  "sorry_report": true,
+  "axioms_here": "propext, sorryAx, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "- fibration_horizontal_nondegen (theorem"
+ },
+ {
+  "idx": 14,
+  "decl": "tubular_neighborhood_theorem",
+  "passed": false,
+  "kind": "theorem",
+  "sorry_here": false,
+  "sorry_report": false,
+  "axioms_here": "propext, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "None \u2014 fully proved, no sorry in depende"
+ },
+ {
+  "idx": 16,
+  "decl": "weinstein_lagrangian_neighborhood_book3",
+  "passed": false,
+  "kind": "theorem",
+  "sorry_here": true,
+  "sorry_report": true,
+  "axioms_here": "propext, sorryAx, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "- contractionSurjective_of_injective (th"
+ },
+ {
+  "idx": 34,
+  "decl": "Codifferential",
+  "passed": true,
+  "kind": "definition",
+  "sorry_here": false,
+  "sorry_report": false,
+  "axioms_here": "propext, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "None \u2014 fully proved, no sorry in depende"
+ },
+ {
+  "idx": 27,
+  "decl": "CompatibleTriple.sp_cap_O_eq_U",
+  "passed": true,
+  "kind": "proposition",
+  "sorry_here": false,
+  "sorry_report": false,
+  "axioms_here": "propext, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "None \u2014 fully proved, no sorry in depende"
+ },
+ {
+  "idx": 28,
+  "decl": "Connection",
+  "passed": true,
+  "kind": "definition",
+  "sorry_here": false,
+  "sorry_report": false,
+  "axioms_here": "propext, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "None \u2014 fully proved, no sorry in depende"
+ },
+ {
+  "idx": 41,
+  "decl": "HarmonicForms",
+  "passed": true,
+  "kind": "definition",
+  "sorry_here": false,
+  "sorry_report": false,
+  "axioms_here": "propext, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "None \u2014 fully proved, no sorry in depende"
+ },
+ {
+  "idx": 33,
+  "decl": "HasParametrix",
+  "passed": true,
+  "kind": "definition",
+  "sorry_here": false,
+  "sorry_report": false,
+  "axioms_here": "propext, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "None \u2014 fully proved, no sorry in depende"
+ },
+ {
+  "idx": 1,
+  "decl": "IsDeformationEquivalent",
+  "passed": true,
+  "kind": "definition",
+  "sorry_here": false,
+  "sorry_report": false,
+  "axioms_here": "propext, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "None \u2014 fully proved, no sorry in depende"
+ },
+ {
+  "idx": 71,
+  "decl": "IsSWSolution",
+  "passed": true,
+  "kind": "definition",
+  "sorry_here": false,
+  "sorry_report": false,
+  "axioms_here": "propext, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "None \u2014 fully proved, no sorry in depende"
+ },
+ {
+  "idx": 63,
+  "decl": "IsSWSolutionWith",
+  "passed": true,
+  "kind": "definition",
+  "sorry_here": false,
+  "sorry_report": false,
+  "axioms_here": "propext, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "None \u2014 fully proved, no sorry in depende"
+ },
+ {
+  "idx": 0,
+  "decl": "IsSymplecticVectorField",
+  "passed": true,
+  "kind": "definition",
+  "sorry_here": false,
+  "sorry_report": false,
+  "axioms_here": "propext, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "None \u2014 fully proved, no sorry in depende"
+ },
+ {
+  "idx": 37,
+  "decl": "JActsOnForms.laplacian_C_eq_laplacian",
+  "passed": true,
+  "kind": "proposition",
+  "sorry_here": false,
+  "sorry_report": false,
+  "axioms_here": "propext, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "None \u2014 fully proved, no sorry in depende"
+ },
+ {
+  "idx": 29,
+  "decl": "MetricCompatible",
+  "passed": true,
+  "kind": "definition",
+  "sorry_here": false,
+  "sorry_report": false,
+  "axioms_here": "propext, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "None \u2014 fully proved, no sorry in depende"
+ },
+ {
+  "idx": 43,
+  "decl": "ParametrixOnManifold.HasParametrixOnManifold",
+  "passed": true,
+  "kind": "definition",
+  "sorry_here": false,
+  "sorry_report": false,
+  "axioms_here": "propext, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "None \u2014 fully proved, no sorry in depende"
+ },
+ {
+  "idx": 64,
+  "decl": "SWModuliSpace",
+  "passed": true,
+  "kind": "definition",
+  "sorry_here": false,
+  "sorry_report": false,
+  "axioms_here": "propext, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "None \u2014 fully proved, no sorry in depende"
+ },
+ {
+  "idx": 55,
+  "decl": "SymplecticFibration",
+  "passed": true,
+  "kind": "definition",
+  "sorry_here": false,
+  "sorry_report": false,
+  "axioms_here": "propext, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "None \u2014 fully proved, no sorry in depende"
+ },
+ {
+  "idx": 8,
+  "decl": "SymplecticLinearAlgebra.IsLagrangian",
+  "passed": true,
+  "kind": "definition",
+  "sorry_here": false,
+  "sorry_report": false,
+  "axioms_here": "propext, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "None \u2014 fully proved, no sorry in depende"
+ },
+ {
+  "idx": 7,
+  "decl": "SymplecticLinearAlgebra.IsSymplecticSubspace",
+  "passed": true,
+  "kind": "definition",
+  "sorry_here": false,
+  "sorry_report": false,
+  "axioms_here": "propext, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "None \u2014 fully proved, no sorry in depende"
+ },
+ {
+  "idx": 3,
+  "decl": "SymplecticLinearAlgebra.SymplecticBasis",
+  "passed": true,
+  "kind": "definition",
+  "sorry_here": false,
+  "sorry_report": false,
+  "axioms_here": "propext, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "None \u2014 fully proved, no sorry in depende"
+ },
+ {
+  "idx": 9,
+  "decl": "SymplecticLinearAlgebra.symplecticVolumeForm",
+  "passed": true,
+  "kind": "definition",
+  "sorry_here": false,
+  "sorry_report": false,
+  "axioms_here": "propext, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "None \u2014 fully proved, no sorry in depende"
+ },
+ {
+  "idx": 10,
+  "decl": "SymplecticManifold",
+  "passed": true,
+  "kind": "definition",
+  "sorry_here": false,
+  "sorry_report": false,
+  "axioms_here": "propext, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "None \u2014 fully proved, no sorry in depende"
+ },
+ {
+  "idx": 11,
+  "decl": "Symplectomorphism",
+  "passed": true,
+  "kind": "definition",
+  "sorry_here": false,
+  "sorry_report": false,
+  "axioms_here": "propext, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "None \u2014 fully proved, no sorry in depende"
+ },
+ {
+  "idx": 4,
+  "decl": "WeinsteinNeighborhood.lagrangianQuotientDualEquiv",
+  "passed": true,
+  "kind": "proposition",
+  "sorry_here": false,
+  "sorry_report": false,
+  "axioms_here": "propext, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "None \u2014 fully proved, no sorry in depende"
+ },
+ {
+  "idx": 26,
+  "decl": "acs_submanifold_symplectic",
+  "passed": true,
+  "kind": "proposition",
+  "sorry_here": false,
+  "sorry_report": false,
+  "axioms_here": "propext, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "None \u2014 fully proved, no sorry in depende"
+ },
+ {
+  "idx": 45,
+  "decl": "corollary2_green_operator_summary",
+  "passed": true,
+  "kind": "corollary",
+  "sorry_here": true,
+  "sorry_report": true,
+  "axioms_here": "propext, sorryAx, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "- green_operator_decomposition (theorem,"
+ },
+ {
+  "idx": 52,
+  "decl": "corollary4_kahler_hodge",
+  "passed": true,
+  "kind": "corollary",
+  "sorry_here": false,
+  "sorry_report": false,
+  "axioms_here": "propext, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "None \u2014 fully proved, no sorry in depende"
+ },
+ {
+  "idx": 50,
+  "decl": "dolbeault_cohomology_iso_harmonic",
+  "passed": true,
+  "kind": "theorem",
+  "sorry_here": true,
+  "sorry_report": true,
+  "axioms_here": "propext, sorryAx, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "- dolbeault_existence_bigraded (theorem,"
+ },
+ {
+  "idx": 30,
+  "decl": "elliptic_has_parametrix",
+  "passed": true,
+  "kind": "theorem",
+  "sorry_here": true,
+  "sorry_report": true,
+  "axioms_here": "propext, sorryAx, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "None \u2014 fully proved, no sorry in depende"
+ },
+ {
+  "idx": 40,
+  "decl": "elliptic_solvability",
+  "passed": true,
+  "kind": "theorem",
+  "sorry_here": true,
+  "sorry_report": true,
+  "axioms_here": "propext, sorryAx, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "None \u2014 fully proved, no sorry in depende"
+ },
+ {
+  "idx": 17,
+  "decl": "gauge_transformation_curvature",
+  "passed": true,
+  "kind": "proposition",
+  "sorry_here": false,
+  "sorry_report": false,
+  "axioms_here": "propext, Quot.sound",
+  "rep_sorry_deps": "None \u2014 fully proved, no sorry in depende"
+ },
+ {
+  "idx": 54,
+  "decl": "gompf_lefschetz_symplectic",
+  "passed": true,
+  "kind": "theorem",
+  "sorry_here": true,
+  "sorry_report": true,
+  "axioms_here": "propext, sorryAx, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "- gompf_construction (theorem, direct)"
+ },
+ {
+  "idx": 44,
+  "decl": "green_operator_decomposition",
+  "passed": true,
+  "kind": "theorem",
+  "sorry_here": true,
+  "sorry_report": true,
+  "axioms_here": "propext, sorryAx, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "None \u2014 fully proved, no sorry in depende"
+ },
+ {
+  "idx": 13,
+  "decl": "hamiltonian_flow_preserves_symplectic_form",
+  "passed": true,
+  "kind": "proposition",
+  "sorry_here": false,
+  "sorry_report": false,
+  "axioms_here": "propext, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "None \u2014 fully proved, no sorry in depende"
+ },
+ {
+  "idx": 46,
+  "decl": "hodge_decomposition_orthogonal",
+  "passed": true,
+  "kind": "corollary",
+  "sorry_here": false,
+  "sorry_report": false,
+  "axioms_here": "propext, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "None \u2014 fully proved, no sorry in depende"
+ },
+ {
+  "idx": 47,
+  "decl": "hodge_representative_exists_unique",
+  "passed": true,
+  "kind": "theorem",
+  "sorry_here": false,
+  "sorry_report": false,
+  "axioms_here": "propext, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "None \u2014 fully proved, no sorry in depende"
+ },
+ {
+  "idx": 36,
+  "decl": "hodge_star_pq_type",
+  "passed": true,
+  "kind": "proposition",
+  "sorry_here": false,
+  "sorry_report": false,
+  "axioms_here": "propext, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "None \u2014 fully proved, no sorry in depende"
+ },
+ {
+  "idx": 48,
+  "decl": "kahler_identities_all_four",
+  "passed": true,
+  "kind": "lemma",
+  "sorry_here": false,
+  "sorry_report": false,
+  "axioms_here": "propext, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "None \u2014 fully proved, no sorry in depende"
+ },
+ {
+  "idx": 51,
+  "decl": "kahler_laplacian_identity",
+  "passed": true,
+  "kind": "theorem",
+  "sorry_here": false,
+  "sorry_report": false,
+  "axioms_here": "propext, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "None \u2014 fully proved, no sorry in depende"
+ },
+ {
+  "idx": 35,
+  "decl": "laplacian",
+  "passed": true,
+  "kind": "definition",
+  "sorry_here": false,
+  "sorry_report": false,
+  "axioms_here": "propext, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "None \u2014 fully proved, no sorry in depende"
+ },
+ {
+  "idx": 39,
+  "decl": "nijenhuis_dual_map_is_d_20_typed",
+  "passed": true,
+  "kind": "proposition",
+  "sorry_here": false,
+  "sorry_report": false,
+  "axioms_here": "propext, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "None \u2014 fully proved, no sorry in depende"
+ },
+ {
+  "idx": 2,
+  "decl": "relative_poincare_lemma",
+  "passed": true,
+  "kind": "proposition",
+  "sorry_here": false,
+  "sorry_report": false,
+  "axioms_here": "propext, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "None \u2014 fully proved, no sorry in depende"
+ },
+ {
+  "idx": 22,
+  "decl": "totalChernFormGeometric",
+  "passed": true,
+  "kind": "definition",
+  "sorry_here": false,
+  "sorry_report": false,
+  "axioms_here": "propext, Classical.choice, Quot.sound",
+  "rep_sorry_deps": "None \u2014 fully proved, no sorry in depende"
+ }
+]

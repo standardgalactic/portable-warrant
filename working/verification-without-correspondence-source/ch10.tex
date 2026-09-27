@@ -1,0 +1,81 @@
+\chapter{The Solvability Complexity of Semantic Preservation}
+\label{ch:sci}
+
+The previous chapter exhibited a definition whose well-definedness could not be read off from the text. This chapter states precisely how hard that question is. The results are those of Appendix A of Bastounis, Circelli, and Hansen~\cite{BCH26}, and the aim is to reconstruct them with their exact hypotheses, to say what their proofs use, and to separate them from the broader interpretations that are tempting and are not established. The monograph's own contribution here is the formulation of the statement called RV-005, which transfers the source's results from the construction to a stated class of specifications, and of the companion statement RV-006, which records what the results leave open.
+
+\section{Prerequisites}
+
+The arithmetical hierarchy classifies sets of natural numbers by the quantifier complexity of their definitions. A set is $\Sigma^0_1$ when it is recursively enumerable, which is to say of the form $\{e : \exists x\, R(e, x)\}$ with $R$ decidable. It is $\Sigma^0_{l}$ when it has the form $\{e : \exists z_1 \forall z_2 \cdots Q z_l\, R(e, z_1, \dots, z_l)\}$ with $R$ decidable and the quantifiers alternating, beginning with an existential. The classes $\Pi^0_l$ are the complements. Post's theorem~\cite{Soare87} identifies these classes with computability relative to iterated Turing jumps: a set is $\Sigma^0_{l}$ exactly when it is recursively enumerable relative to $\emptyset^{(l-1)}$, and it is $\Delta^0_{l+1}$ exactly when it is computable relative to $\emptyset^{(l)}$. A set is $\Sigma^0_l$-complete under many-one reductions when it is $\Sigma^0_l$ and every $\Sigma^0_l$ set reduces to it. A $\Sigma^0_l$-complete set is not in $\Delta^0_l$, so it is not computable even relative to $\emptyset^{(l-1)}$. The Halting set is $\Sigma^0_1$-complete.
+
+The Solvability Complexity Index~\cite{Hansen11} measures, for a computational problem, the least number of successive limits needed to compute it. A problem has $\mathrm{SCI} = 1$ when it is the limit of a sequence of computable approximations, and in general $\mathrm{SCI} = l$ when $l$ nested limits suffice and no smaller number does. The version used in the source is the arithmetic one, written $\mathrm{SCI}_A$, in which the approximating algorithms are arithmetic. For sets of natural numbers the relevant fact, recorded by the source, is that $\mathrm{SCI}_A(\Xi) = l$ corresponds to membership of the associated decision problem in $\Delta^A_{l+1} \setminus \Delta^A_l$. A problem with no finite index has $\mathrm{SCI} = \infty$. The Halting problem has $\mathrm{SCI} = 1$. The source's definitions of towers of algorithms are not reproduced here, and the statements below use only the equivalence with the arithmetical hierarchy that the source records.
+
+\section{The least-number families}
+
+Fix $k \ge 9$ and a computable enumeration $(p_e)_{e \in \mathbb{N}}$ of all integer-coefficient polynomials in $k+1$ variables. With $B_e$ as in Chapter~\ref{ch:hidden}, put
+\[
+d = \{ e \in \mathbb{N} : \exists n\; B_e(n) \}.
+\]
+The set $d$ is the set of indices for which $n_e$, and therefore $r_e$, is well defined. It is $\Sigma^0_2$ by inspection of its definition, as $\exists n \forall (x_1, \dots, x_k)\; p_e(n, x_1, \dots, x_k) \ne 0$.
+
+\begin{theorem}[Theorem A.3 of the source]
+\label{thm:A3}
+For $k \ge 9$ the set $d$ is $\Sigma^0_2$-complete under many-one reductions. Consequently no procedure can always decide whether $n_e$ is well defined, even with an oracle for the Halting problem.
+\end{theorem}
+
+The structure of the proof is as follows, with the sources of each ingredient identified. The set $\mathrm{NTOT} = \{ e : \exists n\; P_e(n) \uparrow \}$, the indices of partial computable functions that diverge on some input, is $\Sigma^0_2$-complete. For each $e$ the relation $P_e(n) \downarrow$ is recursively enumerable in $(e, n)$. By the DPRM theorem in the form that reduces the number of unknowns to nine, due to Jones, every recursively enumerable relation is Diophantine with nine unknowns, so there is a polynomial $q$ with $P_e(n) \downarrow \iff \exists (x_1, \dots, x_9)\; q(e, n, x_1, \dots, x_9) = 0$. Then $P_e(n) \uparrow \iff \forall (x_1, \dots, x_9)\; q(e, n, \mathbf{x}) \ne 0$, which is $B$ for the polynomial $q(e, \cdot, \cdot)$. Since the enumeration contains every integer-coefficient polynomial, and padding with dummy unknowns handles $k > 9$, a computable function $f$ with $p_{f(e)} = q(e, \cdot, \cdot)$ is available, and $e \in \mathrm{NTOT} \iff f(e) \in d$. This is a many-one reduction. The remaining ingredient, that $\mathrm{NTOT}$ is $\Sigma^0_2$-complete, is Post's theorem together with the standard completeness of $\mathrm{TOT}$ for $\Pi^0_2$.
+
+A remark on the count of unknowns removes a possible misreading. The bound $k \ge 9$ refers to the unknowns $x_1, \dots, x_k$ over which the universal quantifier ranges, and these are in addition to the parameter $n$. The polynomials therefore have $k + 1$ variables. The bound is not a count of auxiliary variables introduced for convenience, and it arises from the nine-unknown form of the DPRM theorem.
+
+The theorem extends to every finite level. For $l \ge 2$ and $k \ge 9$ let $B^{(l)}_e(n)$ be defined by an alternating prefix of quantifiers $Q_2 z_2 \cdots Q_{l-1} z_{l-1}$, with $\exists$ at odd indices and $\forall$ at even indices, followed by $\forall (x_1, \dots, x_k)\; p_e \ne 0$ when $l$ is even and by $\exists (x_1, \dots, x_k)\; p_e = 0$ when $l$ is odd, in an enumeration of polynomials in $l - 1 + k$ variables. These are the source's displays (A.4a) and (A.4b). Set $d_l = \{ e : \exists n\; B^{(l)}_e(n) \}$.
+
+\begin{theorem}[Theorem A.4 of the source]
+\label{thm:A4}
+For every $l \ge 2$ and $k \ge 9$ the set $d_l$ is $\Sigma^0_l$-complete under many-one reductions. No algorithm decides well-definedness of the corresponding least-number term, even relative to $\emptyset^{(l-1)}$. The case $l = 2$ recovers $d_2 = d$, and $d_l$ has the Turing degree of $\emptyset^{(l)}$.
+\end{theorem}
+
+\begin{corollary}[Corollary A.5 of the source]
+\label{cor:A5}
+For every $l \ge 2$, $\mathrm{SCI}_A(\Xi_{d_l}) = l$. Equivalently, $d_l \in \Delta^A_{l+1} \setminus \Delta^A_l$.
+\end{corollary}
+
+Section A.2.1 of the source then draws the global conclusion. The problem of answering the emptiness question for all $e$ and all $l \ge 2$ has $\mathrm{SCI} = \infty$, since for each fixed $l$ it contains $d_l$ as a subproblem of index $l$. The source makes the slogan precise in this way: every trustworthy autoformalizer that always outputs either a faithful translation or the message that the statement cannot be translated must solve problems harder than any problem of finite SCI. This is also the claim made in the abstract of the source.
+
+Remark A.6 of the source records that the bound $k \ge 9$ reflects the state of the literature on the DPRM theorem. A recent refinement by Sun lowers the corresponding bound from $k \ge 11$ to $k \ge 10$ for integer unknowns, while for natural-number unknowns the best known bound for $\Sigma^0_2$-completeness of $d$ is $k \ge 9$. The source does not claim decidability for fewer unknowns. The remark matters for the monograph because it blocks an inference that would otherwise be tempting, namely that the problem becomes decidable below the threshold. The absence of a proof of completeness at $k = 8$ is not a proof of decidability at $k = 8$.
+
+\section{From the construction to a class of specifications}
+
+The theorems above concern a constructed family of sets. The question that matters for verification is whether they constrain a given class of specifications. The monograph's formulation makes the transfer explicit.
+
+\begin{definition}[Embedding of the least-number constructions]
+A class $\mathcal{S}$ of specifications \emph{effectively embeds the least-number constructions at level $l$} (with unknowns $k \ge 9$) when there is a computable map $e \mapsto N^{(l)}_e \in \mathcal{S}$ such that $N^{(l)}_e$ introduces the term $n^{(l)}_e = \min\{ n : B^{(l)}_e(n) \}$ and $N^{(l)}_e$ is well defined if and only if $e \in d_l$.
+\end{definition}
+
+An \emph{autoformalizer with refusal} for $\mathcal{S}$ is a total function $T$ on $\mathcal{S}$ whose value is either a formal proposition or the symbol $\bot$, and it is \emph{trustworthy} when it satisfies two conditions: if $T(N) \ne \bot$ then $N$ is well defined and $T(N)$ corresponds to $N$, and if $T(N) = \bot$ then $N$ is not well defined. It never mistranslates and never refuses a translatable specification.
+
+\begin{theorem}[RV-005]
+\label{thm:rv005}
+Let $\mathcal{S}$ effectively embed the least-number constructions at level $l \ge 2$ with $k \ge 9$. Then well-definedness of the defining term is $\Sigma^0_l$-hard on $\mathcal{S}$, and no total computable procedure decides it. In particular no trustworthy computable autoformalizer with refusal exists for $\mathcal{S}$, and none exists even with an oracle for $\emptyset^{(l-1)}$. If $\mathcal{S}$ embeds the constructions at every level $l \ge 2$, then the combined problem has $\mathrm{SCI} = \infty$.
+\end{theorem}
+
+\begin{proof}
+By the embedding, $e \in d_l \iff N^{(l)}_e$ is well defined, and $e \mapsto N^{(l)}_e$ is computable. Suppose $T$ is a trustworthy autoformalizer computable relative to $\emptyset^{(l-1)}$. Then $e \in d_l \iff T(N^{(l)}_e) \ne \bot$: if $e \in d_l$ the specification is well defined, so by trustworthiness $T$ does not refuse, and if $e \notin d_l$ the specification is not well defined, so $T$ does not return a translation, because a returned translation requires well-definedness. Hence $d_l$ would be computable relative to $\emptyset^{(l-1)}$, contradicting $d_l \notin \Delta^0_l$ from Theorem~\ref{thm:A4}. The hardness statement is the reduction $e \mapsto N^{(l)}_e$ composed with the completeness of $d_l$. The case of all levels follows because each $d_l$ is a subproblem, and Corollary~\ref{cor:A5} gives index $l$ for each.
+\end{proof}
+
+The theorem is also conditional on Theorem~\ref{thm:A4}, which is the source's result and is not reproved here, and the passage to levels $l \ge 2$ rests on it. The combined claim $\mathrm{SCI}=\infty$ follows from the strictness of the arithmetical hierarchy, since a procedure deciding all levels would decide each $d_l$ relative to $\emptyset^{(l-1)}$. The theorem proves hardness. Completeness for the class would need membership in $\Sigma^0_l$ for the whole class, which is not shown. The theorem is conditional on the embedding, and the condition must be proved class by class. The source establishes strong hardness for constructed families of presupposition-resolution problems. It does not follow that every reasonable formulation of semantic correspondence has the same complexity, and a new theorem that claims hardness for a particular class must identify the class and exhibit the embedding. The chapter's claim is therefore about classes rich enough to define least-number terms over arbitrary Diophantine conditions, which includes the specifications of arithmetic and analysis in ordinary mathematical language but excludes many restricted formalisms.
+
+The trustworthiness conditions are also a matter of convention, as the second condition shows. It treats a specification with an undefined term as untranslatable. The convention is the source's, and Chapter~\ref{ch:nondischarge} makes the dependence explicit where the theorem of that chapter relies on it.
+
+\section{Restriction and the open boundary}
+
+The hardness of the unrestricted problem does not imply hardness for every restricted class of mathematical texts. This is the statement RV-006, and it is a record of a limitation and not a theorem.
+
+\begin{remark}[RV-006]
+\label{prop:rv006}
+The source establishes no decidability result for fewer than nine unknowns, and RV-005 does not apply to a class that fails to embed the least-number constructions. For any proposed restricted correspondence language, a decidability or hardness claim requires its own proof.
+\end{remark}
+
+Exceeding every fixed finite level of a hierarchy over an unrestricted class says nothing about a class that cannot express the quantifier patterns of the construction. A restricted language in which every definition carries a proof of existence, or in which defining terms range over a bounded domain, may admit a decidable fidelity check, and the constructive proposals of Part~VII are directed at such languages. Two cautions apply. The first is that restriction purchases decidability at the price of expressiveness, and the expressiveness lost may include the texts of greatest interest. The second is that the partial result is not an assurance in the other direction: a class that is not known to embed the constructions is not thereby known to be tractable.
+
+\section{Consequences for the theory of residue}
+
+The results have a consequence for the theory of Part~V that is easily misstated. They do not say that semantic obligations cannot be handled. They say that no total procedure can, on unrestricted classes, discharge all of them or even decide which of them are dischargeable. The obligations that cannot be settled by computation can still be recorded, preserved through transformations, and reported honestly. That is what the preservation theory of Chapter~17 is for. A pipeline that cannot be trustworthy in the sense of the theorem above can still be sound in a weaker and more useful sense, namely that it never reports as settled an obligation it has only preserved. The computability barrier therefore motivates the shift from certification of correspondence to bounded certification with an explicit residue, and it fixes the sense in which that shift is forced and not merely convenient.

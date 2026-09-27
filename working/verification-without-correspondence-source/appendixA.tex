@@ -1,0 +1,267 @@
+\chapter{Formal Definitions and Logical Conventions}
+\label{app:formal}
+
+This appendix fixes the definitions on which the preservation results of the monograph depend. It is written to be self-contained, so that the two central results, the traceability theorem (RV-020) and the compositional preservation theorem (RV-008), can be derived from it without appeal to the prose of the main text. Each definition is stated before it is used, and each result is accompanied by an explicit statement of which hypotheses it consumes. A closing section records the points at which writing the specification exposed a circularity or an unstated assumption in the outline, because those points determine where the main text must be careful.
+
+\section{Verification instances and the three judgments}
+
+Let $\mathsf{Spec}$ be a class of natural-language specifications, $\mathsf{Arg}$ a class of natural-language arguments, and $\mathsf{Form}$ a class of formal propositions. A \emph{verification instance} is a tuple
+\[
+V = (N, P, \I, \Gamma, F, \pi),
+\]
+in which $N \in \mathsf{Spec}$ is the originating specification, $P \in \mathsf{Arg}$ its purported argument, $\I$ the intended interpretation, $\Gamma$ the formal environment of definitions, axioms, imports, and dependencies, $F \in \mathsf{Form}$ the formalized proposition, and $\pi$ the proof term. The interpretation $\I$ is part of the data of the instance and is held fixed throughout a chain of transformations. A change of interpretation is not treated as an incidental step and would itself require a transition certificate, a point taken up in Section~\ref{sec:audit}.
+
+Three judgments are distinguished. Kernel acceptance is $K(V) :\Longleftrightarrow \Gamma \vdash \pi : F$. Statement correspondence is $C(V) :\Longleftrightarrow \llbracket N \rrbracket_{\I} \equiv_{\I} \llbracket F \rrbracket_{\I}$, where $\llbracket\cdot\rrbracket_{\I}$ assigns a denotation in a common semantic domain and $\equiv_{\I}$ is an explicitly chosen equivalence relation, which may be logical equivalence, equality of solution sets, preservation of quantified dependencies, or a stronger intensional relation. Argument correspondence is $A(V)$, a relation between the justified inferential steps of $P$ and those of $\pi$, which cannot be reduced to agreement of conclusions. The definition presupposes that $N$ is resolved in the context in the sense of Chapter~\ref{ch:natural}, so that $\llbracket N\rrbracket_{\I}$ is a single denotation; for ambiguous $N$ the statement obligation is relative to a chosen reading. Where a denotation may be undefined, as for a presupposing description, $\equiv_{\I}$ is an equivalence relation on the defined denotations only. No result in this appendix depends on the particular choice of $\equiv_{\I}$; the choice enters only through the contents of the obligations introduced below.
+
+\section{Contents and the consequence relation}
+
+Obligations have contents, and contents must stand in a relation of consequence for preservation to be a precise notion.
+
+\begin{definition}[Content language and consequence]
+Let $\Lang$ be a set, the \emph{content language}, whose elements are the propositions that obligations assert. A \emph{consequence relation relative to $\I$} is a relation $\ent\, \subseteq \mathcal{P}(\Lang) \times \Lang$ satisfying, for all $X, Y \subseteq \Lang$ and $\psi, \chi \in \Lang$:
+\begin{enumerate}[label=(C\arabic*), leftmargin=2.4em]
+\item \emph{Reflexivity:} if $\psi \in X$ then $X \ent \psi$.
+\item \emph{Monotonicity:} if $X \ent \psi$ and $X \subseteq Y$ then $Y \ent \psi$.
+\item \emph{Cut:} if $X \ent \chi$ for every $\chi \in Y$, and $Y \ent \psi$, then $X \ent \psi$.
+\end{enumerate}
+For a set $Y$ and a proposition $\psi$ the notation $X \ent Y$ abbreviates that $X \ent \chi$ for every $\chi \in Y$.
+\end{definition}
+
+These are the conditions of a Tarskian consequence relation~\cite{Tarski36}. The relation is not classical semantic consequence over all truths. Under classical consequence any two true contents would be equivalent and every true content would follow from the empty set, so every transition between true contents would be preserving and the framework would collapse into a question about truth. The relation $\ent$ is instead derivability from the premises together with a \emph{certified background} $\mathcal{B}_\I$, a fixed base of admitted facts and rules, by admitted inference steps. Reflexivity, monotonicity, and cut hold for such a relation. The typing of transitions is accordingly relative to $\mathcal{B}_\I$, and a transition that is a weakening relative to one background may be conservative relative to a background that includes a restoring lemma. A failure of entailment means that no admitted derivation is available, and does not assert that the content is false. Nothing further is assumed. In particular the relation is not assumed decidable, and in general it is not, so every use of $\ent$ in a ledger is mediated by a certificate. Nor is it assumed compact, although every instance used below involves finite sets. The notation $X \ent \psi$ is used in place of a conjunction of the members of $X$, which avoids committing the content language to a conjunction connective.
+
+\section{Obligations, statuses, and the residue}
+
+\begin{definition}[Obligation]
+An \emph{obligation} is a record $o = (\tau, \cont, \rho, E, D, \sigma)$ in which $\tau$ is a type drawn from a set of obligation types that includes the distinguished type $\mathsf{assumption}$, $\cont(o) \in \Lang$ is the content, $\rho$ the provenance, $E$ the available evidence, $D$ the set of obligations on which $o$ depends, and $\sigma(o) \in \Sigma$ the current status, where
+\[
+\Sigma = \{\mathsf{open},\ \mathsf{supported},\ \mathsf{discharged},\ \mathsf{refuted},\ \mathsf{defeated}\}.
+\]
+Each obligation carries exactly one status. The status \textsf{supported} records evidence short of an accepted certificate and must not be read as \textsf{discharged}. The status \textsf{defeated} records that an accepted certificate has been overridden and does not assert that the content is false, which is the role of \textsf{refuted}.
+\end{definition}
+
+\begin{definition}[Residue]
+For a finite set $\Ob$ of obligations, the \emph{verification residue} is
+\[
+\Res(\Ob) = \{\, o \in \Ob : \sigma(o) \neq \mathsf{discharged} \,\}.
+\]
+\end{definition}
+
+\begin{proposition}[Completeness of the residue partition]
+\label{prop:partition}
+For every finite $\Ob$,
+\[
+\Res(\Ob) = \Res_{\mathsf{open}} \sqcup \Res_{\mathsf{supported}} \sqcup \Res_{\mathsf{refuted}} \sqcup \Res_{\mathsf{defeated}},
+\qquad
+\Res_s = \{ o \in \Ob : \sigma(o) = s \},
+\]
+and $\Ob = \Res(\Ob) \sqcup \{ o \in \Ob : \sigma(o) = \mathsf{discharged}\}$. The four components are pairwise disjoint and their union is $\Res(\Ob)$.
+\end{proposition}
+
+\begin{proof}
+Because $\sigma$ is a function into $\Sigma$, the sets $\{o : \sigma(o) = s\}$ for $s \in \Sigma$ partition $\Ob$. Removing the block indexed by \textsf{discharged} leaves the remaining four blocks, whose union is $\Res(\Ob)$ by definition.
+\end{proof}
+
+The proposition is definitional, and it is stated for exactly that reason: its content is the requirement that the status model assign one status per obligation. If a later chapter allowed an obligation to carry two statuses, for instance \textsf{supported} and \textsf{defeated} simultaneously, the partition would fail and the residue accounting of the main text would have to be revised.
+
+Three baseline obligations accompany every instance $V$: $O_{\mathrm{formal}}$ with content $\Gamma \vdash \pi : F$, $O_{\mathrm{statement}}$ with content $\llbracket N\rrbracket_{\I} \equiv_{\I} \llbracket F\rrbracket_{\I}$, and $O_{\mathrm{argument}}$ with content that $P$ and $\pi$ correspond. Only the first is settled by kernel acceptance.
+
+\section{Certificates, historical discharge, and warranted discharge}
+
+Discharge is a property of one obligation, and it has two readings that the theory keeps apart.
+
+\begin{definition}[Discharge certificate]
+A \emph{discharge certificate} for an obligation $o$ is a tuple $c = (\alpha, \I, \mathrm{dep}(c), \mathrm{pf})$ recording the accepting authority $\alpha$, the interpretation $\I$ under which acceptance occurred, a finite set $\dep(c) \subseteq \Ob \cup \Aut$ of obligations and authorized assumptions on which the acceptance depends, and a payload $\mathrm{pf}$ constituting the evidence.
+\end{definition}
+
+Here $\Aut \subseteq \Lang$ is the \emph{authorized context}, the set of assumptions fixed with the verification instance and accepted without a tracking obligation, for instance the axioms of the stated foundation. A ledger state at time $t$ consists of the obligations, their accepted certificates, and a set $\mathsf{Def}_t$ of recorded defeaters, each of which targets a certificate or an authorized assumption.
+
+\begin{definition}[Dependency graph]
+\label{def:depgraph}
+At a ledger state $t$ the \emph{dependency graph} $G_t$ (the graph of the state, with the edges contributed by every transition accepted up to $t$) has as vertices the obligations, the accepted certificates, and the authorized assumptions. Its edges are of three kinds, all read as ``depends on'': \emph{obligation-dependency edges} from each obligation $o$ to every member of its dependency field $D(o)$; \emph{certificate-dependency edges} from each accepted certificate $c$ to every member of $\dep(c)$, together with an edge from each obligation to the certificate that discharges it; and \emph{assumption-use edges} from each obligation $o$ whose preservation in some transition $T_i$ uses a permitted assumption $\theta \in \Theta_i$, in the sense that $T_i$ is preserving at $o$ and $\theta \in \Theta_i$ (the edge is created for every member of $\Theta_i$ at every obligation at which $T_i$ is preserving, so that no redundant assumption escapes the acyclicity test), to the vertex that supplies $\theta$, which is $\theta$ itself when $\theta \in \Aut$ and the tracked obligation $a_\theta$ otherwise.
+\end{definition}
+
+A certificate or a defeater is accepted into the ledger only if the resulting graph is acyclic, so that $G_t$ is acyclic at every ledger time $t$ and not only at transition times. The three kinds of edge are listed separately because a cycle may close through a mixture of them: an obligation may depend on a tracked assumption whose discharge certificate depends, through a second obligation, on the first. Acyclicity is therefore required of $G_t$ as a whole and not of each family of edges separately.
+
+\begin{definition}[Historical and warranted discharge]
+\label{def:warranted}
+A discharge of $o$ by $c$ is \emph{historical} at time $t$ if $c$ was accepted at some time $s \le t$. Assume that $G_t$ is acyclic, so that, $G_t$ being finite, the relation of dependency is well founded. The discharge is \emph{currently warranted} at time $t$ if $c$ is historical, no defeater in $\mathsf{Def}_t$ targets $c$, and every member of $\dep(c)$ is either an authorized assumption against which no defeater in $\mathsf{Def}_t$ is recorded, or an obligation whose own discharge is currently warranted at time $t$.
+\end{definition}
+
+The definition is by recursion on the well-founded dependency order and is therefore unambiguous. Historical discharge is a record and is never rewritten. Warranted discharge is a function of the current ledger state.
+
+\begin{proposition}[Defeasibility of discharge, RV-021]
+\label{prop:defeasible}
+Let $t \le t'$ be ledger times with $\mathsf{Def}_t \subseteq \mathsf{Def}_{t'}$ and no certificate removed, and assume the dependency graphs $G_t$ and $G_{t'}$ are acyclic. Then (i) every historical discharge at $t$ is historical at $t'$; (ii) if in addition no certificate is accepted in the interval $(t,t']$, then every discharge currently warranted at $t'$ is currently warranted at $t$; and (iii) there exist ledgers in which a discharge is currently warranted at $t$ and not at $t'$.
+\end{proposition}
+
+\begin{proof}
+(i) holds because acceptance times only accumulate. For (ii), proceed by well-founded induction on the dependency order. Suppose the discharge of $o$ by $c$ is warranted at $t'$. Since no certificate is accepted in $(t,t']$, $c$ was accepted at a time $\le t$ and is historical at $t$, and the same holds for the certificate of every obligation in $\dep(c)$. Then no defeater in $\mathsf{Def}_{t'}$ targets $c$, hence none in $\mathsf{Def}_t \subseteq \mathsf{Def}_{t'}$ does. Each member of $\dep(c)$ is an authorized assumption undefeated at $t'$, hence at $t$, or an obligation whose discharge is warranted at $t'$, hence at $t$ by the induction hypothesis. Thus $c$ is warranted at $t$. For (iii), let $o_1$ be discharged by $c_1$ with $\dep(c_1) = \{a\}$ for an authorized assumption $a$, warranted at $t$ with $\mathsf{Def}_t = \varnothing$, and let a defeater targeting $a$ be recorded at $t'$. Then $c_1$ is historical at both times and warranted only at $t$.
+\end{proof}
+
+Without the extra hypothesis of (ii) the implication fails: a certificate accepted at $s$ with $t<s\le t'$ and undefeated is warranted at $t'$ and is not even historical at $t$. What the proposition states is therefore antitonicity in the defeaters for a fixed set of certificates, together with monotone accumulation of the historical record. It formalizes the point that a defeated assumption propagates upward through every certificate that depends on it, while leaving the historical record intact. The status of $o_1$ at $t'$ reverts from \textsf{discharged} to \textsf{open} or \textsf{defeated}, according to the policy of the ledger, and the history records both facts.
+
+\begin{definition}[Obligation-level warrant, status, and establishment]
+\label{def:status}
+An obligation $o$ is \emph{warranted-discharged at $t$} if some accepted certificate for $o$ is currently warranted at $t$. In the recursion of Definition~\ref{def:warranted}, ``an obligation whose own discharge is currently warranted'' means an obligation that is warranted-discharged in this sense, so that an obligation with several certificates loses warrant only when all of its certificates have lost it. The stored status is tied to warrant by the convention $\sigma_t(o)=\mathsf{discharged}$ if and only if $o$ is warranted-discharged at $t$; when it is not, $\sigma_t(o)$ is one of the other four values according to the policy of the ledger, and the historical record of the certificate is kept. Residue and its partition are evaluated with $\sigma_t$, and I write $\Res_t$ and $\Res_{s,t}$ where the time matters. A proposition $\psi\in\Lang$ is \emph{established at $t$} if $\psi\in\Aut$ and no defeater in $\mathsf{Def}_t$ targets it, or $\psi=\cont(o)$ for an obligation $o$ that is warranted-discharged at $t$. The certificates are \emph{sound} if every proposition established at $t$ holds under $\I$, and $\ent$ is \emph{sound for $\I$} if $X\ent\psi$ and every member of $X$ holds under $\I$ imply that $\psi$ holds under $\I$. The predicate ``holds under $\I$'' is a predicate $\mathrm{Hold}_\I\subseteq\Lang$ given as part of the data of the instance; for contents that concern $\I$ itself, such as the content of $O_{\mathrm{statement}}$, it is supplied by the authority for the intended interpretation, and the second statement of Theorem~\ref{thm:compose} is relative to it. The entailment certificates that witness preservation are assumed correct for $\ent$. Both soundness conditions are hypotheses about the authorities and the interpretation. They are not consequences of (C1) to (C3), and nothing in the ledger can verify them.
+\end{definition}
+
+\section{Transitions and transition certificates}
+
+Let $X_0, X_1, \dots, X_n$ be artifacts and $f_i : X_{i-1} \to X_i$ transformations, with finite obligation sets $\Ob_i$ attached to $X_i$.
+
+\begin{definition}[Transition certificate]
+A \emph{transition certificate} for $f_i$ is a triple $T_i = (Q_i, \Delta_i, \Theta_i)$ where $Q_i \subseteq \Ob_{i-1} \times \Ob_i$ is the successor relation, $\Delta_i \subseteq \Ob_{i-1}$ is the discharge record, each member carrying a discharge certificate that is currently warranted in the ledger state $t_i^-$ immediately before the acceptance of $T_i$, and $\Theta_i \subseteq \Lang$ is a finite set of permitted assumptions. Write $\succs_i(o) = \{o' : (o,o') \in Q_i\}$. The ledger starts at a time $t_0$ at which $X_0$ and $\Ob_0$ are recorded, and the certificate $T_i$ is accepted at a time $t_i > t_{i-1}$, with $t_i^-$ the state immediately before it. The graph $G_{t_0}$ is required to be acyclic. Warrant of the members of $\Delta_i$ is evaluated in the state $t_i^-$, which does not yet contain the assumption-use edges of $T_i$, so that the definition of warrant is not applied to the graph that $T_i$ itself extends.
+\end{definition}
+
+\begin{definition}[Admissibility]
+\label{def:admissible}
+A transition certificate $T_i$ is \emph{admissible} when (A1) every $\theta \in \Theta_i$ satisfies either $\theta \in \Aut$, or $\theta = \cont(a_\theta)$ for some obligation $a_\theta \in \Ob_i$ of type $\mathsf{assumption}$, either introduced by the transition or carried from $\Ob_{i-1}$ through $Q_i$; and (A2) the dependency graph $G_i$ of Definition~\ref{def:depgraph}, including the assumption-use edges created by the transition, remains acyclic.
+\end{definition}
+
+Condition (A1) forbids the introduction of an untracked assumption. An assumption not in the authorized context enters the ledger as a new obligation and therefore enters the residue until it is discharged. Condition (A2) is the form of non-circularity that is required, and it applies to the dependency graph as a whole, which includes obligation dependencies, certificate dependencies, and assumption-use edges. It is not enough to forbid an assumption identical to the content being preserved, because a circle may close through several steps, for instance when the discharge of an assumption obligation depends on the obligation whose preservation it was introduced to secure. Acyclicity also guarantees that Definition~\ref{def:warranted} is well posed. It does not guarantee soundness. An acyclic ledger may rest on a certificate that is wrong, on an assumption that is false, or on a consequence relation that fails to track the intended interpretation, and acyclicity excludes only the circular justification of one claim by itself. The semantic hypotheses of Theorem~\ref{thm:compose}, that the certificates are sound for $\ent$ under $\I$, are separate and are not implied by (A1) and (A2).
+
+\begin{definition}[Context and preservation]
+For a transition certificate $T_i$ and $o \in \Ob_{i-1}$ the \emph{certified context} of $o$ is
+\[
+\Ctx_i(o) = \{\cont(o') : o' \in \succs_i(o)\} \cup \{\cont(d) : d \in \Delta_i\} \cup \Theta_i .
+\]
+The transition $f_i$ is \emph{preserving at $o$} when $\Ctx_i(o) \ent \cont(o)$, and \emph{preserving} when it is preserving at every $o \in \Ob_{i-1}$.
+\end{definition}
+
+The entailment is certified and not computed: the certificate must contain a witness of $\Ctx_i(o) \ent \cont(o)$ that a checker for $\ent$ accepts. Because $\ent$ is relative to $\I$ and undecidable in general, a preservation claim has the status of the checker that accepts the witness, and an unchecked claim is itself an open obligation.
+
+\begin{definition}[Typing of transitions]
+\label{def:typing}
+For $o \in \Ob_{i-1}$ and $\Ctx = \Ctx_i(o)$, the transition is of exactly one of four types at $o$:
+\begin{center}
+\begin{tabular}{@{}lll@{}}
+\toprule
+ & $\cont(o) \ent \Ctx$ & $\cont(o) \nent \Ctx$ \\
+\midrule
+$\Ctx \ent \cont(o)$ & conservative & strengthening \\
+$\Ctx \nent \cont(o)$ & weakening & lateral \\
+\bottomrule
+\end{tabular}
+\end{center}
+Conservative and strengthening transitions are preserving. Weakening and lateral transitions are non-preserving. A strengthening transition preserves $\cont(o)$ but imports the burden of discharging stronger content, and a weakening transition loses content, in that everything certified follows from $\cont(o)$ but $\cont(o)$ does not follow from it.
+\end{definition}
+
+The notation $\cont(o) \ent \Ctx$ means $\{\cont(o)\} \ent \chi$ for every $\chi \in \Ctx$. The four cases are exhaustive and mutually exclusive by construction.
+
+\section{Traceability: RV-020 and RV-017}
+
+The first of the two central results is purely syntactic and does not use $\ent$.
+
+\begin{definition}[Well-formed ledger]
+A ledger $(T_i)_{i=1}^n$ is \emph{well formed} when every $T_i$ records a disposition for every inherited obligation: for each $o \in \Ob_{i-1}$, either $o \in \Delta_i$ or $\succs_i(o) \neq \varnothing$ (or both).
+\end{definition}
+
+Define the composite successor sets by $S_0(o) = \{o\}$ and $S_{k}(o) = \bigcup_{o' \in S_{k-1}(o)} \succs_k(o')$. Say that $o \in \Ob_0$ has a \emph{certified discharge in its ancestry up to $n$} if for some $k \le n$ there is $o' \in S_{k-1}(o)$ with $o' \in \Delta_k$.
+
+\begin{theorem}[Traceability of dispositions, RV-020]
+\label{thm:trace}
+Let $(T_i)_{i=1}^n$ be a well-formed ledger. For every $o \in \Ob_0$, either $o$ has a certified discharge in its ancestry up to $n$, or $S_n(o) \neq \varnothing$. Moreover, the property of well-formedness, and the computation of $S_n(o)$ and of the ancestry discharge, are decidable for finite ledgers by inspection of $Q_i$ and $\Delta_i$ alone.
+\end{theorem}
+
+\begin{proof}
+Suppose $o$ has no certified discharge in its ancestry up to $n$. It is shown by induction on $k \le n$ that $S_k(o) \neq \varnothing$. For $k=0$, $S_0(o) = \{o\}$. If $S_{k-1}(o) \neq \varnothing$ and $k \le n$, choose $o' \in S_{k-1}(o)$. By hypothesis $o' \notin \Delta_k$, so well-formedness gives $\succs_k(o') \neq \varnothing$, and $\succs_k(o') \subseteq S_k(o)$. Decidability is immediate from finiteness: each condition is a finite check of set membership and non-emptiness.
+\end{proof}
+
+\begin{corollary}[No silent discharge, RV-017]
+\label{cor:nosilent}
+In a well-formed ledger, an originating obligation that has no certified discharge in its ancestry has a successor at the final artifact $X_n$.
+\end{corollary}
+
+The theorem is deliberately weak and the weakness is the source of its value. It guarantees that nothing disappears from the ledger without a recorded disposition. It says nothing about whether the recorded dispositions are semantically adequate, which is the content of the second central result. A ledger can be well formed and non-preserving, for instance when a successor is a weakening of its predecessor, and the independence of the two properties is established in Proposition~\ref{prop:independence}.
+
+\section{Compositional preservation: RV-008}
+
+Define the cumulative assumption and discharge pool $\mathsf{A}_0 = \varnothing$ and $\mathsf{A}_k = \mathsf{A}_{k-1} \cup \{\cont(d) : d \in \Delta_k\} \cup \Theta_k$, and the cumulative context of $o \in \Ob_0$ by
+\[
+\Gamma_k(o) = \{\cont(o') : o' \in S_k(o)\} \cup \mathsf{A}_k .
+\]
+
+\begin{theorem}[Compositional semantic preservation, RV-008]
+\label{thm:compose}
+Let $(T_i)_{i=1}^n$ be a ledger of transition certificates over a consequence relation $\ent$ satisfying (C1) to (C3), fix $o \in \Ob_0$, and suppose each $T_k$ is preserving at every obligation of $S_{k-1}(o)$. Then
+\[
+\Gamma_n(o) \ent \cont(o).
+\]
+Now suppose in addition that the ledger is admissible, that the certificates are sound and $\ent$ is sound for $\I$ in the sense of Definition~\ref{def:status}, and that at the evaluation time $t$ every member of $\Gamma_n(o)$ is established at $t$. Then $\cont(o)$ holds under $\I$; I say that it is \emph{transported}, to distinguish this from being established in the sense of Definition~\ref{def:status}, which would require that $o$ itself be warranted-discharged. Every member of $\Gamma_n(o)$ has a source: itself in $\Aut$; or $\cont(o')$ for $o'\in S_n(o)$; or $\cont(d)$ for some $d\in\Delta_k$, $k\le n$; or a member of $\Theta_k\setminus\Aut$, whose source is the tracked assumption obligation required by (A1). If a member $\cont(d)$ or a tracked assumption is not established at $t$, then the corresponding source obligation is not warranted-discharged at $t$; if a member of $\Aut$ is not established, it is defeated. Transport through $\Gamma_n(o)$ fails to that extent, although by (C2) transport through a subset that entails $\cont(o)$ may still be available.
+\end{theorem}
+
+\begin{proof}
+By induction on $k$ it is shown that $\Gamma_k(o) \ent \cont(o)$. For $k=0$, $\Gamma_0(o) = \{\cont(o)\}$, and (C1) gives the claim. Assume $\Gamma_{k-1}(o) \ent \cont(o)$ and consider $\Gamma_k(o)$. Take $o' \in S_{k-1}(o)$. Since $T_k$ is preserving at $o'$, $\Ctx_k(o') \ent \cont(o')$. Now $\Ctx_k(o') \subseteq \Gamma_k(o)$, because $\succs_k(o') \subseteq S_k(o)$ and the discharge contents and permitted assumptions of $T_k$ lie in $\mathsf{A}_k$. Monotonicity (C2) gives $\Gamma_k(o) \ent \cont(o')$. Next take $\psi \in \mathsf{A}_{k-1}$. Then $\psi \in \mathsf{A}_k \subseteq \Gamma_k(o)$ and (C1) gives $\Gamma_k(o) \ent \psi$. Since $\Gamma_{k-1}(o) = \{\cont(o') : o' \in S_{k-1}(o)\} \cup \mathsf{A}_{k-1}$, it has been shown that $\Gamma_k(o) \ent \chi$ for every $\chi \in \Gamma_{k-1}(o)$. Combining with $\Gamma_{k-1}(o) \ent \cont(o)$ and applying cut (C3) yields $\Gamma_k(o) \ent \cont(o)$.
+
+For the second statement, $\Gamma_n(o)\ent\cont(o)$ by the first. Every premise is established at $t$ by hypothesis, hence holds under $\I$ because the certificates are sound, and $\ent$ is sound for $\I$, so $\cont(o)$ holds under $\I$. The description of the sources is by the definitions of $S_n(o)$, $\mathsf{A}_n$ and, for $\Theta_k\setminus\Aut$, condition (A1). A premise $\cont(d)$ with $d\in\Delta_k$ is established when $d$ is warranted-discharged at $t$, and an assumption $\theta\in\Theta_k\setminus\Aut$ is established when the obligation tracking it is warranted-discharged; the contrapositives give the last sentences. The converses can fail, since the same content may be established through another obligation or through $\Aut$.
+\end{proof}
+
+The first statement uses reflexivity, monotonicity, and cut, and preservation only at the obligations reached from $o$; this local form is what the proof needs, and preservation of the whole transition is stronger. It does not use admissibility or well-formedness, since the certified context and preservation are defined for any triple $(Q_i,\Delta_i,\Theta_i)$, and it does not use decidability of $\ent$. Admissibility enters the second statement: (A1) supplies the tracked source obligation of each assumption outside $\Aut$, and (A2) makes the notion of current warrant well posed. Where the obligation $o$ itself lies in $\Delta_1$ (the only possibility for an originating obligation unless the record persists across artifacts), its content is a premise of its own cumulative context and the first statement holds by (C1) from that point. The obligations whose status blocks transport belong to the various $\Ob_k$. Whether they appear among the obligations of the final artifact $X_n$ is a separate matter: for the descendants of $o$ it is answered by well-formedness and Theorem~\ref{thm:trace}, and for sources of premises in $\mathsf{A}_n$ it is answered only if the ledger is also required to carry them forward, which is not assumed. The entailment holds with or without that requirement, and I call the set of source obligations not warranted-discharged at $t$ the \emph{transport shortfall}, as opposed to the residue of $X_n$.
+
+\section{Independence of preservation and discharge: RV-018}
+
+\begin{proposition}[Independence, RV-018]
+\label{prop:independence}
+Suppose $\Lang$ contains propositions $p, q, r$ with $\{p,q\} \nent r$, where $r$ is taken as $\cont(o)$ in part (ii) and $q$ as $\cont(d)$. Then:
+\begin{enumerate}[label=(\roman*), leftmargin=2.4em]
+\item there is, for every $n\ge1$, an admissible ledger of length $n$ in which every $T_i$ is preserving at $o_{i-1}$ and in which the status of every obligation in $S_n(o)$ is \textsf{open};
+\item there is an admissible, well-formed ledger in which the discharge of an obligation $d$ is warranted, yet the transition is not preserving at some other obligation $o \neq d$;
+\item if $d \in \Delta_i$ then $\Ctx_i(d) \ent \cont(d)$, so an obligation recorded in the discharge set of a transition is preserved at that transition.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(i) Take $\Ob_0 = \{o\}$ with $\cont(o) = p$ and status \textsf{open}. Let each $T_i$ have $Q_i = \{(o_{i-1}, o_i)\}$ with $\cont(o_i) = p$ and status \textsf{open}, $\Delta_i = \varnothing$, $\Theta_i = \varnothing$. Then $\Ctx_i(o_{i-1}) = \{p\}$ and (C1) gives preservation at every step, while no obligation is ever discharged. (ii) Take $\Ob_0 = \{d, o\}$ with $\cont(d) = q$ and $\cont(o) = r$. Let $T_1$ have $\Delta_1 = \{d\}$ with a warranted certificate, $Q_1 = \{(o, o')\}$ with $\cont(o') = p$, $\Theta_1 = \varnothing$, and $\succs_1(d) = \varnothing$. The ledger is well formed. Here $\Ctx_1(o) = \{p, q\}$ because the discharge record contributes $\cont(d) = q$ to every certified context. Since $\{p,q\} \nent r$ the transition is non-preserving at $o$ although $d$ is warranted-discharged. The point is that the discharge of $d$ supplies a premise and does not supply the missing content of $o$. (iii) For $d \in \Delta_i$ the content $\cont(d)$ belongs to $\Ctx_i(d)$ by the definition of the certified context, and (C1) gives $\Ctx_i(d) \ent \cont(d)$. The membership $d\in\Delta_i$ is a recorded fact about the transition, and the certificate of $d$ is warranted at $t_i^-$, before $T_i$ is accepted, so $d$ is already discharged when the transition records it.
+\end{proof}
+
+Part (iii) shows that the independence is asymmetric at a single obligation. Preservation without discharge occurs by (i), and discharge without preservation occurs at a different obligation, by (ii). An obligation recorded in $\Delta_i$ is preserved at $T_i$. An obligation whose status is discharged but which is not recorded in $\Delta_i$ may have only a weaker successor, and is then not preserved at its own step, so the asymmetry holds for the recorded discharge and not for the status as such. A discharge can also make another obligation preserved, for instance when the contents coincide, so the claim established is that discharge of one obligation need not preserve another, and not that it never does.
+
+\begin{corollary}[A verified continuation can retain unresolved obligations, RV-009]
+Part~(i) shows a chain preserving an open obligation through any number of transformations without discharging it. In a well-formed ledger, Theorem~\ref{thm:trace} shows that an obligation with no certified discharge in its ancestry has a successor at the final artifact, and Theorem~\ref{thm:compose} gives the entailment of its content from the cumulative context. Whether the tracked assumptions on which preservation relied are carried to the final artifact depends on whether the ledger requires it.
+\end{corollary}
+
+\section{Weakening and the total certified context: RV-019}
+
+\begin{proposition}[Preservation is a property of the total context, RV-019]
+\label{prop:weak}
+The transition $f_i$ fails to preserve $o$ if and only if $\Ctx_i(o) \nent \cont(o)$. In particular: (i) a successor $o' \in \succs_i(o)$ whose content $\cont(o')$ is strictly weaker than $\cont(o)$ does not by itself cause failure; and (ii) a transition with a single successor strictly weaker than $\cont(o)$, empty $\Delta_i$ and empty $\Theta_i$, is non-preserving at $o$.
+\end{proposition}
+
+\begin{proof}
+The first sentence is the definition of preservation. For (i), assume $\Lang$ contains propositions $p,q$ and a proposition $m$ with $\{p,q\} \ent m$, $\{p\} \nent m$, $\{q\} \nent m$, $m \ent p$ and $m \ent q$ (a meet of $p$ and $q$; its existence is a hypothesis on $\Lang$, since $\Lang$ is not assumed to have a conjunction), let $\cont(o)=m$, and let $\succs_i(o) = \{o_p, o_q\}$ with contents $p$ and $q$. Each successor is strictly weaker than $\cont(o)$, yet $\Ctx_i(o) = \{p,q\} \ent \cont(o)$, so the transition is preserving. For (ii), $\Ctx_i(o) = \{\cont(o')\}$ and $\{\cont(o')\} \nent \cont(o)$ because $\cont(o')$ is strictly weaker, that is, $\cont(o) \ent \cont(o')$ and $\{\cont(o')\} \nent \cont(o)$.
+\end{proof}
+
+The derivative-loss example of Chapter~12 is, on the source's report and subject to the provisional status recorded there, an instance of (ii) in the following sense. The natural-language estimate asserts $\|N^{-1}F\|_{C^m_y} \le C_m \|F\|_{C^{m+4}_y}$, and the Lean statement asserts the same with $\|F\|_{C^{m+5}_y}$ on the right. Every $F$ satisfying the first hypothesis class satisfies the second, so the second is implied by the first and not conversely, and a proof of the second does not entail the first unless a restoring lemma or admissible assumption is added to the context. The example must be evaluated against all premises available in the formalized development and not against the single declaration, as (i) shows.
+
+\section{Representation of certification status: RV-014}
+
+\begin{definition}[Certification order]
+A \emph{certification order} is a partial order $(S, \preceq)$ on statuses, for instance the product order on triples of evidence levels for kernel acceptance, statement correspondence, and argument correspondence.
+\end{definition}
+
+\begin{proposition}[No faithful scalar, RV-014]
+\label{prop:scalar}
+If $(S,\preceq)$ contains two incomparable elements, there is no function $s : S \to \mathbb{R}$ with
+\[
+x \preceq y \iff s(x) \le s(y) \qquad \text{for all } x, y \in S.
+\]
+\end{proposition}
+
+\begin{proof}
+Let $x, y$ be incomparable, so that $x \not\preceq y$ and $y \not\preceq x$. If such an $s$ existed, then $s(x) > s(y)$ and $s(y) > s(x)$, which is impossible, since $\le$ on $\mathbb{R}$ is total.
+\end{proof}
+
+A scalar summary is therefore either non-reflecting, ranking statuses that are incomparable, or non-preserving. The substantive companion question is the least $d$ such that $(S, \preceq)$ order-embeds into $(\mathbb{R}^d, \le)$ with the componentwise order. For a finite poset this is its order dimension in the sense of Dushnik and Miller, and the statement of Chapter~21 will be restricted to finite certification orders, for which the quantity is well defined.
+
+\section{Audit of the specification}
+\label{sec:audit}
+
+Writing the definitions above in full exposed five points at which the outline required refinement, and these constrain the main text.
+
+First, the non-circularity condition proposed for permitted assumptions, that $\Theta_i$ alone must not entail $\cont(o)$, is not the right condition. An assumption identical to $\cont(o)$ that is recorded as a tracked open obligation is not dishonest, because the obligation reappears in the residue, and preservation then reports exactly what it should, namely that $o$ is preserved on the strength of an unproved assumption. The genuine circularity is a cycle in the dependency graph, taken over obligation dependencies, certificate dependencies, and assumption-use edges together, which is why Definition~\ref{def:admissible} requires (A2) instead. Acyclicity is a structural condition and does not by itself secure soundness.
+
+Second, the premises $\cont(d)$ for $d \in \Delta_i$ enter the certified context whether or not the discharge remains warranted. Entailment is therefore a logical statement and the transport of establishment from premises to conclusion is the separate second statement of Theorem~\ref{thm:compose}. The two must not be merged in the prose.
+
+Third, the interpretation $\I$ is held fixed along the chain. A transformation that changes the interpretation, for instance by moving from real-valued to rational-valued semantics, is outside the present formalism and would require a transition between two consequence relations, one relative to $\I$ and one to $\I'$, with a certified translation of contents. This is recorded as a limitation and a candidate extension.
+
+Fourth, warrant is defined relative to a dependency graph that the transition being certified itself extends, and the time indices $t_i^-$ and $t_i$ of the definition of a transition certificate are there to prevent a circularity between the warrant of the discharge record and the graph in which it is evaluated. Fifth, the entailment condition has the status of a certified claim. Theorem~\ref{thm:trace} is mechanically checkable, Theorem~\ref{thm:compose} is conditional on soundness of the certificates for $\ent$, and the monograph asserts nothing stronger about the second than that it makes preservation a precise and composable property distinct from discharge.

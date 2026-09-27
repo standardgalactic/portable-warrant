@@ -1,0 +1,314 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1.15in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathpazo}
+\usepackage[T1]{fontenc}
+\usepackage{microtype}
+\usepackage{setspace}
+\usepackage{enumitem}
+\usepackage{array}
+\usepackage[colorlinks=true,linkcolor=black,citecolor=black,urlcolor=black]{hyperref}
+\onehalfspacing
+\setlength{\parindent}{1.5em}
+\setlength{\parskip}{0.2em}
+
+\newcommand{\F}{\mathcal F}
+\newcommand{\Q}{\mathcal Q}
+\newcommand{\C}{\mathcal C}
+\newcommand{\G}{\mathcal G}
+\newcommand{\M}{\mathcal M}
+\newcommand{\PP}{\mathbb P}
+\newcommand{\E}{\mathbb E}
+\newcommand{\feas}{\mathrm{feas}}
+\newcommand{\adm}{\mathrm{adm}}
+\newcommand{\app}{\mathrm{app}}
+\newcommand{\Th}{\Theta}
+
+\theoremstyle{plain}
+\newtheorem{proposition}{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{remark}{Remark}
+
+\title{Correct Relative to Its Inputs:\\Responsibility for the Domain of Automated Decisions}
+\author{Flyxion\\Independent Researcher}
+\date{October 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent Procedural correctness relative to an input schema does not establish the adequacy of that schema, and it does not establish that the decisions the system produces are justified. A consequential omission of a variable may be negligent, deliberate, unavoidable, or justified by a competing constraint, and the task is to determine which, without presuming that every such omission is a design failure. The paper develops three formal objects: the input domain of a model and its value, the provenance of that domain through the stages of a development and deployment pipeline, and the admissible investigations available to each responsible actor and to the organization. It gives ordered tests that classify an omission, shows that every stage of a pipeline can be locally justified while the system as a whole loses information that was jointly indicated, and states a closure condition under which an organization is answerable for the discoverability of deficiencies without any individual being omniscient. It distinguishes individual willful blindness from organizational arrangements that suppress unwelcome information, and it carries one decision through collection, deployment, and retrospective investigation in three versions that come out differently. The result is an account of when a system that decides correctly from what it was given leaves someone answerable for what it was never given.
+\end{abstract}
+
+\section{Introduction}
+
+A model can be correct in a narrow and precise sense: no other policy conditioned on the same inputs would have done better. The sentence that a model is correct relative to its inputs names a property of a function, and it is a property that can be audited. It does not follow from it that the decision produced is a good one, or that anyone who deployed the system acted responsibly in doing so. The inputs may have excluded a variable that mattered, and then the function was answering well a question that its builders had posed badly. The observation is easily stated and it is easily lost, because correctness relative to inputs is the one property of an automated system that can be checked without leaving the system, and a property that is easy to check tends to be mistaken for the property that matters.
+
+The parent essay, \emph{The Domain and Its Establishment} \cite{flyxion2026domain}, begins from the remark that a function can only operate on its domain and argues that an agent, unlike a function, may be answerable for how its domain was established, maintained, or deliberately restricted. Automated decision systems make the contrast unusually sharp. The domain of the function is an explicit object, a schema of named variables, and the function is literally unable to respond to anything outside it. The domain is also established by a chain of actors, each of whom sees only part of the system, and none of whom may possess the information, authority, or resources needed to evaluate the whole. A model therefore provides a clean test of the framework and also exposes a complication that the parent essay treated only briefly: the establishment of a domain can be distributed, and responsibility for it can fail to attach to any individual even when something has plainly gone wrong.
+
+The central claim of the paper is the following. Procedural correctness relative to an input schema does not establish the adequacy of that schema, nor does it establish that the system's decisions are justified. The omission of a relevant variable may be negligent, deliberate, unavoidable, or justified by competing constraints, and it would be an error to presume that every consequential omission is a design failure. The task is to supply tests that determine which kind of omission has occurred. Three formal objects carry the argument: the model's input domain, the provenance of that domain through a development and deployment pipeline, and the admissible investigations available to each responsible actor. Throughout, the distinction between a model operating correctly and a system being responsibly constructed is kept explicit.
+
+The guiding concern can be stated in one sentence. When a system makes a decision correctly from the information supplied to it, the question is who answers for the information that was never supplied. The answer developed here depends on the kind of omission. For some omissions nobody answers for the omission itself, though continuing duties may remain. For others the answer is a particular actor at a particular stage of the pipeline. For a third class, the answer is the organization, because the arrangement of interfaces and escalation routes determined that a deficiency indicated in the joint information was never indicated to anyone able to act on it.
+
+The paper makes six contributions. It formalizes the value of an input variable and shows that correctness relative to a schema places no bound on that value (Section 3). It gives ordered tests that sort omissions into unavoidable, not indicated, justified by a competing constraint, and deficient, with deficient omissions further divided by motivation (Section 4). It extends the analysis from static schemas to the system's own capacity to acquire information at run time (Section 5). It shows that every stage of a pipeline can be locally justified while the pipeline loses jointly indicated information (Section 6). It states a closure condition that makes an organization answerable for discoverability without requiring any actor to be omniscient (Section 7), and it separates individual willful blindness from organizational suppression of unwelcome information (Section 8). A worked case in three versions tests whether the definitions discriminate between responsibility structures (Section 9), and the remaining sections state counterexamples, limits, and conclusions. The paper does not address model internals, fairness criteria, or interpretability, and it does not attribute duties to a model. Responsibility attaches to the people and organizations that establish and operate the system.
+
+\section{Preliminaries}
+
+The definitions of the parent essay are recalled here in compressed form so that the paper can be read independently. Their motivation and development are in \cite{flyxion2026domain}.
+
+Let $(\Omega,\F,\PP)$ be a probability space with a filtration $(\F_t)_{t\ge 0}$, where $\F_t$ is the information an agent actually possesses at time $t$. Let $\Q_t$ be the set of information-acquisition procedures available at $t$, each $q\in\Q_t$ with a cost $c_t(q)$ and an observation $Z_q$ that is not available until $q$ has been performed. Decision at $t$ proceeds in two stages. An investigation $q$ is chosen using only $\F_t$, and an action is then chosen using the enlarged state $\F_{t^{+}}^{q}=\F_t\vee\sigma(Z_q)$. For a loss function $L$ and a set $\Pi(\cdot)$ of policies measurable with respect to the stated information, the value of an investigation, assessed from the standpoint of what is known before it is performed, is
+\[
+V_t(q)=\inf_{\pi\in\Pi(\F_{t^{+}}^{q})}\E\bigl[L(\pi,\omega)\mid\F_t\bigr]+c_t(q).
+\]
+Three sets of investigations are distinguished: the feasible set $\Q_t^{\feas}$, determined by the agent's operational constraints and resources; the applicable set $\Q_t^{\app}=\{q\in\Q_t:D_t(q)=1\}$, where $D_t$ indicates satisfaction of the applicable standard of care and the set is independent of whether a particular agent can carry the investigations out; and the admissible set $\Q_t^{\adm}=\Q_t^{\feas}\cap\Q_t^{\app}$. The difference $\Q_t^{\app}\setminus\Q_t^{\feas}$ marks duties that apply to an agent who lacks the means of meeting them, and such duties can give rise to secondary duties, for instance a duty to report the inability to investigate. Two quantities must be kept apart. The admissible-relative loss difference $\Delta_t(q)=V_t(q)-\inf_{q'\in\Q_t^{\adm}}V_t(q')$ is an economic comparison and can be negative for impermissible omissions. The normative violation measure $\nu_t(q)\ge 0$ is zero for every admissible procedure and positive for specified violations of the standard. Neither is culpability, which additionally requires a judgment about responsibility for the omission, and willful blindness requires a motivational component that neither the information nor the violation measure records.
+
+The justification of a decision is $J_t=J(q_t,\pi_t\mid\F_t,\C_t,\mathcal P)$, where $\C_t$ is the set of operational constraints and $\mathcal P$ the governing principles. It is fixed relative to the circumstances and standards at $t$. The later assessment $\widehat J_{t\mid t+1}$ may use subsequent evidence about what the agent knew, could have known, or avoided, and may use a realized outcome as evidence about the circumstances of the decision, but may not treat the outcome as information the agent had when choosing. Finally, for an agent $i$ embedded among other agents, the constraints it faces are partly the product of decisions made elsewhere, $\C_t^{(i)}=G_i\bigl(\C_t^{\mathrm{ext}},d_{<t}^{(1)},\ldots,d_{<t}^{(n)}\bigr)$, a representation that separates the origin of a restriction from its normative justification.
+
+\section{The input domain and procedural correctness}
+
+Let $K$ be a finite index set of variables, with $X_k:\Omega\to\mathcal X_k$ a measurable variable for each $k\in K$. A schema is a subset $S\subseteq K$, and the information available to a model that uses schema $S$ is the $\sigma$-algebra $\G_S=\sigma(X_k:k\in S)$. A model is a policy $m\in\Pi(\G_S)$, a map from the schema's variables to actions. The decision is made at deployment, but the schema was fixed earlier, at a design time $\tau$, from the information $\F_\tau$ held by those who fixed it.
+
+\begin{definition}[Value of a schema]
+For a loss $L$ and design time $\tau$, the value of schema $S$ is
+\[
+R_\tau(S)=\inf_{\pi\in\Pi(\G_S)}\E\bigl[L(\pi,\omega)\mid\F_\tau\bigr].
+\]
+A model $m\in\Pi(\G_S)$ is $\varepsilon$-correct relative to $S$ if $\E[L(m,\omega)\mid\F_\tau]\le R_\tau(S)+\varepsilon$, and correct relative to $S$ if $\varepsilon=0$.
+\end{definition}
+
+Correctness is a property of the pair of a model and a schema. It says that, given the variables the model was permitted to see, nothing better could have been done. The value of an additional variable is the amount by which the schema's value improves when the variable is added.
+
+\begin{definition}[Value of a variable]
+For $k\notin S$, the value of $X_k$ given $S$, assessed at $\tau$, is
+\[
+\Th_\tau(k\mid S)=R_\tau(S)-R_\tau(S\cup\{k\}).
+\]
+\end{definition}
+
+The quantity is conditional on $S$, so that a variable already well represented by proxies in $S$ has a small value, and it is a loss difference of the same kind as $\Delta_t$: it is an economic comparison under a particular loss model and a particular assessment of the world, and it is not a measure of any failure of responsibility.
+
+\begin{proposition}\label{prop:correctness}
+Let $S\subseteq S'\subseteq K$. Then (i) $\Th_\tau(k\mid S)\ge 0$ for every $k\notin S$, and $R_\tau(S')\le R_\tau(S)$. (ii) If $R_\tau(S')<R_\tau(S)$, then every model correct relative to $S$ has expected loss exceeding the best attainable under $S'$ by exactly $R_\tau(S)-R_\tau(S')>0$. (iii) If $R_\tau(S')<R_\tau(S)$, then no model in $\Pi(\G_S)$ is correct relative to $S'$.
+\end{proposition}
+
+\begin{proof}
+Since $S\subseteq S'$ we have $\G_S\subseteq\G_{S'}$, hence $\Pi(\G_S)\subseteq\Pi(\G_{S'})$, and an infimum over a larger set is no greater, which gives (i). For (ii), a model correct relative to $S$ attains $R_\tau(S)$ by definition, so its excess over $R_\tau(S')$ is $R_\tau(S)-R_\tau(S')$. For (iii), suppose $m\in\Pi(\G_S)$ were correct relative to $S'$. Then its expected loss equals $R_\tau(S')$, but as an element of $\Pi(\G_S)$ its expected loss is at least $R_\tau(S)>R_\tau(S')$, a contradiction.
+\end{proof}
+
+The proposition is elementary and its content is negative: correctness relative to a schema places no bound on how much better a larger schema would have done. A system can be audited and found correct to any tolerance while omitting a variable of arbitrarily large value. The parent essay's opening remark applies directly. The function is answerable for its operation within its domain, and the domain's adequacy is a question about something else.
+
+\begin{remark}
+The value $\Th_\tau(k\mid S)$ is indexed by the time at which it is assessed, and the index matters. At design time, the value is computed from $\F_\tau$ and is part of the historical justification of the decision to omit $k$. At a later time $\tau'$, when more has been learned, the value $\Th_{\tau'}(k\mid S)$ may be far larger. A large later value shows that the schema was inadequate, which is a fact about the world, and it does not by itself show that omitting $k$ at $\tau$ was unjustified. This is the distinction between $J_\tau$ and $\widehat J_{\tau\mid\tau'}$ applied to the choice of a schema, and the failure to observe it is the most common route by which post-incident review slides into hindsight.
+\end{remark}
+
+Two further points complete the setting. First, inclusion of a variable is not always permissible. A variable may be legally barred, a use of it may violate a norm of fairness or privacy, or its collection may be infeasible, so that $R_\tau(S\cup\{k\})$ describes a schema that cannot lawfully or practically be built. Second, the loss function $L$ and the principles $\mathcal P$ that fix it are themselves part of the domain in a broader sense, since a model can be correct relative to its inputs and optimal for an objective that should not have been adopted. Section 10 returns to this second domain.
+
+\section{Four kinds of omission}
+
+Suppose a variable $k\notin S$ has positive value, $\Th_\tau(k\mid S)>0$, so that the schema is in a precise sense incomplete. The question of responsibility is not settled by the size of the value. It depends on what could have been done about the omission, what the available evidence indicated, and what the governing norms permitted. To state the tests, let $q_k\in\Q_\tau$ denote an acquisition procedure that would render $X_k$ available to the system, with cost $c_\tau(q_k)$, and let $\Q_\tau^{\feas,O}$ denote the investigations feasible for the organization as a whole, taking its budget and operational constraints as given. Let $\F^{\vee}_\tau$ denote the joint information held across the organization at $\tau$, that is, the join of the information of every actor in it.
+
+The parent essay treated the question of whether an investigation was reasonably indicated through a threshold condition. In the present setting the condition can be given a definite form. Let $M_k$ be the event that the realized value of $X_k$ given $S$ is at least a materiality level $\delta_\tau$, set by the standard of care. The omission of $k$ is \emph{indicated} relative to information $\mathcal H$ when
+\[
+\iota_\tau(k;\mathcal H)=1\quad\Longleftrightarrow\quad \PP(M_k\mid\mathcal H)\ge\theta_\tau ,
+\]
+where $\theta_\tau$ is a diligence threshold, also fixed by the standard of care. Both $\delta_\tau$ and $\theta_\tau$ are normative parameters and are not derived from the model. They mark the places where the account hands a question back to the practice that governs it.
+
+\begin{definition}[Ordered tests]
+For an omitted variable $k$ with $\Th_\tau(k\mid S)>0$, apply the following tests in order.
+\begin{enumerate}[label=T\arabic*., leftmargin=2.2em, itemsep=0.1em]
+\item \emph{Feasibility.} Is $q_k\in\Q_\tau^{\feas,O}$? If not, the omission is \emph{unavoidable} (type U).
+\item \emph{Indication.} If $q_k$ is feasible, is $\iota_\tau(k;\F^{\vee}_\tau)=1$? If not, the omission is \emph{not indicated} (type N).
+\item \emph{Applicability.} If the omission was indicated, is $q_k\in\Q_\tau^{\app}$? If not, because a competing norm forbids acquiring or using $X_k$, the omission is \emph{justified by a competing constraint} (type J).
+\item \emph{Otherwise,} $q_k\in\Q_\tau^{\adm}$ was indicated and was not performed, and the omission is \emph{deficient} (type D), with $\nu_\tau(q_k)>0$.
+\end{enumerate}
+A deficient omission is of type D2 if a motivational component is present, meaning that the avoidance is attributable to a suspicion of what the information would show, and of type D1 otherwise.
+\end{definition}
+
+\begin{proposition}\label{prop:types}
+For every omitted variable $k$ with $\Th_\tau(k\mid S)>0$, exactly one of U, N, J, D holds.
+\end{proposition}
+
+\begin{proof}
+The four outcomes are produced by sequential tests, each of which either terminates with a type or passes the variable to the next test, and T4 is the residual case reached only if T1 to T3 are all passed. Hence the types are exhaustive. They are mutually exclusive because each is defined by the failure of exactly one test conditional on passing all earlier ones.
+\end{proof}
+
+The consequence is the claim stated in the introduction in sharper form. A consequential omission is a design failure only if it is of type D, and the classification is made by the tests and not by the value $\Th_\tau$. A variable of very large value can be omitted without any failure of diligence, as when the variable could not be acquired at all (U), when nothing in the available evidence suggested that it mattered (N), or when its use was forbidden for reasons that the standard of care recognizes (J). Conversely, a variable of modest value can be omitted deficiently, because the omission was indicated and the investigation was admissible and cheap. The size of the value and the character of the omission are independent, and this independence is what prevents the framework from collapsing into a single scalar of harm.
+
+Three remarks sharpen the tests. First, the types are indexed by time. The classification at $\tau$ is part of the historical justification of the schema, and it can change as circumstances change. A variable whose acquisition was infeasible at $\tau$ may become feasible later, a consent regime that barred linkage may be revised, and evidence that did not indicate relevance may begin to. Each such change renews the question, and an organization that continues to omit the variable after the change is evaluated by the tests as applied at the later time. Type J in particular carries a continuing duty to revisit: a justified exclusion is justified only so long as the competing constraint remains in force and no lawful means of obtaining the information has appeared.
+
+Second, T3 treats competing constraints as a single applicability judgment, and this simplifies matters that are often graded. A norm may bar the use of a variable while permitting its collection, may bar collection while permitting a proxy, or may permit use only under conditions that raise cost. These cases call for weighing, and the account requires only that the weighing be done under the applicable standard of care and recorded, so that a later assessment can see what was weighed.
+
+Third, the tests are applied here at the level of the organization, treated as the agent whose schema it is. Section 6 asks where within the organization the loss of a variable occurs, and Section 7 asks what the organization owes with respect to making deficiencies discoverable to the actors within it.
+
+\section{The system's own capacity to acquire information}
+
+The foregoing treats the schema as static, fixed at design time. Many deployed systems have some capacity to acquire information at run time. They can query a database, request a measurement, abstain, or defer to a human reviewer, and the set of such options is itself an object of design. Extending the framework to this case shows that the structure of the main essay reappears one level down.
+
+Consider a deployed system at decision time $s$, with state $\G_S$ and a set of run-time investigations $\Q_s^{\mathrm{sys}}$ that its designers have made available, including a null investigation. Each $q\in\Q_s^{\mathrm{sys}}$ has a cost $c_s(q)$, which may include the delay and expense of human review, and produces an observation $Z_q$. The value of choosing $q$ is
+\[
+V^{\mathrm{sys}}_s(q)=\inf_{\pi\in\Pi(\G_S\vee\sigma(Z_q))}\E\bigl[L(\pi,\omega)\mid\G_S\bigr]+c_s(q),
+\]
+and the system's investigation rule is correct relative to its tools if it selects a minimizer of $V^{\mathrm{sys}}_s$ over $\Q_s^{\mathrm{sys}}$. A particularly important member of $\Q_s^{\mathrm{sys}}$ is deferral, an investigation whose observation is the judgment of a person who has access to information the system lacks. A system that can recognize that its input lies outside the region in which its schema is adequate, and can defer in that case, has acquired a capacity that a static schema does not give it, and the adequacy of that recognition is a further property of design.
+
+The parallel with Section 3 is exact. A system can be correct relative to its tools, selecting the best available investigation from $\Q_s^{\mathrm{sys}}$, while the organization could have given it a better set. Define the \emph{capacity gap}
+\[
+\Th^{\mathrm{sys}}_s=\min_{q\in\Q_s^{\mathrm{sys}}}V^{\mathrm{sys}}_s(q)-\min_{q\in\Q_s^{\feas,O}}V^{\mathrm{sys}}_s(q)\ \ge 0 ,
+\]
+where $\Q_s^{\feas,O}\supseteq\Q_s^{\mathrm{sys}}$ is the set of run-time investigations the organization could feasibly have provided. The gap is a loss difference and carries no verdict, and it is classified by the same ordered tests applied to the investigation that would have closed it. The set $\Q_s^{\mathrm{sys}}$ is an artifact of design, and the question of who answers for it is the question of Section 6.
+
+Two consequences follow. When a system chooses its own investigations, as in systems that call tools or decide which records to retrieve, the choice is a procedure that can be evaluated for correctness relative to the tools and the objective it was given. Responsibility for what it did not look at is then borne by those who defined $\Q_s^{\mathrm{sys}}$ and the standard encoded in its objective, in the same way that responsibility for a model's omitted variable is borne by those who fixed its schema. The slogan that a model is correct relative to its inputs has a second form, that an investigating system is correct relative to its tools, and the second is subject to the same limitation as the first.
+
+The second consequence concerns the record. A later assessment $\widehat J$ can discriminate among the types only if the information held by the actors at the time can be reconstructed. Deployed systems can be built to keep such a record: schema versions, the evidence available to each stage, the tickets and notes in which concerns were raised, and the log of what the system saw and did. Whether to keep it is a choice made before any dispute arises, and its absence has a particular effect on the framework. If $\F_\tau^{(j)}$ cannot be reconstructed, the historical justification cannot be assessed, and the assessment must default to whatever rule the governing practice supplies for missing records, which is a question the framework does not answer. Keeping the record is therefore itself an investigation in the admissible set, aimed at the future assessment and not at the present decision, and a failure to keep it is a failure of the same kind as any other omitted acquisition.
+
+\section{Provenance of the domain through a pipeline}
+
+A system's schema is rarely fixed by one actor. A typical pipeline passes through stages $j=1,\ldots,n$: the design of what to collect, collection and linkage, labeling, feature construction, modeling, validation, governance review, deployment, and operation with monitoring. At each stage an actor, or a team standing in for one, makes decisions that determine which variables the next stage can use. Write $\F^{(j)}_\tau$ for the information available to the actor at stage $j$, $\Q^{\feas,(j)}_\tau$ for the investigations feasible for that actor, and $\C^{(j)}_\tau=G_j\bigl(\C^{\mathrm{ext}}_\tau,d^{(1)}_{<\tau},\ldots,d^{(n)}_{<\tau}\bigr)$ for the constraints it faces, which are partly set by the decisions of the other stages. Let $A_j\subseteq K$ be the set of variables that stage $j$ either holds or can feasibly acquire. A variable $k$ \emph{drops} at stage $j$ if $k\in A_j$ and $k\notin A_{j+1}$, and the \emph{locus} of the omission of $k$ is the first stage at which it drops. If a variable is in no $A_j$, it was never within reach of any actor and its omission is of type U.
+
+The ordered tests can be applied at each stage with that stage's information and feasible set, and this yields a local classification of the decision of each actor with respect to $k$. Let $\iota^{(j)}_\tau(k)=\iota_\tau(k;\F^{(j)}_\tau)$ denote indication relative to the information of stage $j$ alone, and let $\nu^{(j)}_\tau$ denote the local violation measure. A stage with no indication has a local investigation outside its applicable set, so $\nu^{(j)}_\tau=0$ for it however much the system as a whole may have lost. This is the sense in which an actor is answerable for its own procedure relative to its own information and constraints, and it is the parent essay's justification relation applied locally.
+
+\begin{proposition}[Local-global gap]\label{prop:gap}
+There exist pipelines in which every stage is locally justified with respect to a variable $k$, so that $\nu^{(j)}_\tau=0$ for all $j$, while $k$ is feasible for the organization, $\Th_\tau(k\mid S)>0$, and the omission is indicated relative to the joint information, $\iota_\tau(k;\F^{\vee}_\tau)=1$.
+\end{proposition}
+
+\begin{proof}
+Consider two stages whose information consists of conditionally independent signals $Y_1$ and $Y_2$ about the event $M_k$ that $X_k$ is material, with likelihood ratios $\lambda_1,\lambda_2>1$ for the observed values. Let $o_0$ denote the prior odds of $M_k$ and $o^{*}=\theta_\tau/(1-\theta_\tau)$ the odds corresponding to the threshold. Posterior odds given $Y_j$ alone are $o_0\lambda_j$, and given both signals are $o_0\lambda_1\lambda_2$. Choose $o_0=o^{*}/(\lambda_1\lambda_2)$. Then the joint odds equal $o^{*}$, so $\iota_\tau(k;\F^{\vee}_\tau)=1$, while the odds for stage $j$ alone are $o^{*}/\lambda_{3-j}<o^{*}$, so $\iota^{(j)}_\tau(k)=0$ for $j=1,2$. Each stage lacks indication and therefore has no applicable investigation of $k$ and $\nu^{(j)}_\tau=0$. Taking $q_k$ feasible for the organization and $\Th_\tau(k\mid S)>0$ completes the construction.
+\end{proof}
+
+The proposition is an existence result, and what it establishes is a possibility that an account of responsibility must be able to represent. A relevant deficiency can be jointly indicated and individually invisible. One actor may hold a signal that a population is poorly served and have no access to the schema, and another may know the variable exists and have no reason to think it matters. Neither has the indication, and neither is negligent. Nothing in the local analysis can find the failure, because the failure is not located at any stage. It is a property of how information is arranged across stages, and the party answerable for arrangements of that kind is the one that establishes the interfaces, which is the subject of the next section.
+
+\section{Distributed responsibility without omniscience}
+
+No single participant in a pipeline need possess the information, authority, or resources to evaluate the entire system, and the account should not require otherwise. A requirement that each actor attend to the joint information $\F^{\vee}_\tau$ would be a requirement of omniscience and could not be a standard of care. What can be required is that the organization establish mechanisms by which a deficiency indicated in the joint information becomes indicated to someone able to act on it.
+
+Let $\M$ be the set of routing mechanisms available to the organization, where a mechanism $m$ passes selected signals from the information of some actors to others. These include interfaces that expose upstream decisions to downstream stages, escalation procedures by which an actor without authority can deliver a concern to one who has it, and audits that examine outputs for the kinds of failures that individual stages cannot see. For an actor $j$ and a mechanism set $\M'\subseteq\M$, write $\F^{(j,\M')}_\tau$ for the information of $j$ enlarged by the signals routed to it under $\M'$. Let $\mathrm{Auth}(k)$ be the set of actors with authority to alter the schema with respect to $k$. The attention available to any actor is limited, and a mechanism is admissible if its cost and the load it places on the receiving actor are within what the standard of care permits. Write $\M^{\adm}$ for the admissible mechanisms.
+
+\begin{definition}[Closure]
+A mechanism set $\M'$ achieves \emph{closure at $k$} if, whenever $\iota_\tau(k;\F^{\vee}_\tau)=1$, there is an actor $j\in\mathrm{Auth}(k)$ with $\iota_\tau(k;\F^{(j,\M')}_\tau)=1$.
+\end{definition}
+
+Closure does not say that anyone holds the joint information. It says that whatever is indicated by the joint information has been made indicated to some actor who can act, and the mechanism that achieves this may do so by routing only the signals needed. The organization is in violation with respect to $k$, written $\nu^{O}_\tau(k)>0$, if $k$ is indicated in $\F^{\vee}_\tau$, $q_k\in\Q_\tau^{\app}$, and there is a mechanism set in $\M^{\adm}$ that achieves closure at $k$ but the organization did not adopt it.
+
+\begin{proposition}[Sufficiency of closure]\label{prop:closure}
+Suppose the organization's mechanism set achieves closure at $k$, and every actor is locally diligent in the following sense: an actor with indication for $k$ for whom $q_k$ is admissible performs it, and an actor with indication for whom $q_k$ is applicable but not feasible escalates to an actor who can perform it or reports the inability. Then the omission of $k$ is not of type D.
+\end{proposition}
+
+\begin{proof}
+By closure there is an authorized actor $j$ with $\iota_\tau(k;\F^{(j,\M')}_\tau)=1$. If $q_k$ is feasible for $j$ and applicable, $j$ performs it and $k$ is acquired, so there is no omission for lack of acquisition. If $q_k$ is not applicable because a competing norm forbids it, the omission is of type J. If it is applicable but infeasible for $j$, then $j$ escalates, and since the pipeline is finite the escalation ends in an actor for whom $q_k$ is feasible, in which case it is performed, or in the organization as a whole, for which $q_k$ is infeasible, in which case the omission is of type U. In no case is $q_k$ admissible, indicated, and unperformed.
+\end{proof}
+
+The proposition formalizes responsibility without omniscience. Individual duties are defined relative to $\F^{(j,\M')}_\tau$ and so are bounded by what an actor can be expected to see. The organization's duty is to maintain mechanisms under which indicated deficiencies reach actors who can respond, and its violation, $\nu^{O}_\tau$, is assessed against what admissible mechanisms were available. This places the failure in the arrangement and not in the individual whenever the individuals have done what the arrangement allowed. It also yields three kinds of obligation that the organization carries and no individual does: interfaces, so that each stage can see enough of its neighbors' decisions to form indications; escalation, so that an actor who has indication without authority can deliver it; and audit, so that failures visible only in aggregate are examined by someone with the means to see them.
+
+Closure is bounded by attention. A mechanism that routes every signal to a central reviewer achieves closure in a formal sense and fails the admissibility requirement, because the volume would exceed the reviewer's capacity and bury the signals that matter, so that the indication $\iota_\tau(k;\F^{(j,\M')}_\tau)$ would not in fact be reached. Where not every indicated variable can be routed within the available attention, the standard of care governs prioritization. The organization is then answerable for a defensible ordering, and variables that could not be routed within the bound are unavoidable in the sense of T1 relative to the admissible mechanism set, though the ordering can itself be assessed. This is the point at which the capacity to recognize that an investigation is warranted, listed in the parent essay among the components of $\C_t$, becomes an organizational as well as an individual constraint.
+
+\section{Individual and organizational avoidance}
+
+The parent essay observed that willful blindness is narrower than deficiency: it involves deliberately avoiding information because one suspects what it might reveal, and that motivational component is recorded neither by the information an agent holds nor by the violation measure. In an organization the same phenomenon can occur without any individual satisfying the motivational condition, and the possibility deserves separate treatment because it is the form most likely to be missed.
+
+Call a signal \emph{adverse} if its arrival at an actor with authority would be costly to the organization's interests, as when it threatens a deadline, a contract, a reputation, or a legal position, and \emph{neutral} otherwise. Let $s$ denote the strength of a signal, measured by its contribution to the indication of some variable, and let $\rho(s,v)$ denote the propensity with which a signal of strength $s$ and valence $v$ reaches an authorized actor under the organization's routing arrangements. An arrangement is \emph{suppressive} if $\rho(s,\text{adverse})\le\rho(s,\text{neutral})$ for every strength $s$, with strict inequality for some. The comparison is an ordering of propensities, and it can be assessed from the history of what was in fact routed and what was not, without assigning numerical values to any of them.
+
+\begin{proposition}\label{prop:institutional}
+There exist organizations in which every actor satisfies $\nu^{(j)}_\tau=0$ with respect to a variable $k$ and no actor has a motivational component, while the organization has $\nu^{O}_\tau(k)>0$.
+\end{proposition}
+
+\begin{proof}
+Take the two-stage pipeline of Proposition~\ref{prop:gap}, in which $k$ is indicated in the joint information and in the information of neither stage. Let there be an admissible mechanism that routes the signal $Y_1$ to stage~2, thereby achieving closure at $k$, and let the organization not have adopted it, the choice of arrangement having been made for reasons unrelated to any actor's suspicion about $k$. Each stage lacks indication, so $\nu^{(j)}_\tau=0$ for each, and no actor suspected what the information would show, so no motivational component is present. By definition $\nu^{O}_\tau(k)>0$.
+\end{proof}
+
+The proposition separates two things that ordinary talk about ignorance runs together. The organization is ignorant of something that was in a real sense discoverable within it, and yet there is no person of whom one can say that the person looked away. The ignorance is a property of the arrangement. Such an arrangement may be an accident of the way teams were divided, or it may have been maintained because of its effect, and the framework should distinguish the two. For organizational deliberate avoidance, that is, an organizational omission of type D2, three conditions are required.
+
+\begin{enumerate}[label=O\arabic*., leftmargin=2.2em, itemsep=0.1em]
+\item \emph{Effect.} The arrangement is suppressive in the sense above, so that adverse signals of a given strength are less likely to reach authorized actors than neutral signals of that strength.
+\item \emph{Knowledge.} At the time the arrangement was adopted or retained, some actor with authority over the arrangement had indication, in the sense of the threshold condition, that it suppresses adverse signals. This is the indication condition applied to a claim about the arrangement itself.
+\item \emph{Persistence.} An admissible mechanism that would have removed or reduced the suppression was available and was declined, or never considered after the indication arose.
+\end{enumerate}
+
+If the first condition holds and the second and third do not, the organizational omission is of type D1: it is negligent in the sense that an admissible closure mechanism was available and not adopted, but there was no avoidance. If all three hold, the avoidance is organizational and the omission is of type D2. The second condition is the one on which a case typically turns, and it recurses: whether an authorized actor had indication that the arrangement suppresses signals is a question about what that actor's information supported, to which the tests of Section 4 apply with the arrangement in the place of the variable. The recursion terminates in the ways the parent essay describes, because there may be no further responsible agent, a constraint may have been unavoidable, or the standard of care may not require further inquiry. Evidence for the conditions comes from sources the formalism does not generate, among them the design history of the arrangement, the record of earlier incidents in which signals failed to reach an actor, and proposals for cheap mechanisms that were rejected, and this is one reason that the record discussed in Section 5 matters so much.
+
+\section{A worked case}
+
+The definitions can be tested by carrying one decision through the entire structure, from collection to deployment to retrospective investigation, in three versions that differ in the way the framework predicts they should. A hospital network deploys a model that prioritizes discharged patients for follow-up contact. The schema $S$ consists of diagnosis codes, prior admissions, laboratory values, and age. The loss $L$ penalizes an unattended readmission heavily relative to the cost of a follow-up call. A variable $k$ records whether a patient has reliable transportation and lives within reach of a pharmacy. It is held in a separate social-services system and is not in $S$. A later analysis shows that $\Th_{\tau'}(k\mid S)>0$, and the model's follow-up lists systematically under-prioritize patients for whom $k$ is unfavorable. The model is, throughout, correct relative to $S$.
+
+The pipeline has five actors. A data steward decides what is collected and linked. A modeler fixes features and trains the model. A validation analyst examines performance across subgroups. A governance board reviews validation results and approves deployment. Deployment operations run the system and monitor it. The version-specific facts are as follows.
+
+\emph{Version A.} Linkage to the social-services system is technically feasible and permitted under the consent regime. The steward knows the system exists, though not that its contents matter for follow-up. The modeler is not told of it. The validation analyst observes that the model is miscalibrated for patients living far from facilities, files the observation as a note in the ticketing system, and has no authority over the schema. The board's screening rule, adopted after an earlier adverse note had caused concern about reputation, forwards to the board only validation notes above a severity level, and the analyst's note falls below it. A proposal that the board review subgroup calibration quarterly had been made and declined as not worth the effort.
+
+\emph{Version B.} The facts are the same as in A except that linkage of the social-services records to clinical records is barred, because patients in the historical data did not consent to such linkage and obtaining consent would require re-consenting the population. The analyst's note is routed through a functioning escalation path to the board, which reviews it, records a decision not to link, adds a clinician override field and an outreach protocol for patients flagged by clinicians as likely to face access barriers, and minutes an intention to revisit the decision if the consent regime changes.
+
+\emph{Version C.} The social-services variable is not known by any actor to bear on follow-up, no validation result suggests miscalibration for any subgroup, and the variable's relevance is discovered only after deployment through an unrelated study. All actors have followed the standard procedures, and the board's review mechanisms are as in B.
+
+Applying the ordered tests at the organizational level gives the classification in Table~\ref{tab:versions}. In every version $\Th_{\tau'}(k\mid S)>0$ at the later time, so the schema was inadequate in all three, and the versions differ only in what the tests find at $\tau$.
+
+\begin{table}[h]
+\centering
+\small
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{p{1.4cm}p{1.7cm}p{1.9cm}p{1.8cm}p{1.9cm}p{1.6cm}p{1.2cm}}
+\hline
+Version & Feasible for the organization (T1) & Indicated in $\F^{\vee}_\tau$ (T2) & Forbidden by a competing norm (T3) & Closure achieved & Org.\ violation $\nu^{O}_\tau$ & Type \\
+\hline
+A & Yes & Yes & No & No & $>0$, with O1 to O3 & D2 \\
+B & Yes & Yes & Yes & Yes & $0$ & J \\
+C & Yes & No & Not reached & Not required & $0$ & N \\
+\hline
+\end{tabular}
+\caption{Organizational classification of the omission of $k$ in the three versions.}
+\label{tab:versions}
+\end{table}
+
+The local analysis for Version A is given in Table~\ref{tab:actors}, and it is the case that illustrates Proposition~\ref{prop:gap} and Proposition~\ref{prop:institutional} together. No actor has both indication and authority. The steward has authority but no indication, since it knows only that the data exist. The analyst has indication but no authority, and satisfies its local duty by filing the note, which is the secondary duty to report an inability to act. The board has authority and would have had indication had the note reached it, and the question for the board is therefore not what it knew but whether the arrangement under which the note did not reach it was one it was answerable for. The conditions of the previous section are met. The routing rule is suppressive because it screens out low-severity notes whose content is adverse and not trivially, the board adopted it after a precedent that gave some member indication of what it would do, and a cheap review mechanism was proposed and declined. The failure is located in the arrangement, and Version A is a case of organizational avoidance in which no individual is shown to have looked away.
+
+\begin{table}[h]
+\centering
+\small
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{p{2.6cm}p{3.7cm}p{2.4cm}p{3.2cm}}
+\hline
+Actor & Information about $k$ & Authority over $S$ & Local result \\
+\hline
+Data steward & Knows the data exist; no indication of relevance & Yes & $\nu^{(j)}_\tau=0$; no indication \\
+Modeler & None & Partial & $\nu^{(j)}_\tau=0$; no indication \\
+Validation analyst & Indication from subgroup miscalibration & No & $\nu^{(j)}_\tau=0$; secondary duty met by filing \\
+Governance board & None received; would have had indication & Yes & Answerable for the arrangement, not for the note \\
+Deployment operations & None & No & $\nu^{(j)}_\tau=0$ \\
+\hline
+\end{tabular}
+\caption{Local classification of actors in Version A with respect to $k$.}
+\label{tab:actors}
+\end{table}
+
+Version B has the same outcome pattern and the opposite classification. The organization had the indication, the escalation path worked, and the board weighed the competing constraint and recorded its decision with a mitigation. The omission is of type J and $\nu^{O}_\tau=0$, although $\Th_\tau(k\mid S)>0$ and patients are still under-served. Nothing in the framework denies that something is wrong. It denies that the wrong is a culpable omission, and it identifies what the organization still owes: a continuing duty, noted in Section 4, to revisit the decision when the consent regime changes or a lawful means of obtaining the information appears. If the board declined to revisit it when such a change occurred, the omission would at that later time be evaluated afresh and could become type D.
+
+Version C is the case in which the framework resists hindsight. The variable is of high later value and yet its omission is of type N: the available evidence at $\tau$ did not indicate it, and closure is trivially satisfied because nothing indicated was left unrouted. The retrospective investigation is most likely to go wrong here, since a review that knows the outcome will find the variable obvious and will describe the omission as a design failure. The historical justification $J_\tau$ is fixed by $\F_\tau$ and the applicable standard, and the later assessment $\widehat J_{\tau\mid\tau'}$ may use the outcome as evidence about what was true earlier, for instance that miscalibration existed, but not as information the actors held.
+
+The retrospective investigation therefore works as follows. Investigators reconstruct $\F^{(j)}_\tau$ for each stage from the artifacts the pipeline retained: tickets, schema versions, the board's minutes, and the log of what the system saw. The outcome, a cluster of missed follow-ups among patients with unfavorable $k$, is admitted as evidence that the miscalibration existed and as a prompt for inquiry. In Version A the artifacts show that indication existed and was filed before the board's review, in Version B they show a recorded weighing, and in Version C they show nothing indicating relevance. The three versions are distinguished by what the record supports, which is why the duty to keep the record, discussed in Section 5, belongs among the admissible investigations of the organization. Where the record was never kept, the assessment cannot discriminate among the versions, and the framework supplies no answer beyond observing that the organization alone controlled whether one could be given.
+
+\section{Counterexamples and limits}
+
+Several limits of the account are best shown by cases that the definitions handle only with qualification.
+
+First, an omission may be harmless. If the schema includes a proxy that carries nearly all the relevant information, then $\Th_\tau(k\mid S)$ is small or zero and the omission calls for no inquiry at all. The value is conditional on $S$, so it must be computed with the proxies in place, and a naive audit that lists variables absent from the schema will report omissions that do not matter.
+
+Second, the schema is not the only domain. A model that is correct relative to its inputs and whose schema is adequate can still produce unjustified decisions if the loss $L$ it optimizes should not have been adopted, or if the governing principles $\mathcal P$ are themselves deficient. The specification of the objective is a decision that establishes a second domain, and its evaluation involves the test of the parent essay for the principles themselves, namely whether general adoption of the principle would be defensible. The present paper concerns informational adequacy and leaves that test aside, but it should not be taken to imply that informational adequacy is the whole of responsible construction.
+
+Third, an exclusion norm can be circumvented. If a variable is barred under T3 but can be reconstructed with high accuracy from included variables, then the included variables function as proxies for it, and the exclusion may be satisfied in form while defeated in effect. The framework represents this through the conditional value $\Th_\tau(k\mid S)$ computed over the barred variable, but whether the norm is violated by such reconstruction depends on the norm's purpose, and the account does not decide that.
+
+Fourth, omissions interact. The value of a set of variables is not the sum of the values of its members, since variables may be substitutes or complements, and the value of $k$ given $S$ differs from its value given $S\cup\{k'\}$. The classification of several omissions must therefore be done jointly or in an order that is itself recorded, and the single-variable tests should be read as the case in which the interactions can be set aside.
+
+Fifth, the normative inputs remain inputs. The materiality level $\delta_\tau$, the diligence threshold $\theta_\tau$, the applicable set $\Q_\tau^{\app}$, and the admissibility of mechanisms are fixed by the standard of care and are not derived. The tests organize a judgment and do not replace it. The regress noted in the parent essay, in which a decision about whether to investigate invites a prior decision about whether to investigate that, is also present here in the question of whether the organization investigated the adequacy of its own routing, and it is cut by the same appeal to the standard.
+
+Sixth, the account assigns responsibility to people and organizations and says nothing about the standing of the system itself. That the system selects its own investigations from $\Q_s^{\mathrm{sys}}$ does not make it a bearer of duties, and nothing here depends on whether it should be regarded as one.
+
+\section{Conclusion}
+
+The guiding concern was who answers for the information never supplied to a system that decides correctly from the information it was given. The answer is not a single party and not a single rule. Correctness relative to a schema is a property of a model, and Proposition~\ref{prop:correctness} shows that it is compatible with arbitrarily large unrealized value in omitted variables. Whether an omission is a failure of responsibility depends on a sequence of tests: whether acquisition was feasible, whether the omission was indicated, whether a competing norm applied, and whether the omission was admissible and avoidable. These yield four kinds of omission, each with a different locus of answerability, and a consequential omission is a design failure only in the last.
+
+The pipeline setting adds a result that the single-agent theory could not state. Every stage can be locally justified while the system loses information that was jointly indicated, and the party answerable for such a loss is the organization, whose duty is to maintain interfaces, escalation routes, and audits that make deficiencies discoverable, and not to be omniscient. The organization can also be ignorant by arrangement, with no individual looking away, and the account distinguishes this from organizational avoidance by effect, knowledge, and persistence. The worked case shows that the same model and the same harm can correspond to a deficient, a justified, and a not indicated omission, and that the retrospective investigation can tell them apart only if the record was kept.
+
+The thesis of the parent essay was that an agent may be answerable for how its domain was established. In automated systems the domain is a schema, the establishment is a pipeline, and the answerable party may be an arrangement of people. The same architecture of evaluation applies at each level, which is the sense in which a model that is correct relative to its inputs can be a part of a system that was responsibly or irresponsibly built.
+
+\begin{thebibliography}{9}
+\bibitem{flyxion2026domain} Flyxion. \emph{The Domain and Its Establishment: Information Acquisition and the Boundary of Responsibility}. October 2026.
+\end{thebibliography}
+
+\end{document}

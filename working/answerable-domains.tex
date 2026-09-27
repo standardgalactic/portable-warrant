@@ -1,0 +1,259 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1.15in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathpazo}
+\usepackage[T1]{fontenc}
+\usepackage{microtype}
+\usepackage{setspace}
+\usepackage{enumitem}
+\usepackage[colorlinks=true,linkcolor=black,citecolor=black,urlcolor=black]{hyperref}
+\onehalfspacing
+\setlength{\parindent}{1.5em}
+\setlength{\parskip}{0.2em}
+
+\newcommand{\F}{\mathcal F}
+\newcommand{\Q}{\mathcal Q}
+\newcommand{\C}{\mathcal C}
+\newcommand{\PP}{\mathbb P}
+\newcommand{\E}{\mathbb E}
+\newcommand{\feas}{\mathrm{feas}}
+\newcommand{\adm}{\mathrm{adm}}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{remark}{Remark}
+
+\title{The Domain and Its Establishment:\\Information Acquisition and the Boundary of Responsibility}
+\author{Flyxion\\Independent Researcher}
+\date{October 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent The principle that an agent should be judged by what it knew when it acted is sound, and unqualified it converts ignorance into protection. The qualification concerning acquisition is what prevents informational boundedness from becoming an excuse for ignorance: an agent is answerable for the information it used, and also for the information it could and should have obtained. Starting from the distinction between action and fruit in Bhagavad Gita 2.47, the essay treats the decision domain as partly the product of prior decisions. It separates what an agent possessed from what it could reasonably have acquired, distinguishes the feasible, the economically advantageous, and the normatively admissible, and keeps an economic loss difference apart from a normative violation measure, neither of which is culpability. A decision's historical justification is held fixed while later assessments of it may change. The central claim is that responsibility attaches to the admissible use and acquisition of information within an agent's operational domain, and that an agent, and the institutions around it, may be answerable for how that domain was established, maintained, or deliberately restricted.
+\end{abstract}
+
+\section{The problem}
+
+A familiar defense against outcome bias runs as follows. A decision should be judged by the information available when it was made, and not by facts that surfaced afterward. The principle is sound and the formal version is easy to state: if $\F_t$ is the information available at time $t$, then a decision is evaluated as a function of $\F_t$, and any appeal to events outside $\F_t$ is an error of hindsight. A function is defined on its domain, it can only respond to arguments inside that domain, and it would be incoherent to fault it for failing to respond to anything else.
+
+The difficulty is that the principle, taken alone, converts ignorance into protection. If the evaluation takes $\F_t$ as given, then an agent who never looked, who declined to ask, or who arranged matters so that nothing inconvenient would reach it, appears blameless in exactly the cases where blame is most plainly deserved. A doctrine designed to prevent outcome bias would then shelter negligence from retrospective discovery. The remedy is not to abandon the principle but to relocate the boundary it draws. The boundary should not be located at the information the agent happened to hold. It should be located in the relation between information, capability, role, and obligation.
+
+The move that makes this possible is to treat information acquisition as part of the decision procedure and not as an exogenously fixed input. Two decisions are then in play: whether, and how, to investigate, and what to do after receiving the result of the investigation. The remainder of the essay develops the formalism needed to keep these two decisions apart while evaluating them together. The qualification concerning acquisition is the hinge of the argument, since it is what prevents informational boundedness from becoming an excuse for ignorance.
+
+The organizing thesis can be stated at the outset. The informational boundary governing a decision is itself partly the product of prior decisions, and it is therefore a possible object of responsibility. The domain restriction that protects agents against hindsight becomes a recursive problem of agency: an agent cannot act on information outside its domain, but it may have obligations concerning which information enters that domain.
+
+\section{Action and its fruits}
+
+The idea that responsibility attaches to action and not to result is old, and one of its sharpest statements is Bhagavad Gita 2.47, which opens with the assertion that the agent holds authority over action alone and never over its fruits (\emph{karmaṇy evādhikāras te mā phaleṣu kadācana}). A second line of the same verse forbids making the fruit the motive of the act, and a third forbids attachment to inaction. The Preacher of Ecclesiastes gives a looser parallel, grounded in the finality of death and not in a theory of outcomes: whatever the hand finds to do, it is to be done with full effort (Ecclesiastes 9:10). In both texts the structure is the same. The domain of action is specified by what lies within reach, the quality of action is specified by the care applied within that domain, and neither requires control over what eventually follows.
+
+The verse is often read as an argument for deontology over consequentialism, and it can be read that way, but the reading is too coarse. The third clause blocks the most tempting misinterpretation. Detachment from outcomes is not an argument for passivity, and it is not indifference to evidence. The verse separates the justification of an act from its success while leaving open the question of how the content of duty is determined. If an act predictably harms others, it is no defense that the actor followed a principle without regard to that harm, because the foreseeable consequences are part of what the principle must take into account when it is applied. The workable distinction is therefore between consulting consequences in order to decide what is right and making personal reward the condition of doing what is right. The first is part of deliberation. The second is the corruption the verse warns against.
+
+This distinction has a practical edge in settings where the reward structure runs against principled conduct. An agent who refuses to misrepresent evidence, even where exaggeration would bring recognition, influence, or money, may be systematically disadvantaged in an environment where others exaggerate and are rewarded for it. Two questions then come apart that are easily conflated: whether the principle is justified, and whether following it is an effective strategy for obtaining what society rewards. The answers need not coincide, and the interest of the verse lies in its insistence that the first question can be answered without settling the second. The rest of this essay does not pursue the ethical question directly. It isolates a structural claim that the verse's separation of action from fruit motivates, though the verse does not contain it and is not offered as a proof of it. The claim can be stated without any commitment to a particular moral theory: evaluation of an agent must respect the informational and operational boundaries within which the agent acted.
+
+\section{Domain restriction and non-anticipation}
+
+The structural claim is a statement about domains. At time $t$ an agent has available information $I_t$, a set of possible actions $A_t$, and a decision procedure
+\[
+\pi_t : I_t \to A_t .
+\]
+The realized outcome depends on more than the action and the information. Write
+\[
+Y_{t+1} = F(a_t, I_t, \varepsilon_{t+1}), \qquad a_t=\pi_t(I_t),
+\]
+where $\varepsilon_{t+1}$ collects contingencies lying outside the agent's information at the time of choice. The decision procedure is a function of $I_t$ and of nothing else, so its output cannot depend on $\varepsilon_{t+1}$, whereas the outcome can. It follows that responsibility cannot sensibly be defined as producing a particular realized outcome. It must concern the adequacy of the procedure relative to the information on which it operated, together with the care with which the selected action was carried out.
+
+In the language of stochastic decision theory this is the requirement of non-anticipation. If $(\F_t)$ is the filtration of information available over time, the action $a_t$ must be $\F_t$-measurable. The requirement is easily misread. It does not say that future events are irrelevant to present reasoning, since a possible future event can enter a decision probabilistically whenever there is evidence for its possibility. What it prohibits is conditioning the decision on the realized future event as though that realization were already known. A traveler who crosses a sound bridge and is killed when an asteroid strikes it has not made a worse decision than a traveler who crosses safely. The asteroid is not an admissible input to the original choice unless there was some reason to anticipate it, and its occurrence cannot retroactively alter the information domain in which the choice was made. The asteroid can change what is known about the world afterward without changing what the traveler knew when choosing the bridge. The choice belongs to one informational domain and its consequences belong to another, and treating the two as interchangeable is the error of moral luck.
+
+\section{Three properties that must be kept apart}
+
+Informal discussions of this theme tend to run together three properties that are logically independent. The first is informational boundedness, the restriction of a decision to the information actually available. The second is counterfactual robustness, the stability of a decision procedure across a family of perturbed circumstances. The third is normative justification, the defensibility of the procedure and of the principles it serves. Each can hold without the others, and a formal treatment is useful only if it keeps them distinct while allowing them to be coupled.
+
+Robustness in particular needs care. It does not require choosing the same action under every perturbation. If new information reveals that a sound bridge has deteriorated, changing the decision is exactly what a rational procedure should do. What should remain stable is the decision rule, and not its output. One way to express this is to fix a family $\mathcal N_t$ of admissible decision problems, defined relative to the agent's information at $t$, and to evaluate a policy $\pi$ by its worst-case regret over that family:
+\[
+R_t(\pi)=\sup_{P\in\mathcal N_t}\bigl[V^{*}_{P}-V_{P}(\pi)\bigr],
+\]
+where $V_{P}(\pi)$ is the value of following $\pi$ under model $P$ and $V^{*}_{P}$ is the benchmark. Two specifications are needed before this is well defined. The first concerns the neighborhood: $\mathcal N_t$ is the set of models $P$ that are consistent with $\F_t$ and that belong to a plausibility class fixed by the standard of care, so that the models available for testing are constrained by what the agent actually knew. The second concerns the benchmark, and it matters a great deal. If $V^{*}_{P}$ is allowed to use information unavailable to the original agent, regret partly measures unavoidable ignorance and not any defect in the procedure. The benchmark should therefore be the best expected value attainable by a policy measurable with respect to $\F_t$ (or, for an admissible investigation, with respect to $\F_{t^{+}}^{q}$), and not the value attainable by a policy that knows the realized $\varepsilon_{t+1}$. The size and shape of $\mathcal N_t$ then do the real work. Requiring invariance across all logically possible alternatives would produce paralysis, since no decision survives malicious or physically impossible counterfactuals, so the relevant neighborhood must be restricted to plausible perturbations of initial conditions, epistemic blind spots, and execution errors. The regret measure presupposes a value function, which means it does not independently establish moral justification, and it is offered as an illustration of how robustness could be made precise and not as an operative definition on which the later argument depends.
+
+Three corrections to common overstatements follow. First, robust strategies do not necessarily sacrifice expected value: robustness has an opportunity cost relative to a nominal model, but a robust policy can have higher expected value under the true distribution when the nominal model is wrong, and robustness does not by itself imply lower variance. Second, an unfavorable outcome does not establish irrationality, but it does not cease to be evidence either. Outcomes remain informative about whether the agent's assumptions, models, and procedures were adequate, and the prohibition is against retroactively changing what the agent could have known and not against learning from what happened. Third, a strategy can be robust without being morally acceptable. A policy of systematically exploiting other people may be stable across many environments, and its stability gives no reason to adopt it as a general principle. The upshot is that a decision can be justified without succeeding, successful without being justified, and robust without being morally acceptable. These are three axes and not one.
+
+\section{Possessed and acquirable information}
+
+Let $(\Omega,\F,\PP)$ be a probability space with a filtration $(\F_t)_{t\ge 0}$, where $\F_t$ represents the information the agent actually possesses at time $t$. This is the first of two quantities that responsibility requires. The second is the information the agent could reasonably have acquired, and it is not determined by the filtration at all. It is determined by what the agent was in a position to do.
+
+Let $\Q_t$ be the set of information-acquisition procedures available at time $t$, a set that includes inspection, consultation, measurement, and investigation in the ordinary senses of those words. Each procedure $q\in\Q_t$ has an associated resource cost $c_t(q)$ and, when performed, generates an observation $Z_q$. The operational constraints $\C_t$ determine which procedures can in fact be carried out. With $B_t$ denoting the agent's available resource budget, the feasible investigations are
+\[
+\Q_t^{\feas}
+=
+\bigl\{
+q\in\Q_t :
+c_t(q)\le B_t,\;
+q\text{ is operationally accessible}
+\bigr\}.
+\]
+A decision at time $t$ proceeds in two stages, and the notation must respect the order. In the first stage an investigation $q$ is chosen using only $\F_t$, so that the choice of $q$ is $\F_t$-measurable. In the second stage, after the observation $Z_q$ has been received, an action is chosen using the enlarged information state
+\[
+\F_t^{q}=\F_t\vee\sigma(Z_q),
+\]
+which is available only after $q$ has been performed and is not available when $q$ is chosen. Writing $\F_t^q$ at all is shorthand for this second stage, and it should not be read as suggesting that the observation arrives at the decision time of the first stage. Formally one may index the two stages as $t$ and $t^{+}$ with $\F_t\subseteq\F_{t^{+}}^{q}$, and non-anticipation then requires the investigation to be $\F_t$-measurable and the subsequent action to be $\F_{t^{+}}^{q}$-measurable.
+
+The random variable $Z_q$ is not information the agent already possesses. It represents information the agent might acquire by performing $q$. This point is easily lost and it carries real weight. The agent cannot condition the choice of investigation on the unknown realization of $Z_q$, because the realization is exactly what the investigation is undertaken to learn. Any account that evaluates the choice to investigate by reference to what the investigation would have shown has already smuggled $Z_q$ into $\F_t$ and has committed the error of hindsight under a different name.
+
+\section{Epistemic diligence as a constrained decision problem}
+
+Let $A$ denote the set of available actions and $L$ a loss function over actions and states. For each feasible investigation $q$, define the expected decision loss after observing its result, together with its cost:
+\[
+V_t(q)
+=
+\inf_{\pi\in\Pi(\F_t^{q})}
+\E\bigl[L(\pi,\omega)\mid\F_t\bigr]
++
+c_t(q).
+\]
+Here $\Pi(\F_t^{q})$ is the set of policies measurable with respect to the information the investigation would produce. The conditioning on $\F_t$ in the expectation is the formal expression of the point made above: the value of an investigation is assessed from the standpoint of what is known before it is performed.
+
+An economically optimal investigation minimizes $V_t$. It does not follow that the economically optimal investigation is the one the agent ought to have performed. A person may be obligated to conduct a safety inspection even when its expected private benefit falls below its cost, because the harm the inspection guards against falls on others and is not fully represented in the agent's own loss. Responsibility cannot be derived wholly from expected utility. A further normative constraint is required.
+
+Let $D_t(q)\in\{0,1\}$ indicate whether investigation $q$ satisfies the applicable standard of diligence at time $t$. The admissible investigations are
+\[
+\Q_t^{\adm}
+=
+\Q_t^{\feas}\cap\Q_t^{\mathrm{app}},
+\qquad
+\Q_t^{\mathrm{app}}=\{q\in\Q_t : D_t(q)=1\}.
+\]
+The set $\Q_t^{\mathrm{app}}$ collects the investigations that the applicable standard calls for, whether or not a particular agent can carry them out, and the admissible set is its intersection with what is feasible for that agent. The difference $\Q_t^{\mathrm{app}}\setminus\Q_t^{\feas}$ is not empty in general. It marks duties that apply to an agent who lacks the means of meeting them, and such duties are not simply void: they can give rise to secondary duties, such as a duty to report the inability to inspect.
+Three sets are now distinct. The feasible set records what is physically and operationally possible. The minimizers of $V_t$ record what is economically advantageous. The admissible set records what is normatively required or permitted. The three need not coincide, and much confusion in discussions of negligence comes from silently identifying one with another. A theory that equates the required with the advantageous cannot explain why duties of inspection persist where inspection does not pay, and a theory that equates the required with the feasible would demand every possible inquiry of every agent.
+
+\begin{remark}
+The indicator $D_t$ is not derived within the model. It is supplied by the applicable standard of care, which is a property of the agent's role, the governing norms, and the institutional setting. The formalism marks where such a standard enters and does not pretend to generate it from the loss structure. This is a limitation, and it is stated here so that it is not mistaken for a result.
+\end{remark}
+
+\section{Scarcity and willful blindness}
+
+The distinction between legitimate informational scarcity and culpable avoidance of information becomes sharp once the agent's control over acquisition is taken into account. An informational deficiency is not culpable merely because some feasible investigation would have yielded better information. The further question is whether the investigation was reasonably indicated by the evidence already available.
+
+A bridge inspector who observes visible corrosion has a reason, internal to $\F_t$, to investigate the affected members. The same inspector cannot reasonably be expected to investigate a latent defect for which there is no warning, no established inspection requirement, and no other relevant evidence. In both cases a better investigation may have existed in the sense that it would have produced a better decision. The cases differ in whether the evidence in $\F_t$ pointed toward that investigation. One candidate way to express the difference is through an indication condition: an investigation $q$ is indicated at $t$ when the evidence in $\F_t$ makes it sufficiently likely that $q$ would reveal something material, relative to a threshold fixed by the standard of care. The threshold is a normative parameter and not an empirical one.
+
+Two quantities need to be defined here, and they must not be confused. The first is an economic comparison. Define the admissible-relative loss difference
+\[
+\Delta_t(q)
+=
+V_t(q)-\inf_{q'\in\Q_t^{\adm}}V_t(q').
+\]
+When $q$ is admissible, a positive $\Delta_t(q)$ states how much worse $q$ is, under this loss model, than the best admissible investigation. When $q$ lies outside the admissible set the quantity can be negative, because an impermissible omission may be privately cheaper than every admissible procedure, and two admissible investigations may differ in expected loss without either constituting a failure of diligence. $\Delta_t$ is therefore a comparison of expected losses and not a measure of any failure of epistemic responsibility. The second quantity is a normative violation measure $\nu_t(q)\ge 0$, defined to be zero for every admissible procedure and positive for specified violations of the standard of care, with its size graded by the standard and not by the loss model. Where only a binary judgment is available one may take $\nu_t(q)=1-D_t(q)$ on the feasible set. The loss difference and the violation measure can disagree in sign and in magnitude, and the disagreement is informative: a large $\Delta_t$ with $\nu_t=0$ describes an unlucky or merely suboptimal but compliant choice, while $\nu_t>0$ with $\Delta_t\le 0$ describes a profitable breach. Neither quantity is yet a statement about the agent. Three considerations separate them from culpability.
+
+First, the loss difference depends on the loss model. Different but defensible specifications of $L$ can rank investigations differently, so a positive $\Delta_t$ under one model is not a finding that the agent erred under every model.
+
+Second, culpability additionally requires a judgment about responsibility for the omission. An agent may lack the time, the equipment, the authority, or the understanding to perform an investigation that was objectively better. In such cases both $\Delta_t(q)>0$ and $\nu_t(q)>0$ may hold and yet the omission is not attributable to the agent in any sense that supports blame, because the better investigation lay outside what the agent could do or could be expected to recognize as warranted.
+
+Third, willful blindness is narrower than a culpable violation. It ordinarily involves deliberately avoiding information because the agent suspects what the information would reveal. This motivational component is absent from the filtration, the loss difference, and the violation measure. It concerns why the agent did not investigate, and a model that records only what was known and what was feasible cannot represent a reason. Evidence of willful blindness must therefore come from sources the formalism does not generate, such as the agent's prior conduct, the structure of the choice that led to ignorance, or the pattern of what the agent chose not to look at.
+
+\section{Historical justification and later assessment}
+
+The original justification relation can now be refined so that it takes the whole procedure as its object. Write
+\[
+J_t = J\bigl(q_t,\pi_t \mid \F_t,\C_t,\mathcal P\bigr),
+\]
+where $q_t$ is the investigation selected, $\pi_t$ is the action chosen on the information that resulted, $\F_t$ is the information possessed, $\C_t$ the operational constraints, and $\mathcal P$ the normative principles. The principles specify the standards of diligence and conduct, and the constraints specify what the agent could actually do. The object of evaluation is the sequence of investigating and then acting, and not the action alone.
+
+When new information arrives at a later time $t+1$, it can serve several purposes. It can revise the assessment of the environment, it can improve future procedures, and it can reveal that an earlier decision violated a requirement that was already in force at $t$. These uses must be kept apart from one another, and two operations in particular must not be run together:
+\[
+\underbrace{J_t}_{\text{historical justification}}
+\qquad\text{and}\qquad
+\underbrace{\widehat J_{t\mid t+1}}_{\text{later assessment of that justification}}.
+\]
+The historical justification is fixed relative to the actual circumstances and the applicable standards at $t$. It does not change when the outcome becomes known, and this is what protects against outcome bias. The later assessment is not fixed in the same way. The additional information may bear on what the agent knew, what the agent could have known, or what the agent deliberately avoided, and each of these is a fact about time $t$ that happened to be discovered at $t+1$. Learning that an agent possessed a warning, or that an inspection was skipped for reasons other than scarcity, changes $\widehat J_{t\mid t+1}$ without altering $J_t$ in the sense of the standards that governed.
+
+The distinction is essential. Without it, a doctrine intended to prevent outcome bias collapses into a doctrine that protects negligence from retrospective discovery, because the bar on using later information against the agent would apply equally to later information about what the agent knew at the time. The correct rule is narrower than a blanket exclusion of outcomes. A realized outcome may be admitted as evidence about the circumstances of the decision, for example that a defect existed earlier or that an inspection was negligently omitted. What must be excluded is using the realized outcome as though it were information the agent had when choosing, or treating the bad outcome as itself the proof of a failure.
+
+\section{Role and the structure of the constraint set}
+
+It follows that $\C_t$ cannot be represented adequately by a single resource budget. At least five components need to be distinguished: physical feasibility, informational accessibility, temporal availability, institutional authority, and the agent's capacity to recognize that an investigation is warranted. A budget captures only the first and, imperfectly, the third. An agent with ample resources but no authority to open a sealed record faces a different constraint from an agent with authority and no time, and a theory that collapses both into a scalar will misclassify one or the other.
+
+The last component deserves particular attention because it is the one that connects diligence to competence. Whether an investigation is warranted is itself a matter of judgment, and an agent who lacks the training to see that a symptom calls for inquiry is constrained in a way that differs from an agent who sees the symptom and looks away. The first is a limitation to be weighed in assigning responsibility, possibly alongside a question about who assigned the agent to a task beyond their competence. The second is the pattern the doctrine of willful blindness addresses.
+
+A consequence follows that may initially seem paradoxical: two agents possessing exactly the same information can bear different epistemic responsibilities. An engineer responsible for certifying a bridge and a pedestrian deciding whether to cross it may have identical observations, and the duties of investigation attached to them are nonetheless radically different. The engineer's role places certain procedures in $\Q_t^{\adm}$ that are not in the pedestrian's admissible set, and places the engineer in a position to perform them. Since $\F_t$ is the same for both, the difference cannot be located in $\F_t$. The normative boundary therefore does not lie inside the information set alone. It exists in the relationship among information, capability, role, and obligation.
+
+\section{Answerability for the domain}
+
+The foregoing supports a stronger statement of the original intuition. Responsibility attaches to the admissible use and acquisition of information within an agent's operational domain, and not to the arbitrary realization of events outside that domain. The qualification concerning acquisition is what prevents informational boundedness from becoming an excuse for ignorance. Without it, the statement reduces to the claim that an agent is responsible only for what it did with what it had, which is the claim that licenses the sheltering of negligence described at the outset.
+
+The opening observation about functions can now be refined. A function is answerable for its operation within its domain. It is not answerable for the choice of domain, because a function does not choose its domain; the domain is given with its definition. An agent differs in exactly this respect. The agent's domain, understood as the information on which it acts, is something that was established, maintained, and sometimes deliberately restricted by the agent or by those who assigned its role. An agent may therefore be answerable for how its domain came to be what it is, in addition to being answerable for what it did within it.
+
+This is the step that turns a mathematical constraint on information processing into a potentially useful theory of responsibility. The constraint alone, that a decision can depend only on $\F_t$, is a fact about measurability and says nothing about blame. Responsibility enters through the further questions of whether $\F_t$ was itself the product of admissible acquisition, whether the investigations that would have enlarged it were indicated and within reach, and whether the agent's ignorance was something that happened to it or something it arranged.
+
+\section{Execution and contingency}
+
+The outcome equation of Section 3 separates the agent's locus of control from the exogenous shock $\varepsilon_{t+1}$, and it is tempting to conclude that all variance in execution belongs to the exogenous term. That conclusion is too quick. A failure of execution may be attributable to the agent, to the environment, or to the interaction between them, and a usable theory must distinguish preventable failures from unavoidable disturbances rather than filing every deviation between intention and result under contingency. A surgeon whose hand slips because of fatigue that was foreseeable and avoidable stands in a different position from a surgeon whose instrument fails in a way no inspection could have detected.
+
+The machinery of the preceding sections can be applied here. Execution is itself a procedure with preconditions that can be inspected, maintained, and verified, and the question of whether those preconditions were reasonably checked is the question of admissible investigation applied to the agent's own capacities and tools. A shock that could have been anticipated at admissible cost belongs, for purposes of evaluation, partly to the agent's domain, since the agent was answerable for how the domain was established. A shock that no admissible investigation could have revealed belongs to $\varepsilon_{t+1}$ in the strict sense. The boundary between the two is the same boundary developed above, and it moves with role, authority, and the evidence in hand.
+
+Execution raises a question that is not merely another instance of information acquisition. Before it is a question about what the agent learned, it is a question about whether the agent maintained the conditions required to perform the action at all: whether tools were kept in working order, competence kept current, and fatigue or distraction kept within limits that the task allows. These conditions are established over time by prior decisions, in the same way that an information domain is, and so the duty to maintain them is an extension of answerability for the domain and not a separate principle. It also bounds the reach of the principle. An agent is not answerable for every capacity it might conceivably have cultivated, only for those whose maintenance the standard of care and the agent's role make admissible.
+
+\section{Universalization and the principles}
+
+The justification relation $J(q_t,\pi_t\mid\F_t,\C_t,\mathcal P)$ has been treated so far as taking the principles $\mathcal P$ as given. The evaluation of those principles is a separate question and a separate test. Informational adequacy asks whether the agent acted well relative to what it knew and could have learned. The test applied to $\mathcal P$ asks whether the principles themselves would be defensible if generally adopted, which is close to the first formulation of Kant's categorical imperative: act only on a maxim that could at the same time be willed as a universal law. The two tests do not substitute for each other, and neither settles the dispute between deontological and consequentialist theories. A consequentialist can respect information boundaries, and a deontologist can incorporate empirical consequences into the application of duties.
+
+The test is related to rule consequentialism, since asking what would follow from general adoption introduces a consideration of consequences at the level of principles, but nothing in the argument depends on settling how that relation should be characterized. Its function here is only to establish that the justification of a decision procedure and the justification of the principles governing it are different questions.
+
+A further distinction concerns what is being done when an agent acts on a principle that others do not follow. The agent may regard the principle as binding irrespective of anyone else's conduct, in which case the project is one of integrity. Or the agent may act in the hope of establishing a precedent that could become general, in which case the project is partly one of demonstration. The two are different moral projects, they have different success conditions, and the Gita's injunction sits more naturally with the first, since a precedent is a fruit and the verse forbids making fruits the motive.
+
+\section{Asymmetric incentives}
+
+The preceding analysis separates justification from reward, and in doing so it exposes a collective-action problem. If principled conduct is costly and opportunistic conduct is rewarded, an individual's commitment to universalizable principles can remain morally sound while being strategically disadvantageous. A society can then come to depend on behaviors that its incentive structure systematically discourages: honest reporting, diligent inspection, refusal to exploit informational advantage. The dependence is not hypothetical. Inspection regimes, professional duties of candor, and the conventions of scholarly citation all presuppose that some agents will perform costly diligence whose private return is low.
+
+The resulting position is nearly paradoxical. The less a society rewards principled conduct, the more important it is that some agents act without requiring those rewards, and the same circumstance makes such conduct increasingly difficult to sustain. This is the practical significance of the admissible set $\Q_t^{\adm}$. Because the diligence standard $D_t$ is normative and is not derived from the agent's private loss, it is the formal place where society can encode obligations that incentives alone would fail to produce. Two things can happen to the standard, and they should be kept apart. If the content of $D_t$ is weakened, the admissible set expands, since procedures previously excluded as insufficiently diligent become permitted, and the gap between what is required and what pays closes by the lowering of the standard. If $D_t$ is left unenforced while its content stays the same, the admissible set is unchanged, because a duty can remain normatively binding when nobody enforces it, but the effective set of procedures actually performed drifts toward the economically advantageous ones. A framework that locates responsibility in admissible acquisition therefore also supplies a criterion for criticizing institutions that let the standard erode, and not only for evaluating individual agents.
+
+\section{A worked case}
+
+The definitions can be tested by carrying one decision through the whole structure. A traveler must cross a ravine and can use either a solid bridge or a rope bridge. Under ordinary information the solid bridge is preferred, since both bridges reach the far side and the rope bridge is the less safe. An inspection $q^{\ast}$ of the solid bridge is feasible but costly: it is in $\Q_t^{\feas}$, it has a positive cost $c_t(q^{\ast})$, and its result $Z_{q^{\ast}}$ is unknown until it is performed. The loss $L$ penalizes a collapse heavily. Four agents face this structure, and each is held to the same sequence of questions: what was in $\F_t$, what was feasible and admissible, what was performed, what the violation measure records, and whether a motivational component is present.
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{p{2.6cm}p{3.2cm}p{2.5cm}p{3.7cm}}
+\hline
+Agent & Contents of $\F_t$ & Duty applies; feasible for the agent? & Conduct and classification \\
+\hline
+Traveler with no warning & Nothing indicating damage & No duty applies to a traveler; feasible but not required & Crosses without inspecting. $\nu_t=0$. Justified, whatever happens. \\
+Engineer who sees corrosion and declines & Visible corrosion; the role carries an inspection duty & Duty applies; feasible & Does not inspect. $\nu_t>0$. Negligent; the omission is attributable if the engineer had the time, equipment, and authority. \\
+Engineer who avoids the inspection because it might reveal a defect & Same as above, together with a suspicion that inspection would find something & Duty applies; feasible & Does not inspect, and the pattern of choices shows the reason. $\nu_t>0$ plus a motivational component. Willful blindness. \\
+Engineer who sees corrosion but lacks authority to open the structure & Visible corrosion & Duty applies; not feasible for this agent, who has no access & Cannot inspect. No violation of the duty to inspect is charged to the agent, though a secondary duty to report the inability remains. \\
+\hline
+\end{tabular}
+\end{center}
+
+The classification comes out as the philosophical argument requires, and it does so without collapsing into a single number. The traveler and the engineer have comparable amounts of information about the bridge, yet the admissible set differs with role, which is the point made earlier about duties attaching to position. The first engineer and the second engineer have the same $\F_t$ and the same violation measure, and differ only in the motive, which the formalism does not generate and which must be established from the agent's conduct over time. The fourth engineer shows that $\nu_t$ and culpability can separate: the duty to inspect applies but the investigation is not feasible for this agent, so the first-order failure, if there is one, falls on whoever assigned the task or withheld the authority, while the engineer retains the secondary duty to report the inability.
+
+Now introduce the asteroid. In every case the bridge is destroyed by an event for which $\F_t$ held no evidence and for which no admissible investigation would have supplied any. The event lies in $\varepsilon_{t+1}$ in the strict sense. It changes the realized outcome for all four agents and it changes none of the historical justifications $J_t$. It does, however, change the later assessments: after the event, the first three agents can be examined for what they knew and could have known, and the examination for the second and third engineers may reveal a failure of diligence that the asteroid did not cause and that would have gone unnoticed had the bridge not fallen. This is the situation the distinction between $J_t$ and $\widehat J_{t\mid t+1}$ is built to handle. The outcome does not make the engineers negligent, but it can prompt the inquiry that discovers that they were.
+
+\section{Institutions as objects of evaluation}
+
+The worked case already hints at a further point. In the fourth engineer's situation the constraint set $\C_t$ is not something the agent chose, and treating it as a fixed input to individual justification hides the question of who established it. An individual may exercise exemplary diligence within an institution that systematically withholds the information needed for competent decisions. Conversely, an institution may supply excellent information and procedures that an individual deliberately ignores. These are not merely different degrees of the same failure. They have different loci of responsibility, and a formalism that records only the individual's conduct will misplace the failure in one case or the other.
+
+The framework accommodates this by raising the level of evaluation. At the first level, the object is the individual's procedure $(q_t,\pi_t)$ and the justification relation takes $\C_t$ as given. At the second level, the object is the institution that determined $\C_t$ and the standard $D_t$, and the relevant questions are the same ones asked of the individual: whether the information that ought to have reached the agent could have been supplied at admissible cost, whether the authority needed to investigate was granted, and whether the institution's own ignorance of its agents' predicament was avoidable. The chain of responsibility can terminate in several ways: because no further responsible agent exists, because a relevant constraint was unavoidable, or because further inquiry is not required under the applicable standard. Termination need not amount to the arbitrary acceptance of a norm. This yields the organizing thesis of the essay in its most general form. The informational boundary governing a decision is partly the product of prior decisions, made by the agent or by others, and those prior decisions are themselves objects of responsibility. An agent cannot act on information outside its domain, but it, and the institutions around it, may have obligations concerning which information enters that domain.
+
+The framework does not need to become a general theory of institutional ethics to say this, since the second level reuses the first level's definitions. It does, however, connect directly to the discussion of asymmetric incentives. An institution that rewards opportunism and punishes diligence is, in the sense just given, responsible for part of the shrinking of the domain within which individuals are able to act well.
+
+\section{The provenance of informational constraints}
+
+The framework so far distinguishes what an agent knew, what it could investigate, and what it was required to investigate. A further question concerns how those conditions came to exist. For an agent $i$ embedded among other agents, the operational constraints facing it are partly determined by decisions made elsewhere. One way to represent this is
+\[
+\C_t^{(i)}
+=
+G_i\bigl(
+\C_t^{\mathrm{ext}},\,
+d_{<t}^{(1)},\ldots,d_{<t}^{(n)}
+\bigr),
+\]
+where $\C_t^{\mathrm{ext}}$ collects conditions not produced by any agent in the system and $d_{<t}^{(j)}$ is the record of earlier decisions by agent $j$. The function $G_i$ describes how external conditions and prior decisions together establish the constraints facing $i$. It need not be invertible, and its representation does not by itself assign responsibility.
+
+The purpose of the representation is to separate the origin of a restriction from its normative justification. An institution may have imposed a restriction without having acted negligently, for instance where the restriction answered a legitimate competing demand, and an individual may have created an informational limitation without being culpable for doing so. The architecture then supports the central distinction at several levels without requiring every agent to hold unlimited authority over its own domain. An informational limitation can be a genuine constraint on one agent and a consequence of a decision made by another, and recognizing that dual character is what carries the account beyond ordinary bounded rationality and toward an account of distributed responsibility.
+
+\section{Limits of the account}
+
+Four limits should be stated plainly. The first is that the normative indicator $D_t$ and the threshold governing indication are inputs to the model and not outputs of it, so the formalism organizes a judgment without replacing it. The second is that the decision about whether to investigate may itself be the subject of a prior decision about whether to investigate whether to investigate, and the regress must be cut by some stopping standard that the model does not supply. The third is that the loss difference $\Delta_t$ is relative to a loss model, and the graded violation measure $\nu_t$ inherits the indeterminacy of the standard of care, and the treatment of responsibility for model choice is left open. The fourth is that the robustness neighborhood $\mathcal N_t$ is a free parameter of the same kind: the framework states that it must be bounded and plausible without deriving where the bound lies, and it does not claim to settle the dispute between deontological and consequentialist theories, only to state conditions under which decisions under either can be fairly evaluated. None of these limits undermines the central distinction. They mark the places where the formalism hands the question back to the standards of care that govern a particular practice, which is where it belongs.
+
+\end{document}

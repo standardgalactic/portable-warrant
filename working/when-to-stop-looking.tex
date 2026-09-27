@@ -1,0 +1,511 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1.15in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathpazo}
+\usepackage[T1]{fontenc}
+\usepackage{microtype}
+\usepackage{setspace}
+\usepackage{enumitem}
+\usepackage{array}
+\usepackage[colorlinks=true,linkcolor=black,citecolor=black,urlcolor=black]{hyperref}
+\onehalfspacing
+\setlength{\parindent}{1.5em}
+\setlength{\parskip}{0.2em}
+
+\newcommand{\F}{\mathcal F}
+\newcommand{\G}{\mathcal G}
+\newcommand{\Q}{\mathcal Q}
+\newcommand{\C}{\mathcal C}
+\newcommand{\PP}{\mathbb P}
+\newcommand{\E}{\mathbb E}
+\newcommand{\feas}{\mathrm{feas}}
+\newcommand{\adm}{\mathrm{adm}}
+\newcommand{\app}{\mathrm{app}}
+\newcommand{\tE}{\tau_{\mathrm E}}
+\newcommand{\tM}{\tau_{\mathrm M}}
+\newcommand{\tD}{\tau_{\mathrm D}}
+
+\theoremstyle{plain}
+\newtheorem{proposition}{Proposition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{remark}{Remark}
+\newtheorem{example}{Example}
+
+\title{When to Stop Looking:\\Sequential Inquiry and the Diligence Threshold}
+\author{Flyxion\\Independent Researcher}
+\date{October 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent An agent who must act under uncertainty can always learn a little more before acting, and the question of when it is justified to stop is therefore unavoidable for any account of responsibility for information. This paper separates three conditions under which inquiry may legitimately end: economic optimality, in which further inquiry costs more than it is expected to save; epistemic sufficiency, in which the questions that matter have been settled to within a tolerance; and normative discharge, in which the applicable standard of care no longer requires anything further. The three can coincide, but none entails another, and the paper shows this with explicit models. It defines the discharge condition from the record of inquiry and the standard of care, independently of any conclusion about whether stopping is admissible, so that the proposition that discharge licenses stopping is not circular. It then asks when a myopic rule based on the value of one more observation agrees with the optimal sequential rule. The answer is that the myopic rule never stops later than the optimal one, that the two coincide when the set on which one-step stopping is advantageous only grows over time, and that they can differ sharply when a low-value investigation enables a highly informative second one. Bounds show that the obligation to inquire does not expand without limit, and a worked bridge-inspection case shows a reassuring result that discharges the duty, the same result leaving an independently indicated risk open, a repeated inspection that is unjustified, and an enabling step that a one-step rule would never take. The paper does not derive a unique diligence threshold. It characterizes the threshold, identifies the assumptions under which it can be computed, and states which parameters mathematics can fix and which a standard of care must supply.
+\end{abstract}
+
+\section{Introduction}\label{sec:intro}
+
+Every account of responsibility for the information on which an agent acts must say something about how much looking is enough. The parent essay in this series, \emph{The Domain and Its Establishment} \cite{flyxion2026domain}, makes an agent answerable for the admissible acquisition of information, and it introduces a diligence threshold $\theta_t$ above which an investigation is indicated. It does not say when a sequence of investigations may end. That omission was deliberate, because the question is separate and harder than it looks. Each investigation yields information that bears on whether another is worth making, so the decision to continue is itself a sequential decision problem, and the relevant considerations come from at least three sources that are easily run together.
+
+The first source is economic. Inquiry costs time, money, and attention, and a rational agent stops when what more inquiry is expected to save falls below what it costs. The second is epistemic. After enough inquiry the questions that matter may be settled well enough that further evidence would hardly move the agent's estimate, and one may say the agent knows enough whether or not it would pay to learn more. The third is normative. A standard of care, whether set by law, a profession, an institution, or morality, may declare that an agent who has done certain things has done enough, and it may declare the reverse of an agent who has done many things but left a particular matter open. It is tempting to assume that the three amount to one. A conscientious agent would stop when it is cheaper to stop, when the matter is settled, and when nothing further is required, and these will often happen together. But they are different conditions with different sources, and the cases in which they come apart are the cases that matter most for responsibility.
+
+The central question of the paper is this: when does an agent have sufficient justification to stop acquiring information, even though further inquiry remains possible? The word \emph{justification} is chosen to leave open which of the three conditions supplies it. The thesis is that the answer is a conjunction of a mathematical part and a normative part, and that the contribution of mathematics is to characterize the first and to expose, by elimination, exactly what the second must supply. The paper therefore does not promise a unique diligence threshold derivable from pure mathematics. What can be established is a set of results about optimal stopping relative to a loss model, a set of properties of admissible stopping policies, and a precise list of the parameters on which any computed threshold depends and which only a standard of care can fix.
+
+Four results organize the paper. First, no one of the three stopping conditions entails any other (Proposition~\ref{prop:independence}). Second, the normative discharge condition can be defined from the record of inquiry and the standard of care without reference to the conclusion that stopping is admissible, which is what prevents the claim that discharge licenses stopping from being a mere restatement (Section~\ref{sec:discharge}). Third, a myopic rule that stops when one further observation is not worth its cost never stops later than the optimal sequential rule, it coincides with the optimal rule in the monotone case, and it can fail badly when a low-value investigation makes a high-value one possible (Theorem~\ref{thm:myopic} and Proposition~\ref{prop:xor}). Fourth, the obligation to inquire is bounded: the expected number of investigations is limited by the stakes divided by the cost per investigation, and when the remaining loss is smaller than the cost of an inquiry no continuation of any length is worth making (Proposition~\ref{prop:bounds}). A worked case, a bridge inspection that is carried through four versions, applies these results in Section~\ref{sec:worked}.
+
+The paper retains the definitions and notation of the parent essay and of its two companions, \emph{Correct Relative to Its Inputs} \cite{flyxion2026inputs} and \emph{Deliberate Ignorance and the Law} \cite{flyxion2026law}, and recalls what it needs in Section~\ref{sec:framework} so that it can be read independently. Section~\ref{sec:three} defines the three stopping conditions and shows their independence. Section~\ref{sec:discharge} defines normative discharge. Section~\ref{sec:myopic} treats myopic and optimal stopping, Section~\ref{sec:bounds} the bounds and comparative statics, and Section~\ref{sec:plan} the difference between single-investigation and plan-level indication. Section~\ref{sec:motive} considers the stopping rule as an object of responsibility, Section~\ref{sec:worked} presents the worked case, Section~\ref{sec:supply} sorts the parameters, and Section~\ref{sec:limits} states the limits of the account.
+
+\paragraph{Sources of the mathematical results.} The classical results used here are cited from general knowledge of the literature on optimal stopping and sequential analysis and were not re-derived from the original papers for this essay. The propositions that are original to the paper are proved in full. The sequential setting is standard, and where a statement is a known theorem it is identified as such.
+
+\section{The framework in sequential form}\label{sec:framework}
+
+Let $(\Omega,\F,\PP)$ be a probability space and $(\F_t)$ a filtration, with $\F_t$ the information the agent possesses at time $t$. A decision problem has a state $\omega\in\Omega$, a set $A$ of actions, and a loss $L(a,\omega)\ge 0$. The agent chooses an investigation $q$ from a set $\Q_t$, observes $Z_q$, and then acts using $\F_t\vee\sigma(Z_q)$. As in the parent essay, $\Q_t^{\feas}$ is the set of investigations the agent can carry out, $\Q_t^{\app}$ the set that the governing standard of care calls for, and $\Q_t^{\adm}=\Q_t^{\feas}\cap\Q_t^{\app}$ the admissible set. An omission of an admissible investigation that the evidence indicated is deficient, and the evidence-supported probability of a material fact $f$ is
+\[
+p_t(f)=\PP\bigl(f\mid \F_t\bigr),
+\]
+with $f$ indicated when $p_t(f)\ge\theta_f$, where $\theta_f$ is the diligence threshold the standard sets for $f$. These are the definitions of the parent essay with the agent's index suppressed.
+
+The new ingredient is time within the inquiry. Fix a decision time $t$ and write $\F_{t,0}=\F_t$. An \emph{inquiry sequence} is a list of investigations performed in order, with observations $Z_1,Z_2,\dots,Z_K$ for a finite horizon $K$, and the \emph{inquiry filtration} is
+\[
+\G_k=\F_{t,k}=\F_t\vee\sigma(Z_1,\dots,Z_k),\qquad k=0,1,\dots,K.
+\]
+The $k$th investigation costs $c_k>0$, borne by the agent or on its behalf, and $\Gamma_k=c_1+\dots+c_k$ is the cumulative cost, with $\Gamma_0=0$. Costs are taken to be deterministic here. Allowing $c_k$ to be $\G_{k-1}$-measurable changes nothing below except the notation, and Section~\ref{sec:limits} comments on what it would change in application. The loss is bounded, $0\le L\le M$, except in the Gaussian example of Section~\ref{sec:myopic}, where integrability suffices. The action set is finite, or more generally the infimum below is attained by a measurable selection.
+
+\begin{definition}[Stopping time and stopping loss]\label{def:stopping}
+A \emph{stopping time} is a random variable $\tau$ with values in $\{0,\dots,K\}$ such that $\{\tau\le k\}\in\G_k$ for every $k$. The \emph{stopping loss} at stage $k$ is the Bayes risk of acting now,
+\[
+S_k=\min_{a\in A}\E\bigl[L(a,\omega)\mid\G_k\bigr],
+\]
+and the \emph{total cost} of stopping at stage $k$ is $Y_k=S_k+\Gamma_k$.
+\end{definition}
+
+The adaptedness condition $\{\tau\le k\}\in\G_k$ is the non-anticipation requirement of the parent essay transferred to the inquiry: the decision to stop at stage $k$ can use only what has been learned by stage $k$. It excludes the rule that stops when the unobserved state turns out to be benign.
+
+\begin{lemma}[Information cannot increase the Bayes risk in expectation]\label{lem:super}
+For $k<K$, $\E[S_{k+1}\mid\G_k]\le S_k$ almost surely. Equivalently, $(S_k)$ is a supermartingale, and the one-step value of information $\mathrm{VOI}_k=S_k-\E[S_{k+1}\mid\G_k]$ is non-negative.
+\end{lemma}
+
+\begin{proof}
+Let $a$ attain the minimum defining $S_k$ on a given event of $\G_k$. Because $\G_k\subset\G_{k+1}$, the same action is available at stage $k+1$, so $S_{k+1}\le \E[L(a,\omega)\mid\G_{k+1}]$. Taking $\E[\,\cdot\mid\G_k]$ of both sides and using the tower property gives $\E[S_{k+1}\mid\G_k]\le\E[L(a,\omega)\mid\G_k]=S_k$ on that event. Patching over the finitely many events on which different actions attain the minimum gives the claim.
+\end{proof}
+
+The lemma is the formal statement of the familiar point that information is never harmful to an expected-loss minimizer who can ignore it. Its consequence for the present topic is that the whole question of when to stop is a question about cost, because the benefit of more inquiry is never negative. If inquiry were free, an agent would never be justified economically in stopping before the end of the sequence, and every positive stopping rule is therefore a response to the fact that inquiry is costly or that its benefit is bounded.
+
+\paragraph{The total-cost problem.} An \emph{economic stopping problem} is the minimization of $\E[Y_\tau]=\E[S_\tau+\Gamma_\tau]$ over stopping times $\tau\le K$. Define the value process by backward induction,
+\[
+W_K=Y_K,\qquad W_k=\min\bigl\{Y_k,\ \E[W_{k+1}\mid\G_k]\bigr\}\quad(k<K).
+\]
+This is the standard Bellman recursion, and it is a classical result of optimal stopping (see \cite{chow1971great,ferguson}) that $W_0=\min_\tau\E[Y_\tau]$ and that the first time $k$ at which $W_k=Y_k$ is an optimal stopping time. The authors cited treat the problem in generality, and it is used here only in finite-horizon form, where the recursion is elementary.
+
+\section{Three stopping conditions}\label{sec:three}
+
+\begin{definition}[Economic optimality]\label{def:econ}
+A stopping time $\tau$ is \emph{economically optimal} for the loss $L$ and costs $(c_k)$ if it minimizes $\E[S_\tau+\Gamma_\tau]$. The smallest optimal stopping time is $\tE=\min\{k:W_k=Y_k\}$. The event \emph{economic stop at $k$} is $\{W_k=Y_k\}\in\G_k$.
+\end{definition}
+
+\begin{definition}[Epistemic sufficiency]\label{def:epi}
+Let $\Phi$ be a finite set of events, the \emph{material questions}, and let $\varepsilon\in[0,\tfrac12]$ be a tolerance. Write $u_k(f)=\min\{p_k(f),1-p_k(f)\}$ for the residual uncertainty about $f$ at stage $k$, where $p_k(f)=\PP(f\mid\G_k)$. The inquiry is \emph{epistemically sufficient at $k$} if $u_k(f)\le\varepsilon$ for all $f\in\Phi$.
+\end{definition}
+
+Epistemic sufficiency is defined by the state of the evidence alone. It refers to no loss function and no cost, which is what distinguishes it from the economic condition, and it refers to no standard of care, which is what distinguishes it from the normative one. The tolerance $\varepsilon$ and the choice of $\Phi$ are parameters that someone must supply, and Section~\ref{sec:supply} returns to them.
+
+\begin{lemma}\label{lem:uncertainty}
+For each $f$, $(p_k(f))$ is a martingale and $(u_k(f))$ is a supermartingale. In particular, epistemic sufficiency can be lost: it is possible that $u_k(f)\le\varepsilon$ and $u_{k+1}(f)>\varepsilon$ with positive probability, although $\E[u_{k+1}(f)\mid\G_k]\le u_k(f)$.
+\end{lemma}
+
+\begin{proof}
+That $p_k(f)=\E[1_f\mid\G_k]$ is a martingale is the standard Doob martingale. The function $x\mapsto\min\{x,1-x\}$ is concave, so by the conditional Jensen inequality $\E[u_{k+1}\mid\G_k]\le \min\{\E[p_{k+1}\mid\G_k],1-\E[p_{k+1}\mid\G_k]\}=u_k$. For the second claim, let $p_k(f)=0.01$ and suppose the next observation is surprising with probability $0.01$, moving $p_{k+1}$ to $0.50$, and otherwise moving it to about $0.00505$, which keeps the mean at $0.01$. Then $u_{k+1}$ exceeds any $\varepsilon<0.5$ with probability $0.01$ although its conditional mean, equal to $0.01$, does not exceed $u_k$.
+\end{proof}
+
+The lemma contains a point that matters for responsibility. An agent can be right to have regarded a matter as settled and still find, on the next observation, that it is not. The expected uncertainty falls, but its realization need not, and a standard that treats a settled matter as permanently closed misdescribes inquiry. Section~\ref{sec:discharge} builds the reopening of inquiry into the discharge condition for this reason.
+
+The third condition requires the standard of care, which is defined in the next section. For the present, write $D_k\in\{0,1\}$ for the discharge indicator at stage $k$, to be defined, with $D_k=1$ meaning that stopping at stage $k$ satisfies the relevant epistemic obligations.
+
+\begin{proposition}[Independence of the three conditions]\label{prop:independence}
+Let $\mathrm{E}_k$ denote economic stop at $k$, $\mathrm{S}_k$ epistemic sufficiency at $k$, and $\mathrm{D}_k$ normative discharge at $k$. For each ordered pair of the three conditions there is a model in which the first holds and the second fails. In particular no one of the conditions entails any other.
+\end{proposition}
+
+\begin{proof}
+Use the following model, which also underlies the worked case of Section~\ref{sec:worked}. The state is binary, defective (probability $p$) or sound. The actions are to leave a structure open, with loss $H=50$ if it is defective and $0$ otherwise, or to close it, with loss $K=2$ whatever its state. A test detects a defect with probability $0.8$ and never gives a false alarm; a clear result therefore updates the probability of a defect from $p$ to $0.2p/(1-0.8p)$. The Bayes risk is $S(p)=\min\{50p,2\}$, and the one-step value of the test is $\mathrm{VOI}(p)=S(p)-\E[S(p')]$ with $p'$ the posterior. Take the epistemic tolerance $\varepsilon=0.01$ and the diligence threshold $\theta=0.05$. The values below are computed directly from these definitions.
+
+\begin{center}
+\small
+\begin{tabular}{@{}cccccccl@{}}
+\hline
+Row & $p$ & $\mathrm{VOI}(p)$ & test cost $c$ & $\mathrm{E}$ & $\mathrm{S}$ & $\mathrm{D}$ & Standard of care\\
+\hline
+1 & $0.0104$ & $0.400$ & $0.45$ & yes & no & yes & no protocol outstanding\\
+2 & $0.12$ & $0.608$ & $0.70$ & yes & no & no & indicated: $p\ge\theta$\\
+3 & $0.008$ & $0.307$ & $0.10$ & no & yes & yes & no protocol outstanding\\
+4 & $0.008$ & $0.307$ & $0.45$ & yes & yes & no & required protocol incomplete\\
+5 & $0.04$ & $1.536$ & $0.45$ & no & no & yes & no protocol outstanding\\
+6 & $0.002$ & $0.077$ & $0.45$ & yes & yes & yes & no protocol outstanding\\
+\hline
+\end{tabular}
+\end{center}
+
+Economic stop at $k$ is read here as $\mathrm{VOI}\le c$, which coincides with $W_k=Y_k$ when this is the last available test or when the monotone case of Theorem~\ref{thm:myopic} applies, as it does for a single available test. Epistemic sufficiency is $u=\min\{p,1-p\}\le0.01$. Row 1 shows an economic stop without epistemic sufficiency, since $u=0.0104>0.01$. Row 2 shows an economic stop that is not a discharge, since the probability is above the threshold and the test is admissible. Row 3 shows epistemic sufficiency without an economic stop. Row 4 shows epistemic sufficiency and an economic stop without discharge, because a required protocol (for example a mandated periodic inspection) has not been completed. Row 5 shows discharge without an economic stop and without epistemic sufficiency. Row 6 shows that the three can coincide. Reading across the rows, the pairs are covered as follows: $\mathrm{E}\not\Rightarrow\mathrm{S}$ by row 1, $\mathrm{E}\not\Rightarrow\mathrm{D}$ by row 2, $\mathrm{S}\not\Rightarrow\mathrm{E}$ by row 3, $\mathrm{S}\not\Rightarrow\mathrm{D}$ by row 4, and $\mathrm{D}\not\Rightarrow\mathrm{E}$ and $\mathrm{D}\not\Rightarrow\mathrm{S}$ by row 5.
+\end{proof}
+
+The rows are not meant to be realistic in every detail, and several turn on the particular thresholds chosen. They show that the three conditions respond to different variables. The economic condition depends on the loss, the cost, and the value of the next observation. The epistemic condition depends on the posterior alone. The normative condition depends on the standard of care. Any pair of them can be made to agree by choosing parameters, and the agreement then carries no information about the others.
+
+\section{Normative discharge defined from the record}\label{sec:discharge}
+
+The natural conditional proposition is this: if all required inquiries have been completed, no unresolved evidence triggers a further duty of investigation, and the applicable standard of care permits termination, then stopping is admissible even when additional information could improve the eventual decision. It should not be presented as a substantive result until the discharge conditions are defined independently of the conclusion, since otherwise it merely restates admissibility. This section gives that definition and then states exactly what the proposition does and does not establish.
+
+\subsection{The standard of care and the record}
+
+A \emph{record} at stage $k$ is the information in $\G_k$ together with the list $\mathcal K_k$ of investigations that have been completed, each with the manner in which it was performed. The \emph{standard of care} is a quadruple $\mathcal P=(\mathcal R,\mathcal M,\theta,\kappa)$ with the following components, each of which is a parameter of the standard and none of which is a property of the stopping decision.
+\begin{itemize}[nosep]
+\item $\mathcal R$, the \emph{required-inquiry rule}. It assigns to each record a finite set $\mathcal R_k$ of investigations that the standard requires regardless of the posterior, such as a mandated periodic inspection or a screening step in a clinical protocol.
+\item $\mathcal M$, the set of \emph{material questions}, the facts $f$ whose truth is relevant to the harm the standard guards against. This may coincide with the set $\Phi$ of Definition~\ref{def:epi} but need not.
+\item $\theta=(\theta_f)_{f\in\mathcal M}$, the \emph{indication thresholds}.
+\item $\kappa$, the \emph{quality requirement}, which specifies what it takes for an investigation to count: the competence of the person performing it, the access it had, and the absence of interference of the kinds described as avoidance acts in \cite{flyxion2026law}.
+\end{itemize}
+
+The investigations that remain available at stage $k$ are those of $\Q_{t,k}^{\adm}=\Q_{t,k}^{\feas}\cap\Q_{t,k}^{\app}$, with $\Q^{\app}_{t,k}$ now understood to include the proportionality judgments of the standard. The notion of applicability in the parent essay is thus not separate from the standard. It is the standard's answer to the question which investigations are worth requiring.
+
+\begin{definition}[Normative discharge]\label{def:discharge}
+The \emph{discharge indicator} $D_{t,k}=D_{t,k}(\G_k,\C_{t,k},\mathcal P)\in\{0,1\}$ equals $1$ if and only if the following three conditions hold.
+\begin{enumerate}[label=(\alph*),nosep]
+\item \emph{Completeness.} Every investigation in $\mathcal R_k$ has been completed: $\mathcal R_k\subset\mathcal K_k$.
+\item \emph{Closure of indications.} For every material question $f\in\mathcal M$ for which some investigation in $\Q^{\adm}_{t,k}$ bears on $f$ and is not already in $\mathcal K_k$, the evidence-supported probability satisfies $p_k(f)<\theta_f$.
+\item \emph{Quality.} Every investigation in $\mathcal K_k$ on which (a) or (b) relies satisfies the quality requirement $\kappa$.
+\end{enumerate}
+Here $\C_{t,k}$ is the constraint set of the parent essay, which fixes $\Q^{\feas}_{t,k}$ and so bears on what is available to be required.
+\end{definition}
+
+The definition is a conjunction of conditions on the record. It does not mention whether stopping would be admissible, whether the expected value of further information is positive, or whether the agent in fact stopped. This independence is the point. It means that the claim that discharge licenses stopping has content: it says that stopping at a stage where completeness, closure, and quality hold is not a deficient omission, whatever else may be true of the remaining value of information. The claim would be circular only if $D_{t,k}$ were defined as the indicator of admissible stopping, and it is not.
+
+Two features of the definition should be noted. First, it uses the posterior probability $p_k(f)$ and not the value of information. A question can be indicated although the next observation could not change the decision, and it can be unindicated although the next observation would be very valuable. Section~\ref{sec:plan} returns to this difference between probability indication and value indication. Second, closure of indications is relativized to the questions for which an admissible investigation remains. An open question that nothing admissible could address does not prevent discharge; it is the kind of residual uncertainty the unavoidable-omission type U of the parent essay already treats as non-culpable.
+
+\subsection{What follows}
+
+\begin{proposition}[Non-anticipation of discharge]\label{prop:measurable}
+$D_{t,k}$ is $\G_k$-measurable. Consequently the first discharge time $\tD=\min\{k:D_{t,k}=1\}$, with $\tD=K$ if the set is empty, is a stopping time, and so is any rule that stops at the first discharge after a fixed minimum number of investigations.
+\end{proposition}
+
+\begin{proof}
+Each condition in Definition~\ref{def:discharge} is a function of the quantities $p_k(f)$, which are $\G_k$-measurable, and of $\mathcal K_k$ and $\mathcal R_k$, which depend only on what has been done and observed by stage $k$. Therefore $\{D_{t,k}=1\}\in\G_k$. Then $\{\tD\le k\}=\bigcup_{j\le k}\{D_{t,j}=1\}\in\G_k$.
+\end{proof}
+
+The proposition is the sense in which the diligence standard is non-anticipating in the way the parent essay required. A standard that required the agent to stop when a hidden hazard turned out to be absent would fail this test, and the proposition shows that the standard as defined cannot. It does not follow that every reasonable standard is of this form. A standard that conditions on facts the agent could not have known is not a standard of diligence.
+
+\begin{proposition}[Discharge is not monotone]\label{prop:reopen}
+$D_{t,k}=1$ does not imply $D_{t,k+1}=1$. If $D_{t,k}=1$ and a later observation raises $p_{k+1}(f)$ to or above $\theta_f$ for a material $f$ with an unexecuted admissible investigation, then $D_{t,k+1}=0$.
+\end{proposition}
+
+\begin{proof}
+Condition (b) at stage $k+1$ fails for that $f$ by the definition of $D$. That such an observation occurs with positive probability is Lemma~\ref{lem:uncertainty}, applied to $p_k(f)<\theta_f$ in place of $u_k(f)\le\varepsilon$: a martingale below a threshold can cross it.
+\end{proof}
+
+This is the formal basis of the \emph{reopening duty}. An agent who has discharged the obligation to inquire and then receives a new indication has a renewed obligation, and a stopping rule that treated the original discharge as final would be deficient in the way the parent essay describes. In practice the new indication is typically exogenous to the inquiry in progress, such as a storm, a complaint, or a change in the operating conditions. The model accommodates this by letting the filtration continue to grow after the investigation sequence has been exhausted, so that $\G_k$ includes whatever the agent has come to possess.
+
+\begin{proposition}[Conditional stopping]\label{prop:conditional}
+If $D_{t,k}=1$ then stopping at stage $k$ does not constitute a deficient omission of any investigation, even if $\mathrm{VOI}_k>0$ and some admissible investigation remains. Moreover, there are models in which $D_{t,k}=1$ and $W_k<Y_k$ (continuation is strictly better in expectation), and models in which $D_{t,k}=0$ and $W_k=Y_k$.
+\end{proposition}
+
+\begin{proof}
+The first sentence follows from Definition~\ref{def:discharge} and the parent essay's definition of deficiency, under which an omission is deficient only if it is of an admissible investigation that the evidence indicated or the standard required. If $D_{t,k}=1$, every investigation in $\mathcal R_k$ has been done and every material question with an available admissible investigation has $p_k(f)<\theta_f$, so no remaining admissible investigation is indicated or required. The second sentence is Proposition~\ref{prop:independence}: row 5 has $D=1$ with $\mathrm{VOI}>c$, hence $W_k<Y_k$, and row 2 has $D=0$ with $\mathrm{VOI}<c$, hence $W_k=Y_k$ for a single available test.
+\end{proof}
+
+It should be said plainly what this proposition is. The first sentence is an immediate consequence of the definition, and its force lies in what the definition requires and in what it leaves out. The proposition separates the existence of potentially useful information from an obligation to obtain it. Information can be worth obtaining without being owed, and the reverse. What the proposition does not do is show that the standard $\mathcal P$ is the right one. That is a question for the normative side of the account, and the remainder of the paper is largely about how far the mathematics constrains the answer.
+
+\begin{proposition}[Welfarist alignment]\label{prop:welfarist}
+Suppose the standard of care is \emph{welfarist} in the following sense: $\mathcal R_k=\emptyset$, the quality requirement is met, and $D_{t,k}=1$ if and only if stopping is optimal for the effective loss $L^{N}=\lambda L$ with $\lambda>0$ and the agent's cost $c_k$. Then $\tD=\tE(\lambda L,(c_k))=\tE(L,(c_k/\lambda))$, so that the discharge threshold is computed by the economic stopping problem with the cost-to-loss ratio $\kappa_k=c_k/\lambda$.
+\end{proposition}
+
+\begin{proof}
+The first equality is the definition. The second holds because the stopping loss scales linearly, $S_k(\lambda L)=\lambda S_k(L)$, so $\lambda Y_k(L,c/\lambda)=Y_k(\lambda L,c)$ and the recursion for $W$ is homogeneous of degree one. A stopping time minimizing $\E[Y_\tau]$ also minimizes any positive multiple.
+\end{proof}
+
+The proposition shows when the mathematics does determine the threshold: when the standard is welfarist, the diligence threshold is a computable function of the model once $\lambda$ is given. It also shows what is left. The factor $\lambda$ is the exchange rate between a unit of loss borne by those the standard protects and a unit of cost borne by the agent who inquires. It is not found in the data. If $\lambda=1$ the agent weighs the harm to others as it would weigh its own; a standard that insists on $\lambda>1$ is requiring more inquiry than the agent would choose if it bore only its own losses. The familiar cost-benefit formulation of negligence in \emph{United States v.\ Carroll Towing Co.}, 159 F.2d 169 (2d Cir.\ 1947), comparing the burden of a precaution to the probability of harm times its gravity, is an example of a welfarist standard of this form with a one-step comparison. The citation is from recollection of the opinion and was not rechecked for this essay.
+
+A categorical element in $\mathcal R$ is irreducible to this form. If $\mathcal R_k$ contains an investigation whose one-step value is below its cost, the economic stop is optimal and discharge fails, as in row 4. Required protocols are the institutional device by which a standard of care departs from the welfarist form, and they are discussed further in Section~\ref{sec:plan}.
+
+\section{Myopic and optimal stopping}\label{sec:myopic}
+
+The most natural rule for stopping is the one-step rule: continue if the next observation is worth its cost, and stop otherwise. It requires no look-ahead beyond one investigation, it can be explained to the person who must apply it, and it corresponds to the way many standards of care are phrased, as a comparison of the burden of one more precaution with the harm it would avert. The question is when it agrees with the optimal rule, which looks ahead through the whole remaining sequence.
+
+\begin{definition}[Myopic rule]\label{def:myopic}
+The \emph{one-step stopping set} at stage $k<K$ is
+\[
+A_k=\bigl\{S_k\le\E[S_{k+1}\mid\G_k]+c_{k+1}\bigr\}=\bigl\{Y_k\le\E[Y_{k+1}\mid\G_k]\bigr\}\in\G_k,
+\]
+the event that one more investigation is not worth its cost, and $A_K=\Omega$. The \emph{myopic stopping time} is $\tM=\min\{k:\omega\in A_k\}$. The problem is in the \emph{monotone case} if $A_k\subset A_{k+1}$ almost surely for every $k<K$.
+\end{definition}
+
+The monotone case is the condition that once one-step stopping is advantageous it remains so, and it is the case of Chow, Robbins, and Siegmund \cite{chow1971great}, whose theorem for the general problem is the model for the following. Part (ii) is a finite-horizon version and is proved here in full because the argument is short and is used again below.
+
+\begin{theorem}[Myopic and optimal stopping]\label{thm:myopic}
+\begin{enumerate}[label=(\roman*),nosep]
+\item $\tM\le\tE$ almost surely. The myopic rule never continues past the point at which the optimal rule stops.
+\item If the problem is in the monotone case then $W_k=Y_k$ on $A_k$ for every $k$, and $\tM=\tE$ almost surely. In particular the myopic rule is optimal.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Recall $W_K=Y_K$ and $W_k=\min\{Y_k,\E[W_{k+1}\mid\G_k]\}$, so that $W_k\le Y_k$ and $W_k\le\E[W_{k+1}\mid\G_k]$. Let $\tE=\min\{k:W_k=Y_k\}$. This is a stopping time because $\{W_k=Y_k\}\in\G_k$ by construction, and it is optimal. For optimality, on $\{k<\tE\}$ we have $W_k<Y_k$, so $W_k=\E[W_{k+1}\mid\G_k]$; hence the stopped process $W_{k\wedge\tE}$ is a martingale, and since $W_{\tE}=Y_{\tE}$, $\E[Y_{\tE}]=W_0$. For any stopping time $\tau$, the process $W_{k\wedge\tau}$ is a submartingale and $Y_\tau\ge W_\tau$, so $\E[Y_\tau]\ge W_0$.
+
+(i) Suppose $W_k=Y_k$ for some $k<K$. Then $Y_k\le\E[W_{k+1}\mid\G_k]\le\E[Y_{k+1}\mid\G_k]$, the second inequality because $W_{k+1}\le Y_{k+1}$. That is, $\omega\in A_k$. At $k=K$, $A_K=\Omega$. Hence the event $\{W_k=Y_k\}$ is contained in $A_k$ for every $k$, and so the first $k$ with $\omega\in A_k$ is no later than the first $k$ with $W_k=Y_k$.
+
+(ii) Proceed by backward induction on $k$ to show that $W_k=Y_k$ on $A_k$. At $k=K$ this is the definition of $W_K$. Suppose it holds at $k+1$. By monotonicity, $A_k\subset A_{k+1}$ almost surely, so $W_{k+1}=Y_{k+1}$ on $A_k$. Since $A_k\in\G_k$,
+\[
+1_{A_k}\E[W_{k+1}\mid\G_k]=\E[1_{A_k}W_{k+1}\mid\G_k]=\E[1_{A_k}Y_{k+1}\mid\G_k]=1_{A_k}\E[Y_{k+1}\mid\G_k]\ge 1_{A_k}Y_k,
+\]
+the last inequality being the definition of $A_k$. Hence on $A_k$ the minimum defining $W_k$ is attained by $Y_k$, that is, $W_k=Y_k$. It follows that $\tE\le\tM$, and combined with (i), $\tE=\tM$.
+\end{proof}
+
+Part (i) says something about the direction of the error that a one-step standard can make. In this setting it can understate what diligence requires, by calling a halt when a longer sequence would pay. It cannot overstate it: it never calls for more inquiry than the optimal rule would perform. This asymmetry is a result of the model, not of the standard, and it is conditional on the model's assumptions about what the investigation sequence is. When the agent chooses among investigations, the same argument goes through with $A_k$ defined as the event that no single available investigation has a positive one-step net value, because an optimal stop at $k$ must then be one-step optimal against each available next investigation.
+
+\subsection{The Gaussian case: a computable threshold}
+
+The monotone case includes a model in which the diligence threshold can be written in closed form. It is also the simplest model of an inquiry whose purpose is to estimate a quantity, such as a load rating or the depth of scour, with a quadratic penalty for error.
+
+\begin{proposition}[Gaussian estimation]\label{prop:gaussian}
+Let the unknown quantity be $\vartheta\sim N(m_0,\sigma_0^2)$ and let the successive observations be $Z_j=\vartheta+\epsilon_j$ with independent $\epsilon_j\sim N(0,s^2)$, each costing $c$. Let the loss for an estimate $a$ be $w(a-\vartheta)^2$ with $w>0$, and write $\kappa=c/w$. Then the posterior variance after $k$ observations is $v_k=(1/\sigma_0^2+k/s^2)^{-1}$, the stopping loss is $S_k=wv_k$ and does not depend on the data, and the problem is in the monotone case. The myopic rule, and hence the optimal rule, stops at the first $k$ with $v_k\le v^*$, where
+\[
+v^*=\tfrac12\Bigl(\kappa+\sqrt{\kappa^2+4\kappa s^2}\Bigr).
+\]
+Equivalently, the optimal number of observations is $k^*=\max\{0,\lceil s^2(1/v^*-1/\sigma_0^2)\rceil\}$ if the horizon permits, and it is a deterministic number fixed before any observation is made.
+\end{proposition}
+
+\begin{proof}
+The posterior after $k$ observations is normal with the stated variance, and the estimate that minimizes expected loss is the posterior mean, with expected loss $wv_k$. The variance recursion $v_{k+1}=v_ks^2/(v_k+s^2)$ gives the one-step reduction $v_k-v_{k+1}=v_k^2/(v_k+s^2)$. Since $S_k=wv_k$ is not random, $\E[S_{k+1}\mid\G_k]=wv_{k+1}$, and the event $A_k$ is deterministic: it holds if and only if $wv_k^2/(v_k+s^2)\le c$, that is, $v_k^2-\kappa v_k-\kappa s^2\le0$. The left side is a quadratic in $v_k$ that is non-positive between its roots, and the negative root is below zero, so the condition is $v_k\le v^*$ with $v^*$ the positive root. Because $v_k$ decreases in $k$, $A_k\subset A_{k+1}$. Theorem~\ref{thm:myopic}(ii) applies, with integrability in place of boundedness: the argument uses only that $Y_k$ is integrable and that the minimum is attained, which holds here. Solving $1/\sigma_0^2+k/s^2\ge1/v^*$ for the smallest integer $k$ gives $k^*$.
+\end{proof}
+
+\paragraph{Numerical illustration.} Take $\sigma_0^2=s^2=1$, so that $v_k=1/(1+k)$. With $\kappa=0.01$ the threshold is $v^*=0.1051$, the one-step gain at $k=8$ is $w\cdot0.0111$ and exceeds the cost $0.01w$, the gain at $k=9$ is $w\cdot0.0091$ and does not, and so $k^*=9$. With $\kappa=0.001$ the threshold is $v^*=0.0321$ and $k^*=31$. Reducing the cost-to-loss ratio tenfold increases the optimal number of observations about threefold, which is the scaling $k^*\approx s\sqrt{w/c}$ for small $\kappa$. The diligence threshold in this model is therefore not a number of observations that follows from the nature of the problem. It is a function of the ratio $\kappa=c/w$, and the ratio is what the standard of care must fix.
+
+The example also shows that the optimal stopping rule need not depend on the data. Because the variance does not depend on the observations, the rule that stops after $k^*$ observations is fixed in advance. In this model, therefore, a standard of care can state a required sample size and the question whether the agent stopped too soon is answerable without looking at what the observations turned out to be. In other models, such as the sequential testing of a hypothesis below, the stopping region depends on the data and the standard must be stated as a rule of conduct that depends on the record.
+
+\subsection{Why the myopic rule can fail}
+
+The agreement of the myopic and optimal rules is a property of the monotone case, and the case is not universal. The failure has a simple structure that appears in two forms.
+
+\begin{proposition}[Enabling investigations]\label{prop:xor}
+Let the state $\omega\in\{0,1\}$ be the exclusive-or $\omega=X_1\oplus X_2$ of two independent fair bits, let the loss be $1$ for a wrong act and $0$ for a right one, and let the two investigations reveal $X_1$ and $X_2$ at costs $c_1$ and $c_2$. Then $S_0=S_1=\tfrac12$ and $S_2=0$. The myopic rule stops immediately for every $c_1>0$, so $\tM=0$. The optimal rule is $\tE=2$ whenever $c_1+c_2<\tfrac12$, and the expected total cost is $W_0=\min\{\tfrac12,\,c_1+c_2\}$ in all cases. Thus the myopic rule incurs the excess cost $\tfrac12-c_1-c_2$ whenever $c_1+c_2<\tfrac12$, and the problem is not in the monotone case.
+\end{proposition}
+
+\begin{proof}
+Each bit alone is uninformative about $\omega$, since $\PP(\omega=1\mid X_1)=\tfrac12$ for both values of $X_1$, so $S_0=S_1=\tfrac12$; both together determine $\omega$, so $S_2=0$. At $k=0$, $\E[S_1\mid\G_0]+c_1=\tfrac12+c_1\ge S_0$, so $\omega\in A_0$ and $\tM=0$. At $k=1$, $\omega\in A_1$ if and only if $S_1\le S_2+c_2$, that is, $c_2\ge\tfrac12$. By backward induction, $W_2=Y_2=c_1+c_2$ and $W_1=\min\{\tfrac12+c_1,\ c_1+c_2\}$ so $W_0=\min\{\tfrac12,\ c_1+c_2\}$, where the value of stopping at 0 is $\tfrac12$. Hence stopping at 0 is optimal only when $c_1+c_2\ge\tfrac12$. For $c_1+c_2<\tfrac12$, we have $0\in A_0$ and $1\notin A_1$ since $c_2<\tfrac12$, which violates monotonicity.
+\end{proof}
+
+The exclusive-or model is extreme, but the phenomenon is not. It occurs whenever the value of an investigation depends on its being combined with another. Radner and Stiglitz \cite{radner1984nonconcavity} showed that the value of information is in general not concave in the amount of information, and that a small amount of information can have zero or very small marginal value even when a larger amount is worth a great deal; the exclusive-or model is a limiting case. A second form requires no combination of different investigations. It arises from a decision threshold.
+
+\begin{example}[Threshold effect with a repeated test]\label{ex:threshold}
+In the binary model of Proposition~\ref{prop:independence} (loss $H=50$ for leaving a defective structure open, $K=2$ for closing, a test with detection probability $0.8$ and no false alarms), closing is the better action whenever the probability $p$ of a defect exceeds $K/H=0.04$. A single clear result moves the probability from $p$ to $0.2p/(1-0.8p)$. This is at least $0.04$ whenever $p\ge0.172$, so for such $p$ a single test cannot change the action and has one-step value zero. Take $p=0.20$ and a cost $c=0.10$ per test. A clear result gives posterior $0.0476$, still above $0.04$, so $\mathrm{VOI}_1=0$ and $0\in A_0$, and the myopic rule stops with expected loss $S_0=2$. Two clear results give $0.0099$, below $0.04$. The best sequential policy, computed by backward induction over up to ten tests, performs up to three tests, stopping early on a detection, and has expected total cost $W_0=0.742$ against $2$. A single test is useless by itself because its clear result is not strong enough to reverse the action, and the best policy saves a net $1.26$ once the cost of the tests it performs is counted.
+\end{example}
+
+The example matters for the application because it shows that the failure of the myopic rule does not require an unusual structure of dependence. The repeated test with a fixed decision threshold is as ordinary as an inquiry gets. Whenever the action is robust to one more piece of confirmatory evidence but not to several, a one-step rule will stop where the optimal rule would continue.
+
+\begin{remark}[Sequential testing]\label{rem:sprt}
+When the purpose of inquiry is to decide between two simple hypotheses on the basis of independent observations, with a loss for each kind of error and a linear cost of sampling, the optimal rule is Wald's sequential probability ratio test: continue sampling while the posterior probability of the hypothesis lies in an interval $(a,b)$ and stop when it leaves it \cite{wald1948optimum,arrow1949bayes}. This is a result of the classical sequential-analysis literature and is cited here, not derived. Example~\ref{ex:threshold} is a case of it. The continuation interval, in terms of the posterior probability, is wider than the interval on which one more test is worth its cost, because there is a range of posteriors on which a single test cannot reverse the action although several can. The consequence is that the sequential testing problem is, in general, not in the monotone case, and the myopic rule stops too soon at the edges of the continuation interval.
+\end{remark}
+
+\section{Bounds on the obligation to inquire}\label{sec:bounds}
+
+A theory of diligence invites the objection that it imposes no stopping point. If every investigation with positive value is owed, the obligation seems to extend without limit. The results of this section show that, in the model, it does not. They are elementary, and the interest lies in what they establish for a theory of responsibility rather than in their technical depth.
+
+\begin{proposition}[Bounds]\label{prop:bounds}
+Suppose every investigation costs at least $c>0$ and the loss is bounded, $0\le L\le M$.
+\begin{enumerate}[label=(\roman*),nosep]
+\item \emph{No continuation is worth making when the remaining loss is below the next cost.} If $S_k\le c_{k+1}$, then for every stopping time $\rho$ with $k<\rho\le K$, $\E[Y_\rho\mid\G_k]\ge Y_k$, however many further investigations are contemplated and whatever they are. So stopping at $k$ is economically optimal against every continuation.
+\item \emph{Bounded number of investigations.} Any stopping time $\rho>k$ that is at least as good as stopping at $k$, in the sense $\E[Y_\rho\mid\G_k]\le Y_k$, satisfies $\E[\rho-k\mid\G_k]\le S_k/c$. In particular $\E[\tE]\le S_0/c\le M/c$.
+\item \emph{Plans cost more than they save.} For any plan consisting of $m$ further investigations, the expected reduction in the stopping loss is at most $S_k$ and the cost is at least $mc$. Hence no plan with $m>S_k/c$ investigations is worth making.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(i) For $\rho>k$, $\Gamma_\rho-\Gamma_k\ge c_{k+1}$ and $S_\rho\ge0$, so $\E[Y_\rho-Y_k\mid\G_k]=\E[S_\rho\mid\G_k]-S_k+\E[\Gamma_\rho-\Gamma_k\mid\G_k]\ge c_{k+1}-S_k\ge0$.
+(ii) From $\E[Y_\rho-Y_k\mid\G_k]\le0$ we get $\E[\Gamma_\rho-\Gamma_k\mid\G_k]\le S_k-\E[S_\rho\mid\G_k]\le S_k$, and $\Gamma_\rho-\Gamma_k\ge c(\rho-k)$. The optimal stopping time $\tE$ at $k=0$ satisfies $\E[Y_{\tE}]=W_0\le Y_0=S_0$, which is the hypothesis for $k=0$, and $S_0\le M$.
+(iii) The stopping loss after the plan is non-negative, so the reduction in loss is at most $S_k$. Each investigation costs at least $c$.
+\end{proof}
+
+Part (i) gives the precise sense in which the theory does not impose an indefinitely expanding obligation. The loss that remains, in expectation, bounds the benefit of any amount of further inquiry. When it falls below the cost of a single further investigation, nothing is worth doing, however many investigations are available. Part (ii) bounds the total amount of inquiry that an economic standard could ever require by the ratio of the initial stakes to the cost per investigation. Both bounds hold for the economic condition. A categorical protocol, an element of $\mathcal R$ whose requirement is independent of the posterior, can demand an investigation beyond them, and then the burden of justification falls on the protocol.
+
+\begin{proposition}[Scaling and comparative statics]\label{prop:scaling}
+\begin{enumerate}[label=(\roman*),nosep]
+\item For $\lambda>0$ the economic stopping time for $(\lambda L,(\lambda c_k))$ is the same as for $(L,(c_k))$. The threshold depends on the loss and costs only through their ratio.
+\item If $c'_k\ge c_k$ for all $k$, then $A_k(c)\subset A_k(c')$ for every $k$, so $\tM(c')\le\tM(c)$. If both problems are in the monotone case then $\tE(c')\le\tE(c)$.
+\item If $\lambda'\ge\lambda$ then $\tM(\lambda'L)\ge\tM(\lambda L)$, and the same holds for $\tE$ in the monotone case.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(i) Multiplying $L$ and the costs by $\lambda$ multiplies $S_k$ and $\Gamma_k$ by $\lambda$ and hence $Y_k$, $W_k$, and the one-step inequality defining $A_k$. The events are unchanged. (ii) The condition $S_k\le\E[S_{k+1}\mid\G_k]+c_{k+1}$ is weaker when $c_{k+1}$ is larger, and the first stage at which it holds can only move earlier. The claim for $\tE$ follows from Theorem~\ref{thm:myopic}(ii). (iii) By (i), $\tM(\lambda'L)=\tM(L,(c_k/\lambda'))$, and $c_k/\lambda'\le c_k/\lambda$, so (ii) applies in the reverse direction.
+\end{proof}
+
+The comparative statics are the formal version of the intuition that the more serious the possible harm and the cheaper the investigation, the more inquiry is owed. Part (i) is the substantive point. It says that no part of the answer to the question when to stop can be recovered from the loss and the cost separately. A standard that fixed the cost of inquiry without fixing the weight on the harm, or the reverse, would have fixed nothing about the threshold.
+
+\section{Single-investigation and plan-level indication}\label{sec:plan}
+
+The parent essay and its companions use a notion of indication: an investigation is indicated when the evidence available makes the fact it addresses sufficiently probable. In the sequential setting there are three candidate meanings of indication, and the difference among them is where the enabling-investigation problem enters the standard of care.
+
+\begin{definition}[Levels of indication]\label{def:indication}
+At stage $k<K$ and for a material question $f$ with an admissible investigation bearing on it, the investigation is
+\begin{itemize}[nosep]
+\item \emph{probability-indicated} if $p_k(f)\ge\theta_f$;
+\item \emph{step-indicated} if one more investigation has positive net value, $\omega\notin A_k$, that is $\mathrm{VOI}_k>c_{k+1}$;
+\item \emph{plan-indicated} if some adaptive continuation has positive net value, that is, $W_k<Y_k$, equivalently $\E[Y_\rho\mid\G_k]<Y_k$ for some stopping time $\rho>k$.
+\end{itemize}
+\end{definition}
+
+\begin{proposition}[Step and plan indication]\label{prop:planindicated}
+Step-indicated implies plan-indicated. The converse fails, in the models of Proposition~\ref{prop:xor} and Example~\ref{ex:threshold}, and holds in the monotone case. Probability indication is independent of both: rows 2 and 5 of the table in Proposition~\ref{prop:independence} show probability indication without step indication and step indication without probability indication.
+\end{proposition}
+
+\begin{proof}
+If $\omega\notin A_k$ then $\E[Y_{k+1}\mid\G_k]<Y_k$, and $\rho=k+1$ is a continuation of positive net value. The converse fails by the models cited. In the monotone case, Theorem~\ref{thm:myopic}(ii) shows that $W_k=Y_k$ exactly on $A_k$, so $W_k<Y_k$ exactly off $A_k$. The independence claim is the content of the rows cited.
+\end{proof}
+
+The choice among the three levels is a choice about how a standard of care should be framed, and each has costs. Probability indication is the most administrable, since it asks only whether the evidence made a fact sufficiently likely, and it is insensitive to costs and to what could be done about the fact. Step indication is the usual form of a cost-benefit standard. It can be assessed by a court or reviewer, it relies on what was known at the stage in question, and by Theorem~\ref{thm:myopic}(i) it errs only on the side of too little inquiry. Plan indication is the economically correct criterion, but it requires the assessor to reason about a second-stage value that is not visible at the first stage, and this reasoning is exactly what hindsight distorts. After the enabling step has revealed a defect, it is easy to say that the step was plainly worthwhile. Before, the step may have had no value that anyone could have pointed to.
+
+Required protocols are the institutional response. A protocol bundles an enabling step with the investigation it enables, and the standard then requires the bundle without asking whether the first step is separately worthwhile. A requirement to inspect the underwater portions of a bridge on a schedule includes in its practice the access that makes the inspection possible, and a clinical screening pathway includes the step that has no diagnostic value of its own but makes the diagnostic one available. In the notation of Section~\ref{sec:discharge}, plan-level indication that cannot be defended as an inference from the record is moved into $\mathcal R$, where it is a matter of the standard and not of the individual's estimate. This explains why $\mathcal R$ is a separate component of $\mathcal P$. It is the place at which a standard of care takes a stand on multi-stage value without relying on case-by-case judgment of what the second stage would have shown.
+
+The distinction also determines how omissions of enabling steps are classified. If an agent omits an enabling step that was neither step-indicated nor within any protocol, and had no reason to see its plan-level value, the omission is of type N, not indicated, in the taxonomy of the parent essay, and is not deficient. If the agent knew or suspected that the step would open the way to a revealing inquiry, and omitted it for that reason, the omission is of the motivated kind. This is the same line that the companion essay on the law \cite{flyxion2026law} draws between failing to learn what one should have known and arranging not to learn what one suspects.
+
+\section{The stopping rule as an object of responsibility}\label{sec:motive}
+
+A stopping rule is a policy, and a stop is an act. This section considers what the framework says about the evidential and the motivational side of stopping.
+
+\begin{lemma}[Stopping-rule irrelevance for the posterior]\label{lem:rule}
+For any stopping time $\tau$ and any event $f$, $\PP(f\mid\G_\tau)=\sum_k1_{\{\tau=k\}}\,p_k(f)$. The evidence-supported probability at the stopping time is the probability given the record at that time, whatever the rule by which the stopping time was determined.
+\end{lemma}
+
+\begin{proof}
+The right side is $\G_\tau$-measurable. For $B\in\G_\tau$, $B\cap\{\tau=k\}\in\G_k$ by the definition of $\G_\tau$, so $\E[1_f1_B]=\sum_k\E[1_f1_{B\cap\{\tau=k\}}]=\sum_k\E[p_k(f)1_{B\cap\{\tau=k\}}]=\E[\sum_k1_{\{\tau=k\}}p_k(f)1_B]$.
+\end{proof}
+
+The lemma is the Bayesian statement of the stopping rule principle, discussed at length by Berger and Wolpert \cite{berger1988likelihood}: the inference to be drawn from the data does not depend on the rule that determined when to stop. Its implication for responsibility is a limit on what a stopping decision can be criticized for. An agent who stopped after a reassuring result, and who would have gone on had the result been different, has not thereby formed a biased estimate. The probability that the record supports is the same as for an agent who had decided in advance on a fixed number of tests and obtained the same results. A policy of stopping at the first favorable result is not, merely for that reason, defective as evidence.
+
+The qualification is that the lemma concerns the record that is conditioned on. It protects the posterior only if every observation obtained is in $\G_\tau$. An agent who repeats a test until one gives a reassuring result and then relies on that result alone has not stopped in the sense of the lemma. The agent has discarded observations, and the posterior given the retained record differs from the posterior given the full record. In the vocabulary of Section~2 of \cite{flyxion2026law}, this is an interference, an avoidance act that restricts what flows into the inquiry, and it is addressed by the quality requirement $\kappa$ of Definition~\ref{def:discharge}. The distinction between stopping and censoring is therefore an important one for any practical standard: stopping early on the strength of what one has seen is licensed by the lemma, while ignoring what one has seen is not.
+
+\paragraph{Stops and omissions.} A stop at stage $k$ is the omission of the investigations that remain. By the taxonomy of the parent essay it is classified by whether the omission was deficient and, if it was, by whether it was motivated.
+
+\begin{center}
+\small
+\begin{tabular}{@{}p{0.2\textwidth}p{0.22\textwidth}p{0.5\textwidth}@{}}
+\hline
+Discharge at the stop & Motive of the stop & Classification\\
+\hline
+$D_{t,k}=1$ & any & No deficient omission. A culpable motive does not make a discharged stop deficient with respect to diligence.\\
+$D_{t,k}=0$ & inattention or a mistaken view of the standard & Deficient, type D1.\\
+$D_{t,k}=0$ & suspicion of what the further inquiry would show & Deficient and motivated, type D2.\\
+$D_{t,k}=0$ & a competing constraint the standard recognizes & Justified, type J.\\
+$D_{t,k}=0$ & no admissible investigation available & Unavoidable, type U.\\
+\hline
+\end{tabular}
+\end{center}
+
+The first row states a consequence of the framework that may seem hard to accept. An agent who stops because of a wish not to know, at a point where the standard of care was satisfied, has not committed a deficient omission. This is not an endorsement of the motive. It follows from the definition of deficiency, which attaches to the omission of what was required, and from the fact that the framework treats the motive as aggravating a deficiency and not as creating one. The companion essay on the law \cite{flyxion2026law} reaches the same structural result for the doctrine of willful blindness, which requires a fact the defendant would otherwise have been bound to learn or have suspected. Whether a motive should matter even when no duty was breached is a question the account leaves to other parts of the theory of responsibility.
+
+\paragraph{Policies.} A stopping rule can be assessed before any data are observed. Say that a stopping time $\tau$ is \emph{normatively admissible} if $D_{t,\tau}=1$ almost surely. Whether such a rule exists within the horizon is a substantive matter. If the investigations available in the sequence cannot, in some states, bring $p_k(f)$ below $\theta_f$ for an indicated question, then no stopping time within the horizon is admissible in those states, and the right conclusion is that the plan of inquiry itself is deficient: it was not designed to be capable of discharging the duty. By Proposition~\ref{prop:measurable}, if some admissible stopping time exists then $\tD$ is one, and it is the earliest.
+
+\section{A worked case: the inspection of a bridge}\label{sec:worked}
+
+A municipal engineer is responsible for a road bridge. At each inspection cycle the engineer must decide whether to leave the bridge open or to close it for repair, and may first commission inspections. The case is built to show the distinctions of the paper in a single setting, and it is carried through four versions. The numbers are chosen for transparency and carry no empirical claim.
+
+\paragraph{The model.} There are two hazards, a fatigue crack in a girder ($f_1$) and scour at a pier foundation ($f_2$). Each has its own repair decision, the losses are additive, and the hazards are independent, so that evidence about one carries no information about the other. For each hazard the structure is either defective or sound. Leaving it open costs $H=50$ units if it is defective and nothing otherwise, and closing it costs $K=2$ units whatever its state, so that closing is the better action when the probability of a defect exceeds $K/H=0.04$. An inspection for either hazard detects a defect with probability $0.8$, produces no false alarm, and costs $c=0.45$. The standard of care $\mathcal P$ has no categorical protocol ($\mathcal R=\emptyset$) in Versions A to C, indication thresholds $\theta_{f_1}=\theta_{f_2}=0.05$, and a quality requirement that inspections be performed by a certified inspector with full access. The epistemic tolerance for the table is $\varepsilon=0.01$. The initial probabilities are $p(f_1)=0.05$ and $p(f_2)=0.01$.
+
+\subsection*{Version A: a reassuring result discharges the duty}
+
+The girder is indicated, since $p(f_1)=0.05\ge\theta_{f_1}$, and the engineer commissions the inspection. Without it the Bayes risk is $S_0=\min\{50\cdot0.05,\,2\}=2$. With it, the inspection detects the defect with probability $0.04$ and the engineer closes the bridge, and otherwise the posterior probability of a defect is $0.2\cdot0.05/0.96=0.0104$ and the engineer leaves it open, with expected loss $0.5208$. The expected stopping loss after the inspection is $0.58$, the one-step value is $2-0.58=1.42>0.45$, and the inspection is worth making. The best policy has expected total cost $W_0=0.45+0.58=1.03$ against $2$ for acting immediately.
+
+The inspection is clear. The record is now $p(f_1)=0.0104$ and $p(f_2)=0.01$. Completeness holds because $\mathcal R=\emptyset$. Closure holds because both probabilities are below $0.05$. The quality requirement is met. Hence $D_{t,1}=1$ and the engineer stops. The three conditions of Section~\ref{sec:three} give different verdicts on why, and that is the instructive feature. Economically, a second inspection has value $0.40$, which is below its cost $0.45$, so stopping is optimal. Epistemically, the residual uncertainty $u=0.0104$ is just above the tolerance $0.01$, so the matter is not quite settled in the epistemic sense. Normatively, the duty is discharged. The engineer has stopped while information that could improve the decision remains available, and the stop is not deficient.
+
+\subsection*{Version B: the same result, with an indicated risk unresolved}
+
+Suppose now that the record also contains the flood gauge reading from the previous spring, which raises the probability of scour to $p(f_2)=0.12$. The girder inspection is performed and is clear exactly as in Version A, so $p(f_1)=0.0104$. It carries no information about scour, so $p(f_2)$ remains $0.12$. A scour survey is an admissible investigation that has not been performed, and $0.12\ge\theta_{f_2}$. Closure fails, so $D_{t,1}=0$. Stopping here would be a deficient omission, although the engineer has inspected the bridge with care.
+
+This is the point of the version: having investigated is not the same as having investigated adequately. The reassuring girder result is real evidence about a different hazard. The economic calculation agrees in this version, since the survey has one-step value $0.608>0.45$. The two diverge if the survey is costlier. At a cost of $0.70$ the economic stop is optimal for the scour question, because $0.608<0.70$, and the standard of care still treats the matter as open. This is row 2 of the table in Proposition~\ref{prop:independence}, and it shows the sense in which a standard with probability indication constrains the economic calculation. Whether the standard should be so strict is the normative question of Section~\ref{sec:supply}, and the mathematics only shows that the strictness has a price, namely an expected net cost of $0.70-0.608=0.092$ per survey.
+
+The classification of the omission depends on the engineer's reasons. If the engineer overlooked the flood record, it is a type D1 omission. If the engineer saw it and did not commission the survey because a bad result would have forced a costly closure, it is type D2. If a competing constraint that the standard recognizes, such as a prohibition on diving in the flood season, made the survey impossible, it is type J or U.
+
+A further consequence is the reopening duty. Suppose Version A had ended, as it did, with $D_{t,1}=1$, and that a flood then occurs and raises $p(f_2)$ to $0.12$. By Proposition~\ref{prop:reopen} the discharge lapses, and the engineer who treated the earlier discharge as final would now be in the position of Version B.
+
+\subsection*{Version C: repeated inspection is not justified}
+
+Return to Version A after the clear result and suppose the insurer proposes a second inspection of the girder at once, and then a third, and so on. The state is $p(f_1)=0.0104$, the stopping loss is $S_1=0.5208$, and no new indication has arisen. The expected reduction in loss from $m$ further inspections is $0.400$, $0.480$, $0.496$, $0.499$, and $0.500$ for $m=1,\dots,5$, and their costs are $0.45m$. One further inspection saves $0.40$ and costs $0.45$. Two or more cost at least $0.90$, which exceeds $S_1=0.5208$, the most that any plan could save by Proposition~\ref{prop:bounds}(iii). No number of repeated inspections is worth making.
+
+This is the case that shows the account does not impose an indefinitely expanding obligation. The cumulative saving from repetition approaches $S_1$ and never exceeds it, while the cost grows linearly. In the model, the expected number of inspections under any economically sensible plan is bounded by $S_0/c=2/0.45\approx4.4$ by Proposition~\ref{prop:bounds}(ii), and the optimal policy in this version in fact performs exactly one. The normative condition agrees: with $p(f_1)$ below its threshold and no new indication, no further inquiry is required, and a request for it is a request for a precaution beyond the standard. The insurer may of course ask for more inspection as a matter of contract, but the contract and not the duty would be the source of the requirement.
+
+\subsection*{Version D: an enabling step}
+
+The last version changes the hazard. The bearing seat at a pier can be examined by hand only after a scaffold has been erected. The prior probability of a defect is $0.10$. Leaving the bridge open if the bearing is defective costs $30$ units and closing costs $2$, so that closing is the better action above $0.067$, and the Bayes risk of acting immediately is $S_0=\min\{30\cdot0.10,\,2\}=2$. There are three investigations. A visual inspection from the ground costs $0.05$ and detects a defect with probability $0.3$. Erecting the scaffold costs $0.20$ and reveals nothing. A hands-on inspection, available only after the scaffold, costs $0.30$ and detects a defect with probability $0.95$.
+
+The ground inspection has no value on its own. A clear result gives the posterior $0.0722$, at which leaving the bridge open would cost $2.165>2$, so the action does not change and $\mathrm{VOI}=0<0.05$. The scaffold has $\mathrm{VOI}=0<0.20$, since it reveals nothing. A myopic rule therefore stops at once with total cost $2$. The sequence of scaffold and hands-on inspection has stopping loss afterwards of $0.34$ (a defect is detected with probability $0.095$ and the bridge closed; otherwise the posterior is $0.0055$ and the bridge stays open), so its expected total cost is $0.20+0.30+0.34=0.84$. The optimal rule is to build the scaffold and inspect, and the myopic rule loses $1.16$ units. This is the enabling structure of Proposition~\ref{prop:xor} in a realistic form.
+
+What the standard of care does here depends on its form. A step-indicated standard does not require the scaffold, since no single step has positive value. A probability-indicated standard does reach the question, because $p=0.10\ge\theta=0.05$ and the ground inspection, which bears on the hazard, leaves the probability at $0.0722$, still above the threshold, so closure of indications continues to fail; the engineer who stopped after the ground inspection would not be discharged. Whether the standard requires the scaffold itself depends on whether the access is within $\mathcal R$ or within the investigations that bear on the hazard. This is the case for which Section~\ref{sec:plan} suggests a protocol. A standard that says that the bearing seats must be examined by hand at a stated interval, with access provided as needed, takes a position on the plan-level value of the scaffold that no single-step cost-benefit comparison would reach.
+
+\begin{center}
+\small
+\begin{tabular}{@{}p{0.09\textwidth}p{0.36\textwidth}ccc p{0.2\textwidth}@{}}
+\hline
+Version & Situation at the stop & E & S & D & Verdict\\
+\hline
+A & Girder clear; scour not indicated & yes & no & yes & Stop is justified\\
+B & Girder clear; scour indicated, survey omitted & no & no & no & Stop premature\\
+B$'$ & As B with survey cost $0.70$ & yes & no & no & Stop premature despite economic stop\\
+C & Girder clear; further repeats proposed & yes & no & yes & Repetition not owed\\
+D & Ground inspection only; enabling step omitted & no & no & no & Stop premature; myopic rule misses it\\
+\hline
+\end{tabular}
+\end{center}
+
+In the table, E refers to the economic stop at the last point of the version, S to epistemic sufficiency with $\varepsilon=0.01$, and D to the discharge indicator. In Version D, E is read at the stage after the ground inspection, where scaffold and hands-on inspection together have positive net value although the first step alone does not, so the economic stop is not optimal there.
+
+\section{What the mathematics supplies and what the standard must supply}\label{sec:supply}
+
+The results can now be sorted. The mathematical results are conditional on a model, and a conclusion about when to stop cannot be stronger than the model's inputs.
+
+\begin{center}
+\small
+\begin{tabular}{@{}p{0.31\textwidth}p{0.29\textwidth}p{0.3\textwidth}@{}}
+\hline
+Established by mathematics & Conditional on & Supplied by the standard of care\\
+\hline
+The optimal stopping time $\tE$ and value $W_0$ & Likelihoods, prior, loss $L$, costs $c_k$, finite horizon & The loss, whose losses count, the weight $\lambda$ on harm to others\\
+The myopic rule never stops later than optimal (Thm.~\ref{thm:myopic}(i)) & Fixed or finitely many available investigations & Which investigations are available and applicable\\
+Myopic equals optimal when one-step stopping sets are nested (Thm.~\ref{thm:myopic}(ii)) & Monotone case, verified for the model & Whether the model is believed\\
+A closed-form threshold in the Gaussian case (Prop.~\ref{prop:gaussian}) & Quadratic loss, normal prior and noise & The ratio $\kappa=c/w$\\
+The obligation is bounded (Prop.~\ref{prop:bounds}) & Bounded loss, positive costs & Whether protocols may exceed it\\
+Threshold depends on $c/\lambda$ only (Props.~\ref{prop:welfarist},~\ref{prop:scaling}) & Linear scaling & Both $c$ and $\lambda$\\
+Posterior is independent of the stopping rule (Lemma~\ref{lem:rule}) & Full record retained & The quality requirement $\kappa$\\
+Discharge is non-anticipating and non-monotone (Props.~\ref{prop:measurable},~\ref{prop:reopen}) & Definition~\ref{def:discharge} & What counts as a new indication\\
+\hline
+\end{tabular}
+\end{center}
+
+The right column collects the quantities that cannot be derived. They are the loss function and its scope, the cost to be counted and whose it is, the exchange rate $\lambda$ between the agent's cost and the harm to others, the set $\mathcal M$ of material questions and the thresholds $\theta_f$, the required protocols $\mathcal R$ and in particular those that encode multi-stage value, the quality requirement, the level of indication the standard uses (probability, step, or plan), the tolerance $\varepsilon$ and set $\Phi$ if epistemic sufficiency is to figure in the standard, and the events that count as reopening an inquiry. Each of these is a normative decision about what risks society ought to tolerate and who ought to bear the cost of reducing them. The mathematics does not make them and does not make them unnecessary.
+
+Three consequences are worth stating. First, it is not true that a computed economic threshold \emph{is} a standard of care. It becomes one only when a standard adopts $\lambda$ and the other parameters, and adopting a different $\lambda$ yields a different threshold by the same computation. Second, a standard that is silent about a parameter does not thereby avoid fixing it. A standard that says only that the agent must act reasonably fixes $\lambda$ implicitly through the reviewer's judgment, and the mathematics makes visible which judgment is being made. Third, the assumptions under which the threshold \emph{can} be computed are demanding: known likelihoods, a prior, an agreed loss, deterministic costs, and a known set of available investigations. In the cases that matter most, such as novel technologies and unprecedented risks, some of these are not available, and the right conclusion there is that the threshold is not computed but argued for.
+
+\section{Limits of the account}\label{sec:limits}
+
+The model is Bayesian and assumes that the agent, or the reviewer assessing the agent, can state a prior and a likelihood. Where the probabilities are themselves uncertain, the results of Section~\ref{sec:myopic} apply to each admissible prior but no one answer follows, and a standard that must work under such ambiguity would need a robust formulation that this paper does not give. Costs have been taken as deterministic. When the cost of the next investigation depends on what the previous ones found, as it does when a discovered defect changes the cost of access, $c_{k+1}$ is $\G_k$-measurable, the arguments go through with the notation altered, and the bounds of Proposition~\ref{prop:bounds} require a lower bound on costs that may fail.
+
+Two further limits are deeper. The framework treats the standard of care as a function of the record, and so cannot represent a standard that depends on facts the agent could not have known. This is a feature for a theory of diligence, as noted in Section~\ref{sec:discharge}, but it means the framework does not address strict liability. And the welfarist form of Proposition~\ref{prop:welfarist} is one standard among others. Duties that are owed regardless of a cost-benefit comparison, such as duties to disclose or to refrain from experiments on persons, are represented only by the required protocols $\mathcal R$, which records that they exist without explaining them. The treatment is also of a single agent. When several agents each hold a part of the information and the omissions of one interact with those of another, the question of attribution is of a different kind, and it is the subject of the next companion essay in the series, on shared omissions.
+
+\paragraph{Note on sources.} Theorem~\ref{thm:myopic}(ii) is a finite-horizon version of a result in the theory of optimal stopping due to Chow, Robbins, and Siegmund \cite{chow1971great}, and it is proved here for completeness. The statements concerning the sequential probability ratio test \cite{wald1948optimum,arrow1949bayes}, the nonconcavity of the value of information \cite{radner1984nonconcavity}, and the stopping rule principle \cite{berger1988likelihood} are cited from general knowledge of the literature and were not rechecked against the original texts for this essay, and the bibliographic details below should be verified before the citations are relied on. The reference to \emph{Carroll Towing} in Section~\ref{sec:discharge} is likewise from recollection. The numerical values in Section~\ref{sec:worked} and in Proposition~\ref{prop:independence} and Example~\ref{ex:threshold} were computed by script directly from the definitions, and the closed-form expressions were checked by hand.
+
+\section{Conclusion}\label{sec:conclusion}
+
+When does an agent have sufficient justification to stop acquiring information, even though further inquiry remains possible? The answer given here has two parts. In the model, an agent is economically justified in stopping when the expected value of further inquiry does not exceed its cost, and this can be computed in closed form in the simplest cases, bounded in all, and is approximated by the one-step rule in the monotone case and may be badly approximated by it when low-value investigations enable high-value ones. An agent is normatively justified in stopping when the record shows that the standard of care no longer requires anything further: its required inquiries are complete, no indicated question with an available investigation remains open, and the completed investigations met the standard's quality requirement. The second condition is defined from the record and not from the conclusion that stopping is admissible, which is what gives the claim that discharge licenses stopping its content. It can hold when the first fails, and the reverse, and it lapses when new indications arise.
+
+The bridge-inspection versions show what follows. A reassuring result can discharge the duty (A), and the same result can leave it undischarged when an independently indicated risk remains (B). Repeating an inspection after the matter is settled is not owed, however many repetitions are possible (C). And a duty to look further can reach an investigation that has no value of its own, when it enables one that has (D). What the paper does not do is derive the diligence threshold from mathematics alone. The threshold is a function of parameters that only a standard of care can supply, and the most useful thing the mathematics does is to say which they are.
+
+\begin{thebibliography}{99}
+\bibitem{flyxion2026domain} Flyxion. \emph{The Domain and Its Establishment: Information Acquisition and the Boundary of Responsibility}. Unpublished manuscript, 2026.
+\bibitem{flyxion2026inputs} Flyxion. \emph{Correct Relative to Its Inputs: Responsibility for the Domain of Automated Decisions}. Unpublished manuscript, 2026.
+\bibitem{flyxion2026law} Flyxion. \emph{Deliberate Ignorance and the Law: Where Philosophical and Doctrinal Willful Blindness Diverge}. Unpublished manuscript, 2026.
+\bibitem{chow1971great} Y.\,S.\ Chow, H.\ Robbins, and D.\ Siegmund. \emph{Great Expectations: The Theory of Optimal Stopping}. Houghton Mifflin, Boston, 1971.
+\bibitem{ferguson} T.\,S.\ Ferguson. \emph{Optimal Stopping and Applications}. Lecture notes, Department of Mathematics, University of California, Los Angeles.
+\bibitem{wald1948optimum} A.\ Wald and J.\ Wolfowitz. Optimum character of the sequential probability ratio test. \emph{Annals of Mathematical Statistics} 19 (1948), 326--339.
+\bibitem{arrow1949bayes} K.\,J.\ Arrow, D.\ Blackwell, and M.\,A.\ Girshick. Bayes and minimax solutions of sequential decision problems. \emph{Econometrica} 17 (1949), 213--244.
+\bibitem{radner1984nonconcavity} R.\ Radner and J.\ Stiglitz. A nonconcavity in the value of information. In M.\ Boyer and R.\ Kihlstrom (eds.), \emph{Bayesian Models in Economic Theory}. North-Holland, Amsterdam, 1984, 33--52.
+\bibitem{berger1988likelihood} J.\,O.\ Berger and R.\,L.\ Wolpert. \emph{The Likelihood Principle}, 2nd ed. Institute of Mathematical Statistics Lecture Notes 6, Hayward, 1988.
+\end{thebibliography}
+
+\end{document}

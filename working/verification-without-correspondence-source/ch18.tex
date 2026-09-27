@@ -1,0 +1,79 @@
+\chapter[Epistemic Immutability]{Epistemic Immutability and the Provenance of Proof}
+\label{ch:provenance}
+
+A proof artifact changes. Statements are corrected, arguments are repaired, definitions are replaced, and libraries are updated beneath a development that was accepted last month. Mathematical improvement of this kind is the ordinary life of a formal development and is not a defect. A defect arises when the history of an improvement is represented as evidence about what was true before the improvement. The correction of an error is evidence that the corrected version is better, and it is evidence about the earlier version only in the negative sense that the earlier version needed correction. The chapter proposes a provenance model in which this distinction is structural, so that it cannot be blurred by an editorial choice, and states the invariant that the model secures.
+
+\section{Versions, events, and the append-only ledger}
+\label{sec:ledger18}
+
+The model separates the objects that a verification event involves. The \emph{source text} is the natural-language specification and argument as originally announced. The \emph{formalization} is the formal proposition submitted for checking. The \emph{proof} is the term accepted by the kernel. A \emph{revision} is a later formalization or proof offered in place of an earlier one. A \emph{correspondence judgment} is a human or procedural act asserting that a formal object corresponds to a source object. Each of these is a \emph{version}, identified by a content hash, and each is attached to the obligations of Chapter~\ref{ch:obligations}.
+
+\begin{definition}[Ledger]
+A \emph{ledger} is a finite sequence of events $e_1, e_2, \dots, e_N$. Each event has a kind (introduction of a version, introduction of an obligation, acceptance of a certificate, recording of a defeater, supersession of one version by another, retraction), the identifiers of the versions and obligations it concerns, an authority, a timestamp, and the hash of the preceding event. The ledger is \emph{append-only}: events are added at the end and no event is modified or deleted. The state at time $t$ is the function of $e_1, \dots, e_t$ that assigns each obligation its current status and each certificate its historical and warranted standing.
+\end{definition}
+
+Supersession is an explicit event. When a version $v'$ replaces a version $v$, the ledger records an edge from $v'$ to $v$ and a transition certificate in the sense of Appendix~\ref{app:formal} stating which obligations of $v$ have successors in $v'$, which are discharged, and which assumptions are used. Without the certificate the supersession is recorded as unjustified, and the obligations of $v$ are treated as having no recorded disposition, which the well-formedness condition of Theorem~\ref{thm:trace} exposes.
+
+\section{Correction and retrospective certification}
+
+Two operations are easily confused and the model separates them.
+
+\emph{Correction} replaces a version by another and certifies the new one. The certificates attached to $v'$ are about $v'$. The obligations of $v$ remain in the ledger with their statuses at the time of supersession, so that if the argument of $v$ was found invalid, the argument obligation of $v$ is recorded as refuted and stays refuted.
+
+\emph{Retrospective certification} attaches to $v$ a certificate whose validity depends on $v'$, and presents the result as evidence that $v$ was sound. The operation is not illegitimate in every case, since a lemma proved later can legitimately discharge an obligation raised earlier, but it must be recorded as what it is: a discharge of an obligation of $v$ whose dependency set includes a certificate about $v'$, with a timestamp later than the introduction of $v$. The historical record then shows that the obligation was open until the later event.
+
+\begin{proposition}[RV-012, ledger form]
+\label{prop:rv012}
+In an append-only ledger, for every version $v$ and every time $t$, the historical record of the obligations of $v$ up to $t$ is determined by events $e_1, \dots, e_t$ and is unchanged by any later event. In particular no event concerning a later version $v'$ alters the status history of the obligations of $v$. A discharge of an obligation of $v$ at time $s$ is a new event at $s$, and the interval before $s$ is recorded with the earlier status.
+\end{proposition}
+
+\begin{proof}
+The state at time $t$ is a function of the prefix $e_1, \dots, e_t$ by definition. Events after $t$ are appended and do not change the prefix. The status history of an obligation of $v$ at times $\le t$ is read from that prefix. A discharge at $s$ is an event $e_s$ and affects statuses at times $\ge s$ only.
+\end{proof}
+
+The proposition is definitional, a property of how the ledger is built, and it is stated because the model is useful only if the invariant is explicit. Its content is that a correction cannot be passed off as a historical fact: the ledger has no operation that rewrites the earlier status.
+
+\section{A worked case}
+
+The polynomial example of Chapter~1 illustrates the distinction. Version $v_1$ consists of the stated theorem, the supplied natural-language argument with the incorrect factorization, and no formal proof. The translation produced by a language model is version $v_2$: a Lean proof that compiles, found by correcting the multiplicities. Its obligations are the three baseline ones. The transition from $v_1$ to $v_2$ is preserving at the statement obligation, since the formal proposition expresses the theorem, and it is not preserving at the argument obligation. Since $v_1$ has no proof term, the argument obligation of Appendix~\ref{app:formal} (correspondence of $P$ and $\pi$) is not yet defined for it, and I use an obligation of argument-validity type, whose content is that the supplied argument is valid. That obligation is refuted, and the transition certificate contains no successor for it that carries its content, because the argument of $v_2$ is a different argument. The ledger therefore records: the theorem is established by $v_2$; the original argument is refuted; the formal proof does not formalize the original argument. Each of these is true, and a report that said only that the translation succeeded would conflate them.
+
+The mathematical value of the repair is not in question. Finding a correct proof where the supplied one was wrong is useful. What the model prevents is the inference that the original argument has been vindicated by the existence of a verified proof, an inference that the acceptance loop of Chapter~\ref{ch:establishes} invites.
+
+\section{Supersession, retraction, and independent certification}
+
+Three further operations complete the model. \emph{Supersession} records that $v'$ replaces $v$ and carries a transition certificate. A superseded version remains in the ledger and its obligations keep their statuses. \emph{Retraction} withdraws a certificate or a version. It is recorded as a defeater event, so the obligations that depended on the retracted certificate lose their warranted standing by Proposition~\ref{prop:defeasible} and revert in status, while the history retains the fact that they were once discharged. \emph{Independent certification} is a second certificate for an obligation already discharged.
+
+\begin{definition}[Independence]
+Two certificates $c, c'$ for the same obligation are \emph{independent} when their authorities are distinct and the dependency closures $\dep^*(c)$ and $\dep^*(c')$ in the dependency graph of Definition~\ref{def:depgraph} are disjoint apart from the authorized context.
+\end{definition}
+
+Independence is a structural property of the dependency graph and is not a claim about the honesty or competence of the authorities. Its use is that, by the obligation-level rule of Definition~\ref{def:status}, an obligation with two independent certificates loses warrant only if both lose it, whereas a discharge supported by two certificates that share a dependency loses warrant when the shared dependency is. Two checks by the same kernel on the same library are not independent in this sense, and the ledger records them as correlated. This is the formal reading of the common intuition that a second opinion must be genuinely second.
+
+\section{Tamper evidence}
+
+The ledger form of RV-012 is a property of the data model. A stronger statement is available when the ledger is stored in a medium that can be altered. Chain each event to its predecessor by a cryptographic hash, so that the hash of $e_{k}$ is a function of its content and of the hash of $e_{k-1}$.
+
+\begin{proposition}[RV-012, tamper-evident form]
+\label{prop:tamper}
+Assume the hash function is collision resistant. If an event $e_k$ with $k < N$ is altered after the head hash $h_N$ has been recorded by an independent party, then the recomputed chain no longer yields $h_N$, except with negligible probability.
+\end{proposition}
+
+\begin{proof}
+Altering $e_k$ changes its content and so, by collision resistance, its hash. The hash of $e_{k+1}$ takes that hash as an input and so changes in turn, and likewise for each later event, so the recomputed head differs from $h_N$ unless a collision occurs at some link.
+\end{proof}
+
+The proposition is conditional on collision resistance and on the independence of the party that holds $h_N$, and these are assumptions of the tamper model, not facts the monograph establishes. It establishes the limited claim that, under the model, retrospective alteration is detectable. It does not prevent alteration, and it does not address the case in which the entire ledger and its head are replaced consistently before any independent party has recorded the head.
+
+\section{Provenance in practice: two training reports}
+
+Two recent reports on model training, neither concerned with proof, practice the discipline that the model formalizes, and they serve as worked examples. Both are preprints, and their figures are reported as the authors give them, without reproduction.
+
+Chen et al.\ \cite{Chen26} (arXiv:2610.10426) study the joint improvement of a language-model policy and the runtime harness that formats its prompts and handles its errors. Their central observation is that the value of an execution trajectory for training depends on the harness under which it was generated, and so a trajectory is recorded with a fingerprint that hashes the prompt template, tool bindings, and processors it ran under, and not merely a harness identifier. In the ledger vocabulary the fingerprint is part of the provenance $\rho$ of the evidence, and the practice is the requirement that evidence be used only under conditions matching those of its production, which is the condition for transferring a certificate from one environment to another. They compare a recipe that pools successful trajectories from sibling candidate harnesses with a recipe that keeps only trajectories whose fingerprint matches the adopted harness. Under identical search and promotion protocol, the pooled recipe supplies 149 to 308 trajectories per iteration and yields no accepted model update in the 9B-parameter comparison, while the matched recipe supplies 30 to 50 and yields two accepted updates totaling $+6$ solved tasks. The authors take care over what the comparison does not show: the recipes differ jointly in several choices, so the table compares complete recipes, and the prompt-completion pair counts of the two recipes overlap.
+
+The same report separates attribution by a promotion rule. A candidate harness is evaluated with the policy held fixed, and a candidate policy with the harness held fixed, on a held-out promotion split whose task identifiers are verified disjoint from those used to generate candidate updates, and a candidate is adopted only if the number of newly solved tasks exceeds the number newly broken. In the vocabulary of this chapter the promotion split is a source of certificates independent of the evidence that produced the candidate, in the sense of the definition of independence above, since their dependency closures are disjoint, and the rule records which component each accepted gain is credited to. The accepted gains, cumulated per component, are a ledger of the form that Section~\ref{sec:ledger18} describes, with an entry for each decision and the rejected candidates retained.
+
+Cheng et al.\ \cite{Cheng26} (arXiv:2610.02462) make a distinction that is the ledger's distinction between prospective and retrospective certification. Their predictive relations are fitted on development states and judged on unseen ones, and they state that each prediction keeps the status it was given whatever the outcome. They mark which comparison forms were pre-specified before a test and which are retrospective refits, and they mark with a dagger a selection made after the test results were seen. A prospective prediction that succeeds is evidence of the relation. A retrospective refit that matches is evidence only that the form can be fitted, and the reader is told which is which. The practice is the one the ledger enforces structurally: the record of when a claim was fixed is part of the claim, and a later event cannot move it.
+
+\section{What the model does not do}
+
+The model does not prevent mathematical improvement, and it does not require that old versions be preserved in a form that remains usable. It requires that the claims made about old versions remain reconstructible. A library can be updated beneath a development, and when that happens the certificates that depended on the old library lose warranted standing, and the ledger shows which. The concern is not to freeze mathematics. It is to prevent the history of an improvement from being misrepresented as evidence of earlier correctness, and to make that prevention a property of the record and not of the diligence of whoever writes the report.

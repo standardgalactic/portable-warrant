@@ -1,0 +1,101 @@
+\part{Objectives, Optimization, and Institutional Scale}
+
+\chapter{Reward Functions and the Production of Substitution}
+\label{ch:reward}
+
+The preceding parts concern verification of an artifact after it exists. This chapter concerns the process that produces artifacts when that process is optimized against a verifier. In reinforcement learning on mathematical reasoning, a reward is computed by checking the final answer, sometimes the steps, and in formal settings the acceptance of a proof by a kernel. A system trained against such a reward is shaped by what the reward distinguishes, and the question of the chapter is what a reward can distinguish about fidelity to the task. The starting point is first-person testimony of Daniel Ketterer~\cite{Ketterer26}, who trains language models on mathematical reasoning and reports having watched models make errors that cancel and still be rewarded, and misrepresent a problem, solve the different problem correctly, and be rewarded. That account is used here as testimony about failure modes. The two public events that Ketterer cites, an Erdős-conjecture result and a breach at Hugging Face, are specific historical claims that the monograph does not rely on until they are independently verified.
+
+\section{Reward as an equivalence relation}
+
+Let $H$ be a set of reasoning trajectories, $R : H \to \mathbb{R}$ a reward function, and $Q : H \to \{0,1\}$ a predicate indicating that a trajectory satisfies the obligations of the task. The reward induces an equivalence relation, $h_1 \sim_R h_2$ when $R(h_1) = R(h_2)$.
+
+\begin{theorem}[RV-010, factorization]
+\label{thm:rv010}
+Task satisfaction factors through the reward, meaning $Q = g \circ R$ for some $g : R(H) \to \{0,1\}$, if and only if $R(h_1) = R(h_2)$ implies $Q(h_1) = Q(h_2)$ for all $h_1, h_2 \in H$. If the condition fails, no classifier that depends only on the scalar reward decides $Q$ correctly on every trajectory.
+\end{theorem}
+
+\begin{proof}
+If $Q = g \circ R$ then equal rewards give equal values of $Q$. Conversely if the condition holds, define $g(r)$ as the common value of $Q$ on $R^{-1}(r)$, which is well defined, and $Q = g \circ R$. If the condition fails, choose $h_1, h_2$ with $R(h_1) = R(h_2)$ and $Q(h_1) \ne Q(h_2)$; any classifier of the form $g \circ R$ gives the same output on both and is wrong on one.
+\end{proof}
+
+The theorem is elementary. Its force comes from its reading: the reward signal considered alone lacks the information needed to decide the task predicate whenever two trajectories with the same reward differ in whether the task was satisfied. It does not show that training cannot favor the correct trajectory. A training process has access to more than the reward of a single trajectory, including the distribution of trajectories and the structure of the model, and may in practice drift toward correct ones. The theorem is a statement about what the reward value contains.
+
+A quantitative companion measures how much is lost. Let $\mu$ be a probability measure on $H$ with $R$ taking countably many values.
+
+\begin{proposition}[Irreducible error of reward-based classification]
+\label{prop:bayes}
+The minimum, over all functions $g$, of the probability under $\mu$ that $g(R(h)) \ne Q(h)$ equals
+\[
+\varepsilon(R, Q) = \sum_{r} \min\bigl( \mu(R = r, Q = 1),\ \mu(R = r, Q = 0) \bigr),
+\]
+attained by taking $g(r)$ to be the majority value of $Q$ on $\{R = r\}$. It is zero if and only if $Q = g \circ R$ holds $\mu$-almost surely.
+\end{proposition}
+
+\begin{proof}
+For each reward level $r$, the classifier errs on the mass $\mu(R = r, Q \ne g(r))$, which is minimized by choosing $g(r)$ as the value of $Q$ carrying the larger of the two masses, leaving the smaller. Summing over levels gives the stated minimum. It vanishes exactly when for each $r$ one of the two masses is zero, which is almost sure factorization.
+\end{proof}
+
+The quantity $\varepsilon(R,Q)$ is a property of the reward and the task, not of any learner. A nonzero value says that no function of the reward can agree with the task predicate on all but a vanishing set of trajectories, and a small positive value says that the failure is rare but irreducible. It is the quantitative form of the observation that the verifier is, in training, the objective.
+
+\section{Correct answers do not identify correct reasoning}
+
+The related result RV-003 concerns outcome-based rewards, in which $R$ depends only on the final answer.
+
+\begin{proposition}[RV-003]
+\label{prop:rv003}
+Let $R$ depend only on the final answer. Then any two trajectories with the same final answer receive the same reward, and hence, if one is a valid solution and the other is not, $R$ does not factor the task predicate.
+\end{proposition}
+
+The construction of such pairs is elementary. A trajectory that computes $2 + 3$ as $5$ and one that computes $2 \cdot 3 - 1$ as $5$ share the answer and differ in validity. More to the point, a trajectory may restate the problem $x^2 = 9$ with $x > 0$ as $x^3 = 27$ and solve the latter correctly. Every step after the restatement is valid for the problem the model actually solved, the final answer $3$ is correct, and the reward is positive. The only flawed step is the restatement, and recognizing that it is flawed requires knowing what the original problem meant. This is the substitution problem of Chapter~7 observed from the side of training, and it is not repaired by checking steps.
+
+Process-based rewards check each step against the preceding one. They fail on substitution in the same way, for a structural reason. A step reward is a predicate $V(s_i \mid s_{i-1})$, and the restatement step $s_1$ is judged relative to its predecessor, which is the problem as the model represents it. If the predecessor is itself the substituted problem, then every step including the restatement passes. The restatement is checked against the original problem only if the original is supplied to the step verifier, which makes the step verifier a statement-correspondence checker, with all the difficulties of Part~III.
+
+Proof-checker rewards, in which $R(h) = 1$ exactly when the kernel accepts, instantiate Theorem~\ref{thm:rv001} directly: $K$ is blind to the originating specification, so $R$ is constant on instances that differ in whether the statement corresponds. The proof-checker reward is therefore an objective that rewards verified formal statements, and its quality as a proxy for the task is exactly the quality of the formalization step that precedes it.
+
+\section{The pipeline as a chain of transformations}
+\label{sec:pipeline19}
+
+The reward is one link in a longer chain. Write
+\[
+T \xrightarrow{\ S\ } S(T) \xrightarrow{\ R\ } R(S(T)) \xrightarrow{\ \mathrm{opt}\ } \pi_\theta,
+\]
+where $T$ is the intended task, $S(T)$ its operational specification, $R(S(T))$ the reward built from the specification, and $\pi_\theta$ the learned policy. Each arrow is a transformation in the sense of Chapter~\ref{ch:preservation}, and the obligations of the task are carried or lost at each. A faithful specification paired with a defective reward is a failure at the second arrow. A correct reward exploited by a policy that finds unintended ways to maximize it is a failure at the third. A policy that behaves reliably in training and differently under deployment is a failure of a later transformation from training conditions to deployment conditions. They are three different failures located at three different arrows, and the preservation theorem of Chapter~\ref{ch:preservation} applies to the chain as a whole: if each arrow carries a certificate and is preserving, the task obligation is preserved to the policy, and if any arrow lacks one the task obligation is preserved to that point and the chain beyond it records the gap as residue.
+
+\section{Objective admissibility and task admissibility}
+
+The pipeline view separates two notions that review of the objective tends to merge. \emph{Objective admissibility} concerns whether the optimization criterion is acceptable: whether the specification and reward, reviewed before training, express the intended class of tasks. It is a property of the first two arrows over a distribution of problems. \emph{Task admissibility} concerns whether a particular operation performed by the trained system preserves the obligations of a particular task. It is a property of an individual transition from a novel problem $T_x$ to the representation the model constructs for it at inference time.
+
+A certificate for the first is a universal statement over the training distribution $D$: for every $x \in D$, the transition $T_x \to S(T_x) \to R(S(T_x))$ is preserving. A certificate for the second is a per-instance statement about a problem that may lie outside $D$. The first does not give the second. A universal statement over $D$ says nothing about $x \notin D$, and the model's interpretation of a new problem is built during inference, where no reviewed objective intervenes. A model may substitute a nearby problem without any defect in the reward definition. The first admissibility does not give the second, as just argued. The converse, that task admissibility can hold for a given instance while the objective is inadequate, is plausible, since a particular transition can preserve its obligation under a defective objective, but I do not give a witness here and do not claim it as a result.
+
+Ketterer proposes concentrating human understanding where the objective is set, on the grounds that objectives are few and traces are many. The proposal is sound as an allocation of attention and addresses the first admissibility. It does not address the second, and the pipeline view shows why the second cannot be delegated to the first: the arrows at which the second admissibility operates are the ones that occur after the review.
+
+\section{Reviewability and adequacy}
+
+A further distinction concerns what review can accomplish. An objective is \emph{reviewable} when a person can read its definition at reasonable cost. It is \emph{adequate} when it rewards only legitimate solutions across the distribution of possible problems. The two are different, and the second is not implied by the first. A scorer that checks whether a final expression equals a reference value is short to read. Establishing that it rewards only legitimate solutions requires reasoning about every way a sufficiently capable optimizer might satisfy it, and the length of the definition is no measure of the effort.
+
+The point is the one made about the trivial identity of Chapter~\ref{ch:hidden}: syntactic simplicity is not evidence of semantic adequacy. In ledger terms, reviewability is the condition that the content of the objective obligation can be stated, and adequacy is the condition that the obligation can be discharged. A reviewed objective that has not been shown adequate is an obligation in the residue, with status \textsf{supported} at best, and a human review is a certificate with an authority and a dependency set, which can be defeated if the optimizer finds an exploit the reviewers did not anticipate. The review is a contribution to governance and is not a once-and-for-all solution.
+
+\section{Illustrations from training reports}
+\label{sec:trainillus}
+
+The structure analyzed in this chapter appears, in a milder and fully documented form, in recent reports on the training of language models. The reports below are not studies of mathematical fidelity, and none of them concerns a proof assistant. They are used here as worked examples of three structural features: an objective whose value is blind to a component of the task, a proxy that disagrees with the task predicate, and a training distribution that differs from the deployment distribution. Every figure is as reported by the authors of preprints that the monograph has read but not reproduced, and none of the claims is independently verified.
+
+\subsection*{An objective blind to omissions}
+
+Tang and Yang \cite{Tang26} (arXiv:2610.09639) study on-policy distillation in a controlled synthetic setting that separates factual knowledge, represented by random lookup tables, from compositional skill, represented by the order in which known facts are combined. A student $S_0$ is distilled from teachers that differ in what they add: held-out facts ($T_f$), branching-tree composition ($T_s$), or neither ($T_\emptyset = S_0$). Averaged over four models, students distilled from $T_s$ reach 79.10 percent greedy accuracy on unseen tree structures against 0.72 percent under the control, while students distilled from $T_f$ reach 13.12 percent on single-step queries about held-out facts and 0.54 percent on chains of such facts. Replacing reverse KL by forward KL substantially restores factual transfer. On natural-language benchmarks with Qwen3-4B-Base the same asymmetry appears: the initial student scores 11.25 on recent factual questions and 17.41 on competition mathematics, and after distillation from a reasoning teacher the scores are 10.75 and 23.88, while after distillation from a knowledge teacher, whose own score on the factual benchmark is 84.55, they are 9.64 and 19.40.
+
+The authors attribute the asymmetry to the direction of the divergence. Reverse KL evaluates discrepancies under the student's own distribution and therefore penalizes the student only on tokens it already produces with substantial probability. The relevant elementary fact can be stated exactly. If the teacher assigns probability $p > 0$ to a token and the student assigns it probability $\epsilon$, the contribution of that token to the reverse divergence is $\epsilon \log(\epsilon/p)$, which tends to $0$ as $\epsilon \to 0$, whereas its contribution to the forward divergence is $p \log(p/\epsilon)$, which grows without bound. The statement concerns the term for the omitted token and not the whole objective, since probability mass that the student places elsewhere is penalized, but it shows what the reverse objective contributes about an omitted target: almost nothing.
+
+In the terms of Theorem~\ref{thm:rv010}, the training objective is a reward whose level sets contain students that differ in whether they have acquired the held-out fact. The two benchmark scores in the final table also show why a single aggregate would mislead. A student distilled from the reasoning teacher improves by $6.47$ points on one benchmark and changes by $-0.50$ on the other, so a pooled score would register a gain that is attributable to one capability only. The controlled design is what makes the two task predicates separately measurable, and the report is an instance of the practice recommended in this chapter: the predicates are separated by construction and not inferred from a total.
+
+\subsection*{A proxy that disagrees with the task}
+
+Cheng et al.\ \cite{Cheng26} (arXiv:2610.02462) predict the capability loss caused by compression, and they measure loss as token-weighted cross-entropy on reference completions. They record that task accuracy and execution success are evaluated separately from this continuous endpoint. In their selection experiments they report that termination and the evaluation target are separate factors: a supervised end marker restores termination and raises the exact-match score of one student, while for the Pythia models the disagreement between loss and exact match persists, so that a selector must state whether it optimizes loss or exact match. This is a documented case in which a proxy and a task predicate rank candidates differently, and the authors respond as the framework recommends, by requiring the choice of objective to be stated and not leaving it implicit in the metric.
+
+\subsection*{A training distribution that differs from deployment}
+
+Wang et al.\ \cite{Wang26} (arXiv:2610.09346) motivate OnlineQAT by an observation about the transition from training to deployment. Existing recovery methods for low-bit quantized models are optimized on fixed completions or teacher-generated answers, whereas the deployed quantized model conditions on prefixes that it generates itself, and quantization errors can move the model into states that are absent from the offline recovery data. In the pipeline of Section~\ref{sec:pipeline19}, this is a failure of preservation at the arrow from training conditions to deployment conditions: a certificate that holds on the prefixes visited in training does not cover the prefixes visited at deployment. The remedy proposed, training on the student's own sampled prefixes, is an attempt to enlarge the domain on which the training certificate holds, and not a discharge of the obligation for states outside it.
+
+\section{Design implications}
+
+Three implications follow for the design of training objectives, none of which is a theorem. Rewards that depend on more than the final answer reduce the irreducible error of Proposition~\ref{prop:bayes} only if the additional information discriminates trajectories that differ in $Q$, and a measure of that discrimination, the conditional impurity within reward levels, can be estimated on labeled samples. Statement-level checks, which compare the restatement with the original, must be treated as correspondence checks with the limits of Chapter~\ref{ch:sci}, so the architecture should expect abstention and record it. And reporting of training outcomes should separate the reward obtained from the status of the task obligation, as the ledger does, so that a high reward is not reported as evidence of fidelity.

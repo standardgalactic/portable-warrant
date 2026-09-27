@@ -1,0 +1,67 @@
+\chapter{What the Navier-Stokes Formalization Establishes}
+\label{ch:establishes}
+
+Chapters~\ref{ch:derivative} and~\ref{ch:pressure} documented two discrepancies between OpenAI's natural-language statements and the Lean statements that stand in for them. This chapter asks what follows. It does not ask whether the Navier-Stokes blow-up argument is correct, a question on which the source takes no position and which the monograph does not address. It asks what epistemic standing the verified artifacts have given the documented discrepancies, which claims remain justified, which have been withdrawn, and which were never supported by the verification at all.
+
+\section{Three kinds of evidence}
+
+Three different claims are often compressed into the statement that a result has been formally verified. The first is that the theorem is true. The second is that a particular proof of it is valid. The third is that an announced result has been adequately documented for independent review. Evidence for the first bears on the mathematical facts, evidence for the second on the derivation, and evidence for the third on the relation between the announcement and the artifacts that are supposed to support it.
+
+A successful Lean check is evidence of the second kind with respect to the Lean statement and its Lean proof. It is not evidence of the first kind with respect to the natural-language theorem unless the Lean statement corresponds to it, and the first two documented discrepancies, on the source's report and with the provisional classification of Chapters~\ref{ch:derivative} and~\ref{ch:pressure}, indicate that for specific lemmas it does not correspond as an equivalence. The non-entailment is the source's claim; no independent certificate of it is offered here. It is evidence of the third kind only to the extent that the artifacts can be read against the announcement, and a discrepancy of the kind documented in Chapters~\ref{ch:derivative} and~\ref{ch:pressure} reduces that extent. The three kinds are logically independent. A true theorem may be announced with an invalid proof, a valid proof may support a weaker theorem than the one announced, and a correct proof of the announced theorem may be impossible to check against the announcement.
+
+\section{Claims that remain justified, in question, or unsupported}
+
+The ledger of Chapter~\ref{ch:preservation}, applied to what the documented discrepancies establish, sorts claims into three groups.
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{@{}p{0.34\textwidth}p{0.19\textwidth}p{0.38\textwidth}@{}}
+\toprule
+Claim & Status & Basis \\
+\midrule
+The cited Lean declarations are accepted by the Lean kernel & Justified, as reported & Source's report. Not compiled by the monograph \\
+\path{norm_derivativeWord_inverse_le} establishes an estimate requiring $m+5$ derivatives & Justified, as reported & Source's citation of the declaration at the pinned commit; text of the declaration read at that commit (Appendix~\ref{app:nsaudit}) \\
+That estimate establishes (8.19) of the natural-language paper & In question & The Lean estimate is weaker relative to the certified Lean development \\
+The Lean pressure-flux estimate establishes (10.19) & In question & The two estimates are not directly comparable on the source's report \\
+The natural-language proof is incorrect & Unsupported & The source disclaims this \\
+The natural-language proof is correct & Unsupported & Neither the Lean artifacts nor the source address it \\
+The remaining Lean declarations faithfully formalize their counterparts & Unexamined & Not examined by the source or the monograph \\
+\bottomrule
+\end{tabular}
+\caption{Epistemic standing of claims about the Navier-Stokes formalization.}
+\label{tab:standing}
+\end{table}
+
+The distinction between in question and unsupported matters. A claim is in question when it was made or could be made on the strength of the formalization and the source's reported discrepancies, if they stand, would defeat it; in the vocabulary of Appendix~\ref{app:formal} it is open with a source-reported non-entailment, and it is not refuted, since no certificate of the negation is claimed. An unsupported claim is one that no part of the evidence addresses, in either direction. The claim that the natural-language proof is incorrect belongs to the second group. The documented discrepancies are discrepancies of translation between two artifacts, and a mistranslation of a correct lemma is as compatible with them as a mistranslation of an incorrect one. The source says as much, and the monograph adopts the disclaimer as binding. In the vocabulary of Chapter~\ref{ch:preservation}, the Lean artifacts and the natural-language paper are separate objects, and the relation between them is the subject of the residue. The residue is not a verdict on the theorem.
+
+The final row of the table records a large unexamined region. The source reports two discrepancies and states in Remark 3.4 that the displayed examples do not exhaust the mistranslations. The remainder of the formal development has not been audited in the way the two cases have, and the audit is not complete. The monograph therefore draws no conclusion about the fidelity of the rest, either that it is faithful or that it is not. A reader who infers fidelity of the remainder from the absence of reported discrepancies makes an inference from silence, and a reader who infers infidelity from the existence of two discrepancies makes an inference from a sample whose selection is not described.
+
+\section{The Euler claim and the limits of prediction}
+
+The source's Section 3.3 concerns OpenAI's announced proof for the Euler equations. It treats the announcement only by prediction. The source states that a careful examination was not carried out, and that its assessment of a very high likelihood of substantial mistranslation rests on preliminary examination. No documented Euler discrepancy therefore exists, and the monograph does not treat the Euler case as a third example. The distinction is between a documented discrepancy, which is an observed relation between two specified artifacts, and a forecast, which is an expectation about artifacts that have not been compared. A forecast may be well founded and is still not evidence of the same kind. The ledger records the Euler case, if at all, as an open obligation whose content is that the Euler formalization corresponds to the Euler announcement, with status open and a note that the source's expectation bears on it without discharging or refuting it.
+
+\section{The mechanism: acceptance loops}
+
+Section 3.4 of the source supplies a mechanism by which discrepancies of this kind are produced, and the mechanism is an instance of the separation proved in Chapter~\ref{ch:nondischarge}. The acceptance loop in question revises a proof until it proves the formal statement. Its termination test is kernel acceptance of the revised proof against a fixed formal proposition $F$.
+
+\begin{proposition}[Indifference of the acceptance loop]
+\label{prop:loop}
+Let $F$ be fixed and let $\pi'$ be any proof with $\Gamma \vdash \pi' : F$. The acceptance test returns the same result on $\pi'$ whether $\pi'$ is (a) a repair of the original argument, correcting an error while following its structure, or (b) a replacement, an unrelated proof of $F$. If the original argument is incorrect, replacement is available as a route to acceptance and repair may not be.
+\end{proposition}
+
+\begin{proof}
+The test is a function of $(\Gamma, \pi', F)$ alone, as in Theorem~\ref{thm:rv001}. Repair and replacement are distinguished only by the relation of $\pi'$ to the original argument $P$, which does not enter the test. If $P$ is incorrect and no repair of $P$ yields a proof of $F$ in $\Gamma$, any proof of $F$ is a replacement.
+\end{proof}
+
+The consequence is that the loop counts both the repair of an error and the replacement of a correct argument as success. It also gives an incentive to find a different proof when the original is incorrect, since a different proof is the only route to acceptance in that case. This is the structure of Example 2.1 in the source, where the chatbot's translation succeeded by finding the correct multiplicities and so did not translate the argument supplied. The mechanism does not establish that any particular proof in the Navier-Stokes development was produced by replacement, and the source does not claim it. It establishes that a loop of this form cannot distinguish replacement from repair, so a reported success from such a loop is not evidence of argument fidelity.
+
+\section{Back-translation does not escape the problem}
+
+Remark 3.5 of the source anticipates the natural response: translate the accepted formal proof back into natural language and compare. The remark observes that this requires a further check that the back-translation represents the formal proof faithfully and that its reasoning matches the original argument. The point is structural, and the ledger shows it. The chain from the original argument $P$ to the formal proof $\pi$ to the back-translation $B(\pi)$ consists of two transitions. The comparison of $B(\pi)$ with $P$ is a check on the composite only if each transition is preserving, in the sense of Theorem~\ref{thm:rv008-ch}. The back-translation transition introduces its own obligation $o_B$, that $B(\pi)$ corresponds to $\pi$. Agreement of $B(\pi)$ with $P$ in outline establishes the composite relation only when $o_B$ is discharged, and discharging $o_B$ is a correspondence problem of the same kind as the one the round trip was meant to address. Round-trip agreement does not entail semantic preservation, which is RV-007, proved in Chapter~8. The back-translation moves the obligation. It does not discharge it.
+
+\section{The state of the residue}
+
+The residue of the Navier-Stokes formalization, as far as the monograph can describe it from the source, has the following shape. There are two statement-equivalences that are open, with non-entailment reported by the source and a provisional classification, the derivative lemma and the pressure-flux lemma, each with its type and its repairs recorded. There are the argument obligations for each lemma, failing independently. There is an open obligation of unknown size for the unexamined declarations. There is an open obligation for the Euler formalization, supported only by a forecast. There is, finally, the procedural obligation that the process that produced the artifacts tests acceptance and not fidelity. None of these bears on the truth of the theorem, and each bears on how much weight the announcement of a verified proof can carry.
+
+A further entry belongs to the monograph itself. Its reading of the Lean artifacts and of the natural-language paper is second-hand, through the source. The equation numbers, lemma numbers, and quoted passages are as reported, and the Lean declarations have not been compiled. The monograph's own claims about the case are therefore conditional on the accuracy of the source, and that conditionality is recorded as an open obligation of the monograph in the list of items to verify.

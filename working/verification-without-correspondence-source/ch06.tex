@@ -1,0 +1,92 @@
+\chapter{Autoformalization as Constrained Translation}
+\label{ch:autoformal}
+
+Autoformalization is the production of formal mathematics from informal mathematics by an automated system. The term covers tasks that differ in what is to be preserved, and the differences matter for what a success report can mean. This chapter separates the tasks, adopts the two forms of success that the source distinguishes, and proposes a record, called a translation contract, in which the claims made on behalf of a translation can be stated and later audited.
+
+\section{Four tasks under one name}
+
+The following tasks are commonly grouped.
+
+\begin{enumerate}[label=(\roman*)]
+\item \emph{Theorem formalization.} Given a statement in prose, produce a formal statement. The output has no proof. Its correctness is exactly statement correspondence, $C(V)$, in the notation of Appendix~\ref{app:formal}.
+\item \emph{Proof reconstruction.} Given a formal statement, produce a formal proof. The informal argument may be consulted or ignored. Correctness is kernel acceptance of the proof of the given statement.
+\item \emph{Proof translation.} Given a prose proof of a statement together with a formalization of the statement, produce a formal proof that follows the prose argument. Correctness has a kernel component and an argument component, $A(V)$.
+\item \emph{Whole-document translation.} Given a mathematical text, produce a formal development containing the definitions, statements, proofs, and dependencies of the text. Correctness concerns the preservation of the text as a whole.
+\end{enumerate}
+
+The tasks are ordered by the amount of the original that has to survive. In the first, only a statement does. In the last, a structure of definitions and dependencies does, and a failure of preservation can occur at any node or at any edge.
+
+\section{Two forms of success}
+
+The source identifies two forms of autoformalization, and the monograph adopts them in the following paraphrase. I state them here because Part~IV's cases are cases of the gap between them.
+
+\begin{definition}[Form 1: acceptance of a translated proof]
+\label{def:form1}
+Given a natural-language proof of a theorem and a formalization of the theorem that has already been accepted as faithful, a translation is successful in form~1 if the resulting Lean development is accepted by the kernel without any placeholder for a missing proof and without additional axioms.
+\end{definition}
+
+\begin{definition}[Form 2: faithful semantic translation]
+\label{def:form2}
+Given a mathematical text, a translation is successful in form~2 if it is a faithful semantic translation of the entire text, including its definitions, statements, proofs, and the dependencies between them. A different but provable assertion does not count as a faithful translation.
+\end{definition}
+
+The definitions differ in what they presuppose and in what they check. Form~1 presupposes that the statement has been faithfully formalized, and its criterion is a property of the formal artifact alone: the kernel accepts, no placeholder remains, no axiom has been added. Form~2 presupposes nothing and its criterion refers to the original. The difference has an immediate logical consequence, stated here with its limits.
+
+\begin{proposition}[Form 1 does not entail form 2]
+\label{prop:form12}
+Let $D$ be a formal development meeting the form~1 criterion with respect to a statement $F$ that has been accepted as faithful. Then form~2 success does not follow: $D$ need not be a faithful semantic translation of the text $N$ from which the proof was taken. Specifically, the form~1 criterion is a function of $D$ and its environment, and cannot register a proof in $D$ whose steps lack counterparts in the informal proof.
+\end{proposition}
+
+\begin{proof}
+The form~1 criterion mentions only that the kernel accepts $D$, that no placeholder remains, and that no axiom has been added. The instance is the symmetric-matrix example of Chapter~\ref{ch:proofnot} and Theorem~\ref{thm:rv002}, in which a faithfully formalized statement is proved by a route without counterparts, under a strict argument-correspondence relation, for the steps of the informal proof. The form~1 criterion holds and the form~2 criterion, which requires faithful translation of proofs as well as statements, fails. The criterion is also silent about definitions, and Chapter~\ref{ch:hidden} documents a total library default that departs from the informal notion; I do not claim that it yields a form~1 instance with a faithful statement, and the proposition rests on the argument case alone.
+\end{proof}
+
+The proposition is stated with the statement held faithful, as form~1 presupposes, so it is not a restatement of Theorem~\ref{thm:rv001}. It rests on the separation results for definitions and arguments and inherits their conditions. The source's own reading, as I understand it, is that the Lean translations it examines meet form~1 and that the question of form~2 is what its analysis shows to be unresolved. This is a reading of the source and is marked as such.
+
+\section{What a translation preserves}
+
+A translation, of any of the four kinds, can be described as a sequence of steps, each of which transforms a representation of the mathematics into another. A step may rename, expand a definition, strengthen or weaken a hypothesis, introduce a convention, or replace an argument by another with the same conclusion. Appendix~\ref{app:formal} types such transitions as conservative, strengthening, weakening, or lateral, relative to a certified background, and proves in Theorem~\ref{thm:compose} that a chain of admissible, preserving steps yields entailment of the originating content from the cumulative context, and that this entailment becomes establishment only when the premises are established. The vocabulary is intended for use here: what a translation preserves is the class of content types that its steps are not allowed to change.
+
+\begin{definition}[Content types]
+\label{def:contenttypes}
+The content of a mathematical text is divided into the following types, which are taken as the dimensions of preservation. \emph{Statements} are the propositions asserted. \emph{Definitions} are the meanings assigned to terms. \emph{Hypotheses} are the conditions under which a result is asserted, including standing assumptions. \emph{Arguments} are the inferential structure of the proofs. \emph{Dependencies} are the relations between results, namely which result is used to prove which. \emph{Scope} is the intended range of the quantifiers and variables.
+\end{definition}
+
+The list is not claimed to be canonical. It is intended to be fine enough that the failures documented in Part~IV, a weakened exponent in a hypothesis, a lateral change of the set on which an estimate holds, and a total default for a partial term, each fall under exactly one type, and coarse enough to be manageable.
+
+\section{The translation contract}
+
+A translation is made under an understanding of what is to be preserved and what is to be disclosed. The understanding is rarely written down. When it is not, claims of success have no fixed referent, and a reader cannot tell whether a given change was licensed. The contract makes the understanding explicit.
+
+To attach content types to the obligations of a ledger, fix a \emph{tagging} $\kappa$, a partial function assigning to an obligation one content type of Definition~\ref{def:contenttypes}, and call a ledger \emph{tag-respecting} if $(o,o')\in Q_i$ implies $\kappa(o')=\kappa(o)$. The tagging is defined on the obligations that descend from the originating obligations of the content being translated. It is undefined on the baseline obligation $O_{\mathrm{formal}}$ and on tracked assumption obligations, which are outside the six types, and compliance is required only where it is defined. The tagging is part of the record: which obligation of a translation concerns a statement, which a definition, and which a dependency is a decision, made by whoever sets up the ledger, and it can itself be wrong.
+
+\begin{definition}[Translation contract]
+\label{def:contract}
+A \emph{translation contract} is a quadruple $\mathfrak{C} = (\mathrm{Pres}, \mathrm{Strict}, \mathrm{Perm}, \mathrm{Disc})$ where $\mathrm{Pres}$ is a set of content types that must be preserved, $\mathrm{Strict}\subseteq\mathrm{Pres}$ is the set of those types at which only conservative steps are compliant, $\mathrm{Perm}$ is a set of the transition types $\{\text{conservative}, \text{strengthening}, \text{weakening}, \text{lateral}\}$ that are permitted at obligations whose type lies outside $\mathrm{Pres}$, and $\mathrm{Disc}$ is a disclosure rule requiring that every occurrence of a permitted type other than conservative be recorded with its obligation, its direction, and its justification.
+\end{definition}
+
+A tag-respecting ledger \emph{complies with} $\mathfrak{C}$ if, for every step $T_i$ and every $o\in\Ob_{i-1}$ on which $\kappa$ is defined: when $\kappa(o)\in\mathrm{Pres}\setminus\mathrm{Strict}$, the step is preserving at $o$, that is, of type conservative or strengthening at $o$; when $\kappa(o)\in\mathrm{Strict}$, the step is of type conservative at $o$; and when $\kappa(o)\notin\mathrm{Pres}$, the type of $T_i$ at $o$ lies in $\mathrm{Perm}$ and, if it is not conservative, it is disclosed as $\mathrm{Disc}$ requires. A contract is specific to a task. For form~1, $\mathrm{Pres}$ is the statement as given, and the contract can require more than the form~1 criterion checks, for example the arguments, at the price of leaving form~1. For form~2, $\mathrm{Pres}=\mathrm{Strict}$ contains all six types and $\mathrm{Perm}$ is empty, since a strengthening step is a departure from a faithful translation. The two contracts differ in how much of the original must survive, which is the difference between the criteria; I do not claim that they differ in nothing else.
+
+\begin{proposition}[What compliance gives]
+\label{prop:compliance}
+Let a tag-respecting ledger of admissible transition certificates comply with a contract $\mathfrak{C}$, over a consequence relation satisfying (C1) to (C3).
+\begin{enumerate}[label=(\roman*)]
+\item For every originating obligation $o$ with $\kappa(o)\in\mathrm{Pres}$, $\Gamma_n(o)\ent\cont(o)$.
+\item For every originating obligation $o$ with $\kappa(o)\notin\mathrm{Pres}$, the ledger records each step at which preservation fails along the descendants of $o$, so that the failure is disclosed and not silent; compliance gives no entailment for such $o$.
+\item Compliance does not give establishment of $\cont(o)$. By Proposition~\ref{prop:independence}(i) a compliant chain can preserve an open obligation through any number of steps without discharging it, and by Theorem~\ref{thm:compose} establishment further requires, besides sound certificates, that the sources of the premises in $\Gamma_n(o)$ be warranted-discharged.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(i) By tag-respect, every obligation in $S_{k-1}(o)$ has a tag in $\mathrm{Pres}$, so every step is preserving at every obligation reached from $o$. The first statement of Theorem~\ref{thm:compose}, which needs preservation only at the obligations reached from $o$, then applies and gives $\Gamma_n(o)\ent\cont(o)$. (ii) Likewise every obligation reached from $o$ has a tag outside $\mathrm{Pres}$, and at each of them compliance requires a type in $\mathrm{Perm}$ and disclosure of any type other than conservative; the disclosures are the record. A step of type weakening or lateral, if permitted, defeats the hypothesis of Theorem~\ref{thm:compose}, which is why no entailment is claimed. (iii) is Proposition~\ref{prop:independence}(i) together with the second statement of Theorem~\ref{thm:compose}.
+\end{proof}
+
+The proposition does not say that compliance with a good contract guarantees a good translation. Its content is that the contract fixes which obligations are held to preservation, which departures are tolerated and reported, and that even full compliance leaves the question of establishment where it was, with the authorities behind the discharges and the soundness of $\ent$. Entailment is a logical statement and does not depend on whether certificates remain warranted; establishment does. A contract serves two functions: it fixes the referent of a claim of fidelity, and it makes the claim auditable because each step is either covered by the contract or reported as a violation. The tagging on which both rest is an additional certified claim.
+
+\section{Contracts for the cases of Part IV}
+
+The use of the contract can be illustrated by what a form~1 contract fails to say about the cases of Part~IV. Under a form~1 contract the statement is given and $\mathrm{Pres}$ contains it, so the translation of the proof is not licensed to change the statement. In the derivative case, the weakening of the exponent is a change to a hypothesis inside a proof step, not to the stated theorem, and the contract is silent on intermediate claims. A contract with $\mathrm{Pres}$ extended to include the hypotheses of cited lemmas, and with $\mathrm{Perm}$ empty, would classify the step as a violation at the moment of translation and require disclosure. The classification is the source-supported, provisional classification of Chapter~\ref{ch:derivative}, and the example is one of what a more explicit contract would have recorded, not a statement that a violation was certified.
+
+\section{Limits of the contract}
+
+The contract is a record and not a procedure. It does not say how to determine whether a step is conservative. That determination is a transition certificate, whose authority is a reader or a prover, and which is subject to the limits of Part~III: for the class of specifications that contains hidden-existence families, no uniform procedure decides statement correspondence, and a contract cannot manufacture one. What the contract adds is accountability about which determinations were made and by whom, and a place for the determinations that were not made.

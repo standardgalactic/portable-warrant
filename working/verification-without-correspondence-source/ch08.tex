@@ -1,0 +1,107 @@
+\chapter{Back-Translation and the Circularity of Certification}
+\label{ch:backtrans}
+
+A natural proposal for checking a formalization is to translate the formal statement back into prose and compare the result with the original. If the two agree, the argument goes, nothing was lost. The proposal is attractive because the comparison is between two objects in the same language and because the reverse translation can be automated. This chapter explains why the comparison creates a further correspondence obligation instead of discharging the first, proves that round-trip agreement does not entail fidelity (RV-007), and identifies conditions under which translations can nevertheless provide useful evidence.
+
+\section{The round trip}
+
+Let $D \subseteq \Lang_N$ be a set of specifications, $f : D \to \Lang_F$ a forward translation, and $b : \Lang_F \to \Lang_N$ a reverse translation. Let $\approx$ be a relation of agreement on $\Lang_N$, which may be string identity, equality after normalization, or a judgment of paraphrase.
+
+\begin{definition}[Round-trip agreement and fidelity]
+\label{def:roundtrip}
+The pair $(f,b)$ has \emph{round-trip agreement on $D$} if $b(f(N)) \approx N$ for every $N \in D$. The forward translation $f$ is \emph{faithful on $D$} if $\llbracket f(N) \rrbracket_\I \equiv_\I \llbracket N \rrbracket_\I$ for every $N \in D$, where the right-hand side is the meaning of $N$ in a fixed context. The reverse translation $b$ is \emph{faithful on a set $E \subseteq \Lang_F$} if $\llbracket b(F) \rrbracket_\I \equiv_\I \llbracket F \rrbracket_\I$ for every $F \in E$.
+\end{definition}
+
+Round-trip agreement concerns the surface of $N$ and the surface of $b(f(N))$. Fidelity concerns the meaning. The question is what the first says about the second.
+
+\section{Agreement does not entail fidelity: RV-007}
+
+The observation that follows is elementary. It is stated with two parts, one showing that round-trip agreement is very weak as a property of $f$ alone, and one showing that it is compatible with failure of fidelity in the symmetric case where both translators share the failure.
+
+\begin{proposition}[Round-trip agreement constrains only injectivity]
+\label{prop:injective}
+Take $\approx$ to be identity. (i) If $(f,b)$ has round-trip agreement on $D$ then $f$ is injective on $D$. (ii) Conversely, if $f$ is injective on $D$ then there is a $b$ such that $(f,b)$ has round-trip agreement on $D$, whatever the meaning of the formal sentences $f(N)$.
+\end{proposition}
+
+\begin{proof}
+(i) If $f(N_1)=f(N_2)$ then $N_1 = b(f(N_1)) = b(f(N_2)) = N_2$. (ii) Define $b$ on $f(D)$ by $b(f(N)) = N$, which is well defined by injectivity, and arbitrarily elsewhere.
+\end{proof}
+
+Part (ii) is the point. For the pair to pass the round trip it suffices that $f$ lose no surface information, and this is independent of whether $f$ preserves meaning. If one is free to choose $b$ after seeing $f$, round-trip agreement is satisfiable by every injective translation, faithful or not, provided the reverse translation may be chosen after the forward one. Round-trip agreement therefore carries information about fidelity only to the extent that $b$ is constrained independently of $f$.
+
+\begin{theorem}[Round-trip agreement does not entail fidelity, RV-007]
+\label{thm:rv007}
+Suppose $D$ contains two specifications $N_0,N_1$ with $\llbracket N_0\rrbracket_\I\not\equiv_\I\llbracket N_1\rrbracket_\I$, and suppose there is a faithful injective translation $f_0 : D\to\Lang_F$ with a left inverse $b_0$. All denotations of members of $D$ are defined, and $\equiv_\I$ is an equivalence relation on defined denotations. Then there are translations $f, b$ such that $(f,b)$ has round-trip agreement on $D$, $f$ is not faithful on $D$, and $b$ is not faithful on $f(D)$. The relation $\equiv_\I$ is assumed to be an equivalence relation.
+\end{theorem}
+
+\begin{proof}
+Write $F_i=f_0(N_i)$. Faithfulness of $f_0$ gives $\llbracket F_i\rrbracket_\I\equiv_\I\llbracket N_i\rrbracket_\I$, so $F_0$ and $F_1$ are inequivalent, since $\equiv_\I$ is transitive and symmetric. Let $\rho:\Lang_F\to\Lang_F$ be the transposition exchanging $F_0$ and $F_1$ and fixing every other sentence. It is injective with $\rho^{-1}=\rho$. Define $f=\rho\circ f_0$ and $b=b_0\circ\rho$ on $\Lang_F$, where $b_0$ is extended arbitrarily outside $f_0(D)$. For $N\in D$, $b(f(N))=b_0(\rho(\rho(f_0(N))))=b_0(f_0(N))=N$, so round-trip agreement holds, in fact as identity. Now $f(N_0)=F_1$ and $\llbracket F_1\rrbracket_\I\equiv_\I\llbracket N_1\rrbracket_\I\not\equiv_\I\llbracket N_0\rrbracket_\I$, so $f$ is not faithful at $N_0$. Also $b(f(N_0))=N_0$ while $\llbracket F_1\rrbracket_\I\not\equiv_\I\llbracket N_0\rrbracket_\I=\llbracket b(F_1)\rrbracket_\I$, so $b$ is not faithful at $F_1\in f(D)$.
+\end{proof}
+
+A concrete instance: let $D=\{N_0,N_1\}$ with $N_0$ the sentence ``$n$ is even'' and $N_1$ the sentence ``$n$ is odd'' for a natural number $n$, with $F_0,F_1$ the corresponding formal predicates. The pair that translates ``even'' to the formal odd predicate and back again passes the round trip exactly and is wrong in both directions. The construction is a coordinated misreading: $\rho$ is a systematic reinterpretation and $b$ undoes it at the surface, so nothing in the round trip detects it.
+
+The theorem is deliberately weak, since it exhibits a pair under a mild existence hypothesis and not a rate. Its content is that round-trip agreement is not a sufficient condition and that no argument of the form ``the round trip returns the original, so nothing was lost'' is valid without further premises. A case from Chapter~\ref{ch:hidden} shows the same phenomenon in a form that is not artificial, although it is not an instance of the construction above.
+
+\begin{example}[The silent default under the round trip]
+\label{ex:rtdefault}
+Let $N_e$ define $n_e$ as the least $n$ with $B_e(n)$, and let $f(N_e)=F_e$ be the formalization using the library infimum. Let $b$ render the infimum as ``the least $n$ such that $B_e(n)$.'' Then $b(f(N_e))$ is, to the surface, $N_e$, for every $e$. The round trip agrees for all $e$ including those with $e \notin d$, where $F_e$ assigns the default $n_e=0$ and the specification is undefined. By Theorem~\ref{thm:hidden}, under the convention stated there, the statement correspondence $C(V_e)$ holds exactly for $e\in d$, a $\Sigma^0_2$-complete set.
+\end{example}
+
+The passage from a presupposing description to a total function is not an injective self-map of $\Lang_F$, so the example does not instantiate the theorem's construction. It exhibits the same structure: both directions use the same reading of ``the least $n$ such that'' because both are generated by the same convention, and the agreement is a correct fact about strings and not evidence about meanings.
+
+\section{Why the second translation is a second obligation}
+
+The comparison $b(f(N)) \approx N$ is a claim of the form that a certain prose sentence says the same as another. If $\approx$ is string identity, the claim is decidable and uninformative, by Proposition~\ref{prop:injective}. If $\approx$ is a judgment of paraphrase, the claim is a claim about meaning, and meaning claims are what the statement obligation $O_{\mathrm{statement}}$ was about in the first place. The reverse translation $b$ then introduces its own obligation, that $b$ is faithful on the relevant formal sentences, which is a statement-correspondence obligation of the same kind with the roles of prose and formal language exchanged. In the vocabulary of Appendix~\ref{app:formal}, the back-translation is a transition whose certificate has to be supplied by an authority, and the authority for it is again a reader. The residue does not shrink: one obligation has been replaced by an obligation that has the same form and, so far as the record shows, the same authority-dependence.
+
+If the authority for $b$ is the same system that produced $f$, the certificate depends on the thing it certifies. A dependency graph in which the fidelity of $f$ is supported by agreement with $b$ and the fidelity of $b$ is supported by agreement with $f$ has a cycle, and Definition~\ref{def:admissible} excludes it. If the authority is a different system, its independence is itself a claim to be supported, and the next section says what is required of it.
+
+\section{Independent translations}
+
+A weaker use of the second translation is as evidence about the first, based on the idea that errors of independent translators are unlikely to coincide. Let $E_1, E_2$ denote the events that translations $f_1, f_2$ of the same specification are unfaithful, with probabilities $e_1,e_2$. Say the translations \emph{agree} if the resulting formal sentences are equivalent.
+
+\begin{proposition}[Agreement and coincident error]
+\label{prop:independent}
+Fix a probability distribution over specifications and over the randomness of the translators, define ``wrong'' for a translation as unfaithful, and say the two translations agree when their outputs are equivalent under $\equiv_\I$. Faithful outputs are equivalent to the meaning of the specification, hence to each other, so two faithful translations agree. Then
+\begin{enumerate}[label=(\roman*)]
+\item $\Pr(\text{agree and wrong}) \le \Pr(E_1\cap E_2) \le \min(e_1,e_2)$;
+\item if $E_1$ and $E_2$ are independent, $\Pr(\text{agree and wrong}) \le e_1 e_2$ and
+\[
+\Pr(\text{wrong}\mid\text{agree}) \le \frac{e_1e_2}{(1-e_1)(1-e_2)};
+\]
+\item the chain in (i) holds with equality, $\Pr(\text{agree and wrong})=\Pr(E_1\cap E_2)=\min(e_1,e_2)$, when the errors coincide, $E_1=E_2$, and the wrong sentences are equivalent, provided $e_1=e_2$ or one error event contains the other.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(i) To agree on a wrong sentence, both outputs must be equivalent to a sentence that is not a faithful rendering, so both translations are unfaithful; the event is contained in $E_1\cap E_2$, whose probability is at most each of $e_1,e_2$. (ii) Under independence $\Pr(E_1\cap E_2)=e_1e_2$. The probability of agreement is at least that of both being faithful, $(1-e_1)(1-e_2)$, since faithful translations agree by assumption. The conditional probability is the quotient. (iii) If $E_1=E_2$ and the wrong sentences are equivalent then agreement and error both occur whenever $E_1$ does, and $\Pr=e_1$, which equals $\min(e_1,e_2)$ if $e_1=e_2$.
+\end{proof}
+
+For $e_1=e_2=0.1$, independence gives a bound of about $0.012$ on the probability of error given agreement, while perfectly correlated errors give an error probability of $0.1$ on the very same agreement events. The numbers are illustrative of the structure and carry no empirical claim. The hypothesis that carries the weight is independence, and independence in this setting is not plausible by default: translators trained on overlapping data, conditioned on the same prompt, using the same library convention, or exposed to the same example of a pattern, can fail on the same specifications, and Example~\ref{ex:rtdefault} is a case in which the failure is attributable to the library, which every translator into that library shares. A claim of independence is an obligation to be supported, for instance by showing that the translators differ in method, data, and target conventions, and by estimating the correlation of errors on a held-out sample with trusted labels.
+
+\section{Controlled vocabularies and certified glossaries}
+
+There is a regime in which a round trip, or a comparison of translations, does provide evidence, and its conditions are definite. Suppose that the prose is restricted to a controlled language $\Lang_C\subseteq \Lang_N$ built compositionally from a finite glossary $G$ of phrases, each with an assigned formal definition, and suppose the formal sentences are built from the same definitions.
+
+\begin{definition}[Certified glossary]
+\label{def:glossary}
+A \emph{glossary} is a finite set of pairs $(w,\gamma(w))$ of a phrase $w$ and a formal term $\gamma(w)$. It is \emph{correct in the context $c$} if $\llbracket\gamma(w)\rrbracket_\I\equiv_\I$ the intended meaning of $w$ in $c$ for every pair. It is \emph{certified} if for each pair a certificate of that equivalence, accepted by an identified authority, is warranted in the ledger. A certificate evidences correctness only to the extent that it is sound, which is a hypothesis on the authority and not a consequence of its being warranted.
+\end{definition}
+
+\begin{proposition}[Fidelity on a compositional fragment]
+\label{prop:glossary}
+Let $\Lang_C\subseteq\Lang_N$ be generated from $G$ by a finite set of constructors with unique parsing, suppose that $\equiv_\I$ is a congruence for the meaning operations of those constructors, that the intended meaning of a phrase $w$ in $c$ is $\llbracket w\rrbracket_\I$, and suppose that both $\llbracket\cdot\rrbracket_\I$ on $\Lang_C$ and $\llbracket\cdot\rrbracket_\I$ on the formal terms they translate to are compositional with respect to those constructors, with the formal constructors interpreted by the same operations on meanings. If $G$ is correct in $c$ and $f$ is defined by replacing each phrase $w$ by $\gamma(w)$ and each constructor by its formal counterpart, then $f$ is faithful on $\Lang_C$ in $c$.
+\end{proposition}
+
+\begin{proof}
+By induction on the construction of $N\in\Lang_C$. For a glossary phrase, faithfulness is the correctness of $G$. For a compound $N=\kappa(N_1,\dots,N_k)$, $f(N)=\kappa^{F}(f(N_1),\dots,f(N_k))$ and by compositionality of both semantics $\llbracket f(N)\rrbracket_\I$ is the result of applying the meaning operation of $\kappa$ to $\llbracket f(N_i)\rrbracket_\I$, which by the induction hypothesis are equivalent to $\llbracket N_i\rrbracket_N$. The result is equivalent to $\llbracket N\rrbracket_N$.
+\end{proof}
+
+The proposition says where the evidence comes from: from the correctness of the glossary, evidenced by sound certificates, and from the compositionality of the fragment, not from the round trip. Uniqueness of parsing makes $f$ a function, and the congruence property is what lets the induction pass through the constructors; for the intensional choices of $\equiv_\I$ permitted in Appendix~\ref{app:formal} it can fail. In such a fragment the round trip can serve as a check that the translators implement the glossary as written, a check on implementation errors and not on meaning. The cost of the regime is that everything outside $\Lang_C$ is out of scope, that the glossary certificates are themselves statement-correspondence obligations to be discharged by an authority, and that, as Chapter~\ref{ch:natural} observed, readings depend on context and practice, so that the compositional fragments are only a part of mathematical prose. Controlled languages are therefore a way of purchasing certified fidelity on a fragment, at the price of the fragment. This is the same trade as that of conservative certification in Chapter~\ref{ch:futility}.
+
+\section{Certified intermediate representations}
+
+A related option is an intermediate representation between prose and the target formalism, designed so that each of the two translations is simpler and so that the intermediate form can be inspected by a reader. The structure is a chain $N\to M\to F$, and by Theorem~\ref{thm:compose} the cumulative context entails the originating content when both steps are admissible and preserving; the content is transported when every premise of the cumulative context is established, and not otherwise guaranteed. The intermediate form helps if inspection of $M$ is cheaper or more reliable than inspection of $F$, which is a claim about the authorities and not about the logic. It does not remove the obligation: it moves it into two smaller obligations, each of which has an authority.
+
+\section{Summary of the chapter}
+
+The back-translation is not a verifier of the forward translation. Its agreement with the original is satisfiable by every injective forward map when the reverse map may be chosen afterwards (Proposition~\ref{prop:injective}), is compatible with coordinated failure (Theorem~\ref{thm:rv007}, Example~\ref{ex:rtdefault}), and is evidence only under premises that are themselves obligations: independence of translators (Proposition~\ref{prop:independent}), or a certified glossary and a compositional fragment (Proposition~\ref{prop:glossary}). In each case the evidence is conditional on a certificate whose authority is outside the round trip. This is the sense in which certification by translation is circular: the comparison that would settle fidelity can be run only after fidelity of the comparator has been settled.

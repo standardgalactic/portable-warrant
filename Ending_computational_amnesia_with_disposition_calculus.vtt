@@ -1,0 +1,2570 @@
+WEBVTT
+
+00:00.000 --> 00:03.960
+Imagine finding out that you were just denied a life-saving medical procedure.
+
+00:04.100 --> 00:04.620
+Oh, man.
+
+00:04.800 --> 00:07.940
+Right? You're understandably terrified, you know, you're frustrated,
+
+00:08.220 --> 00:10.760
+and you call the hospital administration to ask why.
+
+00:10.920 --> 00:11.260
+Naturally.
+
+00:11.580 --> 00:15.500
+And the administrator pauses, looks at their screen, and says,
+
+00:15.620 --> 00:21.300
+well, our computer system evaluated your file, it output a denied status,
+
+00:21.520 --> 00:24.500
+and then it deleted its temporary scratchpad to save memory.
+
+00:24.700 --> 00:25.600
+Which is horrifying.
+
+00:25.800 --> 00:26.280
+It is.
+
+00:26.280 --> 00:31.900
+So they basically tell you, unfortunately, we have absolutely no idea what evidence it looked at
+
+00:31.900 --> 00:33.180
+or why it made that decision.
+
+00:33.360 --> 00:34.260
+Yeah, you're just out of luck.
+
+00:34.480 --> 00:34.780
+Exactly.
+
+00:35.200 --> 00:39.900
+And in our modern world, that scenario isn't just some, you know, dystopian sci-fi nightmare.
+
+00:40.100 --> 00:43.220
+It's basically how standard software operates right now.
+
+00:43.340 --> 00:44.140
+It really is.
+
+00:44.740 --> 00:49.060
+We've built this massive digital infrastructure where software is legally allowed,
+
+00:49.200 --> 00:52.840
+and, I mean, even encouraged, to have complete computational amnesia.
+
+00:52.840 --> 00:56.760
+Yeah, that amnesia is a feature, not a bug, in traditional systems.
+
+00:57.100 --> 00:57.220
+Right.
+
+00:57.400 --> 01:01.460
+But today, you are going to learn how a breathtaking new mathematical framework
+
+01:01.460 --> 01:06.040
+is about to make that kind of amnesia fundamentally mathematically impossible.
+
+01:06.380 --> 01:06.940
+It is.
+
+01:07.060 --> 01:11.340
+It's a profound shift in how we think about the very purpose of a computer.
+
+01:11.720 --> 01:12.960
+A total paradigm shift.
+
+01:13.140 --> 01:18.860
+Because for nearly a century, our entire philosophy of computing has been built around one primary goal,
+
+01:18.960 --> 01:21.280
+which is just calculating the final answer.
+
+01:21.280 --> 01:25.440
+Right. You put in a mathematical equation, the processor hums,
+
+01:25.480 --> 01:29.460
+it does a bunch of invisible work, and it spits out the number 42.
+
+01:29.820 --> 01:30.260
+Exactly.
+
+01:30.600 --> 01:32.220
+We get the result, and we're happy.
+
+01:32.620 --> 01:37.460
+In computer science, these foundational concepts, like the traditional lambda calculus...
+
+01:37.460 --> 01:40.220
+Going all the way back to Alonzo Church in the 1930s, yeah.
+
+01:40.360 --> 01:41.760
+Right. Alonzo Church.
+
+01:42.220 --> 01:44.680
+Those concepts are built entirely around this idea.
+
+01:45.200 --> 01:48.860
+You have an input, you apply a function, you compute the result,
+
+01:48.860 --> 01:53.020
+you return that final value, and the system completely forgets the journey it took to get there.
+
+01:53.320 --> 01:54.460
+It's totally stateless.
+
+01:54.740 --> 01:56.860
+Yes. A completely stateless transaction.
+
+01:57.280 --> 02:02.680
+Which, I mean, that is a perfectly fine paradigm if you are just calculating the digits of pi.
+
+02:02.840 --> 02:03.060
+Sure.
+
+02:03.060 --> 02:06.180
+Right? Or, you know, rendering a pixel on a video game screen.
+
+02:06.180 --> 02:11.300
+For those specific tasks, the journey truly doesn't matter, only the destination.
+
+02:11.980 --> 02:13.820
+But the real world is messy.
+
+02:14.020 --> 02:14.360
+Exactly.
+
+02:14.740 --> 02:18.520
+If we pull back and look at the systems that actually run our lives,
+
+02:18.780 --> 02:26.040
+like a legal contract execution or a medical diagnostic pipeline or a massive algorithmic financial trade,
+
+02:26.700 --> 02:29.360
+the real world doesn't operate like a simple math equation.
+
+02:29.480 --> 02:30.820
+No, it definitely doesn't.
+
+02:30.820 --> 02:35.320
+In those high-stakes scenarios, how we arrived at the final answer is often,
+
+02:35.700 --> 02:39.360
+well, it's more legally and ethically critical than the answer itself.
+
+02:39.880 --> 02:42.120
+I mean, if you've ever applied for a mortgage online,
+
+02:42.400 --> 02:46.140
+you've probably been on the receiving end of this exact black box.
+
+02:46.420 --> 02:47.040
+Oh, absolutely.
+
+02:47.280 --> 02:49.680
+You get this automated email saying, application denied,
+
+02:50.300 --> 02:54.180
+but literally no one can tell you who actually authorized that decision.
+
+02:54.320 --> 02:56.080
+Or what credit bureaus were checked.
+
+02:56.080 --> 03:00.180
+Exactly. Or what alternate loan terms were rejected along the way.
+
+03:00.960 --> 03:04.100
+If a system just spits out approved or denied without a durable,
+
+03:04.380 --> 03:06.660
+witnessed history of how it reached that conclusion,
+
+03:07.180 --> 03:11.240
+it is essentially useless for any process requiring real-world accountability.
+
+03:11.560 --> 03:16.720
+And that tension, that exact problem, is what brings us to the core of our deep dive today.
+
+03:16.940 --> 03:18.800
+Yes, I am so excited for this.
+
+03:18.920 --> 03:24.520
+We are exploring a genuinely groundbreaking 2026 paper by the independent researcher Flyxion.
+
+03:24.520 --> 03:30.300
+Titled, The Calculus of Disposition, Processes, Types, and Witnessed Computation.
+
+03:30.560 --> 03:31.160
+That's the one.
+
+03:31.440 --> 03:31.940
+That's the one.
+
+03:32.160 --> 03:36.140
+And this isn't just a minor update to a programming language.
+
+03:36.640 --> 03:38.660
+It is a complete paradigm shift.
+
+03:39.040 --> 03:39.180
+Yeah.
+
+03:39.460 --> 03:44.720
+Flyxion is proposing a new formal calculus that fundamentally rewrites how we understand
+
+03:44.720 --> 03:50.200
+accountability, authority, and evidence at the very lowest levels of software architecture.
+
+03:50.580 --> 03:52.960
+The paper asks a question that seems simple at first,
+
+03:52.960 --> 03:55.520
+but it just unravels everything we know about programming.
+
+03:56.260 --> 04:00.660
+It asks, what happens when a computer doesn't just calculate a result and dump it out,
+
+04:00.740 --> 04:04.900
+but actually commits to a permanent, witnessed history of its actions?
+
+04:05.160 --> 04:07.380
+And the operative word there is commitment.
+
+04:07.680 --> 04:08.300
+Commitment, right.
+
+04:08.440 --> 04:11.060
+In this calculus, history isn't just some byproduct.
+
+04:11.260 --> 04:15.980
+It's not an optional log file that a lazy developer might remember to turn on.
+
+04:16.060 --> 04:19.080
+Or a text file sitting on a server that anyone can just go in and edit.
+
+04:19.080 --> 04:25.580
+Exactly. Flyxion formalizes the concept of a commitment as a living computational entity.
+
+04:25.880 --> 04:27.040
+Okay, a living entity.
+
+04:27.420 --> 04:32.060
+Right. It is a piece of data that moves through a very strict append-only life cycle.
+
+04:32.740 --> 04:37.780
+Every single action taken on that commitment changes what futures are still possible for it.
+
+04:38.040 --> 04:41.280
+But critically, none of those actions are permitted to revise the past.
+
+04:41.600 --> 04:44.520
+Never. The past is mathematically locked.
+
+04:44.520 --> 04:47.220
+So let's break down the mechanics of that life cycle,
+
+04:47.360 --> 04:51.160
+because I feel like it's the foundational building block for everything else we're going to talk about today.
+
+04:51.380 --> 04:52.220
+It absolutely is.
+
+04:52.620 --> 04:57.300
+In this calculus, a commitment isn't just a raw integer or a string of text.
+
+04:57.460 --> 05:01.060
+It has a unique identity, it carries specific content,
+
+05:01.060 --> 05:05.760
+and it exists in a highly specific, mathematically enforced life cycle state.
+
+05:06.100 --> 05:11.820
+Right. It is born, it lives, it gets evaluated, and eventually it has to be disposed of.
+
+05:11.820 --> 05:16.420
+So to understand the life cycle, we have to look at the specific states Flyxion lays out.
+
+05:16.780 --> 05:18.580
+Let's start with the life states.
+
+05:18.820 --> 05:19.060
+Okay.
+
+05:19.520 --> 05:22.260
+A commitment starts its existence as open.
+
+05:22.620 --> 05:22.920
+Open.
+
+05:23.220 --> 05:26.060
+Yeah. This simply means it has been introduced into the system.
+
+05:26.620 --> 05:30.320
+Its identity has been minted, but it doesn't hold any actual data yet.
+
+05:30.680 --> 05:31.800
+Just an empty folder.
+
+05:32.220 --> 05:32.580
+Exactly.
+
+05:33.180 --> 05:35.120
+From there, it becomes bound.
+
+05:35.560 --> 05:35.940
+Bound.
+
+05:35.940 --> 05:41.360
+Which means a specific value or a piece of raw data has been permanently attached to that identity.
+
+05:41.820 --> 05:43.320
+Okay. Making sense.
+
+05:43.680 --> 05:50.620
+Next, it moves to the transformed state, meaning some computational function has actually evaluated that raw data
+
+05:50.620 --> 05:52.980
+and produced a new processed output.
+
+05:53.600 --> 05:57.540
+Okay. So if we apply this to the mortgage analogy we used earlier.
+
+05:57.720 --> 05:58.080
+Please do.
+
+05:58.680 --> 06:02.160
+Open is basically opening the blank application file on the server.
+
+06:02.340 --> 06:02.560
+Right.
+
+06:02.560 --> 06:07.360
+Bound is attaching your specific salary and your credit score to that file.
+
+06:07.500 --> 06:07.660
+Yep.
+
+06:08.260 --> 06:12.860
+And transformed is the bank's algorithm crunching those numbers and outputting a risk score.
+
+06:13.100 --> 06:14.260
+That is a perfect mapping.
+
+06:14.640 --> 06:14.780
+Yeah.
+
+06:15.080 --> 06:18.540
+And once it is transformed, it enters the verification stage.
+
+06:19.220 --> 06:19.620
+Right.
+
+06:19.780 --> 06:22.680
+Which yields two possible life states, if I remember correctly.
+
+06:22.900 --> 06:23.260
+You do.
+
+06:23.260 --> 06:29.820
+It can become verified, meaning the transformed output has been proven correct against some standard.
+
+06:30.600 --> 06:32.720
+Or it can enter a state called verification failed.
+
+06:33.160 --> 06:33.560
+Exactly.
+
+06:34.000 --> 06:39.700
+And those are the five live states where the commitment is still actively moving through the system's logic.
+
+06:40.120 --> 06:42.220
+But it can't stay alive forever, right?
+
+06:42.280 --> 06:44.400
+I mean, the computer needs to clear its desk eventually.
+
+06:44.840 --> 06:45.160
+Right.
+
+06:45.300 --> 06:46.400
+Eventually it has to end.
+
+06:46.400 --> 06:48.600
+So we arrive at the terminal states.
+
+06:49.120 --> 06:52.480
+And the calculus dictates there are exactly two ways this journey ends.
+
+06:52.840 --> 06:53.320
+Only two.
+
+06:53.900 --> 06:59.360
+First is collapsed, which means the commitment was successfully observed, finalized, and rendered as a public result.
+
+06:59.680 --> 07:00.740
+Like an approved loan.
+
+07:01.200 --> 07:01.440
+Right.
+
+07:01.980 --> 07:06.740
+Or it is refused, meaning it was intentionally and permanently rejected.
+
+07:07.400 --> 07:14.520
+And this is where the architecture makes a radical, almost philosophical departure from traditional computing environments.
+
+07:14.520 --> 07:16.220
+Yeah, this part blew my mind.
+
+07:17.120 --> 07:20.580
+In most systems, if you want to abort a process, you just kill it.
+
+07:20.900 --> 07:21.520
+You drop it.
+
+07:22.120 --> 07:28.440
+But in Flyxion's calculus, explicit refusal is available from every single live state.
+
+07:29.000 --> 07:29.520
+Wait, really?
+
+07:29.860 --> 07:30.640
+Every single one?
+
+07:30.940 --> 07:31.240
+Yes.
+
+07:31.580 --> 07:34.560
+Even right at the very beginning when the file is basically empty?
+
+07:35.260 --> 07:35.740
+Absolutely.
+
+07:36.460 --> 07:41.600
+Whether the commitment is open, bound, transformed, verified, or verification failed,
+
+07:41.600 --> 07:46.500
+an authorized principle can step in at any microsecond and hit the refuse button.
+
+07:47.040 --> 07:47.160
+Wow.
+
+07:47.600 --> 07:50.160
+It immediately transitions it to a terminal state.
+
+07:50.780 --> 07:51.120
+Okay.
+
+07:51.300 --> 07:54.660
+Let me look at this from a systems architecture perspective for a second,
+
+07:54.660 --> 07:58.580
+because memory optimization is always a huge deal in computer science.
+
+07:58.680 --> 07:59.040
+For sure.
+
+07:59.040 --> 08:07.140
+If a computational process fails right out of the gate, like it's just open and immediately some network error happens or the input is totally garbled,
+
+08:07.660 --> 08:09.260
+why clutter the system's memory?
+
+08:09.260 --> 08:10.540
+I see where you're going.
+
+08:10.860 --> 08:10.960
+Right.
+
+08:11.100 --> 08:17.340
+Like, why go through this highly ceremonial effort of explicitly refusing it and logging that refusal forever?
+
+08:17.900 --> 08:26.720
+In Java or C++, a garbage collector would just identify that the object is no longer in use, sweep it away, free up the RAM, and the system moves on.
+
+08:26.820 --> 08:28.180
+That's standard practice, yeah.
+
+08:28.180 --> 08:30.640
+So, why not just delete the failed commitment?
+
+08:31.220 --> 08:38.300
+Because in a system designed for legal and societal accountability, dropping a failed process creates an unrecorded dead end.
+
+08:38.460 --> 08:38.900
+Ugh.
+
+08:39.320 --> 08:42.440
+Garbage collection is fantastic for optimizing RAM.
+
+08:42.620 --> 08:43.360
+I mean, it really is.
+
+08:43.740 --> 08:46.080
+But it is catastrophic for auditing.
+
+08:46.440 --> 08:48.140
+Right, because the history is gone.
+
+08:48.360 --> 08:48.760
+Exactly.
+
+08:49.040 --> 08:55.900
+As you pointed out in traditional programming, if an error happens early, the program might just silently terminate that thread.
+
+08:55.900 --> 08:58.080
+It's as if the attempt never existed.
+
+08:58.520 --> 08:59.060
+The amnesia.
+
+08:59.520 --> 09:00.200
+The amnesia.
+
+09:01.020 --> 09:05.140
+But Phlyxian's architecture argues that erasure is the enemy of truth.
+
+09:05.440 --> 09:06.080
+Ooh, that's good.
+
+09:06.600 --> 09:08.020
+Erasure is the enemy of truth.
+
+09:08.640 --> 09:12.560
+Making refusal available everywhere is a massive architectural decision.
+
+09:12.900 --> 09:15.720
+It forces every single failure out of the shadows.
+
+09:15.860 --> 09:17.140
+So you can't hide anything.
+
+09:17.460 --> 09:17.680
+No.
+
+09:18.500 --> 09:22.460
+When a process ends, it doesn't just vanish into the ether of freed memory.
+
+09:23.360 --> 09:26.680
+Refusal becomes a deliberate, authorized disposition.
+
+09:26.680 --> 09:28.220
+And it leaves a paper trail.
+
+09:28.560 --> 09:28.840
+Exactly.
+
+09:29.640 --> 09:36.660
+The mathematical record of that refusal carries a principle, which means the cryptographic identity of the entity who authorized the refusal.
+
+09:36.900 --> 09:37.200
+Okay.
+
+09:37.200 --> 09:42.620
+And a reason, which is the specific code or textual explanation for why it was refused.
+
+09:43.320 --> 09:48.800
+It transforms a silent, invisible failure into a permanent, mathematically intelligible record.
+
+09:48.800 --> 09:53.360
+That quote, erasure is the enemy of truth, that is really going to stick with me.
+
+09:53.580 --> 09:54.180
+It's powerful.
+
+09:54.580 --> 09:57.520
+It reminds me of how highly regulated industries handle hiring.
+
+09:57.860 --> 09:58.820
+Oh, that's a good analogy.
+
+09:59.140 --> 09:59.280
+Right.
+
+09:59.280 --> 10:03.360
+Imagine a defense contractor gets 1,000 resumes for a top-secret position.
+
+10:03.500 --> 10:03.740
+Okay.
+
+10:03.940 --> 10:08.840
+If a candidate is rejected at the very first stage, like just the initial resume screening,
+
+10:09.500 --> 10:15.300
+Human Resources doesn't just shred the resume, wipe the candidate's name from the database, and pretend they never applied.
+
+10:15.500 --> 10:16.800
+No, they legally can't.
+
+10:16.880 --> 10:17.440
+Exactly.
+
+10:17.820 --> 10:20.240
+You are legally required to record the rejection.
+
+10:20.800 --> 10:25.860
+You log the application date, the candidate's identity, and the exact reason they didn't move forward.
+
+10:25.860 --> 10:29.460
+Like they lacked a required security clearance or something.
+
+10:29.700 --> 10:29.820
+Right.
+
+10:30.340 --> 10:32.060
+You do that so you have a history.
+
+10:32.360 --> 10:39.980
+Because if that candidate files a lawsuit a year later claiming discrimination, or if the government audits your hiring practices, you have the proof.
+
+10:40.180 --> 10:41.340
+You need that paper trail.
+
+10:41.580 --> 10:41.780
+Yeah.
+
+10:41.940 --> 10:46.720
+You don't just delete the record to save database space when accountability is on the line.
+
+10:46.920 --> 10:48.820
+That captures the stakes perfectly.
+
+10:48.820 --> 10:55.660
+And it brings up a core guarantee of this mathematical calculus, which Flyxion calls terminal exclusivity.
+
+10:55.860 --> 10:56.860
+Okay.
+
+10:56.980 --> 10:57.520
+What does that mean?
+
+10:58.380 --> 11:05.640
+Because refused and collapsed are completely distinct terminal states, a single commitment can never, ever be both.
+
+11:06.080 --> 11:07.680
+It's mutually exclusive.
+
+11:08.360 --> 11:08.840
+Precisely.
+
+11:09.460 --> 11:14.000
+If it is refused, the mathematics prevent it from ever being collapsed into a final observation.
+
+11:14.760 --> 11:15.020
+Okay.
+
+11:15.360 --> 11:18.340
+And if it is collapsed, it cannot retroactively be refused.
+
+11:18.900 --> 11:21.340
+The life cycle is strictly acyclic.
+
+11:21.880 --> 11:23.440
+Time only moves in one direction.
+
+11:23.960 --> 11:24.960
+So no going back.
+
+11:24.960 --> 11:25.560
+No.
+
+11:25.900 --> 11:30.720
+Once you hit a terminal state, that specific commitment's life cycle journey is permanently locked.
+
+11:31.240 --> 11:31.460
+Okay.
+
+11:31.560 --> 11:39.100
+So if refusal is this conscious, deliberate choice that we log permanently, how does the system actually gather the evidence needed to make that choice?
+
+11:39.460 --> 11:41.240
+That's the million-dollar question.
+
+11:41.580 --> 11:41.780
+Right.
+
+11:41.820 --> 11:45.220
+Because you can't just have systems blindly refusing things without justification.
+
+11:45.620 --> 11:47.340
+You need proof that something is wrong.
+
+11:47.520 --> 11:49.480
+You need verifiable evidence.
+
+11:49.480 --> 11:55.580
+And that takes us into how this calculus handles verification, which frankly completely broke my brain at first glance.
+
+11:55.580 --> 11:56.820
+No, I don't blame you.
+
+11:57.000 --> 11:59.480
+It is just so counterintuitive to how we normally write software.
+
+12:00.240 --> 12:07.700
+It is deeply counterintuitive because it completely separates the act of judging evidence from the act of making a final decision.
+
+12:07.940 --> 12:08.780
+Walk me through it.
+
+12:08.780 --> 12:11.060
+Well, let's look at the mechanics.
+
+12:11.600 --> 12:17.140
+In the calculus, verification happens when a commitment is in that transformed state we talked about.
+
+12:17.280 --> 12:17.540
+Right.
+
+12:17.620 --> 12:18.540
+The data has been processed.
+
+12:18.980 --> 12:19.180
+Yeah.
+
+12:19.180 --> 12:27.840
+A verifier evaluates the transformed value against a specific set of rules, and then the path branches into two possible outcomes.
+
+12:28.120 --> 12:28.380
+Okay.
+
+12:28.660 --> 12:35.180
+If the verification is successful, the commitment moves to the verified state, and it carries what is called a witness.
+
+12:35.700 --> 12:35.940
+Okay.
+
+12:36.000 --> 12:37.320
+Let's unpack witness for a second.
+
+12:37.440 --> 12:40.460
+We aren't talking about, like, a person swearing on a Bible in a courtroom.
+
+12:40.700 --> 12:40.840
+No.
+
+12:41.080 --> 12:48.820
+In cryptography, a witness is a piece of mathematical data that proves a statement is true without you having to redo all the work yourself, right?
+
+12:48.820 --> 12:49.540
+Exactly.
+
+12:49.760 --> 12:51.900
+Like a zero-knowledge proof or a digital signature?
+
+12:52.240 --> 12:53.600
+That's the exact concept.
+
+12:54.120 --> 12:58.020
+The witness is cryptographic proof that the value satisfies the condition.
+
+12:58.580 --> 13:01.360
+So success yields a verified state with a witness.
+
+13:01.980 --> 13:04.640
+But what happens if the verification fails?
+
+13:05.200 --> 13:10.920
+The commitment moves to the verification-failed state, carrying an authenticated certificate of that failure.
+
+13:11.160 --> 13:11.280
+Right.
+
+13:11.460 --> 13:12.940
+Basically a digital red flag.
+
+13:13.120 --> 13:15.520
+But here is the critical nuance that shocked me.
+
+13:15.720 --> 13:16.160
+What's that?
+
+13:16.160 --> 13:19.700
+A failed verification does not end the commitment.
+
+13:20.200 --> 13:23.620
+Let's pause and emphasize that because it is brilliant.
+
+13:24.360 --> 13:30.420
+A negative result, a total failure to pass verification, leaves the commitment entirely live.
+
+13:30.960 --> 13:31.480
+But why?
+
+13:31.480 --> 13:38.360
+I mean, if I write a script right now in Python and I run an if statement that says, if the user is under 18, deny access.
+
+13:38.780 --> 13:39.080
+Right.
+
+13:39.280 --> 13:41.600
+The program just terminates the access right there.
+
+13:41.720 --> 13:43.600
+The failure is the end of the line.
+
+13:44.420 --> 13:48.700
+Why on earth would Flyxion's calculus keep a failed process alive?
+
+13:49.700 --> 13:52.480
+Because verification classifies evidence.
+
+13:52.860 --> 13:54.880
+It does not dispose of the continuation.
+
+13:54.880 --> 13:57.200
+Okay, run that by me one more time.
+
+13:57.760 --> 14:02.180
+A verifier's only job is to evaluate truth claims against an independent condition.
+
+14:02.500 --> 14:02.900
+That's it.
+
+14:03.340 --> 14:06.020
+It changes the evidentiary state of a commitment.
+
+14:06.740 --> 14:07.620
+So it's just a label.
+
+14:08.320 --> 14:09.020
+Essentially, yes.
+
+14:09.560 --> 14:17.100
+It basically says to the broader system, hey, here's a mathematically certified record that this value is incorrect or unsafe.
+
+14:17.340 --> 14:18.580
+But it doesn't act on it.
+
+14:18.580 --> 14:27.840
+No, it takes an authority, a designated principal holding a specific cryptographic capability, to actually look at that failed state and hit the refuse button.
+
+14:28.280 --> 14:29.160
+Oh, I see.
+
+14:29.580 --> 14:31.640
+It's exactly like a building inspector.
+
+14:32.100 --> 14:33.520
+Okay, I like where this is going.
+
+14:33.720 --> 14:35.600
+Let's say you're building a new house, right?
+
+14:35.940 --> 14:38.640
+And the city inspector comes in to look at the electrical panel.
+
+14:39.040 --> 14:39.340
+Okay.
+
+14:39.680 --> 14:42.580
+They test the circuits and they realize the wiring is totally faulty.
+
+14:42.760 --> 14:44.100
+It's a massive fire hazard.
+
+14:44.220 --> 14:44.900
+A total failure.
+
+14:44.900 --> 14:45.380
+Right.
+
+14:45.860 --> 14:49.780
+But the inspector doesn't show up the next morning with a wrecking ball to demolish the house.
+
+14:49.980 --> 14:50.820
+No, of course not.
+
+14:50.980 --> 14:53.440
+They don't have the authority to dispose of the project.
+
+14:53.880 --> 14:57.860
+They just staple a bright red failed inspection certificate to the front door.
+
+14:58.260 --> 14:58.620
+Yes.
+
+14:59.020 --> 15:00.680
+That's the verification failed state.
+
+15:01.220 --> 15:02.280
+The house is still standing.
+
+15:02.540 --> 15:04.460
+It's still an active construction project.
+
+15:04.740 --> 15:05.100
+Exactly.
+
+15:05.540 --> 15:10.100
+It takes the city planning board or the owner of the property, the actual disposition authority,
+
+15:10.100 --> 15:15.160
+to look at that red tag, review the evidence, and formally decide to bulldoze the project,
+
+15:15.500 --> 15:17.420
+which is the refuse action.
+
+15:18.060 --> 15:20.160
+That analogy perfectly illustrates the design.
+
+15:20.660 --> 15:24.340
+And that strict separation is absolutely vital for the future of modern software,
+
+15:24.820 --> 15:28.640
+especially as we integrate more autonomous agents and AI into our infrastructure.
+
+15:29.080 --> 15:30.480
+Because AI isn't perfect.
+
+15:30.760 --> 15:31.560
+Far from it.
+
+15:31.900 --> 15:37.980
+Think about how this architecture protects us against faulty AI or overzealous automated checking
+
+15:37.980 --> 15:38.500
+mechanisms.
+
+15:38.940 --> 15:39.180
+Right.
+
+15:39.180 --> 15:43.820
+If an automated verifier could silently kill a process the moment it found a discrepancy,
+
+15:44.520 --> 15:49.120
+you'd have algorithmic systems terminating massive financial operations or medical pipelines
+
+15:49.120 --> 15:51.160
+left and right without any human oversight.
+
+15:51.580 --> 15:52.660
+It would be total chaos.
+
+15:52.960 --> 15:57.780
+A slightly miscalibrated AI could shut down a hospital's entire intake system just because
+
+15:57.780 --> 15:59.940
+of a minor formatting error in a database.
+
+16:00.360 --> 16:00.720
+Exactly.
+
+16:01.160 --> 16:07.320
+By forcing the commitment into a live verification failed state, the calculus demands that an authorized
+
+16:07.320 --> 16:10.900
+principle make the final permanent call on a certified failure.
+
+16:11.100 --> 16:14.200
+So someone actually has to sign off on the destruction?
+
+16:14.720 --> 16:15.080
+Yes.
+
+16:15.600 --> 16:20.960
+It mandates a human or at least a significantly higher level authorized protocol in the loop.
+
+16:21.360 --> 16:25.280
+It prevents the machine from presuming the authority to dispose.
+
+16:25.280 --> 16:30.600
+It's a structural safeguard against the system quietly sweeping its own mistakes or its own
+
+16:30.600 --> 16:32.840
+overly rigid judgments under the rug.
+
+16:33.140 --> 16:33.860
+Beautifully put.
+
+16:34.560 --> 16:36.600
+The system basically says, I found an error.
+
+16:36.940 --> 16:39.160
+Here's the signed certificate proving the error.
+
+16:39.520 --> 16:40.700
+Now what do you want me to do with it?
+
+16:40.700 --> 16:44.960
+But this naturally leads to a massive structural vulnerability.
+
+16:45.580 --> 16:45.820
+Uh-oh.
+
+16:46.160 --> 16:46.720
+What is it?
+
+16:47.140 --> 16:52.800
+Well, if we are explicitly separating the gathering of evidence from the actual authority to dispose
+
+16:52.800 --> 16:57.540
+of a commitment, how does the calculus keep track of who is actually allowed to hit that
+
+16:57.540 --> 16:59.520
+refuse or collapse button?
+
+17:00.280 --> 17:01.400
+Oh, right.
+
+17:01.520 --> 17:05.460
+Because if anyone could just hit refuse, the entire system collapses.
+
+17:05.760 --> 17:06.080
+Exactly.
+
+17:06.080 --> 17:10.980
+I could just wander onto the network and refuse your completely valid verified bank transfer.
+
+17:11.420 --> 17:12.120
+Which would be bad.
+
+17:12.320 --> 17:12.840
+Very bad.
+
+17:13.240 --> 17:19.580
+So we have to look at how the calculus handles authority, delegation, and this is a wild real
+
+17:19.580 --> 17:23.140
+world case study from the paper, how this applies to large language models.
+
+17:23.420 --> 17:25.180
+Yeah, that case study is fascinating.
+
+17:25.700 --> 17:28.760
+Let's start with the fundamental mechanics of authority in this system.
+
+17:29.140 --> 17:29.320
+Okay.
+
+17:29.520 --> 17:33.840
+In the disposition calculus, authority is treated as a linear capability.
+
+17:34.760 --> 17:35.840
+Linear capability.
+
+17:36.080 --> 17:36.380
+Right.
+
+17:36.680 --> 17:41.140
+It can be shared as a static policy, meaning a specific group of people always have the
+
+17:41.140 --> 17:45.400
+right to do something, or it can be held exclusively by one entity at a time.
+
+17:45.800 --> 17:50.640
+Whenever we use the word linear in programming, we're usually talking about concepts derived
+
+17:50.640 --> 17:52.360
+from linear logic, right?
+
+17:52.600 --> 17:53.260
+Yes, exactly.
+
+17:53.480 --> 17:58.620
+Like the ideas introduced by Jean-Yves Girard in the 1980s, where a resource and memory can't
+
+17:58.620 --> 18:02.100
+just be infinitely copied or duplicated like a normal variable.
+
+18:02.580 --> 18:03.720
+You've hit the nail on the head.
+
+18:03.720 --> 18:10.160
+In standard programming, if I have a variable x equals 5, I can copy x a million times across
+
+18:10.160 --> 18:10.780
+my program.
+
+18:11.500 --> 18:14.160
+But a linear capability acts more like a physical object.
+
+18:14.720 --> 18:17.740
+An exclusive capability is held by one principle at a time.
+
+18:18.140 --> 18:18.460
+Okay.
+
+18:18.460 --> 18:22.780
+If I hold the cryptographic token that grants exclusive authority to collapse a commitment,
+
+18:23.220 --> 18:23.900
+you do not.
+
+18:24.400 --> 18:28.100
+I can, however, transfer that authority to you using a delegate record.
+
+18:28.320 --> 18:29.780
+So I can give it to you.
+
+18:29.920 --> 18:30.320
+Yes.
+
+18:30.820 --> 18:36.800
+But because authority is linear, the calculus guarantees what Flyxion calls conservation.
+
+18:37.560 --> 18:38.760
+Conservation of authority.
+
+18:39.020 --> 18:39.260
+Right.
+
+18:39.260 --> 18:43.760
+Delegating a capability moves it, it never, ever duplicates it.
+
+18:44.160 --> 18:46.080
+It's like handing you the keys to my car.
+
+18:46.200 --> 18:46.560
+Exactly.
+
+18:46.820 --> 18:49.920
+If I physically hand you the keys, I am no longer holding the keys.
+
+18:49.920 --> 18:53.200
+I can't hand you a copy of the keys while magically keeping the original.
+
+18:53.460 --> 18:56.900
+The total number of keys in existence remains exactly the same.
+
+18:57.400 --> 19:02.860
+And that physical constraint prevents authority from magically amplifying as it moves through
+
+19:02.860 --> 19:03.860
+a complex network.
+
+19:03.860 --> 19:07.780
+So no rogue AI accidentally giving itself admin rights.
+
+19:07.920 --> 19:08.380
+Exactly.
+
+19:08.940 --> 19:14.780
+You can't have a runaway loop where an AI system accidentally duplicates its own administrative
+
+19:14.780 --> 19:15.420
+privileges.
+
+19:15.740 --> 19:17.720
+Which is a very real fear right now.
+
+19:17.800 --> 19:18.160
+It is.
+
+19:18.720 --> 19:24.140
+And to prove how robust this is, Flyxion tests this entire architecture of authority against
+
+19:24.140 --> 19:26.260
+a real-world scenario from 2026.
+
+19:27.220 --> 19:27.780
+Oh, right.
+
+19:27.860 --> 19:29.140
+The neutron scattering facility.
+
+19:29.540 --> 19:29.860
+Yes.
+
+19:29.860 --> 19:36.080
+So this massive national neutron scattering facility was trying to figure out how to allocate
+
+19:36.080 --> 19:39.940
+its incredibly limited, very expensive laboratory time.
+
+19:40.260 --> 19:40.680
+High stakes.
+
+19:40.960 --> 19:41.860
+Very high stakes.
+
+19:42.340 --> 19:46.860
+They decided to use a large language model to compare and rank the thousands of highly
+
+19:46.860 --> 19:49.140
+complex scientific proposals they receive.
+
+19:49.660 --> 19:49.880
+Okay.
+
+19:49.980 --> 19:51.640
+This is the perfect stress test.
+
+19:51.940 --> 19:56.200
+You have an incredibly smart AI reading dense scientific proposals and scoring them.
+
+19:56.340 --> 19:56.500
+Right.
+
+19:56.500 --> 20:00.700
+A lot of people looking at that would think, well, the AI is doing all the heavy lifting.
+
+20:01.040 --> 20:02.140
+It's making the judgments.
+
+20:02.460 --> 20:05.160
+So the AI is basically making the decisions.
+
+20:05.580 --> 20:06.900
+It certainly looks that way.
+
+20:07.360 --> 20:10.920
+But how does this specific mathematical calculus view the LLM?
+
+20:11.280 --> 20:14.880
+It strictly segments the process into four distinct roles.
+
+20:15.060 --> 20:15.260
+Okay.
+
+20:15.340 --> 20:16.020
+Lay them out for me.
+
+20:16.520 --> 20:18.260
+First, you have a signal producer.
+
+20:18.640 --> 20:19.380
+Signal producer.
+
+20:19.380 --> 20:25.400
+This might be a basic embedding similarity algorithm that just flags if two proposals look
+
+20:25.400 --> 20:27.040
+suspiciously plagiarized.
+
+20:27.340 --> 20:28.100
+Just a little nudge.
+
+20:28.460 --> 20:28.860
+Exactly.
+
+20:29.560 --> 20:31.020
+It has no evidential standing.
+
+20:31.200 --> 20:33.940
+It just whispers a hint on an annotation channel.
+
+20:34.180 --> 20:34.340
+Okay.
+
+20:34.420 --> 20:34.860
+Roll two.
+
+20:35.280 --> 20:37.880
+Second, you have the evidence producer.
+
+20:38.320 --> 20:40.420
+In this case study, that is the LLM.
+
+20:40.760 --> 20:41.140
+Ah.
+
+20:41.680 --> 20:46.260
+The LLM reads the proposals, compares their scientific merit, and outputs a ranking.
+
+20:46.920 --> 20:47.440
+Okay.
+
+20:47.520 --> 20:47.960
+Roll three.
+
+20:47.960 --> 20:53.320
+Third, you have a verifier, which might be an automated deterministic script, checking
+
+20:53.320 --> 20:57.680
+the LLM's output to ensure the ranking math actually adds up to 100%.
+
+20:57.680 --> 20:59.000
+Just double-checking the homework.
+
+20:59.240 --> 20:59.440
+Right.
+
+20:59.980 --> 21:05.000
+And finally, fourth, you have the disposition authority, which is the Human Scientific Review
+
+21:05.000 --> 21:05.360
+Committee.
+
+21:05.800 --> 21:10.240
+So the AI is strictly cordoned off into role number two, just the evidence producer.
+
+21:10.560 --> 21:10.980
+Correct.
+
+21:11.580 --> 21:15.960
+The calculus grants the LLM the authority to write what is called a discharged record.
+
+21:16.460 --> 21:16.980
+Discharged.
+
+21:16.980 --> 21:18.060
+Okay.
+
+21:18.540 --> 21:23.300
+This means the LLM is authorized to deliver its ranking into the permanent ledger as evidence.
+
+21:23.540 --> 21:24.380
+But nothing more.
+
+21:24.920 --> 21:25.260
+Exactly.
+
+21:25.500 --> 21:27.980
+And this is the crux of the entire paper's philosophy.
+
+21:28.700 --> 21:35.200
+The LLM is explicitly mathematically denied the authority to verify, collapse, or refuse.
+
+21:35.200 --> 21:40.540
+So if I'm the listener, I'm thinking, what does this actually mean for me in practical terms?
+
+21:40.660 --> 21:40.780
+Right.
+
+21:41.440 --> 21:47.640
+It means we have a mathematical framework that ensures we can never accidentally let the AI hold the gavel.
+
+21:47.800 --> 21:48.020
+Never.
+
+21:48.020 --> 21:59.040
+Even if the AI outputs a perfectly accurate, beautifully reasoned ranking of scientific merit, the system statically prevents what Flyxion calls authority derivation.
+
+21:59.300 --> 21:59.560
+Yes.
+
+21:59.900 --> 22:08.220
+Producing a brilliant score, no matter how good that score is, does not magically grant the AI the capability token to actually dispose of the commitment.
+
+22:08.220 --> 22:12.240
+And this isn't just a policy written in some corporate HR handbook.
+
+22:12.460 --> 22:14.860
+It is enforced by the compiler itself.
+
+22:14.860 --> 22:16.420
+The actual code compiler.
+
+22:16.600 --> 22:16.800
+Yes.
+
+22:17.300 --> 22:21.200
+The compiler is the program that translates human written code into machine code.
+
+22:21.320 --> 22:21.500
+Right.
+
+22:22.000 --> 22:32.320
+If a programmer tries to write a line of code where the LLM attempts to collapse the commitment and finalize the decision, the compiler will look for the linear capability token required to execute that function.
+
+22:32.580 --> 22:33.580
+And it won't find it.
+
+22:33.840 --> 22:34.260
+Exactly.
+
+22:34.800 --> 22:39.680
+Since the LLM's function signature lacks that token, the program will literally not compile.
+
+22:39.880 --> 22:40.160
+Wow.
+
+22:40.400 --> 22:42.440
+It throws a syntax error before it even runs.
+
+22:42.440 --> 22:47.940
+It's like having a highly paid, incredibly brilliant junior analyst at a Wall Street consulting firm.
+
+22:48.000 --> 22:48.680
+Oh, I love this.
+
+22:48.800 --> 22:48.980
+Right.
+
+22:49.620 --> 22:52.760
+They spend three months researching a massive corporate merger.
+
+22:52.900 --> 22:59.920
+They build a flawless 500-page financial model, and they hand this deeply researched dossier to the executive committee.
+
+23:00.660 --> 23:01.820
+That dossier is evidence.
+
+23:02.100 --> 23:03.300
+It's a dispositional record.
+
+23:03.660 --> 23:03.900
+Yes.
+
+23:03.900 --> 23:13.780
+But if that junior analyst gets a big head, walks into the boardroom, bypasses the CEO, and tries to sign the final billion-dollar merger contract themselves.
+
+23:14.300 --> 23:15.080
+Which would be hilarious.
+
+23:15.480 --> 23:20.680
+The legal system, or in our case, the compiler, just violently rejects it.
+
+23:20.680 --> 23:26.120
+You can produce the best evidence in the world, but if you don't hold the cryptographic key, you are not the disposition authority.
+
+23:26.700 --> 23:33.700
+And the beauty of this is that if we look at the ledger after the fact, the providence of that decision is crystal clear to any auditor.
+
+23:33.940 --> 23:34.900
+Because it's all written or down.
+
+23:35.080 --> 23:35.280
+Right.
+
+23:35.760 --> 23:45.380
+The ledger will clearly show the LLM delivering the evidence, a verifier checking the math, and finally, the human committee appending the terminal collapse or refuse record.
+
+23:45.380 --> 23:45.800
+Right.
+
+23:46.360 --> 23:56.100
+If the LLM somehow managed to hack the system and bypass the committee, the ledger would show a terminal record written by a principal who mathematically lacked the capability to write it.
+
+23:56.200 --> 23:57.940
+Which would trigger alarm bells immediately.
+
+23:58.100 --> 23:58.320
+Yes.
+
+23:59.040 --> 24:02.700
+It makes systemic overreach instantly, cryptographically auditable.
+
+24:03.040 --> 24:03.300
+Okay.
+
+24:03.440 --> 24:06.100
+So we've mathematically handcuffed the AI.
+
+24:06.420 --> 24:08.220
+It can't authorize the final step.
+
+24:08.700 --> 24:13.400
+We know exactly what happens during a commitment's life, and we know exactly who is allowed to do it.
+
+24:13.680 --> 24:13.960
+We do.
+
+24:13.960 --> 24:24.400
+But if I'm the AI's programmer and I'm feeling malicious, what stops me from just going into the underlying database, deleting the human committee's refusal, and faking an approval?
+
+24:24.880 --> 24:26.220
+Ah, database tampering.
+
+24:26.420 --> 24:26.700
+Right.
+
+24:26.840 --> 24:30.540
+How does the memory of the system actually defend itself from being rewritten?
+
+24:30.920 --> 24:36.500
+To understand the system's defense mechanisms, we really have to look at the underlying data structure itself.
+
+24:36.620 --> 24:37.020
+Okay.
+
+24:37.020 --> 24:44.140
+The calculus does not use a standard relational database where you can just issue an update or delete command on a row.
+
+24:44.580 --> 24:46.020
+So no SQL injections here.
+
+24:46.140 --> 24:46.500
+Exactly.
+
+24:47.060 --> 24:49.740
+It relies on an append-only ledger of records.
+
+24:50.320 --> 24:57.340
+Every single time an action is taken, a new, cryptographically linked record is added to the absolute end of the list.
+
+24:57.840 --> 24:59.100
+The absolute end.
+
+24:59.100 --> 24:59.660
+Yes.
+
+25:00.020 --> 25:12.060
+You have a POP record to open a commitment, a bind record to attach data, transform, verify, refuse, collapse, and a few others for things like timeouts and discharges.
+
+25:12.280 --> 25:14.220
+So it's basically event sourcing.
+
+25:14.700 --> 25:15.960
+That's exactly what it is.
+
+25:16.160 --> 25:19.500
+It's just a chronological diary of everything that ever happened in the system.
+
+25:19.500 --> 25:20.420
+Exactly.
+
+25:20.820 --> 25:28.160
+But, you know, a diary is only useful if you can read it and accurately understand the current state of the world based on what's written.
+
+25:28.740 --> 25:29.140
+Sure.
+
+25:29.600 --> 25:34.680
+For that, the calculus uses a mathematical state machine function called replay.
+
+25:35.000 --> 25:35.360
+Replay.
+
+25:35.660 --> 25:35.960
+Yes.
+
+25:36.580 --> 25:42.240
+The replay function takes this chronological list of events and folds over them step by step.
+
+25:42.240 --> 25:50.420
+Applying each event to a blank slate to reconstruct the exact disposition state of every single commitment in the system.
+
+25:51.100 --> 25:51.120
+Wow.
+
+25:51.240 --> 25:52.540
+Starting from zero every time.
+
+25:52.960 --> 25:53.800
+Conceptually, yes.
+
+25:54.520 --> 26:00.800
+If the replay function succeeds without throwing an error, it proves that the ledger is mathematically and internally consistent.
+
+26:01.160 --> 26:02.360
+So it double checks the math.
+
+26:02.600 --> 26:02.920
+Right.
+
+26:03.200 --> 26:08.980
+It proves that every rule was followed, every witness was valid, and no terminal state was violated.
+
+26:08.980 --> 26:12.920
+And Flyxion didn't just theorize that this would work on a whiteboard.
+
+26:13.220 --> 26:14.220
+No, they didn't.
+
+26:14.480 --> 26:19.760
+They built a massive executable reference environment called the Laboratory to exhaustively check the math.
+
+26:19.940 --> 26:21.500
+It was a massive undertaking.
+
+26:22.060 --> 26:28.700
+They computationally generated over 15,000 different possible ledgers, some valid, some intentionally broken,
+
+26:29.360 --> 26:36.180
+and then analyzed over 370,000 different linearizations of those ledgers, just trying to break their own logic.
+
+26:36.180 --> 26:40.100
+They were actively hunting for what they call minimal countermodels.
+
+26:40.780 --> 26:42.060
+What's a minimal countermodel?
+
+26:42.340 --> 26:49.380
+It's essentially the smallest possible combination of events that causes a logical system to fail or act inconsistently.
+
+26:49.620 --> 26:51.620
+Like finding the tiny crack in the dam.
+
+26:51.800 --> 26:52.260
+Exactly.
+
+26:53.000 --> 27:00.640
+The fact that the laboratory could not find any valid countermodels that broke the core rules is a massive testament to the rigor of the calculus.
+
+27:00.960 --> 27:01.600
+That's incredible.
+
+27:01.600 --> 27:08.140
+And one of the most conceptually beautiful things to emerge from that rigorous testing is the idea of history twins.
+
+27:08.480 --> 27:10.360
+Oh, I love this concept.
+
+27:10.620 --> 27:11.480
+It's so cool.
+
+27:11.900 --> 27:19.880
+History twins are two different histories, like two completely different ledgers, that produce the exact same final output.
+
+27:20.060 --> 27:20.260
+Right.
+
+27:20.420 --> 27:23.920
+But their pasts, the ghosts of how they got there, are completely different.
+
+27:24.040 --> 27:24.360
+Right.
+
+27:24.360 --> 27:28.160
+Imagine two ledgers running parallel banking systems.
+
+27:28.280 --> 27:28.500
+Okay.
+
+27:28.640 --> 27:39.400
+In ledger A, a commitment for a loan application is opened, bound with data, transformed by a risk model, verified, and finally collapsed to yield a specific observation.
+
+27:40.000 --> 27:42.040
+Let's say the loan is approved for $100,000.
+
+27:42.400 --> 27:43.120
+Standard process.
+
+27:43.120 --> 27:50.080
+Now, in ledger B, the exact same sequence happens for that specific loan application, yielding $100,000.
+
+27:50.680 --> 27:50.960
+Okay.
+
+27:51.280 --> 27:59.240
+But in the background of ledger B, a completely different loan application was opened, evaluated, and quietly refused by a risk manager.
+
+27:59.640 --> 28:09.300
+So, if you were just a standard auditor who only looks at the final output of the successful loan, both ledgers just say, result, approved for $100,000.
+
+28:09.660 --> 28:09.940
+Yes.
+
+28:09.940 --> 28:12.260
+A simple value check can't tell them apart at all.
+
+28:12.260 --> 28:12.940
+Exactly.
+
+28:13.480 --> 28:18.620
+If your lens of observation only looks at final, collapsed values, the twins are identical.
+
+28:18.900 --> 28:20.100
+They look exactly the same.
+
+28:20.520 --> 28:24.680
+But the calculus formally introduces the concept of a collapsed lens.
+
+28:24.960 --> 28:26.360
+A collapsed lens.
+
+28:26.780 --> 28:34.380
+If an auditor applies a lens that reports on refusals, suddenly ledger A and ledger B look entirely different.
+
+28:34.580 --> 28:35.120
+Oh, wow.
+
+28:35.600 --> 28:37.200
+Well, consider another set of twins.
+
+28:37.200 --> 28:49.860
+Again, a standard lens checking only the value sees them as identical.
+
+28:50.200 --> 28:50.380
+Yep.
+
+28:50.380 --> 28:54.080
+But a lens checking authority distinguishes them immediately.
+
+28:54.340 --> 28:57.020
+It proves that history fundamentally matters.
+
+28:57.020 --> 29:02.780
+Two systems can arrive at the exact same answer, but how they got there creates a fundamentally different reality.
+
+29:02.980 --> 29:03.220
+Yes.
+
+29:03.480 --> 29:08.340
+And an auditor or a regulator can actually detect that reality if they use the right mathematical lens.
+
+29:08.340 --> 29:18.640
+And this brings up a deeply profound theorem in the paper called the causal shuffle theorem, which connects to a concept from computer science known as Mazurkiewicz traces.
+
+29:18.980 --> 29:19.960
+Oh, this is fascinating.
+
+29:20.400 --> 29:25.000
+And Tony Mazurkiewicz developed trace theory in the 1970s to understand concurrent systems, right?
+
+29:25.340 --> 29:26.940
+You know your computer science history.
+
+29:26.940 --> 29:27.740
+A little bit.
+
+29:28.180 --> 29:32.920
+Because when you look at a ledger, it's just a single straight chronological line of events.
+
+29:33.120 --> 29:33.380
+Right.
+
+29:33.480 --> 29:34.240
+One after the other.
+
+29:34.480 --> 29:41.160
+But in the real world, massive systems have independent events happening at the exact same millisecond in totally different parts of the world.
+
+29:41.440 --> 29:41.920
+Precisely.
+
+29:42.240 --> 29:52.580
+Let's say you are opening a commitment on a server in New York, and I am refusing a totally unrelated commitment on a server in Tokyo.
+
+29:52.900 --> 29:53.320
+Okay.
+
+29:53.320 --> 29:57.880
+The global ledger has to record one event before the other.
+
+29:58.340 --> 29:59.260
+It has to pick a sequence.
+
+29:59.840 --> 30:05.820
+But physically and logically, the order doesn't actually matter, because our actions have nothing to do with each other.
+
+30:06.100 --> 30:13.380
+So the causal shuffle theorem proves that the exact chronological order of independent records doesn't matter for the replay function?
+
+30:13.980 --> 30:14.340
+Right.
+
+30:14.900 --> 30:22.980
+If the server swaps the order of your Tokyo action and my New York action, replay still reconstructs the exact same final state of the world.
+
+30:23.320 --> 30:29.020
+The only records that must strictly follow a chronological order are the dependent records.
+
+30:29.740 --> 30:32.500
+Meaning actions operating on the very same commitment.
+
+30:33.180 --> 30:33.540
+Exactly.
+
+30:34.020 --> 30:38.260
+Like, you mathematically cannot verify a commitment before you've transformed it.
+
+30:38.420 --> 30:41.560
+That violates the arrow of time for that specific entity.
+
+30:41.560 --> 30:42.560
+Yes.
+
+30:42.560 --> 30:49.320
+The sequence of records for a single commitment must obey what Flyxion calls the ledger path lemma.
+
+30:49.980 --> 30:51.440
+Ledger path lemma.
+
+30:51.980 --> 30:57.200
+They must trace a legal, uninterrupted, acyclic path through the life cycle.
+
+30:57.660 --> 31:01.700
+But independent records can shuffle around without breaking the universe.
+
+31:01.700 --> 31:04.340
+That's so wild to think about.
+
+31:05.240 --> 31:10.800
+It proves that the strict total ordering imposed by a central database server is often incidental.
+
+31:11.120 --> 31:13.760
+What actually matters is causal dependence.
+
+31:14.700 --> 31:15.560
+Okay, but hold on.
+
+31:16.040 --> 31:20.600
+I'm going to jump on a vulnerability here, and this goes back to my question about a malicious programmer.
+
+31:20.860 --> 31:21.140
+Hit me.
+
+31:21.140 --> 31:30.480
+You're saying replay reads the ledger, checks all the causal paths, applies the ledger path lemma, and mathematically proves that everything is internally valid.
+
+31:30.640 --> 31:30.900
+Yes.
+
+31:31.160 --> 31:32.720
+But what if I am a bad actor?
+
+31:33.360 --> 31:38.920
+What if I do something terrible, like an illegal authorization, and it gets recorded at the very end of the ledger?
+
+31:39.120 --> 31:39.340
+Okay.
+
+31:39.340 --> 31:42.060
+To hide it, I don't try to change the past.
+
+31:42.200 --> 31:47.200
+I just take a pair of digital scissors and snip off the last five records of the ledger entirely.
+
+31:47.460 --> 31:47.620
+Oh.
+
+31:48.220 --> 31:48.660
+Truncation.
+
+31:48.980 --> 31:49.380
+Right.
+
+31:50.120 --> 31:52.280
+The remaining ledger is still perfectly valid, right?
+
+31:52.580 --> 31:54.580
+The causal paths still make sense.
+
+31:54.780 --> 31:57.080
+They just look like they haven't finished yet.
+
+31:57.420 --> 31:57.980
+That's true.
+
+31:58.440 --> 32:04.300
+If the ledger can't mathematically prove it wasn't truncated, isn't the whole history at risk of a massive cover-up?
+
+32:04.300 --> 32:12.560
+That is a brilliant deduction, and it is exactly what Flyxion formally defines as the prefix indistinguishability theorem.
+
+32:13.380 --> 32:15.220
+Prefix indistinguishability.
+
+32:15.480 --> 32:15.680
+Yeah.
+
+32:16.040 --> 32:19.900
+The calculus openly and honestly acknowledges this mathematical limit.
+
+32:20.540 --> 32:21.140
+Okay.
+
+32:21.320 --> 32:23.360
+So it knows it has a weak spot.
+
+32:23.560 --> 32:23.800
+Yes.
+
+32:24.220 --> 32:31.440
+The replay function can absolutely prove that a ledger is mathematically valid, and that whatever is written down could have happened.
+
+32:31.720 --> 32:31.900
+Right.
+
+32:31.900 --> 32:35.240
+But it fundamentally cannot prove that the ledger wasn't truncated.
+
+32:35.980 --> 32:40.380
+A ledger with the last five records deleted is simply a prefix of the true ledger.
+
+32:40.540 --> 32:40.740
+Right.
+
+32:40.780 --> 32:41.380
+The beginning part.
+
+32:41.860 --> 32:47.320
+And in formal logic, every prefix of an admissible ledger is, by definition, also admissible.
+
+32:47.860 --> 32:51.720
+To the system, it just looks like you're viewing the ledger at an earlier point in time.
+
+32:52.180 --> 32:53.220
+So how do we fix it?
+
+32:53.620 --> 32:58.740
+If the internal math can't stop someone from just deleting the end of the story, how do we secure the system?
+
+32:58.740 --> 33:01.920
+You can't fix it from within the ledger itself.
+
+33:02.660 --> 33:05.260
+To prove completeness, you need an external anchor.
+
+33:05.860 --> 33:06.560
+An external anchor.
+
+33:07.100 --> 33:10.320
+You need something outside the history to vouch for the history.
+
+33:11.100 --> 33:16.420
+In modern cryptography, this usually means using something like a hash chain or a Merkle tree.
+
+33:16.820 --> 33:20.940
+Where each block of data contains a cryptographic fingerprint of the previous block.
+
+33:20.940 --> 33:28.840
+Exactly. And you periodically take that fingerprint, that signed checkpoint, and you publish it to an independent external witness.
+
+33:29.300 --> 33:32.520
+Like a public transparency log or a distributed blockchain.
+
+33:32.920 --> 33:33.140
+Right.
+
+33:33.820 --> 33:40.900
+The ledger vouches for its own internal contents, but you rely on the outside witness to prove that nothing is missing from the end.
+
+33:41.320 --> 33:42.460
+Oh, that makes so much sense.
+
+33:42.460 --> 33:50.320
+If someone snips the last five records off, the external transparency log will show a fingerprint that no longer matches the truncated ledger.
+
+33:50.740 --> 33:56.660
+The system doesn't pretend to be magically secure in a vacuum. It knows exactly where its mathematical borders are.
+
+33:56.860 --> 33:57.280
+Exactly.
+
+33:57.780 --> 34:03.140
+Okay, so the ledger tracks everything perfectly, and we use external hash chains to make sure nothing is deleted.
+
+34:03.380 --> 34:03.540
+Right.
+
+34:03.800 --> 34:09.020
+But what if a process doesn't do something explicitly wrong? What if it just does nothing?
+
+34:09.500 --> 34:11.180
+Ah, the stalling problem.
+
+34:11.180 --> 34:16.800
+Right. What prevents a process from just stalling out forever, leaving a commitment hanging in digital limbo?
+
+34:17.240 --> 34:19.740
+This is a huge issue in distributed systems.
+
+34:20.080 --> 34:27.680
+And that brings us to the final major innovation, linear types and what I am calling the anti-ghosting protocol.
+
+34:28.000 --> 34:36.280
+I love that name. This is where the calculus brilliantly bridges the gap between what happened in the past and what must happen in the future.
+
+34:36.660 --> 34:37.340
+Okay, explain.
+
+34:37.340 --> 34:42.260
+We talked earlier about linear logic regarding the authority to dispose, right?
+
+34:42.640 --> 34:43.700
+Yes, the car keys analogy.
+
+34:44.080 --> 34:52.480
+Okay, well, the calculus also uses a highly strict linear type system to manage the actual right to advance a commitment through its life cycle.
+
+34:52.900 --> 34:54.720
+Let's make sure everyone is on the same page.
+
+34:54.720 --> 35:00.240
+When a commitment is opened, the system generates a linear right to advance it.
+
+35:00.500 --> 35:00.740
+Correct.
+
+35:01.060 --> 35:04.680
+And because it's a linear type, the fundamental rules of the universe apply.
+
+35:05.100 --> 35:08.300
+This resource cannot be created out of nothing, and it cannot be destroyed.
+
+35:08.680 --> 35:09.740
+That is the core of it.
+
+35:10.460 --> 35:14.020
+Linear resources cannot be duplicated, and they cannot be discarded.
+
+35:14.020 --> 35:18.780
+Let's look at duplication first, because it solves a massive headache in computer science.
+
+35:19.060 --> 35:20.080
+Oh, race conditions.
+
+35:20.380 --> 35:20.560
+Right.
+
+35:21.080 --> 35:28.520
+If process A holds the right to advance a specific commitment, the operating system cannot duplicate that right and hand a copy to process B.
+
+35:28.880 --> 35:31.220
+Which formally prevents race conditions.
+
+35:31.220 --> 35:40.220
+You cannot have two parallel components of a massive program trying to collapse or refuse the exact same commitment at the exact same millisecond.
+
+35:41.080 --> 35:42.200
+The compiler catches it.
+
+35:42.660 --> 35:43.020
+Exactly.
+
+35:43.300 --> 35:54.360
+The compiler, again, before the program is even allowed to run, will analyze the code, detect that a linear variable is being passed to two different functions at once, and it will throw a fatal error.
+
+35:54.680 --> 35:58.700
+So no two people can try to steer the exact same car at the exact same time.
+
+35:59.000 --> 35:59.520
+Precisely.
+
+35:59.520 --> 36:03.440
+But the other side of the linear type coin is discarding.
+
+36:03.860 --> 36:05.740
+You can't just throw the right away.
+
+36:06.420 --> 36:10.120
+And that is the mechanism that prevents a prunxis from just stopping.
+
+36:10.940 --> 36:16.800
+In a standard programming language like Python or JavaScript, a program can just terminate.
+
+36:16.960 --> 36:17.120
+Right.
+
+36:17.200 --> 36:18.000
+It just hits the end.
+
+36:18.440 --> 36:24.100
+It can reach the end of its code block, exit, and leave a bunch of database transactions halfway finished.
+
+36:24.220 --> 36:25.300
+Silent abandonment.
+
+36:25.840 --> 36:27.500
+The system just forgets it was doing something.
+
+36:27.660 --> 36:28.040
+Yes.
+
+36:28.240 --> 36:28.380
+Yeah.
+
+36:28.380 --> 36:40.500
+But here, if a program is actively holding a live right to advance a commitment, and it tries to just exit, terminate, or return without disposing of that linear right, the program will not type check.
+
+36:40.580 --> 36:40.760
+Wow.
+
+36:40.760 --> 36:44.640
+It is mathematically impossible to silently abandon a commitment.
+
+36:44.640 --> 36:57.560
+You are physically forced by the grammar of the language itself to either hand that right to another process, advance the commitment to the next logical stage, or explicitly hit the terminal refuse button.
+
+36:57.560 --> 37:00.860
+It is the ultimate anti-ghosting protocol for software.
+
+37:01.140 --> 37:01.820
+It really is.
+
+37:01.940 --> 37:04.020
+You can't just leave a commitment on red.
+
+37:04.020 --> 37:10.320
+The physics of the system force you to either take the next step or explicitly write down, I am refusing this and here is why.
+
+37:10.440 --> 37:11.720
+You have to provide closure.
+
+37:11.720 --> 37:18.600
+And this strict enforcement leads to the crowning mathematical proof of the paper, the theorem of eventual disposition.
+
+37:19.400 --> 37:20.480
+Eventual disposition.
+
+37:20.920 --> 37:21.180
+Yes.
+
+37:21.680 --> 37:33.280
+The calculus guarantees that every single commitment introduced into the system will eventually reach a terminal state, either refused or collapsed, provided four specific real-world conditions are met.
+
+37:33.840 --> 37:34.940
+What are the conditions?
+
+37:34.940 --> 37:38.740
+Because guarantees in computer science always have a catch.
+
+37:38.880 --> 37:41.720
+You can't just mathematically prove that a computer won't freeze.
+
+37:42.480 --> 37:46.860
+You're exactly right, which is why Flyxion maps out the boundaries of physical reality here.
+
+37:47.320 --> 37:48.320
+First, fair scheduling.
+
+37:48.860 --> 37:49.120
+Meaning?
+
+37:49.500 --> 37:54.600
+This means the operating system must actually give the program CPU time to run.
+
+37:55.220 --> 38:00.240
+If the computer loses power or the server is throttled, the math can't save you.
+
+38:00.580 --> 38:01.040
+Fair enough.
+
+38:01.860 --> 38:02.500
+Condition two.
+
+38:02.500 --> 38:05.180
+Second, terminating transformations.
+
+38:05.860 --> 38:11.200
+If you run a data transformation function on a commitment, that function cannot go into an infinite loop.
+
+38:11.440 --> 38:13.500
+It must eventually finish its calculation.
+
+38:13.980 --> 38:14.860
+Okay, that makes sense.
+
+38:15.620 --> 38:15.880
+Third.
+
+38:16.300 --> 38:17.780
+Third, deciding verifiers.
+
+38:18.240 --> 38:22.480
+The cryptographic verifier must actually return a definitive yes or no answer.
+
+38:23.000 --> 38:25.760
+It can't just hang forever trying to parse corrupted data.
+
+38:26.060 --> 38:31.780
+Okay, those first three are basically saying assuming the hardware and the basic code actually function properly.
+
+38:32.500 --> 38:33.460
+Basically, yeah.
+
+38:34.000 --> 38:39.780
+But wait, even with an anti-ghosting protocol, you're constantly relying on the real world to interact with the system.
+
+38:40.360 --> 38:41.680
+What is the fourth condition?
+
+38:42.200 --> 38:44.100
+The fourth is responsive obligations.
+
+38:44.600 --> 38:47.920
+And this directly addresses the messy reality of the real world.
+
+38:48.360 --> 38:50.500
+Because the real world is very messy.
+
+38:50.500 --> 38:54.820
+Very often, a commitment is paused, waiting on an external party.
+
+38:55.600 --> 38:57.460
+Let's go back to our LLM case study.
+
+38:57.820 --> 38:59.260
+Okay, the neutron facility.
+
+38:59.760 --> 39:01.260
+The LLM produces the ranking.
+
+39:01.660 --> 39:06.640
+And the system halts, waiting for the Human Scientific Review Committee to collapse or refuse it.
+
+39:06.840 --> 39:07.060
+Right.
+
+39:07.060 --> 39:12.460
+What if the committee members all go on a month-long vacation and just never log into the portal?
+
+39:13.000 --> 39:13.200
+Right.
+
+39:13.660 --> 39:15.440
+The software is doing its job perfectly.
+
+39:15.620 --> 39:20.500
+The compiler is screaming that the write can't be discarded, but the humans are ghosting the software.
+
+39:20.980 --> 39:21.420
+Exactly.
+
+39:21.940 --> 39:23.540
+How does the calculus handle that?
+
+39:24.360 --> 39:27.920
+It physically can't force a human to sit down and click a button.
+
+39:28.560 --> 39:34.300
+To handle the unreliability of humans, the calculus introduces a specific timeout record.
+
+39:34.560 --> 39:35.520
+A timeout record.
+
+39:35.520 --> 39:38.700
+Let's apply this to a high-speed algorithmic financial trait.
+
+39:39.560 --> 39:42.560
+Let's say your server initiates a massive currency swap.
+
+39:42.940 --> 39:46.440
+And it is waiting for the counterparty server in London to verify the funds.
+
+39:46.740 --> 39:46.940
+Okay.
+
+39:47.340 --> 39:51.080
+The protocol says it expects a response within 48 hours.
+
+39:51.620 --> 39:57.640
+If 48 hours pass, an independent clock authority issues a certified timeout record into the ledger.
+
+39:57.920 --> 39:58.520
+Got it.
+
+39:58.860 --> 40:01.720
+Now, here's the brilliant counterintuitive part.
+
+40:02.120 --> 40:05.440
+The timeout does not automatically refuse the commitment.
+
+40:06.060 --> 40:06.260
+Wait.
+
+40:06.500 --> 40:07.100
+Why not?
+
+40:07.740 --> 40:12.720
+If a legal deadline passes on a trade, shouldn't the system just fail the transaction automatically and protect your money?
+
+40:12.720 --> 40:19.760
+Because an automatic algorithmic refusal would be a disposition without an authorized, accountable decision.
+
+40:20.260 --> 40:20.740
+Ah.
+
+40:20.820 --> 40:22.880
+It would be the machine acting on its own.
+
+40:23.880 --> 40:29.040
+Instead, the timeout record turns the silence into a certified cryptographic fact.
+
+40:29.180 --> 40:29.620
+Wow.
+
+40:29.620 --> 40:36.480
+It says to the ledger, I formally certify that 48 hours passed and the London server did not respond.
+
+40:37.280 --> 40:37.580
+Okay.
+
+40:37.760 --> 40:38.220
+Then what?
+
+40:38.560 --> 40:43.980
+The local program holding the linear write is then forced by the compiler to deal with that new fact.
+
+40:43.980 --> 40:49.140
+The programmer who wrote the trading bot has to write an explicit branch of code that says,
+
+40:49.140 --> 40:56.080
+if a timeout occurs, then my automated principal agent explicitly refuses the commitment because of the missed deadline.
+
+40:56.080 --> 41:01.660
+So the software must actively authorize the refusal based on the certified evidence of silence.
+
+41:01.860 --> 41:02.280
+Exactly.
+
+41:02.760 --> 41:04.600
+That is unbelievably elegant.
+
+41:05.260 --> 41:07.140
+Silence isn't treated as an absence of data.
+
+41:07.420 --> 41:10.700
+The silence itself becomes cryptographically verifiable data.
+
+41:10.860 --> 41:11.940
+Yes, exactly.
+
+41:11.940 --> 41:19.320
+And the system still forces an authorized party, even if it's your local automated agent, to take full legal responsibility for killing the process.
+
+41:19.800 --> 41:22.320
+It creates total inescapable accountability.
+
+41:23.220 --> 41:27.740
+There are no dark corners where processes just fade away due to a network timeout.
+
+41:28.400 --> 41:35.600
+Everything is dragged into the light of the ledger, whether it succeeds, fails, or is simply ignored by the other side.
+
+41:35.820 --> 41:37.920
+Which brings us to the end of our journey today.
+
+41:38.260 --> 41:39.160
+It's been quite a ride.
+
+41:39.160 --> 41:46.400
+If you take a step back and look at what Flyxion has built, we have moved from the traditional amnesiac view of computation,
+
+41:46.740 --> 41:54.180
+just calculating inputs into outputs and forgetting the rest, to a world where computation is a witnessed, legally rigorous life cycle.
+
+41:54.500 --> 41:55.440
+It's a huge leap.
+
+41:56.060 --> 42:02.040
+We explored the immense architectural power of refusal, ensuring that silent failures are a thing of the past.
+
+42:02.520 --> 42:06.160
+We saw the strict mathematical separation of evidence from authority.
+
+42:06.540 --> 42:08.140
+Sorry again to the AI models.
+
+42:08.140 --> 42:11.980
+You can write the brilliant dossier, but you physically cannot sign the contract.
+
+42:12.360 --> 42:13.200
+They'll have to deal with it.
+
+42:13.520 --> 42:22.000
+And we saw how linear typing acts as the ultimate anti-ghosting protocol, forcing software to clean up its historical messes and never abandon a task.
+
+42:22.160 --> 42:26.500
+It is an absolute blueprint for the future of software in high-stakes environments.
+
+42:27.040 --> 42:29.000
+It doesn't pretend that the world is perfect.
+
+42:29.000 --> 42:36.260
+It acknowledges that network errors happen, humans fail to respond, and algorithmic evidence can be deeply flawed.
+
+42:36.420 --> 42:36.640
+Yeah.
+
+42:36.980 --> 42:45.320
+But it ensures that every single one of those messy, chaotic human realities is recorded, auditable, and forever accountable.
+
+42:45.320 --> 42:50.680
+But there's one final thought I want to leave you with, because it's the question that has been nagging at me this entire time.
+
+42:50.880 --> 42:51.180
+What's that?
+
+42:52.320 --> 42:56.920
+This entire calculus is built on the absolute unbreakable rule that you cannot revise the past.
+
+42:57.000 --> 42:57.120
+Right.
+
+42:57.940 --> 42:59.860
+The ledger is append only.
+
+43:00.240 --> 43:01.500
+Terminal states are exclusive.
+
+43:01.780 --> 43:03.300
+Erasure is the enemy of truth.
+
+43:03.420 --> 43:03.920
+All true.
+
+43:03.920 --> 43:06.380
+But you are human.
+
+43:06.600 --> 43:08.020
+What if you just make an honest mistake?
+
+43:08.360 --> 43:16.960
+What if you legally and officially collapse a financial contract, and then you realize there was a typo in the amount, and you disauthorize sending a million dollars instead of 10,000?
+
+43:17.280 --> 43:18.260
+That would be a bad day.
+
+43:18.440 --> 43:18.680
+Right.
+
+43:18.980 --> 43:20.540
+You can't erase the terminal record.
+
+43:20.800 --> 43:22.780
+The math forbids you from rewriting history.
+
+43:22.960 --> 43:24.040
+Are you just doomed?
+
+43:24.620 --> 43:24.880
+Nope.
+
+43:25.160 --> 43:25.880
+You aren't doomed.
+
+43:26.200 --> 43:30.620
+The calculus is rigorous, but it provides a mechanism for human reality.
+
+43:31.220 --> 43:33.140
+It's a concept called compensation.
+
+43:33.920 --> 43:34.800
+Compensation.
+
+43:35.160 --> 43:35.420
+Right.
+
+43:35.940 --> 43:38.680
+You can issue what is called a compensates record.
+
+43:39.260 --> 43:46.800
+It creates a brand new, fresh commitment, but it permanently and cryptographically links it to the old terminal commitment.
+
+43:47.120 --> 43:47.900
+Oh, I see.
+
+43:47.900 --> 43:54.440
+It essentially says to the ledger, I am starting over to legally fix the massive mess I made in Commitment A.
+
+43:55.260 --> 43:57.660
+It is the ultimate expression of computational accountability.
+
+43:58.160 --> 44:00.220
+You are absolutely allowed to fix your errors.
+
+44:00.540 --> 44:02.940
+The system doesn't trap you in a mistake forever.
+
+44:02.940 --> 44:12.640
+But the scar of the original mistake, the fact that it happened, and the documented reason you had to issue a fix, remains permanently visible in the ledger for the rest of time.
+
+44:13.140 --> 44:17.260
+You can heal the error, but the scar remains on the ledger forever.
+
+44:17.940 --> 44:23.800
+Something for you to mull over the next time you casually hit undo on your keyboard and watch your mistake vanish into thin air.
+
+44:23.800 --> 44:28.600
+Thank you for joining us on this deep dive into Flyxion's brilliant architectural blueprint.
+
+44:28.980 --> 44:29.820
+We'll catch you next time.
+
+44:29.820 --> 44:31.100
+I'll see you next time.
+
+44:31.100 --> 44:31.600
+Bye-bye.
+
+44:31.600 --> 44:31.920
+Don't hear you.
+
+44:31.920 --> 44:32.600
+Bye-bye.
+
+44:32.600 --> 44:33.180
+Bye-bye.
+
+44:33.180 --> 44:33.460
+Bye-bye.
+
+44:33.600 --> 44:34.160
+Bye-bye.
+
+44:34.460 --> 44:34.900
+Bye-bye.
+
+44:35.020 --> 44:35.360
+Bye-bye.
+
+44:35.360 --> 44:35.580
+Bye-bye.
+
+44:36.060 --> 44:36.220
+Bye-bye.
+
+44:36.320 --> 44:36.520
+Bye-bye.
+
+44:36.840 --> 44:36.900
+Bye-bye.
+
+44:36.900 --> 44:37.640
+Bye-bye.
+
+44:37.660 --> 44:38.220
+Bye-bye.
+
+44:38.220 --> 44:38.440
+Bye-bye.
+
+44:38.440 --> 44:38.980
+Bye-bye.
+
+44:39.620 --> 44:40.080
+Bye-bye.
+
+44:40.080 --> 44:40.300
+Bye-bye.
+
+44:40.660 --> 44:42.100
+Bye-bye.
+
+44:42.100 --> 44:42.480
+Bye-bye.
+
+44:42.480 --> 44:43.000
+Bye-bye.
+
+44:43.000 --> 44:43.400
+Bye-bye.
+
+44:43.400 --> 44:43.760
+Bye-bye.
+
+44:43.840 --> 44:45.280
+Bye-bye.
+
+44:45.360 --> 44:45.580
+Bye-bye.
+
+44:45.580 --> 44:46.420
+Bye-bye.
+
+44:46.420 --> 44:47.460
+Bye-bye.
+
+44:47.460 --> 44:48.380
+Bye-bye.
+
+44:48.380 --> 44:48.580
+Bye-bye.
+
+44:48.580 --> 44:49.460
+Bye-bye.
+
+44:49.700 --> 44:50.400
+Bye-bye.
+
+44:50.400 --> 44:50.860
+Bye-bye.
+
+44:50.880 --> 44:51.200
+Bye-bye.
+
+44:51.720 --> 44:52.300
+Bye-bye.
+
+44:52.340 --> 44:54.560
+Bye-bye.
+

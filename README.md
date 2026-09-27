@@ -1,20 +1,32 @@
 # The Portable Warrant: Evidence at the Boundary
 
-Publication source distribution for the SCC warrant-preservation paper. The paper is explanatory; the normative software interface lives in the versioned `spec/` directory of `scc-reference`.
+[The Calculus of Disposition](https://standardgalactic.github.io/portable-warrant/calculus-of-disposition.pdf)  — *Textbook*
 
-## Build
+[Continuable Sutability](https://standardgalactic.github.io/portable-warrant/continuable-suitability.pdf)
 
-Run `make` with a LaTeX installation containing `pdflatex` and BibTeX. `make verify` checks the distribution manifest after it has been generated.
+[Task Sufficient Preservation](https://standardgalactic.github.io/portable-warrant/task-sufficient-preservation.pdf)
 
-## Reproducibility snapshot
+[The Uses of the Unfinished](https://standardgalactic.github.io/portable-warrant/unfinished.pdf)
 
-This release is bound to `scc-reference` 0.4.2 (Portable Kernel). The captured Python suite reports 34 passing tests. BASIC and Forth sources are portability profiles; native execution is not claimed by this snapshot.
+[Verification Boundaries](https://standardgalactic.github.io/portable-warrant/verification-boundaries.pdf)
 
-## Scope
+[The Portable Warrant](https://standardgalactic.github.io/portable-warrant/portable-warrant.pdf)
 
-The software does not establish that a system is universally safe. It provides mechanisms for refusing classes of warrant transfer when preservation evidence is absent under declared transformations, domains, and trusted-computing-base assumptions.
+# In Progress
 
+[Verification without Correspondence](https://standardgalactic.github.io/portable-warrant/working/verification-without-correspondence.pdf)
 
-## Expanded theoretical core
+[Answerable Domains](https://standardgalactic.github.io/portable-warrant/working/answerable-domains.pdf)
 
-The current monograph adds a warrant algebra (attenuation, widening, sequential composition, joins, and explicit non-laws), a dedicated temporal-warrant treatment, a complete neuro-formal counterexample, and a distinction among authentic, sound, complete evidence and truth. Appendices E and F provide a compact algebraic reference and a machine-readable finite counterexample.
+[Correct Relative to its Inputs](https://standardgalactic.github.io/portable-warrant/working/correct-relative-to-its-inputs.pdf)
+
+[Deliberate Ignorance and the Law](https://standardgalactic.github.io/portable-warrant/working/deliberate-ignorance-and-the-law.pdf)
+
+[When to Stop Looking](https://standardgalactic.github.io/portable-warrant/working/when-to-stop-looking.pdf)
+
+[Shared Omissions](https://standardgalactic.github.io/portable-warrant/working/shared-omissions.pdf)
+
+[The Objective as Domain](https://standardgalactic.github.io/portable-warrant/working/shared-omissions.pdf)
+
+[Arrangements and their Authors](https://standardgalactic.github.io/portable-warrant/working/arrangements-and-their-authors.pdf)
+~                                                                                                                                    

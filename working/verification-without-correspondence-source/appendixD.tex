@@ -1,0 +1,145 @@
+\chapter{A Lean 4 Prototype: Declarations and Their Status}
+\label{app:lean}
+
+\begin{center}
+\fbox{\parbox{0.92\textwidth}{\textbf{Status of this appendix: not compiled.} No Lean toolchain was available in the environment in which the manuscript was written (checked 8 October 2026: no \texttt{lean}, \texttt{lake} or \texttt{elan} on the path, and release metadata could not be retrieved). Every declaration below is unchecked. No declaration is a verified proved declaration, and the prototype is not a formal verification of any result of this monograph.}}
+\end{center}
+
+\section{Three activities kept apart}
+
+Three different activities could be meant by an appendix of Lean~4 \cite{Lean4} code, and this one performs only the first.
+
+\begin{enumerate}[label=(\arabic*)]
+\item \emph{Documenting an implementation}: writing down, in the syntax of a proof assistant, definitions and statements that are intended to represent objects of Appendix~\ref{app:formal}. This appendix does that.
+\item \emph{Verifying an implementation}: obtaining kernel acceptance for those declarations, with no \texttt{sorry} and a recorded list of axioms. This has \emph{not} been done. Until it is, the word ``proved'' is not applied below to any declaration, and the tags in Table~\ref{tab:leandecls} state intentions, not results.
+\item \emph{Auditing a source claim}: checking a claim of a cited source. Nothing in this appendix does that. The module \path{MathlibToy.lean} restates one toy case reported by the source and does not examine the source's theorems.
+\end{enumerate}
+
+The distinction applies to the prototype with the force it has everywhere in the book. If the files compile, that shows that the declarations are well typed, and that the declarations tagged as proofs are accepted by the kernel. It does not show that the definitions match Appendix~\ref{app:formal}. That correspondence is the question the whole monograph is about, and it is open here, with the divergences listed in Section~\ref{sec:leandiverge} as the part of the open obligation that is already known.
+
+\section{Reproducibility record}
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{@{}p{0.30\textwidth}p{0.62\textwidth}@{}}
+\toprule
+Item & Record \\
+\midrule
+Compilation status & Not compiled. No module has been checked by any Lean toolchain. \\
+Lean toolchain & Not determined. The file \path{lean-toolchain} contains a deliberate placeholder (\texttt{UNPINNED}). The version used at first compile is to be recorded here, together with the output of \texttt{lean --version}. \\
+Mathlib revision & Not determined. Needed only by \path{VWC/MathlibToy.lean}. The \path{lakefile.lean} dependency is deliberately unpinned. The revision is to be recorded from \path{lake-manifest.json} at first compile. \\
+Version constraints assumed & Core modules use only core Lean~4 syntax and avoid the library functions that were renamed in recent releases (\texttt{List.bind}, \texttt{List.join}, \texttt{List.flatMap}, \texttt{List.flatten}). That the files elaborate on a given release is an untested assumption. \\
+Mathlib lemma names assumed & \texttt{Nat.sInf\_empty}, \texttt{Nat.find}, \texttt{Nat.find\_spec}, \texttt{Set.mem\_setOf\_eq}, \texttt{Set.mem\_empty\_iff\_false}. Not checked against any Mathlib revision. \\
+Axioms declared & None. The Tarskian conditions and the soundness hypothesis are structure fields or theorem hypotheses. \\
+Placeholders & Two \texttt{sorry}: \texttt{trace} and \texttt{compose\_first}. \\
+Files & \path{VWC/Ledger.lean}, \path{VWC/Consequence.lean}, \path{VWC/ToyExamples.lean}, \path{VWC/MathlibToy.lean}, \path{lakefile.lean}, \path{lean-toolchain}. \\
+\bottomrule
+\end{tabular}
+\caption{Reproducibility record for the Lean prototype. Entries marked ``not determined'' are open and must be filled at first compile.}
+\label{tab:leanrepro}
+\end{table}
+
+The record is an obligation in the book's sense. It is open, its resolution is the output of a toolchain run, and nothing in the text should be read as supplying it.
+
+\section{Classification of declarations}
+
+Each declaration carries one of the following tags in its docstring.
+
+\begin{description}[leftmargin=2.2cm,labelwidth=2cm,font=\normalfont\ttfamily]
+\item[{[DEF]}] a definition or structure: it introduces a name and asserts nothing.
+\item[{[STMT]}] a theorem statement whose proof is the placeholder \texttt{sorry}. Elaboration of the statement is all that compilation would check.
+\item[{[PROOF-UNCHECKED]}] a theorem with a proof script or term written by the author and not yet run. It becomes a proved declaration only after compilation without \texttt{sorry} and with an acceptable \texttt{\#print axioms} output.
+\item[{[DEF-CHECK]}] an \texttt{example} computing a value on a toy input, a sanity check of a definition.
+\end{description}
+
+No declaration is tagged as an axiom because none exists. Every \texttt{sorry} is counted in Table~\ref{tab:leanrepro}. The command \texttt{\#print axioms} is included after each theorem so that the first compile reports its dependencies.
+
+\begin{table}[ht]
+\centering
+\small
+\begin{tabular}{@{}p{0.27\textwidth}p{0.17\textwidth}p{0.48\textwidth}@{}}
+\toprule
+Declaration & Tag & Intended counterpart in the book \\
+\midrule
+\multicolumn{3}{@{}l}{\emph{Ledger.lean}} \\
+\texttt{Status}, \texttt{Kind} & DEF & statuses and obligation kinds (Def.~\ref{def:status}) \\
+\texttt{Obligation} & DEF & obligation, reduced to id, kind, content, status \\
+\texttt{Transition}, \texttt{Stage} & DEF & transition certificate $(Q_i,\Delta_i,\Theta_i)$ with its input list \\
+\texttt{succs}, \texttt{step}, \texttt{desc} & DEF & $\succs_i(o)$ and $S_n(o)$ \\
+\texttt{Covers}, \texttt{WellFormed}, \texttt{Accepts}, \texttt{WFLedger} & DEF & well-formedness of a ledger \\
+\texttt{DischargedIn} & DEF & certified discharge in the ancestry of $o$ \\
+\texttt{step\_append} & PROOF-UNCHECKED & auxiliary distributivity of \texttt{step} \\
+\texttt{trace} & STMT, \texttt{sorry} & Theorem~\ref{thm:trace} (RV-020) \\
+\multicolumn{3}{@{}l}{\emph{Consequence.lean}} \\
+\texttt{Consequence} & DEF & Tarskian relation, C1--C3 as fields \\
+\texttt{stageCtx}, \texttt{pool}, \texttt{cumCtx} & DEF & $\Ctx_i(o)$, $\mathsf{A}_n$, $\Gamma_n(o)$ \\
+\texttt{LocallyPreserving} & DEF & the hypothesis of the first statement of RV-008 \\
+\texttt{compose\_first} & STMT, \texttt{sorry} & first statement of Theorem~\ref{thm:compose} \\
+\texttt{SoundFor} & DEF & soundness of $\ent$ for the instance predicate $\mathrm{Hold}_{\I}$ \\
+\texttt{transport\_core} & PROOF-UNCHECKED & only the final step of the second statement of RV-008; see below \\
+\multicolumn{3}{@{}l}{\emph{ToyExamples.lean}} \\
+\texttt{t1}, \texttt{t2}, \texttt{toy} & DEF & a two-stage toy ledger \\
+two \texttt{example}s & DEF-CHECK & computation of \texttt{desc} on \texttt{toy} \\
+\multicolumn{3}{@{}l}{\emph{MathlibToy.lean} (requires Mathlib)} \\
+\texttt{B}, \texttt{nSilent}, \texttt{nChecked} & DEF & $B_e$ for $p_e = x_1+x_2-n$, the silent default, and a hypothesis-carrying alternative \\
+\texttt{B\_false}, \texttt{B\_set\_empty}, \texttt{nSilent\_eq\_zero}, \texttt{nChecked\_spec}, \texttt{no\_witness} & PROOF-UNCHECKED & the toy case of Chapter~\ref{ch:hidden} and the source's Section~4.2 \\
+\bottomrule
+\end{tabular}
+\caption{Every declaration with its tag. No tag records a verified result.}
+\label{tab:leandecls}
+\end{table}
+
+\section{Source listings}
+
+The listings are the files of the companion directory, included verbatim. Docstrings repeat the status banner so that the file is not misread when separated from this appendix.
+
+\lstset{language=lean4,basicstyle=\ttfamily\scriptsize,breaklines=true,columns=fullflexible,frame=single,numbers=left,numberstyle=\tiny,xleftmargin=1.2em,showstringspaces=false}
+
+\subsection*{\path{VWC/Ledger.lean}}
+\lstinputlisting{lean/VWC/Ledger.lean}
+
+\subsection*{\path{VWC/Consequence.lean}}
+\lstinputlisting{lean/VWC/Consequence.lean}
+
+\subsection*{\path{VWC/ToyExamples.lean}}
+\lstinputlisting{lean/VWC/ToyExamples.lean}
+
+\subsection*{\path{VWC/MathlibToy.lean}}
+\lstinputlisting{lean/VWC/MathlibToy.lean}
+
+\section{Known divergences from Appendix A}
+\label{sec:leandiverge}
+
+The following divergences are known at the time of writing. They are modelling choices or omissions that make the Lean objects differ from those of Appendix~\ref{app:formal}, and each is an open statement-correspondence obligation for the prototype.
+
+\begin{enumerate}[label=(\roman*)]
+\item Contexts are \emph{lists}, not sets, and are finite. The book's consequence relation is defined on arbitrary sets of contents.
+\item Obligations are identified by \texttt{Nat}. The tuple $(\tau,\varphi,\rho,E,D,\sigma)$ is reduced to four fields, and the evidence, dependency and residue components are not modelled.
+\item The book gives each $\mathcal{O}_k$ as a set and $Q_i\subseteq\mathcal{O}_{i-1}\times\mathcal{O}_i$. The prototype stores for each stage an explicit list of inputs and imposes the chaining condition \texttt{Accepts} between successive stages. This condition is the author's modelling choice and is not a clause of Appendix~\ref{app:formal}.
+\item \texttt{DischargedIn} takes ``certified discharge'' to mean membership in $\Delta_k$ for some descendant at some stage. Warrant, defeat and the status function are not modelled.
+\item The dependency graph, acyclicity, admissibility conditions (A1) and (A2), transition typing, and the status function $\sigma_t$ are not modelled. Consequently the second statement of Theorem~\ref{thm:compose}, which depends on them, is not formalised. The lemma \texttt{transport\_core} records only its last step, and calling it a formalisation of RV-008 would be an error of exactly the kind the book describes.
+\item RV-001, RV-002, RV-004, RV-005, RV-015, RV-018, RV-019 and RV-021 are not represented.
+\item The cumulative pool \texttt{pool} lists contents in the order of the stages, with repetitions. Under the list representation this is harmless for \texttt{mono}, but it is a representation choice.
+\end{enumerate}
+
+\section{What a successful compile would and would not show}
+
+If the four modules compiled with exactly the two declared placeholders, the evidence would be: the definitions are well typed; the statements of \texttt{trace} and \texttt{compose\_first} elaborate; the declarations tagged \texttt{PROOF-UNCHECKED} are accepted by the kernel, with dependencies on axioms as reported by \texttt{\#print axioms}. It would not establish that the statements are the theorems of Appendix~\ref{app:formal}. A reviewer who wished to establish that would repeat for the prototype the procedure the book recommends for any formalization: read each definition against its counterpart, tabulate the divergences, and tag the transition from the appendix to the code as conservative, strengthening, weakening or lateral. The list in Section~\ref{sec:leandiverge} is the first line of that table. Several divergences make the Lean statements weaker or incomparable to the book's, and no assertion is made here that they do not.
+
+If \texttt{trace} or \texttt{compose\_first} were completed, the result would be a machine-checked theorem about the prototype's definitions. By the argument of Chapter~\ref{ch:nondischarge} it would be a discharge of the formal obligation and a transition of the statement obligation whose type is to be determined.
+
+\section{Procedure for the first compile}
+
+\begin{enumerate}[label=(\arabic*)]
+\item Install a Lean toolchain; choose a release; write it into \path{lean-toolchain}; record \texttt{lean --version} in Table~\ref{tab:leanrepro}.
+\item For the Mathlib module, pin the revision in \path{lakefile.lean} and record it from \path{lake-manifest.json}.
+\item Build the core modules first. Record every error verbatim and correct the declaration; do not weaken a statement to make it compile without recording the change in Section~\ref{sec:leandiverge}.
+\item Run the \texttt{\#print axioms} commands and record their output.
+\item Count \texttt{sorry}. Update the classification table: a declaration changes from PROOF-UNCHECKED to proved only after steps 3 to 5.
+\item Only then revise the text of Section~\ref{sec:leanproto} so that the word ``compiled'' is applied to the declarations that were compiled.
+\end{enumerate}
+
+\section{Relation to the test suite of Chapter~\ref{ch:system}}
+
+Chapter~\ref{ch:system} proposes a test suite with seeded unresolved obligations (the polynomial example, the symmetric-matrix example, the hidden-existence default, and the derivative and pressure-flux cases). None of these is encoded here, and the suite has not been run. The module \path{MathlibToy.lean} implements only the toy instance of the hidden-existence case. The remaining cases require the typing machinery of Appendix~\ref{app:formal} that the prototype does not contain.

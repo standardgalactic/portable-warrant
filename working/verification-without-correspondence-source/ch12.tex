@@ -1,0 +1,85 @@
+\setcounter{part}{3}
+\part{The Navier-Stokes Case}
+
+All statements in this part are taken from Section 3 of Bastounis, Circelli, and Hansen~\cite{BCH26}, and the numbering of equations in OpenAI's natural-language paper, \emph{Finite time blowup for Navier-Stokes}~\cite{OpenAI26NS}, is retained as the source reports it. Lean declarations are cited at commit \texttt{f9e8bc5b38b6e212696e8a30e3e91517af887bbd} of \path{openai/NavierStokesAndEuler}~\cite{OpenAI26Lean}. The monograph has compiled none of the Lean code. The chapters of this part were written from the source alone, so every equation number, lemma number, and quoted bound below is the source's report of those objects. A later text-level reading of the cited passages of OpenAI's paper and of the cited Lean declarations is recorded in Appendix~\ref{app:nsaudit}, where each claim is marked as confirmed by that reading, as the source's report, as the monograph's interpretation, or as unverified; the classifications of this part remain provisional after that reading. The source states that it makes no claim about the correctness of OpenAI's natural-language proof, and the part adopts the same discipline: what is examined is the relation between two artifacts, never the truth of the theorem they concern.
+
+\setcounter{chapter}{11}
+\chapter{A Derivative Lost in Translation}
+\label{ch:derivative}
+
+The first documented discrepancy is small enough to state in one line and consequential enough to serve as the paradigm case of a weakening transition. A lemma of the natural-language paper bounds a quantity in terms of a given number of derivatives of the data, and the corresponding Lean result needs one more.
+
+\section{The two estimates}
+
+The discrepancy concerns Lemma 8.6 of OpenAI's paper. Let $m$ be a nonnegative integer, let $\mathbb{T}^2 := \mathbb{R}^2/\mathbb{Z}^2$, and let $F : P \times \mathbb{T}^2 \to \mathbb{C}$ be smooth with zero mean in the torus variable $y$. Let $N = v_t \cdot \nabla_y$ with $v_t = (\sqrt{2} - 1,\, 1)$, and let $N^{-1}F$ denote the unique smooth zero-mean solution $\varphi$ of $N\varphi = F$. For $r \ge 0$ the norm is
+\[
+\|G\|_{C^r_y} := \max_{a + b \le r}\ \sup_{y \in \mathbb{T}^2} \bigl| \partial_{y_1}^a \partial_{y_2}^b G(y) \bigr| .
+\]
+The natural-language estimate, labelled (8.19), is
+\begin{equation}
+\|N^{-1}F\|_{C^m_y} \le C_m \|F\|_{C^{m+4}_y},
+\label{eq:nl819}
+\end{equation}
+and the closest Lean estimate is
+\begin{equation}
+\|N^{-1}F\|_{C^m_y} \le K_m \|F\|_{C^{m+5}_y}.
+\label{eq:lean819}
+\end{equation}
+The constants depend on $m$ and on $v_t$ but not on $F$. The natural-language bound requires $m+4$ derivatives of the input to control $m$ derivatives of the output, whereas the Lean result requires $m+5$.
+
+The cited declaration is
+\begin{quote}
+\small\ttfamily norm\_derivativeWord\_inverse\_le\\
+NavierStokes/SmoothFamilyTorusInverse.lean, lines 1059 to 1080
+\end{quote}
+at the pinned commit. Its hypotheses \texttt{hfirst} and \texttt{hsecond} bound the \texttt{xJet} of order \path{w.length + 5} of the slice and of its swap, and its conclusion bounds the derivative word by \path{mixedLossConstant w.length * C}. Taking a supremum over multi-indices with $|w| \le m$ gives
+\[
+\|N^{-1}F\|_{C^m_y} \le \hat{K}_m \|F\|_{C^{m+5}_y}, \qquad \hat{K}_m = \max(K_0, \dots, K_m),
+\]
+which the source describes as strictly weaker than (\ref{eq:nl819}) because of the extra derivative. A bibliographic caution belongs here. The source's Figure 3 transcript cites different line numbers, 978 to 999, from the 1059 to 1080 of the pinned-commit citation in its text. The text's citation is the one used in this monograph, and the discrepancy is recorded as an open item, since it can be resolved only by inspecting the file at the pinned commit.
+
+\section{Why one derivative is lost}
+
+The source traces the gap to a difference of method. The following reconstruction of the two routes is the monograph's own arithmetic, offered so that the loss of a derivative can be seen as a feature of the argument and not as an accident of bookkeeping, and it is consistent with the exponents the source reports.
+
+Write the Fourier expansion $F(y) = \sum_{k \in \mathbb{Z}^2 \setminus \{0\}} \hat{F}(k) e^{2\pi i k \cdot y}$. Because $N e^{2\pi i k \cdot y} = 2\pi i (v_t \cdot k) e^{2\pi i k \cdot y}$, the solution $N^{-1}F$ has coefficients $\hat{F}(k) / (2\pi i\, v_t \cdot k)$, and applying a derivative of order at most $m$ multiplies the coefficient by a factor bounded by a constant times $(1+|k|)^m$. The natural-language proof invokes the divisor bound (6.7),
+\[
+|v_t \cdot k|^{-1} \le C (1 + |k|),
+\]
+which costs one power of $(1+|k|)$. The coefficients of a function with finite $C^{m+4}_y$ norm decay like $(1+|k|)^{-(m+4)}$ times the norm, up to a constant. The product is therefore bounded by a constant times $\|F\|_{C^{m+4}_y}\,(1+|k|)^{m + 1 - (m+4)} = \|F\|_{C^{m+4}_y}\,(1+|k|)^{-3}$, and the source states that four further derivatives leave exactly this summable bound, so that $\sum_{k \in \mathbb{Z}^2} (1+|k|)^{-3}$ converges. Convergence in two dimensions requires the exponent to exceed $2$, since $\sum_{k \in \mathbb{Z}^2} (1+|k|)^{-s}$ is finite if and only if $s > 2$. The exponent $3$ is therefore the smallest integer exponent that works, which is why $m+4$ is the natural count for this route.
+
+The Lean proof takes a different route. It applies \path{coefficient_seminorm_bound}, which, as the source reports, yields the series $\sum_{k \in \mathbb{Z}^2} (1 + |k_1| + |k_2|)^{-4}$, the exponent $4$ being visible in the Lean source. The route is explicit in the proof. It first needs the Fourier coefficient seminorm of order \path{w.length + 1}, which accounts for the divisor-bound factor, and \path{coefficient_seminorm_bound} then consumes four more derivatives to reach a summable series. The count is $(m+1) + 4 = m+5$. In the natural-language route the divisor factor and the decay are balanced against an exponent of $3$; in the Lean route the lemma that supplies summability demands an exponent of $4$, one more than is needed, and that surplus is the extra derivative.
+
+The same $m+5$ requirement appears in two further declarations, \path{inverse_finiteJets} and \path{mixedJet_inverse_bound}, which in addition use mixed derivatives and are in that respect incomparable with (\ref{eq:nl819}). The chapter therefore reports not one weaker lemma but a family of Lean results with a common count.
+
+\section{What the Lean result does and does not establish}
+
+The distinction on which the chapter turns is between a verified weaker estimate and a contradiction of the stronger claim. The Lean result does not refute (\ref{eq:nl819}). Nothing in it asserts that the $m+4$ bound is false, and nothing in it is inconsistent with that bound. It fails to certify the bound. A reader who learns that the corresponding Lean lemma is proved may take the natural-language lemma to be confirmed, and the discrepancy shows why that inference is unavailable: what was confirmed is the lemma with one more derivative. The aim is not to decide anything about the Navier-Stokes argument but to show how a single additional derivative changes what has been certified.
+
+It does not follow that the extra derivative is harmful downstream. Whether the rest of the proof can absorb a requirement of $m+5$ derivatives where it was written to need $m+4$ depends on how the lemma is applied, and the source does not settle it. The question is nonetheless an obligation, and its form is given by the propagation result of Chapter~\ref{ch:preservation}: every statement that uses (\ref{eq:nl819}) inherits the question of whether its use survives the loss.
+
+\section{The case in the ledger}
+
+Let $o_{8.19}$ be the obligation whose content is (\ref{eq:nl819}) and $o_{\mathrm{Lean}}$ the obligation whose content is (\ref{eq:lean819}). The transition from the natural-language paper to the formalization has $Q = \{(o_{8.19}, o_{\mathrm{Lean}})\}$, $\Delta = \varnothing$, and $\Theta = \varnothing$, so the certified context of $o_{8.19}$ is $\{\varphi(o_{\mathrm{Lean}})\}$. Two entailments are relevant. The first is that $\varphi(o_{8.19})$ entails $\varphi(o_{\mathrm{Lean}})$, which is elementary: since $\|F\|_{C^{m+4}_y} \le \|F\|_{C^{m+5}_y}$, any $C_m$ satisfying (\ref{eq:nl819}) satisfies (\ref{eq:lean819}) with $K_m = C_m$. The second is the converse, that $\varphi(o_{\mathrm{Lean}})$ entails $\varphi(o_{8.19})$. If that entailment fails, the transition is non-preserving at $o_{8.19}$ and, since the original entails everything in the context, it is a weakening in the sense of Definition~\ref{def:typing}.
+
+The source supplies the failure of the converse by describing the Lean estimate as strictly weaker. The monograph records the classification as source-supported and provisional, as it must, because it supplies no independent argument for the non-entailment. The next section explains why the classification also depends on the choice of consequence relation, and why that dependence is not a technicality.
+
+\section{On the choice of consequence relation}
+
+A question arises that the formalism of Appendix~\ref{app:formal} must answer, and it is best faced directly. If $\models_{\mathcal{I}}$ were classical semantic consequence, so that $X \models \psi$ whenever $\psi$ is true in every model of $X$, then any two true statements would be equivalent, and all true statements would be consequences of the empty set. The Lean estimate (\ref{eq:lean819}) is presumably true and so is, if the lemma of the natural-language paper is correct, (\ref{eq:nl819}). Under classical consequence each entails the other, every transition between true contents would be preserving, and the whole analysis would collapse into a question about the truth of the theorem, which is what the part has promised not to address.
+
+The consequence relation of the framework is not classical consequence over all truths. It is relative to the \emph{certified background} of the development: $X \models_{\mathcal{I}} \psi$ means that $\psi$ is derivable from $X$ together with a fixed base of admitted facts and rules, by admitted inference steps. Appendix~\ref{app:formal} requires only that $\models_{\mathcal{I}}$ be reflexive, monotone, and transitive, and those conditions are satisfied by derivability relative to a base. What the choice of base does is fix what counts as available to the downstream steps of a proof. With the base consisting of the certified results of the Lean development, the Lean estimate does not yield (\ref{eq:nl819}), because no admitted derivation produces it, and the non-entailment means that the stronger bound is not certified from the weaker, not that it is false. The typing of transitions is thus relative to a base, and a transition may be a weakening relative to one base and conservative relative to another that includes a restoring lemma. This is what the appendix means by a justification that restores entailment, and it is the reason the typing is a statement about the whole certified context.
+
+The consequence for this chapter is a precise one. The claim that the Lean transition is a weakening is the claim that, relative to the certified Lean development, (\ref{eq:nl819}) is not derivable from (\ref{eq:lean819}). That claim is checkable in principle by inspection of the development, and the monograph reports it on the strength of the source.
+
+\section{Three repairs}
+
+The ledger states what would have to be done to close the gap, and the three options differ in what they leave in the residue.
+
+The first repair is \emph{discharge}: prove (\ref{eq:nl819}) in the formal development, by following the natural-language route through the divisor bound with exponent $3$. This closes the discrepancy at the lemma, and the obligation $o_{8.19}$ is discharged by the new proof. The second is \emph{assumption}: admit (\ref{eq:nl819}) as a tracked assumption obligation $a$ with $\varphi(a) = \varphi(o_{8.19})$. The transition then becomes preserving, with $\Theta = \{\varphi(a)\}$, and the formal development carries the open obligation $a$ in its residue wherever the lemma is used. This is the honest form of the conditional theorem: the Lean results hold given the $m+4$ bound, and the bound is unproved in the development. The third is \emph{acceptance of the weakening}: keep the Lean estimate, record the transition as a weakening, and discharge the obligation of showing that every downstream use tolerates $m+5$. Each of the downstream obligations is a statement of the form that a particular application of (\ref{eq:nl819}) remains valid with one more derivative of regularity.
+
+None of the three is selected by the kernel. The framework's contribution is that all three are expressible and that the choice among them is visible in the residue, in contrast to the unrepaired state in which the extra derivative is invisible to anyone who reads only that the lemma has been formalized.
+
+\section{What the chapter establishes}
+
+In terms of the three judgments of Chapter~\ref{ch:nondischarge}, the Lean declaration is accepted by the kernel, so $K$ holds for the instance. The statement obligation of the natural-language lemma against the Lean statement is not discharged as an equivalence: relative to the certified Lean development, the Lean statement is strictly weaker, and the monograph records that status as source-reported. The argument obligation is a distinct matter. On the source's description the two proofs follow different routes, as the exponents $3$ and $4$ in the monograph's own reconstruction suggest. That reconstruction does not show that the Lean route is a different argument, since it could be the same strategy with a lossier summability step, so the failure of argument correspondence is source-reported and provisional, and the case is offered as one in which all three judgments may separate in a single lemma. This is why the chapter is the monograph's paradigm case: a verified result, a documented weakening at the level of the statement, and a documented divergence of method, none of which is an error by the kernel and all of which the phrase ``the lemma was formalized'' conceals.

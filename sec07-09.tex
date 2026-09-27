@@ -1,0 +1,176 @@
+%======================================================================
+\section{Helpful Completion and the Capture of Intention}\label{sec:assist}
+%======================================================================
+
+The artifacts considered so far are completed by their producers. A newer class of artifacts completes \emph{its users}. Autocomplete finishes sentences, recommendation systems finish choices, route planners finish journeys, predictive interfaces finish forms, and generative assistants finish drafts, arguments, and images. These systems act on an object that was until recently treated as the paradigm of latent incompletion: an intention that has not yet settled. The question of this section is when such completion assists an agent and when it replaces the agent's own continuation with the system's.
+
+\emph{Instantiation.} The state $\Omega$ is the agent's space of possible actions together with the purposes they serve; the continuation relation $A$ is the distribution of actions still open to the agent; $\Sigma$ is what the system and the agent can observe of unassisted behavior; $\mathcal{K}$ includes the refusal cost defined below; $\mathcal{W}$ divides authority over purpose between agent and system; and $\sim_{\mathcal{R}}$ is the identity of the agent's purpose across alternative executions.
+
+\subsection{Suggestion-induced divergence}
+
+Let $\mathcal{A}$ be a finite set of possible actions and $p_0$ the distribution over $\mathcal{A}$ describing what an agent would do unassisted. A completion system offers a suggestion $s\in\mathcal{A}$, after which the agent acts according to $p(\cdot\mid s)$. The strength with which the suggestion reorganizes the action space is
+\begin{equation}\label{eq:Is}
+I_s\ =\ \KL\big(p(\cdot\mid s)\,\big\|\,p_0\big)\ =\ \sum_{a\in\mathcal{A}}p(a\mid s)\log\frac{p(a\mid s)}{p_0(a)}.
+\end{equation}
+$I_s=0$ exactly when the suggestion changes nothing. Large $I_s$ is not in itself objectionable, since a correction of a typing error changes behavior a great deal. What matters is \emph{where} the divergence falls.
+
+Decompose each action as $a=(\varpi,e)$, where $\varpi$ is the purpose the agent pursues and $e$ the execution by which it is pursued: which word is meant versus how it is spelled, where one is going versus which streets one takes, what one wants to argue versus how the sentence is phrased. By the chain rule for relative entropy,
+\begin{equation}\label{eq:chain}
+I_s\ =\ \underbrace{\KL\big(p(\varpi\mid s)\,\|\,p_0(\varpi)\big)}_{I_s^{\mathrm{purpose}}}\ +\ \underbrace{\E_{\varpi\sim p(\cdot\mid s)}\KL\big(p(e\mid\varpi,s)\,\|\,p_0(e\mid\varpi)\big)}_{I_s^{\mathrm{exec}}}.
+\end{equation}
+
+\begin{definition}[Purpose neutrality]
+A completion system is \emph{$\varepsilon_\varpi$-purpose-neutral} for an agent if $I_s^{\mathrm{purpose}}=\KL\big(p(\varpi\mid s)\,\|\,p_0(\varpi)\big)\leq\varepsilon_\varpi$ for every suggestion $s$, so that nearly all divergence falls on execution. Exact neutrality, $\varepsilon_\varpi=0$, is a limiting case.
+\end{definition}
+
+The tolerance matters because exact neutrality is almost never attained. Spelling correction, ordering, and routing all alter what becomes salient, and salience can shift purposes. The useful question is how large $I_s^{\mathrm{purpose}}$ is relative to $I_s^{\mathrm{exec}}$, not whether it vanishes.
+
+Approximately purpose-neutral completion reduces the cost of carrying out a purpose already selected. It is completion at the level of foundations in the sense of Section~\ref{sec:selective}: it fixes the means so that the agent's ends can be pursued dependably. Completion with positive $I_s^{\mathrm{purpose}}$ participates in selecting the end itself. It closes a vertex near the sink of the agent's own dependency graph, the level at which, by Corollary~\ref{cor:purposes}, closure is least likely to be warranted by an outside party.
+
+\subsection{Refusal cost}
+
+A suggestion may remain formally optional while making every alternative comparatively effortful or perceptually obscure. Model this by a \emph{refusal cost} $c_{\mathrm{ref}}\geq 0$ incurred whenever the agent does something other than accept the suggestion. If the agent's unassisted behavior is a random-utility choice, so that $p_0(a)\propto\exp(u(a))$, then the assisted distribution is
+\begin{equation}\label{eq:refusal}
+p(a\mid s)\ =\ \frac{p_0(a)\,e^{-c_{\mathrm{ref}}\,\mathbf{1}[a\neq s]}}{p_0(s)+(1-p_0(s))e^{-c_{\mathrm{ref}}}},
+\end{equation}
+and the acceptance probability is
+\begin{equation}
+\chi_s(c_{\mathrm{ref}})\ =\ p(s\mid s)\ =\ \frac{p_0(s)}{p_0(s)+(1-p_0(s))e^{-c_{\mathrm{ref}}}},
+\end{equation}
+which increases from $p_0(s)$ at $c_{\mathrm{ref}}=0$ toward one. Every alternative remains in the support of $p(\cdot\mid s)$, so nothing is prohibited. Yet alternatives are multiplied by $e^{-c_{\mathrm{ref}}}$, and the effective continuation set of the agent in the sense of \eqref{eq:Ai} contracts as $c_{\mathrm{ref}}$ grows. Refusal cost is the mechanism by which an openness gap is produced at the scale of a single decision.
+
+The empirical record on defaults suggests that $c_{\mathrm{ref}}$ is substantial even when the physical effort of refusal is trivial. Johnson and Goldstein combined an online experiment, in which the default alone substantially changed stated willingness to be an organ donor, with a cross-national comparison in which countries using opt-out defaults showed much higher effective consent than countries using opt-in \cite{johnsongoldstein2003}. The experiment supports the causal claim; the cross-national comparison is observational and consistent with it. In the language of \eqref{eq:refusal}, a single checkbox appears to carry a refusal cost large enough to dominate underlying preferences for much of a population, and the design of such defaults is now studied as a general problem of choice architecture \cite{johnson2012}.
+
+\subsection{Self-confirming prediction}
+
+The strongest effect arises when a completion system learns from the behavior it helps produce. Let the system maintain an estimate $q_t$ of the agent's action distribution, suggest its mode $s_t=\argmax_aq_t(a)$, observe actions drawn from $p(\cdot\mid s_t)$, and update by exponential averaging:
+\begin{equation}\label{eq:learning}
+q_{t+1}\ =\ (1-\eta)\,q_t\ +\ \eta\,p(\cdot\mid s_t),\qquad\eta\in(0,1].
+\end{equation}
+(The mean-field update stands in for stochastic learning from sampled actions; the conclusions hold in expectation.)
+
+\begin{proposition}[Lock-in of arbitrary predictions]\label{prop:lockin}
+Under the refusal model \eqref{eq:refusal}, let $a^\ast$ be any action with $0<p_0(a^\ast)<1$, and suppose
+\begin{equation}\label{eq:lockin-condition}
+c_{\mathrm{ref}}\ \geq\ \log\frac{\max_bp_0(b)}{p_0(a^\ast)}.
+\end{equation}
+If $\argmax_aq_0(a)=a^\ast$, then $s_t=a^\ast$ for all $t$, and $q_t\to p(\cdot\mid a^\ast)$ geometrically. The limiting estimate attributes to the agent a preference whose divergence from the agent's unassisted behavior is $I_{a^\ast}>0$ whenever $c_{\mathrm{ref}}>0$.
+\end{proposition}
+
+\begin{proof}
+From \eqref{eq:refusal}, $p(a^\ast\mid a^\ast)\propto p_0(a^\ast)$ and $p(b\mid a^\ast)\propto p_0(b)e^{-c_{\mathrm{ref}}}$ for $b\neq a^\ast$, so $a^\ast$ is a mode of $p(\cdot\mid a^\ast)$ if and only if $p_0(a^\ast)\geq e^{-c_{\mathrm{ref}}}\max_bp_0(b)$, which is \eqref{eq:lockin-condition}. Suppose $a^\ast$ is a mode of $q_t$. Then $q_{t+1}$ is a convex combination of two distributions each having $a^\ast$ as a mode, and for every $b$, $q_{t+1}(a^\ast)-q_{t+1}(b)=(1-\eta)[q_t(a^\ast)-q_t(b)]+\eta[p(a^\ast\mid a^\ast)-p(b\mid a^\ast)]\geq 0$. By induction $s_t=a^\ast$ for all $t$. With $s_t$ constant, \eqref{eq:learning} gives $q_t-p(\cdot\mid a^\ast)=(1-\eta)^t\big(q_0-p(\cdot\mid a^\ast)\big)\to 0$. Finally $p(\cdot\mid a^\ast)\neq p_0$ when $c_{\mathrm{ref}}>0$ and $p_0(a^\ast)<1$, so $I_{a^\ast}>0$.
+\end{proof}
+
+The condition \eqref{eq:lockin-condition} is the heart of the matter. It does not require $a^\ast$ to be what the agent most wants, or even something the agent often wants. Any action in the support of $p_0$ becomes a stable, self-confirming prediction once refusal is costly enough relative to the ratio between the agent's favorite action and $a^\ast$. The system's data then confirm its prediction, and the preference it infers is a record of its own influence. The phenomenon belongs to a class that machine learning now studies as performative prediction, in which deploying a model changes the distribution it was trained to predict \cite{perdomo2020}, and simulations of recommender feedback loops find that training on recommendation-shaped behavior increases homogeneity without improving utility \cite{chaney2018}. This is the predictive counterpart of Proposition~\ref{prop:selfconfirm-dev}: the specification produces the behavior that is cited as its justification.
+
+Two extensions deepen the concern. First, suggestion can alter the agent's dispositions as well as the agent's acts. If some fraction $\zeta$ of the assisted distribution is internalized, so that $p_0^{(t+1)}=(1-\zeta)p_0^{(t)}+\zeta\,p(\cdot\mid s_t)$, then under a locked suggestion the unassisted distribution itself converges to one concentrated at $a^\ast$, and the divergence $I_{a^\ast}$ measured against the \emph{current} $p_0$ shrinks toward zero. The capture becomes undetectable by the only comparison the agent can make. Jakesch and colleagues found that writing with a language model configured to favor one side of an issue shifted not only the opinions participants expressed in their writing but also their subsequently reported attitudes \cite{jakesch2023}, which is the pattern this extension describes.
+
+Second, a system that serves many agents with a common suggestion homogenizes across them. For two agents $i,j$ with unassisted distributions $p_0^i,p_0^j$ receiving the same suggestion $s$, the probability that their actions coincide is at least $\chi^i_s(c_{\mathrm{ref}})\chi^j_s(c_{\mathrm{ref}})$, which tends to one as $c_{\mathrm{ref}}$ grows, while without assistance it is $\sum_ap_0^i(a)p_0^j(a)$, which may be small. Collective diversity can therefore fall even when each individual output improves. Doshi and Hauser report exactly this combination: stories written with generative assistance were judged more creative individually and were more similar to one another \cite{doshihauser2024}.
+
+\subsection{Assistance that preserves the unfinished}
+
+The analysis does not condemn completion systems. It identifies the parameters that distinguish assistance from capture: the division of divergence between purpose and execution in \eqref{eq:chain}, the refusal cost $c_{\mathrm{ref}}$, and the feedback between suggestion and learning in \eqref{eq:learning}. A system preserves the agent's latent incompletion to the extent that it concentrates its influence on execution, keeps refusal cheap by presenting alternatives as salient as the suggestion, and learns from behavior that its own suggestions did not produce, for instance by holding out a fraction of interactions in which nothing is suggested. The last measure is the predictive analogue of the common evaluation environment recommended in Section~\ref{sec:development}: it keeps the counterfactual $p_0$ observable, so that a later continuer, including the agent, can tell whose purpose has been completed.
+
+%======================================================================
+\section{Institutions That Cannot Represent an Open Case}\label{sec:institutions}
+%======================================================================
+
+Bureaucratic completion is primarily a problem of representational capacity. An administrative institution can act only on what it can record, and it can record only what its schema admits. Bowker and Star showed that classification systems of this kind are infrastructure: they become invisible through use, embed moral and political choices in apparently technical categories, and produce ``torque'' when the lives they classify do not move at the pace or in the shape the categories expect \cite{bowkerstar1999}. Scott showed that states pursue legibility by simplifying the populations and landscapes they govern into forms that can be counted and administered, and that such simplifications, once imposed, can destroy the practical knowledge that made the simplified system work \cite{scott1998}. This section formalizes the mechanism by which such institutions convert open situations into closed records, and states the conditions under which faster processing makes matters worse.
+
+\emph{Instantiation.} The state $\Omega$ is the institution's record of a case; the continuation relation $A$ is the set of records and actions the schema admits; $\Sigma$ is the evidence retained with the record; $\mathcal{K}$ includes processing time, downstream repair, and the cost of schema revision; $\mathcal{W}$ is the authority to classify and to revise the schema; and $\sim_{\mathcal{R}}$ is the identity of the case across reclassification.
+
+\subsection{Schemas and ontological compression}
+
+Model an institution as a state machine whose admissible records belong to a finite schema $\mathfrak{S}$ of classes. Cases $z$ arrive from a population $Z$ with some distribution, and the institution applies a classification map $\pi:Z\to\mathfrak{S}\cup\{\bot\}$, where $\bot$ denotes rejection. When a case's condition cannot be represented within $\mathfrak{S}$, the institution has three options: reject it, force it into the nearest existing class, or revise $\mathfrak{S}$. Let $Y$ be the variable on which correct institutional action depends, the claimant's actual need, eligibility, or risk.
+
+\begin{definition}[Ontological compression]
+The ontological compression of $\pi$ is the decision-relevant information lost by classification,
+\begin{equation}
+\Xi_\pi\ =\ H\big(Y\mid\pi(Z)\big)-H\big(Y\mid Z\big)\ =\ I(Y;Z)-I\big(Y;\pi(Z)\big)\ \geq\ 0,
+\end{equation}
+where $H$ is conditional entropy and $I$ mutual information.
+\end{definition}
+
+Nonnegativity follows from the data-processing inequality, since $\pi(Z)$ is a function of $Z$. $\Xi_\pi=0$ exactly when the schema is sufficient for $Y$. Compression is not in itself a defect: every administrable schema compresses, and a schema that preserved all information about every case would not be a schema. Compression becomes a defect when the lost information is precisely what later action requires, which is to say when the institution has closed a purpose vertex by closing a representational foundation.
+
+\subsection{Throughput under a fixed schema}
+
+Suppose a fraction $m\in(0,1]$ of arriving cases is not representable in $\mathfrak{S}$. A caseworker who spends time $\tau$ on a case detects nonrepresentability and marks the case for further handling with probability $\varphi(\tau)$, increasing and differentiable; otherwise the case is forced into a class, generating an expected downstream repair cost $c_r>0$ in appeals, errors, reapplications, and harms. Each case resolved yields value $v>0$. Over a period of length $T$ the institution resolves $N(\tau)=T/\tau$ cases, and its net value is
+\begin{equation}\label{eq:NV}
+\mathrm{NV}(\tau)\ =\ \frac{T}{\tau}\Big(v-m\,c_r\big(1-\varphi(\tau)\big)\Big).
+\end{equation}
+
+\begin{proposition}[Throughput and repair]\label{prop:throughput}
+Under the model \eqref{eq:NV}, with a fixed period $T$, a fixed misfit fraction $m$, and an increasing detection function $\varphi$, reducing processing time increases the resolution count $N(\tau)$ and increases total downstream repair cost $\frac{T}{\tau}m\,c_r(1-\varphi(\tau))$. It decreases net value whenever
+\begin{equation}\label{eq:throughput-condition}
+\tau\,\varphi'(\tau)\ >\ \frac{v-m\,c_r\big(1-\varphi(\tau)\big)}{m\,c_r}.
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+$N'(\tau)=-T/\tau^2<0$. The repair cost $\mathcal{R}(\tau)=\frac{T}{\tau}mc_r(1-\varphi(\tau))$ has $\mathcal{R}'(\tau)=-\frac{T}{\tau^2}mc_r(1-\varphi)-\frac{T}{\tau}mc_r\varphi'<0$, so it rises as $\tau$ falls. Differentiating \eqref{eq:NV}, $\mathrm{NV}'(\tau)=-\frac{T}{\tau^2}\big(v-mc_r(1-\varphi)\big)+\frac{T}{\tau}mc_r\varphi'(\tau)$, which is positive, so that reducing $\tau$ lowers net value, exactly under \eqref{eq:throughput-condition}.
+\end{proof}
+
+The left side of \eqref{eq:throughput-condition} is the elasticity of detection with respect to time. Where recognizing an unrepresentable case depends sensitively on attention, which is typical of the cases that most need recognizing, acceleration improves every metric the institution reports while reducing the value it produces. By Observation~\ref{obs:boundary}, the repair cost falls outside the reporting boundary: it is borne by claimants, appeal tribunals, other agencies, and the future, a displacement of costs onto claimants that the literature on administrative burden treats as a policy instrument in its own right \cite{herdmoynihan2018}. By Observation~\ref{obs:measurability}, the resolution count is measured and the repairs are not. The two results together predict the characteristic pathology of administrative modernization: rising throughput, stable or improving performance indicators, and a growing hinterland of workarounds and repeat contacts.
+
+\subsection{Why schemas are not revised}
+
+The third option, revising $\mathfrak{S}$, is available in principle and rarely taken. The reason is structural. Let revision cost $K>0$, and let each nonrepresentable case $j$ in a period contribute benefit $\beta_j>0$ from a revised schema. An institution that decides on revision case by case, revising only when a single case's benefit exceeds $K$, never revises when every $\beta_j<K$, however large $\sum_j\beta_j$ becomes. The point is trivial as mathematics and consequential as institutional design. A schema can be globally wrong while every individual mismatch is locally too small to justify revision. The remedy is to aggregate: a \emph{misfit registry} that records forced and rejected cases together with the distinctions they required, so that revision is evaluated against $\sum_j\beta_j$. The registry is the institutional form of the ledger of possibilities in Section~\ref{sec:option}. Bowker and Star's analysis of residual categories, the ``other'' and ``not elsewhere classified'' boxes, can be read in these terms: a residual category is a registry whose contents are never aggregated, so that it absorbs misfits without ever accumulating them into evidence \cite{bowkerstar1999}.
+
+\subsection{The open case}
+
+An administrative system typically distinguishes resolved cases from pending ones. A pending case is merely one to which no class has yet been assigned. The argument of this essay requires a more demanding category.
+
+\begin{definition}[Open case]
+An \emph{open case} is a record comprising: (i) the evidence $\mathcal{D}_z$ bearing on the case, preserved rather than summarized; (ii) a set of competing interpretations $\{(c_\ell,\omega_\ell)\}$ with $c_\ell\in\mathfrak{S}\cup\{\mathfrak{n}\}$ and credence weights $\omega_\ell>0$, where $\mathfrak{n}$ denotes ``no adequate class exists''; (iii) a schema-revision flag entering the misfit registry whenever $\omega_{\mathfrak{n}}>0$; (iv) a named steward responsible for the case; and (v) stated conditions under which the case will be closed.
+\end{definition}
+
+The open case preserves exactly what forced classification destroys. Component (i) keeps the record at least as informative as a forced classification, so that $H(Y\mid\text{record})\leq H(Y\mid\pi(Z))$ whenever the record retains the classification's inputs, with equality to $H(Y\mid Z)$ only when the preserved evidence is sufficient for $Y$ relative to $Z$. The open case does not abolish compression; it defers it and keeps it revisable. Component (ii) keeps a nondegenerate distribution over interpretations, so the case retains continuational breadth. Component (iii) admits the possibility that the institution itself lacks a necessary distinction, which is the only route by which a schema learns. Components (iv) and (v) answer the objection, taken up in Section~\ref{sec:objections}, that openness diffuses responsibility: an open case has an owner and an exit. An institution unable to represent open cases can only reject or distort what it does not already understand. Scott's examples of failed high-modernist schemes are, in this vocabulary, institutions that had closed their schemas before learning what the governed situation contained \cite{scott1998}.
+
+%======================================================================
+\section{Distributed Continuation as a Political Principle}\label{sec:political}
+%======================================================================
+
+Attachment points generalize into a theory of political authority. The relevant opposition is not planning against spontaneity, a contrast that has organized much argument about institutions without clarifying it, but \emph{monopolized completion} against \emph{distributed continuation}. Every durable institution plans, in the sense of fixing some arrangements in advance. The question is who retains the authority to revise those arrangements once they are fixed, and whether that authority is aligned with who must live under them.
+
+\emph{Instantiation.} The state $\Omega$ is the configuration of an institution's components; the continuation relation $A$ is the set of revisions they admit; $\Sigma$ is the public record on which revision can be argued; $\mathcal{K}$ is the cost of pursuing revision; $\mathcal{W}$ is the authority matrix defined below, the element of the core model that this section develops; and $\sim_{\mathcal{R}}$ is the continuity of the institution through amendment.
+
+\subsection{Authority and affectedness}
+
+Let $I=\{1,\dots,n\}$ be agents and $\{1,\dots,J\}$ institutional components: rules, budgets, classifications, facilities, procedures. Let the \emph{authority matrix} $Q\in\mathbb{R}^{n\times J}_{\geq 0}$ record in $Q_{ij}$ the authority of agent $i$ to revise component $j$, and the \emph{affectedness matrix} $\mathsf{A}\in\mathbb{R}^{n\times J}_{\geq 0}$ record in $\mathsf{A}_{ij}$ the degree to which $i$ must live with $j$. For each component with positive column sums, write $q_j$ and $a_j$ for the column-normalized distributions of authority and affectedness over agents.
+
+\begin{definition}
+The \emph{aggregate revision capacity} of the system is $\|Q\|_1=\sum_{i,j}Q_{ij}$. Its \emph{authority--affectedness divergence} is
+\begin{equation}
+\mathcal{M}(Q)\ =\ \sum_{j}\zeta_j\,\mathrm{TV}(q_j,a_j),\qquad\mathrm{TV}(q_j,a_j)=\tfrac12\sum_i|q_{ij}-a_{ij}|,
+\end{equation}
+with weights $\zeta_j\geq 0$ reflecting the importance of each component.
+\end{definition}
+
+$\mathcal{M}=0$ when, for every component, the share of authority to revise it matches the share of those who must inhabit it. Proportionality to affectedness is a baseline, not a self-evident democratic ideal. The principle that all affected interests should have a say has been defended and contested at length \cite{goodin2007}, and expertise, rights, minority protection, causal responsibility, and competence can each justify allocations that depart from it. The measure is therefore named for what it computes rather than for a theory of legitimacy. Its purpose is to make departures from the baseline visible, so that they must be justified, and to show that they are not reduced by increasing revision capacity as such.
+
+\begin{proposition}[Revision capacity without democratization]\label{prop:revision-capacity}
+Let component $j$ have $\zeta_j>0$, and let a central agent $c$ be over-represented in its authority relative to affectedness ($q_{cj}\geq a_{cj}$) while every other agent is weakly under-represented ($q_{ij}\leq a_{ij}$ for $i\neq c$), and suppose at least one agent other than $c$ holds positive authority over $j$. Adding revision authority $\delta>0$ to $c$ for component $j$ strictly increases both aggregate revision capacity and authority--affectedness divergence.
+\end{proposition}
+
+\begin{proof}
+$\|Q\|_1$ rises by $\delta$. Under the stated sign pattern, $\mathrm{TV}(q_j,a_j)=q_{cj}-a_{cj}$, since total variation equals the total positive part of $q_j-a_j$. After the addition, with column sum $\Sigma_j=\sum_iQ_{ij}$, the central share becomes $(Q_{cj}+\delta)/(\Sigma_j+\delta)>Q_{cj}/\Sigma_j$ because $Q_{cj}<\Sigma_j$ by the last assumption, and every other share falls. The sign pattern is preserved, so the new total variation is $q'_{cj}-a_{cj}>q_{cj}-a_{cj}$.
+\end{proof}
+
+The proposition formalizes a common political experience. A system can become more adaptive, more capable of revising itself, while becoming less democratic, because the added capacity accrues to those who already govern. Administrative flexibility, emergency powers, and discretionary waivers all increase $\|Q\|_1$; whether they increase or decrease $\mathcal{M}$ depends entirely on whose rows they enlarge. In the notation of Definition~\ref{def:Oij}, added authority raises $O_c^c$ while leaving those affected holding options controlled by an agent whose valuation they need not share. This is Proposition~\ref{prop:aggregate-public} restated for institutions, and the asymmetry it describes compounds over time. Pierson's analysis of increasing returns in politics shows that early distributions of authority tend to reproduce themselves, because those who hold authority can use it to shape the rules by which authority is later allocated \cite{pierson2000}. In the present notation, the reversal cost $R_j$ of any closure grows with the concentration of $q_j$.
+
+\subsection{Consultation and continuation rights}
+
+Let authority vary in time, $Q_{ij}(t)$, and let $T^{\mathrm{c}}_j$ be the time at which component $j$ is closed. Two forms of participation must be distinguished.
+
+\begin{definition}
+Agent $i$ is \emph{consulted} on component $j$ if $i$ contributes information that enters the closure decision before $T^{\mathrm{c}}_j$, with $Q_{ij}(t)=0$ for $t>T^{\mathrm{c}}_j$. Agent $i$ holds a \emph{continuation right} on $j$ if $Q_{ij}(t)>0$ for some $t>T^{\mathrm{c}}_j$, possibly conditional on specified events.
+\end{definition}
+
+Consultation improves the information on which closure is based and may therefore reduce foreclosure costs. It leaves the post-closure authority matrix unchanged and therefore does nothing to $\mathcal{M}$ after closure. An institution that consults widely and then closes centrally has improved the quality of its completion without distributing the capacity to continue what it completed. Continuation rights are the institutional form of attachment points: they are interfaces through which those governed can produce transitions in the institution without the original authority's discretionary consent.
+
+Several familiar mechanisms can be read as distinct ways of supplying continuation rights. A \emph{right of appeal} is a conditional entry in $Q$, activated when a closure harms the appellant, with a reopening threshold of the kind examined in Section~\ref{sec:reopening}. A \emph{sunset clause} converts a closure into a lease: $Q$ reverts at a scheduled time to a configuration in which the component must be affirmatively renewed, so that the burden of argument falls on continuation of the status quo rather than on its revision. \emph{Local variation} splits a component $j$ into local components $j_1,\dots,j_L$, each with authority concentrated among those locally affected, which lowers $\mathcal{M}$ whenever affectedness is itself local. \emph{Interoperable public infrastructure} provides attachment points in the sense of Section~\ref{sec:attachment}, with accessibility coefficients high for the public rather than for licensed intermediaries.
+
+Two more comprehensive designs deserve separate mention because they treat revision as the normal state of an institution rather than an exception to it. Sabel and Zeitlin describe \emph{experimentalist governance} in the European Union as a recursive cycle: broad framework goals are set jointly, lower-level units are given discretion to pursue them by their own means, units report performance and are compared through peer review, and the framework goals themselves are revised in light of what is learned \cite{sabelzeitlin2008}. In the vocabulary of Section~\ref{sec:selective}, this is a closure schedule in which foundations (the framework and the reporting interface) are fixed, purposes (local means) are left open, and the foundations themselves carry a reopening procedure fed by evidence from the periphery. Ostrom's \emph{polycentric} systems distribute authority across multiple overlapping centers at different scales, each with some autonomy to make and revise rules, so that experimentation and correction occur in parallel rather than awaiting a single sovereign decision \cite{ostrom2010}. Polycentricity replaces a single column-concentrated $q_j$ with many partially overlapping authorities, and its value lies not in maximal dispersion, which would make coordination impossible, but in the availability of multiple entry points for revision.
+
+The political principle that follows is not that everything should remain open. It is that the authority to continue should follow the burden of inhabiting. Where closure must be centralized for safety, accountability, or coordination, the justification should be stated and the central authority should carry reopening obligations commensurate with its concentration. Where closure determines purposes that those governed have the strongest claim to settle, continuation rights belong to them.

@@ -1,0 +1,82 @@
+\part{Translation and Semantic Fidelity}
+\chapter{Natural Language as Mathematical Specification}
+\label{ch:natural}
+
+Every verification instance in this monograph begins with a natural-language specification $N$, and everything the rest of the pipeline can establish is an establishment about some formal object that was derived from it. The relation between $N$ and that object is therefore the first thing that needs an account. This chapter gives one. Mathematical prose is neither unrestricted ordinary language nor a fully formal calculus, and the account has to respect both halves of that description. It has to explain why mathematicians can usually communicate a statement precisely in prose, and it has to explain why a precise reading is nevertheless not a property of the words alone.
+
+\section{What a mathematical sentence leaves unsaid}
+
+A theorem statement in a paper is written for a reader who shares a great deal with the author. The reader knows the conventions of the subfield, the definitions in force in the section, the standing assumptions announced three pages earlier, and the intended domain of each variable. The author relies on all of this, and a formalizer who sees only the sentence does not have it. The following features recur.
+
+\emph{Implicit quantification.} The sentence ``$f$ is continuous'' leaves open the domain on which continuity is asserted, and the sentence ``the matrix $A$ satisfies $A^2 = I$'' leaves open whether $A$ is fixed by context or universally quantified. A sentence with a free variable is read as universally closed in some fields and as existentially closed in others, and a sentence with several quantifiers can be read with more than one scope.
+
+\emph{Contextual definitions.} Terms such as ``bounded,'' ``compact,'' ``smooth,'' ``measurable,'' and ``a.e.'' denote different notions in different texts. Within a single text the definition may have been given once, forty pages earlier, and may have been modified by a later remark that applies only in a particular section.
+
+\emph{Inherited assumptions.} A lemma is often stated under the standing hypotheses of its section, and the hypotheses do not reappear in the statement. A formalization of the lemma in isolation either omits them, which yields a different statement, or adds them, which requires knowing which ones apply.
+
+\emph{Existence presuppositions.} Definite descriptions such as ``the least $n$ such that'' and ``the unique solution'' presuppose that the described object exists and is unique. The presupposition is part of how the sentence is understood and is not stated in it.
+
+\emph{Conventional abbreviations and informal inference.} Phrases such as ``clearly,'' ``by symmetry,'' and ``without loss of generality'' carry argumentative content that the explicit syntax does not. They matter for $O_{\mathrm{argument}}$ rather than for $O_{\mathrm{statement}}$, and they are discussed here because the same reader-dependence governs them.
+
+\section{Readings}
+
+I make the dependence on context explicit by treating interpretation as a relation. Let $\Lang_N$ be the language of natural-language specifications and $\Lang_F$ a formal language with its meaning function $\llbracket\cdot\rrbracket_{\I}$ into a common domain of propositional contents.
+
+\begin{definition}[Context and reading]
+\label{def:context}
+A \emph{context} $c$ for a specification $N$ records the definitions in scope, the conventions of the field, the standing hypotheses, and the intended domains of the variables of $N$. A \emph{reading} of $N$ in $c$ is a formal sentence $F \in \Lang_F$ that a competent reader, informed of $c$, would accept as a rendering of $N$. The set of readings is denoted $\mathrm{Read}_c(N)$.
+\end{definition}
+
+The definition does not assume that $\mathrm{Read}_c(N)$ is a single point, and it does not assume that it is a single equivalence class under $\equiv_{\I}$. It assumes only that the notion of a competent reader is meaningful, which is the same assumption on which mathematical communication rests. The two properties of the set that matter are the following.
+
+\begin{definition}[Resolved and ambiguous specifications]
+\label{def:resolved}
+A specification $N$ is \emph{resolved in $c$} if all elements of $\mathrm{Read}_c(N)$ are pairwise equivalent, $F \equiv_{\I} F'$ for all $F, F' \in \mathrm{Read}_c(N)$, and $\mathrm{Read}_c(N) \neq \varnothing$. It is \emph{ambiguous in $c$} if $\mathrm{Read}_c(N)$ contains two inequivalent sentences, and \emph{unreadable in $c$} if $\mathrm{Read}_c(N) = \varnothing$.
+\end{definition}
+
+The statement correspondence of Appendix~\ref{app:formal} can now be stated relative to a context. A formalization $F$ corresponds to $N$ in $c$ when $F$ is equivalent to a reading of $N$ in $c$. The following observation records the consequences for the resolved and ambiguous cases and for a change of context; the unreadable case has no corresponding formalization to compare and is reported as such. It is an elementary consequence of the definitions and is recorded because each case corresponds to a different kind of report.
+
+\begin{proposition}[Correspondence is context-relative]
+\label{prop:ctxrel}
+Let $F \in \Lang_F$ and let $c, c'$ be contexts for $N$.
+\begin{enumerate}[label=(\roman*)]
+\item If $N$ is resolved in $c$, then $F$ corresponds to $N$ in $c$ if and only if $F \equiv_{\I} F_0$ for any one reading $F_0$ of $N$ in $c$.
+\item If $N$ is ambiguous in $c$, then there is an $F$ that corresponds to $N$ in $c$ and is inequivalent to another reading of $N$ in $c$; correspondence to $N$ in $c$ then does not determine the content of $F$ up to equivalence.
+\item If $\mathrm{Read}_c(N) \neq \mathrm{Read}_{c'}(N)$ as sets of equivalence classes, there is an $F$ that corresponds in one context and not in the other.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(i) Equivalence is transitive and all readings are equivalent. (ii) Take two inequivalent readings $F_1, F_2$; each corresponds to $N$ in $c$ and they are inequivalent. (iii) Take $F$ in a class that belongs to one set of classes and not to the other.
+\end{proof}
+
+Part (ii) is the form in which ambiguity enters the instance: an acceptance of ``a formalization of $N$'' certifies nothing about which reading was formalized. Part (iii) is the form in which a change of context, for example a different edition of a text or a different standing hypothesis, enters. A report on statement correspondence is therefore incomplete unless it names the context.
+
+\section{Presupposition and the default}
+
+The treatment of definite descriptions deserves separate attention, because it is the point at which prose conventions and formal-language conventions diverge in a way that Chapter~\ref{ch:hidden} exploits. In prose, ``the least $n$ such that $B(n)$'' is understood to require that some $n$ satisfy $B$. If none does, the sentence has no truth value or is regarded as defective, depending on the philosophical convention. In a formal library, a function that computes the infimum of a set of natural numbers must be total, and the standard convention assigns a default value on the empty set. The two conventions agree whenever the presupposition holds and diverge whenever it fails.
+
+\begin{proposition}[Agreement of a total formalization with a presupposing description]
+\label{prop:presup}
+Let $S \subseteq \mathbb{N}$ be given by a predicate $B$ and let $\iota S$ denote the description ``the least element of $S$,'' which is defined exactly when $S \neq \varnothing$. Let $\inf^{*}$ be a total function on subsets of $\mathbb{N}$ with $\inf^{*}S = \min S$ for nonempty $S$ and $\inf^{*}\varnothing = d_0$ for a fixed default $d_0$. For any formula $\Phi(x)$,
+\begin{enumerate}[label=(\roman*)]
+\item if $S \neq \varnothing$ then $\Phi(\iota S)$ and $\Phi(\inf^{*}S)$ have the same truth value, and
+\item if $S = \varnothing$ then $\Phi(\iota S)$ is undefined and $\Phi(\inf^{*}S)$ has the truth value of $\Phi(d_0)$, which may be either.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+For nonempty $S$ the two terms denote the same natural number, so the truth values coincide. For empty $S$ the description is undefined by assumption, and the formal term denotes $d_0$.
+\end{proof}
+
+The proposition has a plain consequence for what a reader may infer. When a formalization uses a total function in place of a description, the formalization is a faithful rendering on the part of the parameter space where the presupposition holds. On the rest it is a rendering of a different sentence, which the prose did not utter. Whether that is a defect depends on whether the specification purports to cover the rest, and that is decided by the context $c$ and not by the formal library. The family of Chapter~\ref{ch:hidden} turns this into a statement about the complexity of deciding which part of the parameter space one is in.
+
+\section{Interpretation as practice}
+
+The reading relation cannot be reduced to a function from sentences to propositions, and the reason is not a defect of any particular function. Competent readers disagree on some readings and agree on others, the agreement rests on training and shared examples, and the boundaries of what counts as an acceptable reading are themselves objects of mathematical discussion. The account of this chapter does not attempt to replace that practice with a formal definition. It records the practice as the ground of $O_{\mathrm{statement}}$, and it draws two consequences for the rest of the monograph.
+
+First, the authority behind a statement-correspondence certificate is always a reader, human or otherwise, operating in a context. A certificate from a model that reads the specification and judges the formalization faithful is a certificate from an authority of this kind, and its standing is determined by what is known about the reliability of the authority in the relevant context, as Chapter~\ref{ch:authority} would require of any authority. Second, when the authorities disagree, the disagreement is information. The ledger of Chapter~\ref{ch:system} stores the readings and their provenance, and it does not collapse them.
+
+\section{What the chapter does not claim}
+
+The chapter does not claim that natural-language mathematics is inadequately precise. It claims that the precision it has is a property of a community with its conventions, and that a pipeline which removes the community, as automated translation does, must either reconstruct the conventions explicitly or accept that some of its statement correspondences are undetermined. The next chapter describes what is being asked of translation under that constraint.

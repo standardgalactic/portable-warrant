@@ -1,0 +1,62 @@
+\chapter{Impossibility Without Futility}
+\label{ch:futility}
+
+The results of the preceding chapter might be read as a counsel of despair. If well-definedness of a defining term is $\Sigma^0_l$-hard for every $l \ge 2$ on unrestricted specification classes, by reduction from the complete sets $d_l$, one may conclude that semantic checking is hopeless and that every verification must be accompanied by an irreducible act of faith. That conclusion does not follow, and the present chapter explains why. The existence of undecidable instances limits what a single total procedure can do. It leaves open a large space of procedures that are sound but incomplete, of restricted languages in which the barrier does not arise, and of reporting conventions in which uncertainty is a permitted output. The chapter develops this space and states the design principle that it supports.
+
+\section{Unrestricted hardness and useful partial procedures}
+
+A procedure for checking correspondence can fail in two ways. It can accept an instance whose specification and formalization do not correspond, which is a false acceptance. It can fail to accept an instance that does correspond, which is a missed acceptance. The theorems of Chapter~\ref{ch:sci} show that on unrestricted classes no computable procedure that always answers can avoid both. They do not show that a procedure must commit either failure at will. A procedure that is permitted to abstain can avoid false acceptance entirely at the price of missed acceptances, and the question of practical interest is how many acceptances can be recovered.
+
+\begin{definition}[Sound certifier]
+Let $\mathcal{F}$ be a class of failure types, each a set of instances at which correspondence fails in a specified way. A \emph{certifier} is a function $\kappa$ from instances to $\{\mathsf{accept}, \mathsf{reject}, \mathsf{abstain}\}$. It is \emph{sound with respect to $\mathcal{F}$} when $\kappa(V) = \mathsf{accept}$ implies that $V$ lies in no member of $\mathcal{F}$. It is \emph{sound} when acceptance implies correspondence. It is \emph{incomplete} when it abstains on some corresponding instance.
+\end{definition}
+
+\begin{proposition}[RV-011]
+\label{prop:rv011}
+(i) The certifier that always abstains is sound. (ii) If $\kappa_1, \kappa_2$ are sound with respect to $\mathcal{F}_1, \mathcal{F}_2$ respectively, then the certifier that accepts when both accept and abstains otherwise is sound with respect to $\mathcal{F}_1 \cup \mathcal{F}_2$. (iii) If $\kappa$ is sound with respect to $\mathcal{F}$ and $\kappa'$ is obtained from $\kappa$ by replacing some acceptances or rejections by abstentions, and by no other change, then $\kappa'$ is sound with respect to $\mathcal{F}$.
+\end{proposition}
+
+\begin{proof}
+(i) Acceptance never occurs. (ii) Acceptance by the composite requires acceptance by both, so the instance lies in no member of $\mathcal{F}_1$ and in no member of $\mathcal{F}_2$. (iii) Acceptances of $\kappa'$ are acceptances of $\kappa$.
+\end{proof}
+
+The proposition is elementary and its role is to name the structure. Soundness holds by construction, in the sense that it is a property of how acceptance is gated, and the mathematical substance lies in the certificate languages that make non-trivial acceptance possible. A certifier that abstains always is useless, and a certifier that accepts when a checked witness is supplied is useful in exact proportion to the witnesses it can check.
+
+\section{What soundness can and cannot recover}
+
+The hidden-existence family of Chapter~\ref{ch:hidden} shows both sides. Consider the indices $e$ for which the term $n_e$ is well defined, the set $d$. A certificate that $e \in d$ can be given by supplying a number $n$ together with a proof that $B_e(n)$ holds, that is, that $p_e(n, x_1, \dots, x_k) \ne 0$ for every choice of the unknowns, and for each $j < n$ a tuple $(x_1, \dots, x_k)$ with $p_e(j, x_1, \dots, x_k) = 0$ showing that $B_e(j)$ fails. The second part is checked by evaluation. The first part is a mathematical proof in some formal system. A certifier that accepts $e$ exactly when such a certificate is supplied and checked is sound with respect to false acceptance, since a checked certificate establishes that $n$ is the least element.
+
+\begin{proposition}[Incompleteness of every effective certificate scheme]
+\label{prop:incomplete}
+Let $\mathcal{T}$ be a recursively axiomatized theory sound for arithmetic, and let $\kappa_{\mathcal{T}}$ accept $e$ when $\mathcal{T}$ proves $\exists n\, B_e(n)$. Then the set of accepted indices is a recursively enumerable proper subset of $d$. More generally, no sound certification scheme whose accepted set is recursively enumerable accepts all of $d$.
+\end{proposition}
+
+\begin{proof}
+The accepted set is recursively enumerable, by enumeration of the theorems of $\mathcal{T}$. It is contained in $d$ by soundness. The set $d$ is $\Sigma^0_2$-complete (Theorem~\ref{thm:A3}). A recursively enumerable set is $\Sigma^0_1$, and a $\Sigma^0_2$-complete set is not $\Sigma^0_1$, since otherwise every $\Sigma^0_2$ set would be $\Sigma^0_1$ by reduction, contradicting the strictness of the arithmetical hierarchy. Hence the accepted set is a proper subset of $d$.
+\end{proof}
+
+The proposition fixes what is lost. Whatever effective certificate language is adopted, there are indices $e \in d$ that it cannot certify, and for such indices the certifier abstains. The abstention is not an error and carries no information about whether $e \in d$. The proposition also fixes what is not lost. The certified set is nonempty and in practice large, because for the specifications that occur in actual mathematical work the existence of the defined object is usually provable in a standard theory. The barrier is a barrier to uniform completeness. It is silent about the frequency of the instances on which a given theory can succeed, a point on which the result of Chapter~\ref{ch:sci} on restrictions is explicit.
+
+\section{Restricted languages and domain-specific certificates}
+
+A second source of useful procedures is restriction of the specification language. A language in which every defining term carries a proof of existence is the clearest example. In such a language the specification of Example 4.1 would be rejected as ill formed unless the author supplies the existence proof, and the hidden question is moved from the semantic interface, where it is undecidable in general, to the syntactic interface of the language, where it is checked at submission. A proof-carrying definition has the form of the hypothesis-carrying or subtype representations of Chapter~\ref{ch:hidden}, and the checking of the proof is an ordinary kernel operation. The price is expressiveness: the author must have the proof.
+
+Domain-specific semantic certificates are a third source. A certificate language tailored to a class of statements, such as bounds in a given family of function spaces, may check correspondence by comparing a normal form of the specification with a normal form of the formalization. Such checks are sound relative to the correctness of the normal form, they are incomplete, and they are decidable. They can detect classes of failure that Chapter~\ref{ch:derivative} documents. A certificate language for norm estimates that records the regularity count of each bound would flag the passage from $m+4$ to $m+5$ derivatives mechanically, as an inequality between recorded integers. The failure is not a hidden semantic failure once it is expressed in a vocabulary the checker understands, which is the point of designing the vocabulary.
+
+\section{Human adjudication and conservative abstention}
+
+Some obligations cannot be settled by either procedure, and human adjudication is then the available source of a certificate. The framework does not treat adjudication as outside the system. A judgment by an identified authority that a formalization is faithful is a discharge certificate in the sense of Appendix~\ref{app:formal}, with an authority, an interpretation, a set of dependencies, and a payload consisting of the reasons given. It is historical when accepted and currently warranted as long as its dependencies are. It can be defeated, and when it is, the obligation returns to the residue. The distinction between historical and warranted discharge is what lets adjudication be both used and revised. Where the adjudication was careful and its dependencies are stable, it is a legitimate basis for reliance, and the framework simply records that this is what the reliance rests on.
+
+Conservative abstention is the policy of reporting an obligation as unresolved whenever no sound means of discharge is available. An abstention is not a null output. It is the creation of an open obligation with the content of the instance's correspondence question, and the transition from the instance to its abstention record is preserving by reflexivity, since the successor has the same content as the original. A pipeline that abstains rather than guessing therefore satisfies the preservation theorem of Chapter~\ref{ch:preservation} trivially, and it reports its residue. Abstention is the formal counterpart of the refusal output in the trustworthy autoformalizer of Theorem~\ref{thm:rv005}, with the difference that the refusal there was required to be correct, and here the abstention is only required to be honest.
+
+\section{The design principle}
+
+The results of this chapter and the preceding one support a principle that governs the architectures of Part~VII.
+
+\begin{quote}
+\emph{A verification architecture that is adequate for unrestricted classes of specifications must be permitted to report uncertainty. It may not be required to classify every instance as success or failure.}
+\end{quote}
+
+The argument is a direct combination of the two results. By Theorem~\ref{thm:hidden}, under the convention stated there, the set of indices at which statement correspondence holds is $\Sigma^0_2$-complete, and by Theorem~\ref{thm:rv005} the well-definedness question is hard at every level, so a computable architecture that classifies every instance of a class embedding these constructions as faithful or unfaithful, correctly, cannot exist. By Remark~\ref{prop:rv006} the barrier is for classes that embed the constructions, and a restricted class needs its own analysis. By Proposition~\ref{prop:rv011}, an architecture that classifies some instances and abstains on others can be sound. Since the architecture cannot be both total and correct, it must either misclassify some instances or abstain on some. An architecture that is required to be total is therefore forced to misclassify, and an architecture that is allowed to abstain is not. The principle is a statement about what a requirement of totality costs.
+
+The principle does not say how much abstention is acceptable or where it should be concentrated. These are design questions, and the chapters of Part~VII treat them. What the principle excludes is the position that every verification process must terminate in a verdict, and with it the habit of reading the absence of an objection as the presence of a certificate. Impossibility, on the reading developed here, does not make semantic checking futile. It makes the honest reporting of what has not been checked a structural requirement.

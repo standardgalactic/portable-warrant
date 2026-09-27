@@ -1,0 +1,398 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1.15in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathpazo}
+\usepackage[T1]{fontenc}
+\usepackage{microtype}
+\usepackage{setspace}
+\usepackage{enumitem}
+\usepackage{array}
+\usepackage[colorlinks=true,linkcolor=black,citecolor=black,urlcolor=black]{hyperref}
+\onehalfspacing
+\setlength{\parindent}{1.5em}
+\setlength{\parskip}{0.2em}
+
+\newcommand{\F}{\mathcal F}
+\newcommand{\G}{\mathcal G}
+\newcommand{\Q}{\mathcal Q}
+\newcommand{\C}{\mathcal C}
+\newcommand{\N}{\mathcal N}
+\newcommand{\PP}{\mathbb P}
+\newcommand{\E}{\mathbb E}
+\newcommand{\feas}{\mathrm{feas}}
+\newcommand{\adm}{\mathrm{adm}}
+\newcommand{\app}{\mathrm{app}}
+\newcommand{\Dfc}{\mathcal D}
+
+\theoremstyle{plain}
+\newtheorem{proposition}{Proposition}
+\newtheorem{lemma}{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{remark}{Remark}
+\newtheorem{example}{Example}
+
+\title{Shared Omissions:\\Attribution When Information Losses Interact}
+\author{Flyxion\\Independent Researcher}
+\date{October 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent When several agents each hold part of the means of learning something that none of them learned, the loss that followed cannot be divided by asking what each omission added on its own, because the contributions interact. This paper takes the interaction seriously. It distinguishes the incremental contribution of an omission, which is what adding the corresponding investigation would have changed given a particular configuration of the others, from its intrinsic contribution, which averages over configurations, and it shows that the former depends on the order in which omissions are considered whenever investigations are complements or substitutes. In a pipeline of stages that each preserve or attenuate information, the dependence grows exponentially with the number of stages. The paper then argues that neither measure is a measure of responsibility. An intrinsic contribution assigns shares to agents whose omissions were excused, and an incremental contribution depends on a baseline of other agents' conduct that the standard of care has not fixed. It defines an attribution restricted to the agents whose omissions were deficient, shows that it divides exactly the loss that deficient conduct could have avoided and leaves a residual that no one answers for, and shows that the residual moves to the source of an excuse when the excuse was itself produced by another agent's decision. It then shows that when the baseline is taken to be the actual conduct of the others, an inefficient equilibrium of mutual non-investigation contains no deficient agent, and when it is taken to be reliance on the others, redundant protection contains none; and it proves that a baseline fixed by an efficient assignment of roles removes both gaps. The results are illustrated by a hospital case with a two-stage pipeline and a three-check defense in depth. The paper identifies which of these results follow from mathematics and which parameters a standard of care must supply.
+\end{abstract}
+
+\section{Introduction}\label{sec:intro}
+
+The parent essay in this series, \emph{The Domain and Its Establishment} \cite{flyxion2026domain}, makes an agent answerable for the admissible acquisition of information, and its companions apply that account to automated decisions and to organizations \cite{flyxion2026inputs}, to the law of willful blindness \cite{flyxion2026law}, and to the question of when an inquiry may stop \cite{flyxion2026stop}. Each of them treats a single agent, or treats an organization as if its parts could be summarized by one. The cases that give the account practical weight are cases in which several agents each could have learned something, none did, and a loss followed that would probably have been avoided had enough of them done so. A radiologist assumes that the referring physician has taken the history. The referring physician assumes that the radiologist will ask. A pharmacist, a prescriber, and a nurse each have an opportunity to catch a dosing error, and each relies on the other two. A data team assumes that the vendor validated the labels, and the vendor assumes that the buyer would say if it mattered. The omissions are shared, and the question is what each agent answers for.
+
+The difficulty is not only practical. It is that the natural arithmetic of attribution fails when the omissions interact. If two investigations are complements, in the sense that either alone would have revealed nothing but together they would have revealed everything, then the loss avoided by one agent's investigation depends entirely on whether the other's was made, and asking what each omission added gives answers that range from nothing to everything according to the order in which the question is put. If the investigations are substitutes, in that either alone would have sufficed, then each omission appears decisive when the other is held fixed at omission, and inessential when it is held fixed at investigation. The same pair of omissions is thus accounted for in contradictory ways by two equally reasonable procedures. A theory of responsibility for information that cannot say which accounting is right, or whether the choice matters, has not yet dealt with shared omissions.
+
+The central question of this paper is how responsibility for a loss should be attributed when it results from the omissions of several agents whose investigations interact. The answer defended has three parts. The first is a result about measures of contribution. The incremental contribution of an omission, which is the loss that would have been avoided by adding the corresponding investigation to a particular configuration of others, is ordering-dependent exactly to the extent that investigations interact, and in a pipeline of stages that each preserve or attenuate information the dependence grows exponentially with the number of stages (Propositions~\ref{prop:order} and~\ref{prop:pipeline}). The intrinsic contribution, which averages over all orderings and which is the Shapley value of the associated cooperative game, removes the dependence on order and divides the whole avoidable loss. The second part is that neither is a measure of responsibility. The intrinsic contribution gives positive shares to agents whose omissions were excused, and both measures take for granted a baseline of the other agents' conduct that the standard of care has not fixed. An attribution restricted to the agents whose omissions were deficient, with the actual conduct of everyone else as background, is the appropriate object, and its properties are established in Section~\ref{sec:restricted}. The third part concerns the baseline. When the baseline is the actual conduct of others, an inefficient equilibrium of mutual non-investigation contains no deficient agent, so that a loss that all of them together could have prevented is the fault of none. When the baseline is reliance on others to do their part, redundant protection can leave every agent with an apparently justified omission and the same result. A baseline fixed by a role assignment that is efficient for the team removes both failures, and it is the one that the standard of care should adopt (Propositions~\ref{prop:gaps} and~\ref{prop:roles}).
+
+The paper retains the definitions and notation of the parent essay and its companions and recalls what it needs in Section~\ref{sec:framework}, so that it can be read independently. Section~\ref{sec:incr} distinguishes incremental and intrinsic contribution, Section~\ref{sec:pipeline} treats pipelines, Section~\ref{sec:restricted} defines the restricted attribution, and Section~\ref{sec:baseline} treats the baseline problem. Section~\ref{sec:roles} treats the assignment of roles and Section~\ref{sec:gates} the provenance of an excuse. Section~\ref{sec:worked} carries a hospital case through four versions, Section~\ref{sec:supply} sorts what mathematics supplies from what a standard of care must supply, and Section~\ref{sec:limits} states the limits of the account.
+
+\paragraph{Sources of the mathematical and legal references.} The theory of cooperative games used here, in particular the Shapley value, and the legal tests of causation mentioned in passing are cited from general knowledge of those literatures and were not rechecked against the original texts for this essay. The propositions that are original to the paper are proved in full, and the numerical examples were computed by script from the stated definitions. The paper does not offer legal advice.
+
+\section{The framework with several agents}\label{sec:framework}
+
+Recall the single-agent framework. A probability space $(\Omega,\F,\PP)$ carries a filtration $(\F_t)$, and agent $i$ possesses the information $\F^i_t$. A decision is made in two stages, the choice of an investigation $q$ from a set of acquisition procedures and then an act using the enlarged information. The feasible investigations are $\Q^{\feas}$, the applicable investigations $\Q^{\app}$ are those the standard of care calls for, and the admissible investigations are $\Q^{\adm}=\Q^{\feas}\cap\Q^{\app}$. An omission of an admissible investigation that the evidence indicated is deficient. A deficient omission is of type D2 when it is motivated by suspicion of what the investigation would show and of type D1 otherwise, and non-deficient omissions are of the types U (unavoidable), N (not indicated), and J (justified by a competing constraint). The constraint set $\C^i_t$ of agent $i$ fixes $\Q^{i,\feas}_t$, and it may itself be the product of other agents' decisions, which is the provenance of constraints treated in the parent essay and in \cite{flyxion2026inputs}.
+
+\paragraph{Several agents.} Let $\N=\{1,\dots,n\}$ be a finite set of agents. Each agent $i$ has an investigation $q_i$ with outcome $Z_i$ and a cost $c_i\ge0$ borne by $i$. A single downstream decision is taken, with action set $A$ and loss $L(a,\omega)\ge0$ borne by third parties, using whatever information reaches the decision point. For $S\subset\N$ write $\G_S=\F_0\vee\bigvee_{i\in S}\sigma(Z_i)$ for the pooled information when exactly the agents in $S$ investigate and every outcome is routed to the decision point. The routing assumption is the closure condition of \cite{flyxion2026inputs}: an investigation that is made but whose outcome does not reach the decision contributes nothing, and the possibility that routing fails is treated in Section~\ref{sec:limits}. Define the expected loss when exactly $S$ investigate and the \emph{value} of $S$,
+\[
+R(S)=\E\Bigl[\min_{a\in A}\E\bigl[L(a,\omega)\mid\G_S\bigr]\Bigr],\qquad v(S)=R(\emptyset)-R(S).
+\]
+Thus $v(S)$ is the expected loss avoided when exactly the agents in $S$ investigate. The pair $(\N,v)$ is the \emph{acquisition game}, and the \emph{net value} is $u(S)=v(S)-\sum_{i\in S}c_i$.
+
+\begin{lemma}[Monotonicity]\label{lem:mono}
+$v(\emptyset)=0$, and $S\subset S'$ implies $0\le v(S)\le v(S')\le R(\emptyset)$.
+\end{lemma}
+
+\begin{proof}
+If $S\subset S'$ then $\G_S\subset\G_{S'}$, and the Bayes risk conditional on a finer $\sigma$-field is smaller in expectation, because any action measurable with respect to $\G_S$ is also measurable with respect to $\G_{S'}$. Hence $R(S')\le R(S)\le R(\emptyset)$. The bound $v\le R(\emptyset)$ holds because $R\ge0$.
+\end{proof}
+
+The lemma is the several-agent form of the statement, proved as Lemma~1 of \cite{flyxion2026stop}, that information cannot raise the expected Bayes risk. It does not say that $v$ is additive, and in general it is not.
+
+\begin{example}[Complements and substitutes]\label{ex:xor}
+Let $\omega\in\{0,1\}$ with $\PP(\omega=1)=\tfrac12$, let the loss be $1$ for a wrong act and $0$ otherwise, so that $R(\emptyset)=\tfrac12$. \emph{Complements}: let $\omega=X_1\oplus X_2$ for independent fair bits and let $Z_i=X_i$. Then $v(\{1\})=v(\{2\})=0$ and $v(\{1,2\})=\tfrac12$. \emph{Substitutes}: let $Z_1=Z_2=\omega$. Then $v(\{1\})=v(\{2\})=v(\{1,2\})=\tfrac12$. In the first case the investigations are worth something only together, and in the second either suffices and the other is redundant.
+\end{example}
+
+For two agents define the \emph{interaction} $I=v(\{1,2\})-v(\{1\})-v(\{2\})$. It equals $+\tfrac12$ in the complement case and $-\tfrac12$ in the substitute case. The game is \emph{supermodular} if $v(S\cup T)+v(S\cap T)\ge v(S)+v(T)$ for all $S,T$, which says that investigations are weak complements, and \emph{submodular} if the reverse inequality holds. A game that is both is additive.
+
+\section{Incremental and intrinsic contribution}\label{sec:incr}
+
+\begin{definition}[Incremental contribution]\label{def:incr}
+For $i\notin S$ the \emph{incremental contribution} of $i$ to $S$ is $m_i(S)=v(S\cup\{i\})-v(S)$, the expected loss avoided by adding $i$'s investigation to a configuration in which exactly $S$ investigate. For an ordering $\pi$ of $\N$ let $P^\pi_i$ be the set of agents preceding $i$. The \emph{sequential attribution} along $\pi$ assigns to $i$ the amount $m_i(P^\pi_i)$.
+\end{definition}
+
+Sequential attribution along $\pi$ divides $v(\N)$ exactly, by telescoping, $\sum_i m_i(P^\pi_i)=v(\N)-v(\emptyset)=v(\N)$. It is the form taken by any procedure that adds or removes components one at a time and records what changed, such as a sequential ablation, and it is familiar from the practice of attributing a result to the stages of a process in the order in which they are examined. It is also the form of the but-for test of causation at a particular configuration: the omission of $i$ is a but-for cause of the loss at the actual configuration $S$ if $m_i(S)>0$.
+
+\begin{definition}[Intrinsic contribution]\label{def:intrinsic}
+The \emph{intrinsic contribution} of $i$ is the average of its sequential attributions over all $n!$ orderings,
+\[
+\varphi_i(v)=\frac1{n!}\sum_\pi m_i(P^\pi_i)=\sum_{S\subset\N\setminus\{i\}}\frac{|S|!\,(n-|S|-1)!}{n!}\,m_i(S).
+\]
+\end{definition}
+
+This is the Shapley value of the game $(\N,v)$ \cite{shapley1953value}. It is efficient, $\sum_i\varphi_i=v(\N)$, because each ordering's attributions sum to $v(\N)$; it is symmetric, in that agents who are interchangeable in $v$ receive equal amounts; it gives nothing to an agent whose marginal contribution is always zero; and it is additive in the game. The classical theorem is that these four properties characterize it \cite{shapley1953value}, which is cited here and not reproved. What matters for the present purpose is the plain fact that it is the order-free average of the incremental contributions.
+
+\begin{proposition}[Order dependence is interaction]\label{prop:order}
+\begin{enumerate}[label=(\roman*),nosep]
+\item $m_i(S)$ is the same for all $S\not\ni i$ and all $i$ if and only if $v$ is additive. In that case every sequential attribution, the intrinsic contribution, and the stand-alone value coincide, $m_i(P^\pi_i)=\varphi_i=v(\{i\})$.
+\item If $v$ is supermodular then $m_i(S)\le m_i(S')$ whenever $S\subset S'$, so that sequential attribution gives an agent its largest share when it is considered last and its smallest when it is considered first. If $v$ is submodular the order is reversed.
+\item $\min_Sm_i(S)\le\varphi_i\le\max_Sm_i(S)$. For $n=2$, $\varphi_i=v(\{i\})+\tfrac12I$, and the two possible sequential attributions to $i$ differ by exactly $|I|$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(i) If $v$ is additive then $m_i(S)=v(\{i\})$ for every $S$. Conversely, suppose $m_i(S)=m_i(\emptyset)=v(\{i\})$ for all $i$ and all $S\not\ni i$. Adding the agents of $S$ one at a time gives $v(S)=\sum_{i\in S}v(\{i\})$ by induction on $|S|$, so $v$ is additive. The coincidence claims follow from the definitions.
+
+(ii) For $i\notin S\subset S'$, supermodularity applied to the sets $S\cup\{i\}$ and $S'$ gives $v(S'\cup\{i\})+v(S)\ge v(S\cup\{i\})+v(S')$, which rearranges to $m_i(S')\ge m_i(S)$. The submodular case reverses the inequality.
+
+(iii) The first claim holds because $\varphi_i$ is a weighted average of the values $m_i(S)$ with positive weights summing to one. For $n=2$, $\varphi_1=\tfrac12[v(\{1\})+v(\{1,2\})-v(\{2\})]=v(\{1\})+\tfrac12I$, and the two sequential attributions to agent 1 are $v(\{1\})$ and $v(\{1,2\})-v(\{2\})=v(\{1\})+I$.
+\end{proof}
+
+Proposition~\ref{prop:order} says that the arbitrariness of incremental accounting is exactly the interaction in the game, no more and no less. If investigations do not interact, nothing in the choice among measures matters. If they do, the choice matters by the amount of the interaction, and a theory of responsibility must say which measure, if any, answers the question it asks. Part (ii) adds a point about the practice of attribution: when the investigations are complements, an agent examined last bears the entire interaction, and when they are substitutes, the agent examined first does. An accounting that examines the agents in the order of the process, and that arrives at the last stage after the earlier ones have been taken as done, will charge the last stage heavily under complementarity, and one that works backwards will charge the first.
+
+\begin{remark}[But-for and jointly sufficient omissions]\label{rem:butfor}
+In the complement case of Example~\ref{ex:xor}, when both agents omit, the actual configuration is $S=\emptyset$ and $m_1(\emptyset)=v(\{1\})=0$, and likewise for agent 2. Neither omission is a but-for cause of the loss, although together they are jointly sufficient for it, since had both investigated the loss would have been avoided. A test that treats an omission as a cause when it is a necessary element of a set of conditions jointly sufficient for the loss \cite{wright1985causation,hart1959causation} classifies both omissions as causes here, and the but-for test does not. In the substitute case, when both omit, each omission is a but-for cause, since $m_i(\emptyset)=\tfrac12$. The difficulty there lies on the side of prevention: if both had investigated, neither investigation would have been a but-for cause of the loss avoided, since $m_i(\{j\})=0$. The same pair of agents is thus easy to blame and hard to credit under substitutes, and hard to blame under complements, by the but-for test alone. These observations indicate why overdetermination and joint causation are difficult for tests keyed to a single configuration, and they are not a treatment of the legal literature.
+\end{remark}
+
+\section{Pipelines of information loss}\label{sec:pipeline}
+
+A pipeline is a sequence of stages through which information passes on its way to a decision, and the case of interest is one in which each stage may preserve or attenuate what it receives. The stylization used here is that stage $j$, if its agent is careful, passes the information on without loss, and otherwise passes on a fraction $\lambda_j\in[0,1)$ of its informational content, so that the value of the decision is proportional to the content retained at the end. This is a modeling assumption and not a derivation from the information-theoretic structure, though it is the form taken by the local-global gap of \cite{flyxion2026inputs}, in which a loss that is small at each stage compounds to a loss that is large overall.
+
+\begin{definition}[Pipeline game]\label{def:pipe}
+Let $\N=\{1,\dots,n\}$ index the stages, let $B>0$ be the value of fully preserved information and $\lambda_j\in[0,1)$ the retention factor of stage $j$ when its agent is not careful. For $S\subset\N$, the set of careful agents, the value retained is $B\prod_{j\notin S}\lambda_j$, and the game is
+\[
+v(S)=B\Bigl(\prod_{j\notin S}\lambda_j-\Lambda\Bigr),\qquad\Lambda=\prod_{j\in\N}\lambda_j.
+\]
+\end{definition}
+
+Here $v(\emptyset)=0$, $v(\N)=B(1-\Lambda)$, and $v$ is the expected loss avoided by care at the stages in $S$ relative to care at none.
+
+\begin{proposition}[The pipeline game]\label{prop:pipeline}
+\begin{enumerate}[label=(\roman*),nosep]
+\item The incremental contribution of stage $i$ to $S\not\ni i$ is
+\[
+m_i(S)=B(1-\lambda_i)\prod_{j\notin S\cup\{i\}}\lambda_j,
+\]
+and $v$ is supermodular, strictly so when all $\lambda_j\in(0,1)$ and $n\ge2$.
+\item The incremental contribution of stage $i$ ranges from $B(1-\lambda_i)\prod_{j\ne i}\lambda_j$, when it is considered first, to $B(1-\lambda_i)$, when it is considered last. The ratio of the largest to the smallest is $\bigl(\prod_{j\ne i}\lambda_j\bigr)^{-1}$, which, if each $\lambda_j\le\bar\lambda<1$ for $j\ne i$, is at least $\bar\lambda^{-(n-1)}$ and so grows exponentially in the number of stages.
+\item The intrinsic contribution is $\varphi_i=B(1-\lambda_i)\sum_{S\subset\N\setminus\{i\}}\frac{|S|!(n-|S|-1)!}{n!}\prod_{j\notin S\cup\{i\}}\lambda_j$. For $n=2$,
+\[
+\varphi_1=\tfrac12B(1-\lambda_1)(1+\lambda_2),\qquad\varphi_2=\tfrac12B(1-\lambda_2)(1+\lambda_1),
+\]
+and the interaction is $I=B(1-\lambda_1)(1-\lambda_2)$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(i) Because $v(S\cup\{i\})-v(S)=B\bigl(\prod_{j\notin S\cup\{i\}}\lambda_j-\prod_{j\notin S}\lambda_j\bigr)$ and $\prod_{j\notin S}\lambda_j=\lambda_i\prod_{j\notin S\cup\{i\}}\lambda_j$, the difference equals $B(1-\lambda_i)\prod_{j\notin S\cup\{i\}}\lambda_j$. For $S\subset S'$ the product over $j\notin S'\cup\{i\}$ has fewer factors, each in $[0,1)$, and so is at least the product over $j\notin S\cup\{i\}$. Hence $m_i$ is nondecreasing in the set, which is equivalent to supermodularity by the standard characterization of supermodular set functions through their marginals; the inequality is strict when the factors lie in $(0,1)$ and the sets differ.
+(ii) is the case $S=\N\setminus\{i\}$ against $S=\emptyset$ of (i). (iii) is the definition of $\varphi_i$ applied to (i); for $n=2$ the sum has the two terms $S=\emptyset$ and $S=\{j\}$ with weight $\tfrac12$ each, giving $\tfrac12B(1-\lambda_i)(\lambda_j+1)$, and $I=v(\{1,2\})-v(\{1\})-v(\{2\})=B(1-\lambda_1\lambda_2)-B\lambda_2(1-\lambda_1)-B\lambda_1(1-\lambda_2)=B(1-\lambda_1)(1-\lambda_2)$.
+\end{proof}
+
+The consequence for the practice of attribution is that when the stages are many, the amount charged to a single stage by sequential accounting is determined mostly by the position at which it is examined. With ten stages each retaining $0.8$ of its content when careless, the same stage can be charged $B(0.2)(0.8)^9\approx0.027B$ when considered first and $0.2B$ when considered last, a ratio of about $7.5$. This is the sense in which the incremental contribution is ordering-dependent exponentially in the length of the pipeline. The intrinsic contribution has the opposite virtue, since it does not depend on the order, and the example below shows that it behaves as one would hope in a respect that sequential accounting does not.
+
+\begin{example}[A two-stage pipeline]\label{ex:two}
+Let $B=100$, $\lambda_1=0.5$, $\lambda_2=0.8$. Then $v(\{1\})=40$, $v(\{2\})=10$, $v(\{1,2\})=60$, and the interaction is $I=10$. Sequential attribution along the order $(1,2)$ gives $(40,20)$ and along $(2,1)$ gives $(50,10)$. The intrinsic contribution is $(45,15)$, which is the midpoint, and it sums to $60=v(\N)$. The stage whose attenuation is more severe, stage 1, carries the larger share, and the share of a stage increases with the retention of its neighbor: a careless stage is more culpable the more carefully the others would have preserved what it destroyed.
+\end{example}
+
+The monotonicity in the neighbor's retention, visible in $\varphi_1=\tfrac12B(1-\lambda_1)(1+\lambda_2)$, is worth stating directly. If stage 2 is leaky ($\lambda_2$ near zero), stage 1's care would have mattered little, because what it preserved would have been lost downstream, and its intrinsic share falls toward $\tfrac12B(1-\lambda_1)$. If stage 2 is nearly lossless, stage 1's share rises toward $B(1-\lambda_1)$. The intrinsic contribution thereby encodes the intuition that responsibility for an omission depends on whether the information it would have preserved could have been used, which is the interaction at work and is not an arbitrary convention.
+
+\section{Contribution is not responsibility}\label{sec:restricted}
+
+The intrinsic contribution is order-free, efficient, and symmetric, and it is tempting to take it as the answer to the question what each agent answers for. It is not, for a reason that has nothing to do with games and everything to do with the framework. The framework makes an agent answerable for a loss through deficient omissions, which are omissions of admissible investigations that the evidence indicated. An agent whose omission was unavoidable, not indicated, or justified by a competing constraint has not omitted anything it was answerable for acquiring, and it should receive no share of the loss on that account. The intrinsic contribution does not know this. It is a function of $v$ alone, and $v$ records what the investigations would have done, not whether the agents were required to make them.
+
+\begin{proposition}[Intrinsic contribution ignores excuses]\label{prop:excused}
+If $i$ is not a dummy in $v$, in the sense that $m_i(S)>0$ for some $S\not\ni i$, then $\varphi_i(v)>0$, whatever the status of $i$'s omission. In the two-stage pipeline of Example~\ref{ex:two}, if stage 1 could not have been careful because the access it needed was removed, its intrinsic contribution is nevertheless $45$ of the avoidable $60$.
+\end{proposition}
+
+\begin{proof}
+By Lemma~\ref{lem:mono} every $m_i(S)\ge0$, and the weights in Definition~\ref{def:intrinsic} are positive, so $\varphi_i$ is a positive-weight average of non-negative terms at least one of which is positive. The value $45$ was computed in Example~\ref{ex:two}, and it depends on $v$ only.
+\end{proof}
+
+What is wanted is an attribution that takes the standard of care as an input. Let the actual conduct be described by $S\subset\N$, the agents who investigated, and $O=\N\setminus S$, those who omitted. The standard of care, in the manner of the parent essay, partitions $O$ into the \emph{deficient} omitters $\Dfc\subset O$ and the \emph{non-deficient} omitters $O\setminus\Dfc$, whose omissions are of the types U, N, or J. How the standard makes this partition when the investigations interact is the subject of Section~\ref{sec:baseline}, and for the present it is taken as given.
+
+\begin{definition}[Restricted attribution]\label{def:restricted}
+Given the actual investigators $S$ and the deficient omitters $\Dfc$, the \emph{restricted game} is $v_S(T)=v(S\cup T)-v(S)$ for $T\subset\Dfc$, and the \emph{restricted attribution} of agent $i\in\Dfc$ is its Shapley value in that game,
+\[
+\psi_i=\varphi_i\bigl(v_S\!\restriction_{\Dfc}\bigr)=\sum_{T\subset\Dfc\setminus\{i\}}\frac{|T|!\,(|\Dfc|-|T|-1)!}{|\Dfc|!}\,\bigl[v(S\cup T\cup\{i\})-v(S\cup T)\bigr],
+\]
+and $\psi_i=0$ for $i\notin\Dfc$. The \emph{attributable loss} is $A=v(S\cup\Dfc)-v(S)$, the \emph{avoidable loss} is $V=v(\N)-v(S)$, and the \emph{residual} is $\varrho=V-A$.
+\end{definition}
+
+The restriction does two things. It limits the players to the deficient agents, so that those whose omissions were excused receive nothing. And it holds the conduct of everyone else at what it actually was: the agents who investigated remain investigators, and the non-deficient omitters remain omitters, since an omission that was not deficient is not one the standard would have had the agent avoid, and the counterfactual in which it is repaired is not the counterfactual for which the others answer.
+
+\begin{proposition}[Properties of the restricted attribution]\label{prop:restricted}
+\begin{enumerate}[label=(\roman*),nosep]
+\item \emph{Efficiency over deficient conduct.} $\sum_i\psi_i=A$, the loss that would have been avoided had every deficient omitter investigated and everyone else behaved as they did.
+\item \emph{Bounded by the avoidable loss.} $0\le A\le V$, and the residual $\varrho=v(\N)-v(S\cup\Dfc)\ge0$ is the part of the avoidable loss that could be avoided only if some non-deficient omitter had also investigated. It vanishes if and only if $v(S\cup\Dfc)=v(\N)$.
+\item \emph{Non-negativity and excuses.} $\psi_i\ge0$ for all $i$, and $\psi_i=0$ for every agent whose omission was not deficient.
+\item \emph{Single deficient agent.} If $\Dfc=\{i\}$ then $\psi_i=m_i(S)$, the but-for contribution at the actual configuration.
+\item \emph{Interaction among the deficient.} If $v_S$ is supermodular on $\Dfc$ then $\psi_i\ge v_S(\{i\})$ for each $i$, so that each deficient agent is charged at least what its omission would have cost had the others been blameless, and the shortfall $A-\sum_iv_S(\{i\})$ is the interaction among the deficient, which is distributed among them.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(i) is the efficiency of the Shapley value in $v_S$ on the player set $\Dfc$. (ii) The bounds follow from Lemma~\ref{lem:mono}, since $S\subset S\cup\Dfc\subset\N$, and the identity $V=A+\varrho$ is the definition. (iii) The marginal contributions in $v_S$ are differences of $v$ along inclusions, hence non-negative; agents outside $\Dfc$ are not players. (iv) With one player the Shapley value is the value of the grand coalition, $v(S\cup\{i\})-v(S)$. (v) By Proposition~\ref{prop:order}(ii) applied to $v_S$, each marginal contribution of $i$ is at least $v_S(\{i\})$ (its marginal contribution to the empty set), and $\psi_i$ is an average of them. The remaining statement follows from (i).
+\end{proof}
+
+The residual in part (ii) is the formal home of a familiar moral fact. Some of the avoidable loss was avoidable only through conduct that no one was required to engage in. It is loss that no deficient agent answers for, and it should not be assigned to any of them to make the accounts balance, nor to the excused agent, who did nothing it was answerable for. It is not thereby nothing. It may be owed to those who suffered it by whoever bears the risk by contract, insurance, or institutional design, and the question whom the standard should make bear it is distinct from the question of attribution. Section~\ref{sec:gates} shows that the residual is sometimes the product of another agent's decision and can then be attributed to that agent.
+
+\begin{example}[Stage 1 excused]\label{ex:excused}
+In the pipeline of Example~\ref{ex:two}, suppose neither stage was careful, so that $S=\emptyset$, and that stage 1 was excused because the access it needed had been removed, while stage 2 was deficient, so that $\Dfc=\{2\}$. Then $V=v(\N)=60$, the attributable loss is $A=v(\{2\})=10$, the restricted attribution of stage 2 is $\psi_2=10$, and the residual is $\varrho=50$. If instead both stages were deficient, then $\Dfc=\{1,2\}$, the restricted game is the whole game, $A=60$, and $\psi=(45,15)$. The same pipeline, the same behavior, and the same loss produce attributions of $10$ and $60$ in total according to whether the first stage's omission is excused, and the number $50$ in the first case is the loss that required the care of an agent who could not give it.
+\end{example}
+
+The restricted attribution is a measure of expected loss avoided, and it is an ex ante measure, in that it uses the expectation $v$ and not the realized loss. If the realized loss is known and is to be divided, the natural convention is to scale the shares by the ratio of the realized loss to $A$, and this is a convention that a standard may adopt or replace. The determination of which omissions are deficient is likewise ex ante, made at the time and on the information of each agent, in accordance with the parent essay's separation of historical justification from later assessment.
+
+\section{The baseline problem}\label{sec:baseline}
+
+The restricted attribution takes the deficient set $\Dfc$ as given. When agents act in isolation the parent essay's account says how to determine it: an omission is deficient if the investigation was admissible and the evidence indicated it. When agents interact, the value of an investigation depends on what the others do, so that whether it was indicated depends on a prior question, namely what the agent is entitled or required to assume about the others. This is the baseline problem.
+
+\begin{definition}[Net gain and baselines]\label{def:baseline}
+For $i\notin B$ let $g_i(B)=v(B\cup\{i\})-v(B)-c_i$ be the net gain of adding $i$'s investigation to a configuration $B$. A \emph{baseline rule} assigns to each agent $i$ and each actual profile $S$ a configuration $\beta_i(S)\not\ni i$, and $i$ is \emph{indicated under $\beta$} if $g_i(\beta_i(S))>0$. Three baseline rules are of interest:
+\begin{itemize}[nosep]
+\item the \emph{actual-conduct baseline}, $\beta_i(S)=S\setminus\{i\}$, which evaluates $i$'s investigation against what the others in fact did;
+\item the \emph{reliance baseline}, $\beta_i(S)=\N\setminus\{i\}$, which evaluates it on the supposition that every other agent investigated;
+\item the \emph{role baseline} for a designated set $T\subset\N$, $\beta_i(S)=T\setminus\{i\}$, which evaluates it against the others' assigned roles and does not depend on $S$.
+\end{itemize}
+An omitter is \emph{deficient under $\beta$} if it is indicated under $\beta$ and its investigation is admissible, so that $\Dfc_\beta(S)=\{i\in O:\ i\text{ admissible and }g_i(\beta_i(S))>0\}$.
+\end{definition}
+
+The definition uses the economic form of indication, the net gain of one step against a baseline, because it exposes the dependence on others most plainly. A standard that uses probability indication in the manner of the parent essay, an investigation being indicated when the probability of the fact it addresses is at least a threshold, has the same structure, with the probability computed given an assumption about what the others have done. The conclusions below transfer.
+
+\begin{proposition}[Two gaps]\label{prop:gaps}
+\begin{enumerate}[label=(\roman*),nosep]
+\item Under the actual-conduct baseline, and for admissible investigations, $\Dfc=\emptyset$ if and only if $g_i(S)\le0$ for every $i\notin S$, that is, if and only if no omitter could improve the net value by investigating alone. Such a profile can be strictly inefficient, $u(S)<\max_{S'}u(S')$, so that a loss avoidable by joint investigation contains no deficient agent.
+\item Under the reliance baseline, $\Dfc=\emptyset$ for every actual profile whenever $g_i(\N\setminus\{i\})\le0$ for all $i$, that is, whenever every investigation is, given the others', not worth its cost. This can hold when $u(\emptyset)<\max u$, so that a loss avoidable by some investigations contains no deficient agent whatever anyone did.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(i) The first statement is the definition with $\beta_i(S)=S\setminus\{i\}=S$ for $i\notin S$. For strict inefficiency use the pipeline of Example~\ref{ex:two} with costs $c_1=42$ and $c_2=12$. Then $u(\emptyset)=0$, $u(\{1\})=40-42=-2$, $u(\{2\})=10-12=-2$, and $u(\{1,2\})=60-54=6$. At $S=\emptyset$ the net gains are $g_1(\emptyset)=-2$ and $g_2(\emptyset)=-2$, so neither agent is indicated and $\Dfc=\emptyset$, although the profile $\{1,2\}$ has net value $6$ and the expected loss avoided by joint care is $60$. (ii) Take three agents who each have an independent check that catches an error with probability $d_P=0.6$, $d_R=0.5$, $d_N=0.4$, at costs $c_P=4$, $c_R=c_N=2.5$, where an uncaught error costs $20$ in expectation, so that $v(S)=20\bigl(1-\prod_{i\in S}(1-d_i)\bigr)$. The values are $v(\{P,R,N\})=17.6$, $v(\{R,N\})=14.0$, $v(\{P,N\})=15.2$, $v(\{P,R\})=16.0$. Hence $g_P(\{R,N\})=17.6-14.0-4=-0.4$, $g_R(\{P,N\})=17.6-15.2-2.5=-0.1$, and $g_N(\{P,R\})=17.6-16.0-2.5=-0.9$, all negative, so under the reliance baseline no omitter is ever indicated. Yet $u(\{P,R\})=16.0-6.5=9.5>0=u(\emptyset)$.
+\end{proof}
+
+The two gaps are mirror images, and their conjunction is what makes the baseline unavoidable. The actual-conduct baseline fails under complementarity, where each omission looks pointless given the other's, and the pair is a trap in which mutual omission is stable although mutual investigation is better. This is the structure of an assurance game, and the agents' situation is the familiar one of each waiting for evidence that the other will act. The reliance baseline fails under redundancy, where each omission looks harmless given the others' investigations, and the failure is that of diffusion of responsibility, in which each assumes that someone else is checking. Neither failure shows bad faith. In each, every agent can truthfully say that its own investigation would not have been worth its cost, given what it was entitled to suppose about the others. The loss is a property of the profile and not of any individual's choice, and a standard that evaluates agents one at a time against either baseline will find no one at fault.
+
+\begin{example}[Beliefs about others]\label{ex:belief}
+Suppose in the two-stage pipeline with $c_1=42$ and $c_2=12$ that stage 2 believes that stage 1 will be careful with probability $q$. Stage 2's expected net gain from care is $q\,[v(\{1,2\})-v(\{1\})]+(1-q)\,v(\{2\})-c_2=20q+10(1-q)-12=10q-2$, so it is indicated if and only if $q>0.2$. By symmetry stage 1's expected net gain is $10q'-2$, where $q'$ is its probability that stage 2 will be careful. Each is indicated unless it has good reason to expect the other to fail. If both agents hold probabilities below $0.2$ neither is indicated, and mutual omission is self-confirming.
+\end{example}
+
+The example connects the baseline to the distinction between credence and evidence-supported probability drawn in the companion essay on the law \cite{flyxion2026law}. What an agent believes about the others' conduct, its credence, may differ from what its evidence supports. An agent who assumes that the other stage will fail, or that the other will cover, because it would rather not be responsible, has a belief that is not supported by its evidence and is motivated, and the omission it supports is of type D2 if the evidence-supported baseline would have indicated the investigation. The standard of care therefore has to say whose beliefs about the others count, and the natural answer is that it is the evidence-supported probability, with the burden on the agent to show that the evidence supported its assumption.
+
+\section{Assigning roles}\label{sec:roles}
+
+The two gaps arise because the baseline moves with the others' conduct or with an assumption about it, and the remedy is a baseline that does not. A role baseline fixes in advance a set $T$ of agents who are to investigate, and evaluates each agent's investigation against the roles of the others, not against their performance.
+
+\begin{proposition}[Efficient roles]\label{prop:roles}
+Let $T\in\arg\max_Su(S)$ be an efficient set of investigators. Under the role baseline for $T$,
+\begin{enumerate}[label=(\roman*),nosep]
+\item every $i\in T$ is indicated in the weak sense $g_i(T\setminus\{i\})\ge0$, strictly if $T$ is the unique maximizer;
+\item no $j\notin T$ is indicated, $g_j(T)\le0$;
+\item if $T$ is the unique maximizer, the actual investigators satisfy $S\subset T$ with $S\ne T$, then the deficient set is $\Dfc=\{i\in T\setminus S:\ i\text{ admissible}\}$, which contains every unexcused assignee who omitted. In particular an omission-driven shortfall from the efficient plan always has a deficient agent unless every missing assignee was excused.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(i) For $i\in T$, $g_i(T\setminus\{i\})=v(T)-v(T\setminus\{i\})-c_i=u(T)-u(T\setminus\{i\})\ge0$ because $T$ maximizes $u$, and strictly if $T$ is the unique maximizer. (ii) For $j\notin T$, $g_j(T)=u(T\cup\{j\})-u(T)\le0$ for the same reason. (iii) For $i\in T\setminus S$ the role baseline does not depend on $S$, so by (i) and uniqueness $g_i(T\setminus\{i\})>0$, and $i$ is deficient if it is admissible. Agents outside $T$ are not indicated by (ii) and so are not deficient. Over-provision, $S\supsetneq T$, is not an omission and is outside the scope of this result.
+\end{proof}
+
+The proposition shows that a standard which designates an efficient assignment closes both gaps at once. In the pipeline with $c_1=42$, $c_2=12$ the unique efficient set is $\{1,2\}$, and when neither stage is careful both are deficient, which the actual-conduct baseline could not say. In the defense in depth with the costs above, the efficient set is $\{P,R\}$ with $u=9.5$, ahead of $\{R,N\}$ with $u=9.0$ and $\{P,N\}$ with $u=8.7$. The role baseline for $\{P,R\}$ gives $g_P(\{R\})=16.0-10.0-4=2.0$ and $g_R(\{P\})=16.0-12.0-2.5=1.5$, both positive, and $g_N(\{P,R\})=17.6-16.0-2.5=-0.9$, so the nurse is not indicated. Under the reliance baseline no one was indicated; under the role baseline the prescriber and the pharmacist are.
+
+There is a price, which the proposition also reveals. The mathematics fixes the efficient set only up to ties and only given the model. Two agents with identical investigations and costs make $\{1\}$ and $\{2\}$ equally efficient, and nothing in $v$ and $c$ picks one. The standard must pick, and a pick that is made after the failure, to explain it, is not a baseline. Several principles for breaking the tie are available and are not equivalent: the least-cost avoider, the agent closest to the source of the information, the agent with the best access, or the agent who accepted the role. The first is a familiar principle in the economic analysis of accident law \cite{calabresi1970costs}. The point for the present is that a tie-breaking rule is a normative parameter and not a mathematical consequence.
+
+A further point is the relation of roles to excuses. The efficient set is computed relative to the investigations that are feasible. If an assignee becomes unable to perform, the efficient set for the remaining feasible investigations may differ, and the parent essay's secondary duty to report a limitation becomes the mechanism by which the assignment is recomputed. An assignee who is excused from the primary investigation and does not report is deficient in a different omission, that of the report, and the report is an investigation in its own right in the acquisition game, because it is the means by which the others' baselines are corrected.
+
+\section{The provenance of an excuse}\label{sec:gates}
+
+The residual of Proposition~\ref{prop:restricted} arises when an agent's omission is excused. An excuse often traces to another agent's decision. A stage cannot be careful because its time was cut by a manager, because the access it required was withheld by a vendor, or because the system that would have flagged the case was configured to suppress it. The parent essay calls this the provenance of constraints, and the question here is what it does to attribution.
+
+\begin{definition}[Gate]\label{def:gate}
+Agent $k$ is a \emph{gate} for agent $i$ if $i$'s investigation can be made only after $k$ has acted. Let $v_0$ be a base game on the agents other than $k$, including $i$. The \emph{dispositional assumption} is that an excused agent $i$ would have investigated had it been enabled. Under it, for a coalition $S$ not containing $i$, the \emph{dispositional value} is
+\[
+\tilde v(S)=\begin{cases}v_0\bigl((S\setminus\{k\})\cup\{i\}\bigr)&\text{if }k\in S,\\ v_0(S)&\text{if }k\notin S,\end{cases}
+\]
+so that the investigation of $i$ counts exactly when $k$ has acted.
+\end{definition}
+
+\begin{proposition}[The gate inherits the position of the agent it disables]\label{prop:gate}
+Suppose $k$ is a gate for $i$, agent $i$ is excused and so not in $\Dfc$, and $k$ and the other deficient agents are in $\Dfc$, with actual investigators $S\not\ni i,k$. Under the dispositional assumption, the restricted game on $\Dfc$ is isomorphic, by relabeling $k$ as $i$, to the restricted game of the base game $v_0$ on $(\Dfc\setminus\{k\})\cup\{i\}$: a coalition $T\ni k$ has value $v_0(S\cup(T\setminus\{k\})\cup\{i\})-v_0(S)$, and a coalition $T\not\ni k$ has value $v_0(S\cup T)-v_0(S)$. Consequently $\psi_k$ equals the restricted attribution that $i$ would have received in the base game had it been a deficient agent, and the share that the excused agent's omission would otherwise have left as residual is attributed to the gate.
+\end{proposition}
+
+\begin{proof}
+By Definition~\ref{def:gate}, for $T\subset\Dfc$ containing $k$ the dispositional value of $S\cup T$ is the base-game value of $S\cup(T\setminus\{k\})\cup\{i\}$, and for $T$ not containing $k$ it is the base-game value of $S\cup T$. Relabeling $k$ as $i$ is therefore a bijection between coalitions of $\Dfc$ and coalitions of $(\Dfc\setminus\{k\})\cup\{i\}$ that preserves the values of the restricted games. The Shapley value is invariant under relabeling of players.
+\end{proof}
+
+\begin{example}[The access that was withheld]\label{ex:gate}
+Return to the two-stage pipeline of Example~\ref{ex:two}, and suppose stage 1's careful interview required an interpreter whom a manager $M$ chose not to book. The manager's act of booking is the gate. If the manager's omission was deficient, then $\Dfc=\{M,2\}$ with $S=\emptyset$, and the dispositional assumption gives the restricted game $w(\{M\})=40$, $w(\{2\})=10$, $w(\{M,2\})=60$, which is the pipeline game with $M$ in the role of stage 1. Hence $\psi_M=45$ and $\psi_2=15$, and the attributable loss is $A=60$ with no residual. Had the manager not been brought into the account, stage 1 would have been excused, stage 2 would have been charged $10$, and $50$ would have gone unattributed, as in Example~\ref{ex:excused}. The excuse of one agent is thereby traced to the agent whose decision produced it, and the share that the excused agent's omission would have carried is carried by the gate.
+\end{example}
+
+The proposition has a limit that matters. It relies on the dispositional assumption, a counterfactual about an agent that did not act, and on the deficiency of the gate's own omission, which is judged by the standard against the gate's own baseline and admissible set. If the gate's omission was not deficient, for example because the interpreter budget had been cut by someone upstream for reasons the manager could not affect, the gate is an excused agent in its own right, and the same reasoning traces the excuse one step further. At the end of the chain there may be a constraint that no agent produced, such as a physical impossibility, and the residual that survives is then a loss that no one answers for.
+
+\begin{remark}[Organizational provenance]\label{rem:org}
+Provenance chains of this kind are the formal content of the claim in \cite{flyxion2026inputs} that an organization's informational failure can exist without any individual's blindness. Each agent in a chain may have acted within the constraints that the agent upstream produced, and the question the restricted attribution answers is where, in the chain, a deficient omission occurred. When it answers that none did, the residual is not the fault of the individuals, and it is in this case that the responsibility is the organization's, for the arrangement that produced a chain in which no one was positioned to act.
+\end{remark}
+
+\section{A worked case: shared omissions in a hospital}\label{sec:worked}
+
+The case is a hospital's medication-safety process, set out in four versions that use the two games already introduced. The first pipeline carries a patient's allergy history from an interview to a record, and the second is a three-fold defense in depth against a dosing error. The numbers are chosen for transparency and carry no clinical or empirical claim, and the case offers no medical advice.
+
+\subsection*{Version A: a pipeline in which each stage assumed the other}
+
+The allergy history passes through two stages. At the interview (stage 1) a nurse can elicit the history carefully, at a cost of $c_1=42$ in the units of the model, or can take it quickly, in which case half of its informational content survives ($\lambda_1=0.5$). At entry into the record (stage 2) a clerk can verify the entry against the source, at a cost of $c_2=12$, or can enter it as given, in which case $\lambda_2=0.8$ of the content survives. A history that survives intact is worth $B=100$ in expected harm avoided downstream. This is the pipeline of Example~\ref{ex:two}, with $v(\{1\})=40$, $v(\{2\})=10$, and $v(\{1,2\})=60$.
+
+Neither stage is careful, and a patient is harmed. Each stage can give an account. The nurse says that the clerk's verification would have caught what a rushed interview missed, and that careful interviewing alone would have been wasted if the entry step were lossy. The clerk says that verification against a poor interview would have verified little. Each is partly right, and the two accounts are the two orderings of Proposition~\ref{prop:order}. Under sequential attribution in the order of the process, with the interview first, the nurse is charged $40$ and the clerk $20$; in the reverse order the nurse is charged $50$ and the clerk $10$; and the intrinsic contribution is $(45,15)$.
+
+Under the actual-conduct baseline neither stage is indicated, because $g_1(\emptyset)=40-42=-2$ and $g_2(\emptyset)=10-12=-2$. Mutual omission is a stable profile, though joint care has net value $u(\{1,2\})=6>0$, and the account on which each stage is judged against what the other actually did finds no deficient agent. Under the reliance baseline and under the role baseline for the efficient set $\{1,2\}$ each is indicated, $g_1(\{2\})=60-10-42=8$ and $g_2(\{1\})=60-40-12=8$. If each stage's evidence-supported probability that the other would be careful exceeds $0.2$, as Example~\ref{ex:belief} shows, each is indicated on its own evidence. Both are deficient, and the restricted attribution is the whole game, $\psi=(45,15)$ with $A=V=60$. The nurse answers for three quarters of the avoidable loss and the clerk for one quarter, the nurse's larger share reflecting the greater severity of its attenuation.
+
+\subsection*{Version B: the first stage excused}
+
+Suppose the interview could not have been careful because the interpreter that a careful interview required had not been booked, and the booking was a decision of a unit manager $M$. Considered by itself, the nurse's omission is of the unavoidable type, and stage 1 is not deficient. Then $S=\emptyset$ and $\Dfc=\{2\}$, the attributable loss is $A=v(\{2\})=10$, and the residual is $50$. The clerk answers for $10$, the nurse for nothing, and $50$ of the loss is one that no one in the two-stage account answers for.
+
+Bringing the manager into the account changes this. The booking is a gate for stage 1 (Definition~\ref{def:gate}). If the manager's omission was deficient, which requires that the booking was admissible and indicated for the manager at the time, then $\Dfc=\{M,2\}$ and by Proposition~\ref{prop:gate}, under the assumption that the nurse would have interviewed carefully had the interpreter been present, $\psi_M=45$ and $\psi_2=15$ with no residual. If the booking decision had been constrained from above, say by a staffing allocation the manager did not control, the manager is excused in turn and the question is moved a step up the chain. The clerk's share is $10$ in the first account and $15$ in the second, because the interaction between the clerk and the interview that did not happen is shared with whoever is answerable for it.
+
+\subsection*{Version C: defense in depth and the assumption that others check}
+
+A possible dosing error in an order carries an expected cost of $20$ if it reaches the patient. A prescriber ($P$), a pharmacist ($R$), and a nurse administering the dose ($N$) can each perform an independent check, which catches the error with probability $0.6$, $0.5$, and $0.4$ respectively, at costs of $4$, $2.5$, and $2.5$. The value function is $v(S)=20\bigl(1-\prod_{i\in S}(1-d_i)\bigr)$, with $v(\{P\})=12$, $v(\{R\})=10$, $v(\{N\})=8$, $v(\{P,R\})=16$, $v(\{P,N\})=15.2$, $v(\{R,N\})=14$, and $v(\N)=17.6$. The checks are substitutes and the game is submodular.
+
+Each of the three omits the check. The prescriber thinks that the pharmacist will check, the pharmacist thinks that the nurse will, and the nurse thinks that the first two already have. Under the reliance baseline, as in the proof of Proposition~\ref{prop:gaps}(ii), no one is indicated: $g_P(\{R,N\})=-0.4$, $g_R(\{P,N\})=-0.1$, and $g_N(\{P,R\})=-0.9$. Every omission is, on the supposition that the others check, justified, and the loss $17.6$ that three checks would have avoided has no deficient agent. The net values of the sets of investigators are $u(\{P,R\})=9.5$, $u(\{R,N\})=9.0$, $u(\{P,N\})=8.7$, $u(\N)=8.6$, and the efficient set is $\{P,R\}$. Under the role baseline for $\{P,R\}$, the prescriber and the pharmacist are indicated, $g_P(\{R\})=2.0$ and $g_R(\{P\})=1.5$, and the nurse is not, $g_N(\{P,R\})=-0.9$. The nurse's omission is of type N, not indicated, since a third check is worth less than its cost once the first two are made.
+
+Sequential attribution of the avoidable loss, which is the whole $17.6$, is shown in the table. When the order is prescriber, pharmacist, nurse the prescriber is charged $12$, the pharmacist $4$, and the nurse $1.6$; in the order nurse, pharmacist, prescriber the nurse is charged $8$, the pharmacist $6$, and the prescriber $3.6$. Under substitutes the agent considered first is charged the most (Proposition~\ref{prop:order}(ii)). The intrinsic contribution, computed over the three agents, is $(7.4,5.8,4.4)$ and gives the nurse $4.4$ although the nurse's check was not owed. The restricted attribution holds the nurse's omission as it was and divides only the loss that the deficient could have avoided: with $S=\emptyset$ and $\Dfc=\{P,R\}$ the restricted game has values $12$, $10$, and $16$, so $\psi_P=\tfrac12[12+(16-10)]=9$ and $\psi_R=\tfrac12[10+(16-12)]=7$. The attributable loss is $A=16$ and the residual is $1.6$, the loss that would have been avoided by the third check that was not owed.
+
+\subsection*{Version D: one of the two assigned checks is made}
+
+The prescriber checks, and the pharmacist and the nurse do not. The avoidable loss is $V=17.6-12=5.6$. The role baseline for $\{P,R\}$ finds the pharmacist deficient, $g_R(\{P\})=1.5>0$, and the nurse not indicated. With a single deficient agent, Proposition~\ref{prop:restricted}(iv) gives $\psi_R=v(\{P,R\})-v(\{P\})=4.0$, the attributable loss is $A=4.0$, and the residual is $1.6$. The pharmacist might say that the nurse would have caught the error. That assumption is a belief about the other agent's conduct (Example~\ref{ex:belief}), and it excuses the pharmacist only if the evidence supports it with enough confidence: the pharmacist's expected net gain from checking, when the prescriber has and the nurse checks with probability $q$, is $q\,(17.6-15.2)+(1-q)(16-12)-2.5=1.5-1.6q$, which is positive if and only if $q<0.9375$. A nurse who is not assigned a check and has no protocol requiring one cannot be relied on with that confidence, and the pharmacist's assumption is therefore not supported.
+
+\begin{center}
+\small
+\begin{tabular}{@{}p{0.06\textwidth}p{0.16\textwidth}p{0.2\textwidth}p{0.15\textwidth}p{0.18\textwidth}p{0.08\textwidth}@{}}
+\hline
+Version & Conduct & Deficient: actual-conduct / role baseline & Intrinsic & Restricted & Residual\\
+\hline
+A & No stage careful & none / both stages & $(45,15)$ & $(45,15)$ & $0$\\
+B & As A, stage 1 excused & none / stage 2 & $(45,15)$ & $\psi_2=10$ (or $\psi_M=45$, $\psi_2=15$) & $50$ (or $0$)\\
+C & No check made & all three / $P,R$ & $(7.4,5.8,4.4)$ & $(9,7,0)$ & $1.6$\\
+D & Only $P$ checks & $R,N$ / $R$ & $(7.4,5.8,4.4)$ & $\psi_R=4.0$ & $1.6$\\
+\hline
+\end{tabular}
+\end{center}
+
+Three features of the table deserve comment. First, the actual-conduct baseline returns opposite verdicts in the two kinds of game. Where the investigations are complements, in Versions A and B, it finds no deficient agent in the profile of mutual omission, and where they are substitutes, in Versions C and D, it charges every omitter whose single check would have been worth its cost given what the others did. In Version C that is all three, since $g_P(\emptyset)=8$, $g_R(\emptyset)=7.5$, and $g_N(\emptyset)=5.5$, and in Version D it is the pharmacist and also the nurse, since $g_N(\{P\})=15.2-12-2.5=0.7>0$, although a third check was not owed. The reliance baseline errs the other way in Version C and charges none. Second, the intrinsic contribution does not depend on conduct at all. In Version D it charges the prescriber $7.4$, although the prescriber made the check, because it measures what the investigations would have been worth and not what anyone did. Third, the restricted attribution under the role baseline charges exactly the assigned agents who omitted, in proportion to what their omissions cost, and it reports the residual separately instead of distributing it. It is the only measure in the table that has these properties together.
+
+\section{What the mathematics supplies and what the standard must supply}\label{sec:supply}
+
+The results can be sorted by what they depend on.
+
+\begin{center}
+\small
+\begin{tabular}{@{}p{0.31\textwidth}p{0.28\textwidth}p{0.31\textwidth}@{}}
+\hline
+Established by mathematics & Conditional on & Supplied by the standard of care\\
+\hline
+Order dependence of incremental contribution equals interaction (Prop.~\ref{prop:order}) & Nothing beyond the game $v$ & Whether incremental accounting is the question asked\\
+Exponential ordering range in a pipeline (Prop.~\ref{prop:pipeline}) & Multiplicative retention & Which stages belong to the pipeline, and their retention\\
+Intrinsic contribution is efficient, symmetric, and order-free (Def.~\ref{def:intrinsic}) & Shapley's axioms \cite{shapley1953value} & Whether those axioms are the right ones for responsibility\\
+Intrinsic contribution charges the excused (Prop.~\ref{prop:excused}) & Non-dummy status & Which omissions are excused\\
+Restricted attribution divides exactly the loss deficient conduct could have avoided (Prop.~\ref{prop:restricted}) & The deficient set $\Dfc$ & Admissibility, indication, and the excusing types U, N, J\\
+Each baseline rule has a gap (Prop.~\ref{prop:gaps}) & Net-value form of indication & The baseline rule\\
+Efficient roles close both gaps (Prop.~\ref{prop:roles}) & Known $v$, costs $c_i$, and feasible set & Whose costs and whose losses count; the tie-breaking rule\\
+The gate inherits the disabled agent's position (Prop.~\ref{prop:gate}) & The dispositional assumption & Whether the gate's own omission was deficient\\
+Residual of the attribution (Prop.~\ref{prop:restricted}(ii)) & Nothing beyond the game & Who bears an unattributed loss\\
+\hline
+\end{tabular}
+\end{center}
+
+The right column collects what cannot be derived. It contains the partition of omissions into deficient and non-deficient, which comes from the single-agent framework and is the input to everything above; the baseline rule, and with it the designated set of investigators and the principle that breaks ties among efficient sets; whose costs and whose losses enter $u$, a question already seen in the companion paper on stopping \cite{flyxion2026stop}; the counterfactual about what an excused agent would have done had it been enabled; the choice of the Shapley value and of expected, as opposed to realized, loss; and the allocation of the residual. Three consequences follow. A standard that is silent about the baseline does not avoid choosing one, and a reviewer who evaluates each agent against what the others actually did, or against the supposition that they did their part, has chosen a baseline with a known gap. A standard that assigns roles by protocol makes its choice in advance, and by Proposition~\ref{prop:roles} an efficient assignment is the choice that does not leave an unattributed loss for omissions by the assignees. And the attribution of a shared loss to the deficient is, in the end, a conclusion about conduct and its standard, which the arithmetic of interaction can inform but cannot replace.
+
+\section{Limits of the account}\label{sec:limits}
+
+The acquisition game takes the investigators as a coalition, and the Shapley value averages over orderings of agents that are orderings of consideration and not of time. In a pipeline the stages are in fact ordered, and responsibility might reasonably depend on position, for example by charging the first stage at which a deficient omission occurred, or by weighting orderings according to the flow of information. The paper has not pursued weighted or order-respecting values, and the results on order dependence suggest that the choice would matter in proportion to the interaction. The analysis also assumes that routing succeeds, so that every investigation made reaches the decision point. Where routing can fail, the investigation of one agent is useful only if a second agent passes it on, and the routing agent becomes a gate; Proposition~\ref{prop:gate} applies to that case in the form given, but the dispositional assumption does more work there.
+
+The model is also one of expectation under a single probability measure. It treats the value function $v$ as known to the reviewer, and it does not address the case in which different agents hold different information about the structure of the game, so that each agent's indication is computed under its own model of the others, a case that is probably common and that makes the baseline problem harder. Where agents act strategically, as in a team in which members respond to each other's anticipated conduct, the equilibrium analysis of Proposition~\ref{prop:gaps} is only the beginning, and the dynamics of reliance deserve their own treatment. The restricted attribution assigns expected loss. It does not by itself address joint and several liability, apportionment among defendants, or contribution, which are legal institutions with their own histories, and the paper offers a formal ground for discussing them and not a substitute. Other measures of responsibility in the literature, such as those based on the minimal number of changes needed to alter the outcome \cite{chockler2004responsibility}, are not the subject of this paper and may be better suited to some purposes.
+
+Finally, the treatment concerns agents. The second level of the account, in which an institution is itself the object of evaluation and an informational failure may be located in its arrangements even where no member's omission was deficient, appears here only through the residual and through Remark~\ref{rem:org}, and it is the subject of a later essay in the series.
+
+\paragraph{Note on sources.} The Shapley value and the theory of cooperative games \cite{shapley1953value}, the tests of causation of Wright and of Hart and Honor\'e \cite{wright1985causation,hart1959causation}, the least-cost-avoider principle of Calabresi \cite{calabresi1970costs}, and the structural-model account of responsibility of Chockler and Halpern \cite{chockler2004responsibility} are cited from general knowledge and not rechecked against the original texts, and the bibliographic details should be verified before the citations are relied on. The numerical values in Examples~\ref{ex:two} and~\ref{ex:belief}, in the proofs of Proposition~\ref{prop:gaps}, and in Section~\ref{sec:worked} were computed by script from the definitions.
+
+\section{Conclusion}\label{sec:conclusion}
+
+The question was how responsibility for a loss should be attributed when it results from the omissions of several agents whose investigations interact. The answer has three parts, each of which is a result and not only a recommendation. The incremental contribution of an omission depends on the order of consideration by exactly the interaction in the game, and in a pipeline the dependence is exponential in the number of stages, so that the same stage can be charged very little or a great deal according to where in the process the account begins. The intrinsic contribution removes the dependence on order, but it charges excused agents and is blind to conduct, so that it measures the worth of investigations and not anyone's answerability. The restricted attribution, which divides among the deficient agents the loss that their deficient omissions could have avoided and leaves a residual for everything that required conduct that was not deficient to omit, is the attribution that fits the framework, and the residual moves to the gate when an excuse was produced by another's decision.
+
+The baseline against which each agent's investigation is evaluated decides who is deficient, and the two natural baselines fail in opposite ways. Evaluated against what others in fact did, an inefficient equilibrium of mutual non-investigation has no deficient agent when investigations are complements. Evaluated against the supposition that others did their part, redundant protection has none when they are substitutes. A role baseline fixed by an efficient assignment removes both failures, and the mathematics shows why, though it leaves the tie-breaking rule and the costs that count to the standard of care. The bridge between what interacting agents each could have learned and what each answers for is therefore a protocol, set in advance, that says who is to look.
+
+\begin{thebibliography}{99}
+\bibitem{flyxion2026domain} Flyxion. \emph{The Domain and Its Establishment: Information Acquisition and the Boundary of Responsibility}. Unpublished manuscript, 2026.
+\bibitem{flyxion2026inputs} Flyxion. \emph{Correct Relative to Its Inputs: Responsibility for the Domain of Automated Decisions}. Unpublished manuscript, 2026.
+\bibitem{flyxion2026law} Flyxion. \emph{Deliberate Ignorance and the Law: Where Philosophical and Doctrinal Willful Blindness Diverge}. Unpublished manuscript, 2026.
+\bibitem{flyxion2026stop} Flyxion. \emph{When to Stop Looking: Sequential Inquiry and the Diligence Threshold}. Unpublished manuscript, 2026.
+\bibitem{shapley1953value} L.\,S.\ Shapley. A value for $n$-person games. In H.\,W.\ Kuhn and A.\,W.\ Tucker (eds.), \emph{Contributions to the Theory of Games}, vol.\ II, Annals of Mathematics Studies 28. Princeton University Press, 1953, 307--317.
+\bibitem{wright1985causation} R.\,W.\ Wright. Causation in tort law. \emph{California Law Review} 73 (1985), 1735--1828.
+\bibitem{hart1959causation} H.\,L.\,A.\ Hart and T.\ Honor\'e. \emph{Causation in the Law}. Oxford University Press, Oxford, 1959.
+\bibitem{calabresi1970costs} G.\ Calabresi. \emph{The Costs of Accidents: A Legal and Economic Analysis}. Yale University Press, New Haven, 1970.
+\bibitem{chockler2004responsibility} H.\ Chockler and J.\,Y.\ Halpern. Responsibility and blame: a structural-model approach. \emph{Journal of Artificial Intelligence Research} 22 (2004), 93--115.
+\end{thebibliography}
+
+\end{document}

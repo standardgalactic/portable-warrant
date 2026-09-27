@@ -1,0 +1,408 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1.15in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathpazo}
+\usepackage[T1]{fontenc}
+\usepackage{microtype}
+\usepackage{setspace}
+\usepackage{enumitem}
+\usepackage{array}
+\usepackage[colorlinks=true,linkcolor=black,citecolor=black,urlcolor=black]{hyperref}
+\onehalfspacing
+\setlength{\parindent}{1.5em}
+\setlength{\parskip}{0.2em}
+
+\newcommand{\F}{\mathcal F}
+\newcommand{\G}{\mathcal G}
+\newcommand{\Q}{\mathcal Q}
+\newcommand{\C}{\mathcal C}
+\newcommand{\PP}{\mathbb P}
+\newcommand{\E}{\mathbb E}
+\newcommand{\feas}{\mathrm{feas}}
+\newcommand{\adm}{\mathrm{adm}}
+\newcommand{\app}{\mathrm{app}}
+\newcommand{\Reg}{\mathrm{Reg}}
+\newcommand{\VOI}{\mathrm{VOI}}
+
+\theoremstyle{plain}
+\newtheorem{proposition}{Proposition}
+\newtheorem{lemma}{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{remark}{Remark}
+\newtheorem{example}{Example}
+
+\title{The Objective as Domain:\\Responsibility for What a Decision Procedure Optimizes}
+\author{Flyxion\\Independent Researcher}
+\date{October 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent A decision procedure can be correct relative to the information it used and the objective it optimized while the objective itself is defective, and the account of responsibility developed in earlier papers in this series has treated the objective as given. This paper treats it as a domain. An objective ranges over some features of outcomes and not others, a procedure that optimizes it responds to variation in the former and to nothing in the latter, and an evaluation conducted inside the objective cannot see what lies outside it. The paper shows, in a model in which an optimizer pushes a rewarded quantity that has an unrewarded cost, that correctness relative to the objective places no bound on the regret measured against the standard of care, that the regret is zero below a capability threshold and grows quadratically above it while the objective's own score rises, so that a defect can be latent and then manifest as the system becomes more capable. It proves that an objective cannot audit itself: an investigation into a feature the objective omits has no value under the objective, so that a standard of diligence which indicates inquiry by the agent's own objective will never indicate an audit of it. It shows that the indication to audit is triggered by capability, characterizes the capability above which an audit is worth its cost, and distinguishes four kinds of objective defect, factual, normative, unavoidable, and delegated, of which only the first is an information failure of the kind the earlier papers treat. It applies the account of shared omissions to the case in which one party sets the objective and another operates it, shows that an objective can be harmless in one agent's hands and defective as a universal policy, and distinguishes three tests of justification that are logically independent. The paper identifies what the mathematics settles and which parameters a standard of care must supply.
+\end{abstract}
+
+\section{Introduction}\label{sec:intro}
+
+The parent essay in this series, \emph{The Domain and Its Establishment} \cite{flyxion2026domain}, argues that the informational boundary within which a decision is made is itself an object of responsibility. A procedure is a function of the information available to it, and so it cannot be faulted for failing to respond to what lay outside its domain, but the agent may be answerable for how the domain came to be what it was. The same essay noted, in its discussion of the limits of the account, that the loss model is an input to the analysis and that responsibility for the choice of model is left open. Its companions have since taken up automated decisions \cite{flyxion2026inputs}, the law of willful blindness \cite{flyxion2026law}, the question of when inquiry may stop \cite{flyxion2026stop}, and the attribution of shared omissions \cite{flyxion2026shared}, and each of them takes the objective of the decision as fixed. The present paper takes it up.
+
+The question is whether a decision procedure can be justified when the objective it optimizes is itself defective. The question has a familiar form in discussions of institutions and of automated systems. A hospital is run to minimize length of stay, and patients are discharged earlier than is good for them. A ranking system maximizes engagement, and what is engaging turns out to be harmful. A router maximizes on-time delivery, and the drivers carry the cost of the schedule. In each case the procedure does what it was built to do, and does it well, and the trouble lies in what it was built to do. It is natural to say that no one erred, since the optimizer optimized and the information was used, and equally natural to say that someone must have erred, since a harm resulted that was foreseeable. Both statements are partly right, and the work of the paper is to say in what way.
+
+The thesis is that the objective is a domain in the same sense as the information set. An objective ranges over certain features of outcomes. A procedure that optimizes it is a function of those features and responds to nothing else. Whatever lies outside that range is invisible to the procedure, invisible to any evaluation that uses the objective as its yardstick, and invisible to any inquiry whose worth is measured by the objective. This invisibility is not a mere analogy to the informational case, and it has consequences that the informational case does not have. The principal one is that the blindness of an objective is \emph{self-sealing}: because an investigation into an omitted feature has no value under the objective that omits it, an agent that decides whether to inquire by consulting its own objective will never find an audit of that objective indicated (Proposition~\ref{prop:sealing}). The audit must be indicated by something outside the objective, and the paper argues that this something is the standard of care.
+
+Four further results organize the paper. The defect of an objective can be latent. In a simple model in which an optimizer pushes a rewarded quantity at an unrewarded cost, the regret relative to the standard is zero below a capability threshold and grows quadratically above it, while the objective's own score rises throughout (Proposition~\ref{prop:latent}), so that an objective that was adequate for a modest system becomes defective as the system grows and the defect cannot be seen from the score. The indication to audit is therefore triggered by capability, and there is a capability above which an audit is worth its cost (Proposition~\ref{prop:capability}). Objective defects are of four kinds, and only one is an information failure to which the earlier papers apply directly (Section~\ref{sec:kinds}). And the justification of a procedure whose objective is defective can be separated into three tests that are logically independent (Proposition~\ref{prop:three}).
+
+Section~\ref{sec:framework} recalls the framework and introduces the standard objective and regret. Section~\ref{sec:domain} treats the objective as a domain. Section~\ref{sec:latent} proves the results on regret and latency, Section~\ref{sec:sealing} the self-sealing property, and Section~\ref{sec:capability} the capability threshold for audits. Section~\ref{sec:kinds} classifies objective defects. Section~\ref{sec:guardians} applies the account of shared omissions to an objective that is set by one party and operated by another, and Section~\ref{sec:universal} considers universalization. Section~\ref{sec:three} states the three tests of justification, Section~\ref{sec:worked} carries a delivery-routing case through four versions, Section~\ref{sec:supply} sorts what the mathematics supplies from what a standard must supply, and Section~\ref{sec:limits} states limits and conclusions.
+
+\paragraph{Sources and scope.} The references to the literature on proxy measures and reward specification are cited from general knowledge and were not rechecked against the original texts for this essay, and the bibliographic details should be verified before the citations are relied on. The propositions that are original to the paper are proved in full, and the numerical examples were computed by script from the stated definitions. The paper concerns the structure of responsibility for objectives and takes no position on which objectives are correct.
+
+\section{The framework and the standard objective}\label{sec:framework}
+
+Recall the single-agent framework. A probability space $(\Omega,\F,\PP)$ carries a filtration $(\F_t)$, with $\F_t$ the information possessed at time $t$. A decision has two stages, the choice of an investigation $q$ from the set $\Q_t$ and then an act using the enlarged information. The feasible investigations are $\Q^{\feas}_t$, the applicable ones $\Q^{\app}_t$ are those that the governing standard of care calls for, and the admissible ones are $\Q^{\adm}_t=\Q^{\feas}_t\cap\Q^{\app}_t$. An omission of an admissible investigation that was indicated is deficient, of type D2 when motivated by suspicion of what the investigation would show and of type D1 otherwise, and non-deficient omissions are of types U (unavoidable), N (not indicated), and J (justified by a competing constraint). The justification relation $J(q_t,\pi_t\mid\F_t,\C_t,\mathcal P)$ takes the principles $\mathcal P$ as given, and the parent essay distinguishes the justification of a procedure from the justification of the principles that govern it.
+
+The decision problem has an action set $A$, and the capability of the agent or system is represented by a nested family of feasible sets $A_X$ increasing in a capability parameter $X$. The state $\omega$ and the action $a$ determine outcome features $y(a,\omega)=(y_0,y_1)\in Y_0\times Y_1$, with $y_0$ the features the objective ranges over and $y_1$ those it does not. Two objectives are in play.
+
+\begin{definition}[Operative and standard objectives]\label{def:objectives}
+The \emph{operative objective} is
+\[
+W_0(a,\omega)=w_0\bigl(y_0(a,\omega)\bigr),
+\]
+which depends on the outcome only through $y_0$. The \emph{standard objective} is
+\[
+W_{\mathcal P}(a,\omega)=w_{\mathcal P}\bigl(y_0(a,\omega),y_1(a,\omega)\bigr),
+\]
+the objective that the principles $\mathcal P$ endorse for the decision, which may depend on $y_1$ as well. The operative objective is \emph{domain-restricted relative to the standard} if $W_{\mathcal P}$ is not a function of $y_0$ alone. The procedure $\pi_0$ chooses, for each information state, an action maximizing the conditional expectation of $W_0$.
+\end{definition}
+
+The loss of the earlier papers is the negative of the objective. The standard objective is not assumed to be known with certainty or to be easy to state, and it is a normative object that the standard of care supplies. In the stopping paper \cite{flyxion2026stop} the factor $\lambda$ weighting harm to others against the cost borne by the agent was already a parameter of this kind, and here its role is generalized: it is one of the ways in which $W_{\mathcal P}$ can differ from $W_0$.
+
+\begin{definition}[Regret]\label{def:regret}
+Given the information state $\G$ and capability $X$, the \emph{regret} of the procedure $\pi_0$ against the standard is
+\[
+\Reg(X)=\max_{a\in A_X}\E[W_{\mathcal P}(a,\omega)\mid\G]-\E[W_{\mathcal P}(a_0,\omega)\mid\G],\qquad a_0=\pi_0(\G).
+\]
+\end{definition}
+
+The regret is non-negative and measures how much of the standard's value is lost by optimizing the operative objective. It is a property of the procedure's objective and not of the procedure's execution, since $\pi_0$ is by construction correct relative to $W_0$. Three questions are therefore distinct. The first is whether the procedure was correct relative to its objective and its information, which is the question of the parent essay. The second is whether the objective was adequate relative to the standard, which is the question of $\Reg$. The third is whether the objective was responsibly established, which is the question of whether an admissible inquiry into its adequacy was made when it was indicated. The paper is largely about the relations among them.
+
+\section{The objective as a domain}\label{sec:domain}
+
+The parent essay begins from the observation that a function is defined on its domain and can respond only to what lies within it. A decision procedure is a function of the information $\F_t$, and it would be incoherent to fault it for failing to respond to events outside $\F_t$. The same observation applies to the objective. A procedure that maximizes $W_0$ is a function of the conditional law of $y_0$, and the set of actions it chooses depends on the environment only through that law.
+
+\begin{lemma}[Non-responsiveness]\label{lem:blind}
+Let two environments induce the same conditional law of $y_0(a,\omega)$ given $\G$ for every action $a$, though they differ in the law of $y_1$. Then the maximizers of the conditional expectation of $W_0$ coincide in the two environments, and so does any performance measure that is a function of $y_0$. In particular, the procedure $\pi_0$ chooses the same action, and any benchmark computed from $y_0$ assigns it the same score, in both.
+\end{lemma}
+
+\begin{proof}
+The conditional expectation $\E[W_0(a,\omega)\mid\G]=\E[w_0(y_0(a,\omega))\mid\G]$ is determined by the conditional law of $y_0$ for each $a$, and so is the set of its maximizers and the maximal value. A benchmark that is a function of $y_0$ has conditional expectation determined in the same way.
+\end{proof}
+
+The lemma is the objective's counterpart of the statement that a decision cannot be conditioned on information outside its domain. Its consequence is that evaluation conducted inside the objective cannot discriminate between environments that the standard would treat very differently. A system that is excellent by its own measure cannot, from the measure alone, be told apart from a system that is excellent by its measure and injurious by the standard. The correspondence with the informational case can be set out as follows.
+
+\begin{center}
+\small
+\begin{tabular}{@{}p{0.22\textwidth}p{0.34\textwidth}p{0.34\textwidth}@{}}
+\hline
+ & Information domain & Objective domain\\
+\hline
+What lies inside & Facts in $\F_t$ & Features $y_0$ the objective ranges over\\
+What a procedure responds to & Variation in $\F_t$ & Variation in $y_0$\\
+What lies outside & Facts not acquired & Features $y_1$ the objective omits\\
+Evaluation confined to the domain & Cannot fault the unlearned & Cannot register the omitted cost (Lemma~\ref{lem:blind})\\
+Obligation concerning the boundary & Admissible acquisition of information & Admissible inquiry into the objective's adequacy\\
+\hline
+\end{tabular}
+\end{center}
+
+The correspondence is close but not complete, and the differences carry the paper. An omitted fact can be learned by acquisition, and the value of learning it is measured by the agent's objective. An omitted feature of the outcome can also be learned about, but the value of learning about it is, as Section~\ref{sec:sealing} shows, zero when measured by the objective that omits it. This is the structural difference that makes the objective's blindness harder to remedy than the informational case, and it is the reason the standard of care cannot be replaced by the agent's own diligence.
+
+\section{Correct relative to the objective, defective relative to the standard}\label{sec:latent}
+
+To study how the regret behaves, consider the simplest model in which an optimizer pushes a rewarded quantity at an unrewarded cost. The action is an intensity $x\in A_X=[0,X]$, with the capability $X>0$ the greatest intensity the system can apply, and $y_0=b(x)$ is the rewarded benefit. The omitted feature is a harm $y_1=h(x)$ that grows with intensity. The operative objective is $W_0=b(x)$, and the standard objective is $W_{\mathcal P}=b(x)-h(x)$.
+
+\begin{definition}[Frontier model]\label{def:frontier}
+A \emph{frontier model} has benefit $b$ strictly increasing and differentiable on $[0,\infty)$, harm $h$ such that $V=b-h$ is strictly concave with a maximizer $x^*>0$, and feasible set $A_X=[0,X]$. The \emph{quadratic frontier model} has $b(x)=x$ and $h(x)=\kappa x^2$ with $\kappa>0$, so that $V(x)=x-\kappa x^2$ and $x^*=1/(2\kappa)$.
+\end{definition}
+
+The operative optimum is $a_0=X$, since $b$ is increasing, and the standard optimum is $\min\{X,x^*\}$. Intensity is a stylization of anything by which a system is pushed harder along the rewarded dimension: the tightness of a schedule, the rate of extraction from a resource, the strength of an optimization.
+
+\begin{proposition}[Latent defect]\label{prop:latent}
+In a frontier model,
+\begin{enumerate}[label=(\roman*),nosep]
+\item $\Reg(X)=0$ for $X\le x^*$, and $\Reg(X)=V(x^*)-V(X)>0$ for $X>x^*$, which is strictly increasing in $X$.
+\item The operative score $W_0(a_0)=b(X)$ is strictly increasing in $X$ for all $X$, while the standard value $W_{\mathcal P}(a_0)=V(X)$ is strictly decreasing for $X>x^*$. In particular, for capabilities above $x^*$ the ranking of systems by their own score is the reverse of their ranking by the standard.
+\item In the quadratic model, $\Reg(X)=\kappa\,(X-x^*)^2$ for $X>x^*$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(i) For $X\le x^*$ the maximizer of $V$ over $[0,X]$ is $X$ itself, since a strictly concave function is increasing to the left of its maximizer, so $a_0=X$ is also standard-optimal and the regret is zero. For $X>x^*$ the standard optimum is $x^*$ and $\Reg(X)=V(x^*)-V(X)$, which is positive because $x^*$ is the unique maximizer and increasing in $X$ because $V$ is strictly decreasing to the right of $x^*$. (ii) The first claim is the strict monotonicity of $b$, the second the monotonicity of $V$ just used. (iii) $V(x)=\frac1{4\kappa}-\kappa(x-x^*)^2$, so $V(x^*)-V(X)=\kappa(X-x^*)^2$.
+\end{proof}
+
+The proposition gives the precise sense in which a defective objective can be latent. Below the capability $x^*$ the omitted cost has not yet begun to bind, and the operative objective and the standard agree on what to do. The system is correct relative to its objective and also, as it happens, adequate relative to the standard, and no evaluation of any kind would find fault. Above $x^*$ the two objectives diverge, the system keeps pursuing the rewarded quantity, and the regret grows. The score that the system's own designers watch rises throughout. An objective that was adequate for a modest system can therefore become defective as the system is made more capable, with no change in the objective and no change in the quality of the optimization. This is the structure that discussions of proxy measures describe, in which a measure ceases to serve as a good measure once it is made a target \cite{goodhart1975problems,strathern1997improving,manheim2018categorizing}, and the reward-specification literature has observed a similar dependence of a proxy's reliability on the range of environments in which it is exercised \cite{hadfieldmenell2017inverse}. The proposition adds the quantitative form: the onset is at a threshold determined by where the omitted cost begins to dominate, and beyond it the loss is quadratic in the excess of capability over the threshold.
+
+\begin{proposition}[Correctness places no bound on regret]\label{prop:unbounded}
+For every $M>0$ there is a quadratic frontier model with a procedure that is correct relative to its objective and its information and has $\Reg>M$.
+\end{proposition}
+
+\begin{proof}
+Take $X=1$ and $\kappa>M+1$. Then $x^*=1/(2\kappa)<1=X$, and by Proposition~\ref{prop:latent}(iii), $\Reg=\kappa(1-1/(2\kappa))^2=\kappa-1+1/(4\kappa)>M$.
+\end{proof}
+
+The proposition is trivial to prove and important to state. It says that the question of whether the procedure was correct relative to its objective, which is the question to which the earlier papers in the series were addressed, does not constrain the answer to the question whether the objective was adequate. Any account of justification that stopped at the first question would find the system blameless however large the harm.
+
+\section{The objective cannot audit itself}\label{sec:sealing}
+
+The earlier papers use the value of information to say when an investigation is indicated: an investigation is worth making when the expected reduction in loss exceeds its cost, and a standard of care may require it on that ground or on the ground that the evidence-supported probability of a material fact is high enough. The natural suggestion for the objective is that an audit of its adequacy be treated as another investigation and indicated in the same way. The suggestion meets an obstacle.
+
+\begin{definition}[Audit]\label{def:audit}
+An \emph{audit} of the objective is an investigation $q_\kappa$ whose outcome $Z$ bears on the omitted features, for example on the coefficient $\kappa$ of the harm, and not on $y_0$. Write $\VOI_0(q)$ and $\VOI_{\mathcal P}(q)$ for the expected reduction in the Bayes risk, under $W_0$ and under $W_{\mathcal P}$ respectively, from making the investigation $q$ before choosing the action.
+\end{definition}
+
+\begin{proposition}[Self-sealing blindness]\label{prop:sealing}
+Suppose $W_0$ depends on the state only through a variable $\omega_0$ and the outcome $Z$ of an audit is conditionally independent of $\omega_0$ given the current information $\G$. Then $\VOI_0(q)=0$, whatever the cost of the audit and whatever the value of $\VOI_{\mathcal P}(q)$. The same holds for every sequential plan that consists of such audits. Consequently:
+\begin{enumerate}[label=(\roman*),nosep]
+\item an audit is never economically indicated by the operative objective, at the level of one step or of a plan;
+\item a standard that indicates inquiry by the agent's own objective will never require an audit of that objective; and
+\item the indication of an audit must be computed under the standard objective $W_{\mathcal P}$, or by a probability threshold keyed to the standard, and the agent's economic calculation under its own objective is silent on it.
+\end{enumerate}
+In the quadratic frontier model, in which $W_0=x$ does not depend on $\kappa$ at all, $\VOI_0(q_\kappa)=0$ for every capability $X$, while $\VOI_{\mathcal P}(q_\kappa)>0$ for $X>x_2$ in the sense of Proposition~\ref{prop:capability}.
+\end{proposition}
+
+\begin{proof}
+Because $Z$ is conditionally independent of $\omega_0$ given $\G$, $\E[W_0(a,\omega)\mid\G\vee\sigma(Z)]=\E[W_0(a,\omega)\mid\G]$ for every action $a$. The Bayes risk after observing $Z$ therefore equals the Bayes risk before, and the one-step value of information is zero. For a plan of audits $Z_1,Z_2,\dots$ each satisfying the hypothesis, the same argument applied to the pooled information shows that the conditional expectation of $W_0$ is unchanged by any number of them, so the value of any plan is zero. Parts (i) to (iii) restate this in terms of the indication of the earlier papers. In the quadratic model $W_0=x$ is not a function of $\kappa$, so the hypothesis holds with $\omega_0$ trivial.
+\end{proof}
+
+The proposition is the objective's analogue of the recursion in the parent essay, in which the decision whether to investigate may itself be the subject of a prior decision whether to investigate whether to investigate. There, the regress is a worry about where the chain of obligations ends. Here the chain does not even begin inside the agent's own point of view, because the first link is invisible under the agent's own objective. It is the reason the standard of care has to be the source of the indication. A reviewer who asks whether the agent, given its objective, had reason to look into the objective's adequacy will always find that it did not, and the answer is correct and beside the point.
+
+The result should not be read as saying that the agent has no resources. An agent may have a representation of the standard objective, or a probability that the objective is defective, and then it can compute $\VOI_{\mathcal P}$ or apply a probability threshold. What the proposition excludes is the view that the economic logic of the agent's own objective will generate the audit. Whether the agent \emph{should} represent the standard is a normative question that Section~\ref{sec:three} takes up.
+
+\section{Capability and the indication of audits}\label{sec:capability}
+
+Under the standard objective the audit can have value, and the model allows the value to be computed. Let the harm coefficient $\kappa$ take the values $\kappa_1<\kappa_2$ with probabilities $p_1,p_2$ from the agent's evidence-supported perspective, so that $x_j=1/(2\kappa_j)$ are the two thresholds with $x_1>x_2$, and let $\bar\kappa=p_1\kappa_1+p_2\kappa_2$. An agent that has not audited chooses, to maximize the expected standard value, the intensity $\min\{X,1/(2\bar\kappa)\}$, and an agent that has audited and learned $\kappa$ chooses $\min\{X,x_j\}$. The audit's value under the standard is the difference of the two expected standard values,
+\[
+\VOI_{\mathcal P}(X)=\sum_jp_jV_j\bigl(\min\{X,x_j\}\bigr)-\max_{x\le X}\sum_jp_jV_j(x),\qquad V_j(x)=x-\kappa_jx^2.
+\]
+
+\begin{proposition}[The capability threshold for audits]\label{prop:capability}
+\begin{enumerate}[label=(\roman*),nosep]
+\item $\VOI_{\mathcal P}(X)=0$ for $X\le x_2$ and $\VOI_{\mathcal P}(X)>0$ for $X>x_2$. Thus an audit has value if and only if the capability exceeds $x_2=1/(2\kappa_2)$, the point at which the worse case of the omitted harm begins to bind.
+\item $\VOI_{\mathcal P}$ is non-decreasing in $X$, strictly increasing on $(x_2,x_1)$, and constant for $X\ge x_1$, at the value
+\[
+\VOI^{\max}=\sum_jp_j/(4\kappa_j)-1/(4\bar\kappa).
+\]
+\item If the cost of the audit satisfies $0<c<\VOI^{\max}$, there is a unique capability $X_c\in(x_2,x_1)$ such that the audit is indicated, $\VOI_{\mathcal P}(X)>c$, if and only if $X>X_c$. If $c\ge\VOI^{\max}$ the audit is never indicated.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+Write $I(X)=\sum_jp_jV_j(\min\{X,x_j\})$ and $U(X)=\max_{x\le X}\sum_jp_jV_j(x)$, so that $\VOI_{\mathcal P}=I-U$. The function $\sum_jp_jV_j(x)=x-\bar\kappa x^2$ is strictly concave with maximizer $1/(2\bar\kappa)$, which lies strictly between $x_2$ and $x_1$ because $\kappa_1<\bar\kappa<\kappa_2$.
+
+(i) For $X\le x_2$ every informed intensity $\min\{X,x_j\}$ equals $X$, as does the uninformed one $\min\{X,1/(2\bar\kappa)\}$, so $I=U$. For $X>x_2$ the informed intensities for the two types are $x_2$ and $\min\{X,x_1\}$, which differ because $\min\{X,x_1\}>x_2$. The uninformed agent uses a single intensity, and by strict concavity of each $V_j$ it does strictly worse than the informed agent for at least one type and no better for the other, so $I>U$.
+
+(ii) Differentiating piecewise, $I'(X)=\sum_{j:X<x_j}p_j(1-2\kappa_jX)$ and $U'(X)=1-2\bar\kappa X$ for $X<1/(2\bar\kappa)$ and $0$ above. For $X<x_2$ both equal $1-2\bar\kappa X$ and $\VOI'=0$. For $x_2<X<x_1$ only $j=1$ is active in $I'$, so $I'=p_1(1-2\kappa_1X)>0$, while for $X<1/(2\bar\kappa)$, $U'=p_1(1-2\kappa_1X)+p_2(1-2\kappa_2X)<I'$ because the second term is negative for $X>x_2$, and for $X\ge1/(2\bar\kappa)$, $U'=0<I'$; in both cases $\VOI'>0$. For $X>x_1$ both derivatives vanish. The constant value for $X\ge x_1$ is the difference between $\sum_jp_jV_j(x_j)=\sum_jp_j/(4\kappa_j)$ and $U=1/(4\bar\kappa)$.
+
+(iii) follows from continuity and strict monotonicity of $\VOI_{\mathcal P}$ on $[x_2,x_1]$, with values $0$ at $x_2$ and $\VOI^{\max}$ at $x_1$.
+\end{proof}
+
+\begin{example}[Numerical illustration]\label{ex:voi}
+Let $\kappa_1=0.25$, $\kappa_2=1$ with probabilities $\tfrac12$ each, so that $x_1=2$, $x_2=0.5$, $\bar\kappa=0.625$ and the uninformed intensity is capped at $1/(2\bar\kappa)=0.8$. The value of the audit under the standard is $0$ at $X=0.5$, $0.045$ at $X=0.8$, $0.100$ at $X=1$, $0.155$ at $X=1.25$, $0.194$ at $X=1.5$, and $0.225$ for all $X\ge2$. For an audit costing $c=0.1$ the threshold is $X_c=1$: the audit is not indicated for a system whose capability is at most $1$ and is indicated beyond.
+\end{example}
+
+The proposition has the form of a result in the stopping paper \cite{flyxion2026stop}, that the obligation to inquire depends on the stakes, with the stakes here given by the capability. It also has a structure that the informational case lacks. In the informational case, additional capability usually lowers the cost of inquiry or raises its power. Here additional capability raises the \emph{need} for inquiry, because it moves the system into the region where the omitted cost matters. A system that is strengthened without any new audit therefore passes, without any change in its own behavior, from a regime in which no audit was indicated to one in which an audit is indicated and its omission would be deficient. The duty to audit is a function of capability and not of anything the agent is told.
+
+\section{Four kinds of objective defect}\label{sec:kinds}
+
+The regret of an operative objective has two sources, and separating them shows which of the earlier tests applies. In the frontier model let the agent's evidence-supported distribution over $\kappa$ be fixed. The agent that optimizes the operative objective pushes to $a_0=X$. The agent that adopted the standard objective, with its current evidence about $\kappa$ and no further inquiry, would choose the intensity that maximizes the expected standard value. The agent that had learned $\kappa$ would choose the intensity that is standard-optimal for it.
+
+\begin{proposition}[Specification and information components]\label{prop:decomp}
+Let $\bar R(X)=\E_\kappa[\Reg_\kappa(X)]$ be the expected regret of the operative procedure at capability $X$, with $I(X)$, $U(X)$ and $\VOI_{\mathcal P}(X)=I(X)-U(X)$ as in Section~\ref{sec:capability}. Then
+\[
+\bar R(X)=\underbrace{U(X)-\E_\kappa V_\kappa(X)}_{\text{specification component}}+\underbrace{\VOI_{\mathcal P}(X)}_{\text{information component}},
+\]
+and both components are non-negative. The specification component is the expected gain from replacing the operative objective by the standard objective, with no further inquiry. The information component is the further expected gain from auditing the harm coefficient.
+\end{proposition}
+
+\begin{proof}
+Because $a_0=X$, $\bar R(X)=\E_\kappa[\max_{x\le X}V_\kappa(x)]-\E_\kappa V_\kappa(X)=I(X)-\E_\kappa V_\kappa(X)$, where $I(X)$ is the expected standard value under full knowledge of $\kappa$. Adding and subtracting $U(X)$, the best expected value without further inquiry, gives the decomposition. The specification component is non-negative because $U(X)\ge\E_\kappa V_\kappa(X)$, since $X$ is one of the intensities over which $U$ maximizes, and the information component is non-negative by Proposition~\ref{prop:capability}.
+\end{proof}
+
+\begin{example}[Decomposition]\label{ex:decomp}
+With the numbers of Example~\ref{ex:voi} and $X=2$, the expected value of the standard objective at the operative intensity is $\tfrac12(2-0.25\cdot4)+\tfrac12(2-1\cdot4)=-0.5$, the best uninformed value is $U=0.4$, and the value under full knowledge is $I=0.625$. The expected regret is $\bar R=0.625-(-0.5)=1.125$, of which the specification component is $0.4-(-0.5)=0.9$ and the information component is $0.225$. Most of the loss, $0.9$ of $1.125$, is recovered merely by adopting the standard objective in place of the operative one, with the agent's existing evidence, and only $0.225$ requires inquiry.
+\end{example}
+
+The decomposition matches a distinction between kinds of defect that the earlier papers do not draw, and which determines how the defect is to be judged. The information component is a matter of what the agent could learn, and the framework of the parent essay applies to it, with the difference that the indication is computed under the standard objective (Proposition~\ref{prop:sealing}). The specification component is not a matter of information. It is the loss from the objective's giving too little weight to what the standard counts, and it persists however much the agent learns. When the harm coefficient is known with certainty, the information component vanishes and the specification component is the entire regret.
+
+\begin{remark}[Weight deficit]\label{rem:weight}
+Suppose the harm coefficient $\kappa$ is known and the operative objective weights the harm by $\lambda_0\in[0,\lambda_{\mathcal P})$ while the standard weights it by $\lambda_{\mathcal P}$, so that $W_0=x-\lambda_0\kappa x^2$ and $W_{\mathcal P}=x-\lambda_{\mathcal P}\kappa x^2$. The operative optimum is $x_0=\min\{X,1/(2\lambda_0\kappa)\}$, the standard optimum is $x_{\mathcal P}=\min\{X,1/(2\lambda_{\mathcal P}\kappa)\}$, and the regret is $\lambda_{\mathcal P}\kappa(x_0-x_{\mathcal P})^2$. It is zero when $\lambda_0=\lambda_{\mathcal P}$ or when $X\le1/(2\lambda_{\mathcal P}\kappa)$, and it does not decrease with $X$. The weight $\lambda$ is the exchange rate between harm to others and benefit that the stopping paper \cite{flyxion2026stop} identified as a parameter that only a standard of care can supply, and the present remark shows that a deficit in it produces a regret of the same form as the information defect, without any question of acquisition arising.
+\end{remark}
+
+Four kinds of objective defect can now be distinguished, according to the two questions whether the defect is informational or normative and whether the objective was the agent's own or delegated.
+
+\begin{center}
+\small
+\begin{tabular}{@{}p{0.14\textwidth}p{0.3\textwidth}p{0.25\textwidth}p{0.22\textwidth}@{}}
+\hline
+Kind & Condition & Test that applies & Who answers\\
+\hline
+Factual & Uncertainty about the omitted feature's effect; an admissible audit was indicated under $W_{\mathcal P}$ and was omitted & Earlier framework, with indication under $W_{\mathcal P}$ (information component) & The agent who could audit; types D1 and D2\\
+Normative & Effect known or knowable; the operative weight is below the standard's & The principles $\mathcal P$ (specification component) & The party who set the weights\\
+Unavoidable & Uncertainty, but no admissible audit exists & Type U of the earlier framework & No one for the information component\\
+Delegated & The objective was fixed by another party and the operator's constraint set excludes revising it & Secondary duty to report; provenance of the constraint & The delegating party, by the gate result of \cite{flyxion2026shared}\\
+\hline
+\end{tabular}
+\end{center}
+
+The kinds are not exclusive. A delegated objective can be defective in the factual way, in the normative way, or in both, and the table records that the delegation changes who answers and not what the defect is. The classification makes one point that is easy to miss. Only the factual kind is an information failure of the sort the earlier papers treat. A defective objective is not, in general, the product of an omitted investigation, and an account of responsibility for objectives that tried to reduce all of them to omitted investigations would be unable to say what is wrong in the normative case, where the agent knew everything relevant and the objective was still deficient.
+
+\section{Delegated objectives and two guardians}\label{sec:guardians}
+
+An objective is often set by one party and operated by another. A platform specifies the target and a depot team runs the system that pursues it. A regulator fixes a metric and a firm optimizes it. The setting raises the problem of shared omissions studied in \cite{flyxion2026shared}, and its results apply with little modification.
+
+There are two guardians of the objective's adequacy. The principal $\Pi$ can review the specification, at a cost $c_\Pi$, and the operator $O$ can examine its own outcome data on the omitted feature, at a cost $c_O$. Either audit reveals the harm coefficient, and either party can then correct the matter, the principal by revising the objective and the operator by capping the intensity or reporting. The two audits are therefore substitutes in the sense of that paper: the acquisition game has $v(\{\Pi\})=v(\{O\})=v(\{\Pi,O\})=\VOI_{\mathcal P}(X)$ and $v(\emptyset)=0$.
+
+\begin{proposition}[Two guardians]\label{prop:guardians}
+In the two-guardian game, for any capability at which $\VOI_{\mathcal P}(X)>\max\{c_\Pi,c_O\}$:
+\begin{enumerate}[label=(\roman*),nosep]
+\item under the reliance baseline, in which each guardian assumes the other audits, neither is indicated, since $g_i(\{\Pi,O\}\setminus\{i\})=-c_i<0$, so that a loss avoidable by an audit contains no deficient guardian;
+\item under the actual-conduct baseline both are indicated, since $g_i(\emptyset)=\VOI_{\mathcal P}(X)-c_i>0$, so that when neither audits both are deficient even though a single audit would have sufficed;
+\item the efficient assignment is the cheaper guardian alone, and under the role baseline for it that guardian is indicated and the other is not. If $c_O<c_\Pi$ the audit is the operator's.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+The net gain of adding a guardian to a configuration that already contains the other is $v(\{\Pi,O\})-v(\{j\})-c_i=-c_i$, and to the empty configuration is $v(\{i\})-c_i=\VOI_{\mathcal P}(X)-c_i$. For (iii), the net values are $u(\{i\})=\VOI_{\mathcal P}(X)-c_i$ and $u(\{\Pi,O\})=\VOI_{\mathcal P}(X)-c_\Pi-c_O$, so the efficient set is the cheaper guardian alone, uniquely if the costs differ, and the efficient-roles result of \cite{flyxion2026shared} gives the indication pattern.
+\end{proof}
+
+With the numbers of Example~\ref{ex:voi}, at $X=2$ where $\VOI_{\mathcal P}=0.225$, and with $c_\Pi=0.06$ for a review of the specification and $c_O=0.04$ for the operator's reading of its own incident data, the net values are $u(\{O\})=0.185$, $u(\{\Pi\})=0.165$ and $u(\{\Pi,O\})=0.125$, and the operator is the efficient auditor. The assignment follows the cost and the proximity to the data. It does not follow that the principal is free of obligation. The audit is an information matter, and the principal's duty to fix the weight that the objective assigns to those the operation affects is a matter of specification. The decomposition of Proposition~\ref{prop:decomp} shows how the two are separated: in the numerical case $0.225$ of the expected regret is informational and belongs to the guardian of the audit, and $0.9$ is the specification component, which does not depend on the audit and belongs to whoever set the objective. Where the principal controls the operator's access to the outcome data, the principal is a gate in the sense of the earlier paper, and an operator who could not audit because the data were withheld is excused while the principal inherits its position.
+
+\section{Universalizing an objective}\label{sec:universal}
+
+The parent essay distinguishes the justification of a procedure from the justification of the principles governing it, and proposes for the latter a test close to the first formulation of the categorical imperative: whether the principles would be defensible if generally adopted. The test has an application to objectives that the single-agent analysis cannot show. An objective can be harmless in the hands of one agent and defective as a general policy, because the omitted cost is shared.
+
+Consider $n$ agents who each choose an intensity $x_i\in[0,X]$, with a benefit $\sum_ix_i$ and a harm $\kappa(\sum_ix_i)^2$ that is borne in common, as with congestion, depletion of a shared resource, or the fatigue of a shared workforce. Let $S=\sum_ix_i$ and let $S^*=1/(2\kappa)$ be the total that maximizes $S-\kappa S^2$. The operative objective of each agent ignores the common harm, so each chooses $x_i=X$.
+
+\begin{proposition}[Universal adoption]\label{prop:universal}
+If all $n$ agents adopt the operative objective, the regret against the standard is $0$ for $nX\le S^*$ and $\kappa(nX-S^*)^2$ for $nX>S^*$. In particular, with $n^*=\lfloor S^*/X\rfloor+1$, the objective produces no regret for $n<n^*$ agents, including a single agent, and a regret that grows quadratically in the excess $nX-S^*$ for $n\ge n^*$. A test of the objective that asks only whether it causes harm in one agent's hands will pass it for every $n<n^*$ and cannot detect that it fails as a general policy.
+\end{proposition}
+
+\begin{proof}
+The standard value of a total $S\le nX$ is $S-\kappa S^2=\frac1{4\kappa}-\kappa(S-S^*)^2$, maximized at $S^*$ when $S^*\le nX$ and at $nX$ otherwise. Universal adoption gives $S=nX$. The regret is $\kappa(nX-S^*)^2$ if $nX>S^*$ and $0$ otherwise, by the argument of Proposition~\ref{prop:latent}.
+\end{proof}
+
+With $\kappa=1$ and $X=0.25$, $S^*=0.5$ and $n^*=3$: the regret is $0$ for $n=1,2$, $0.0625$ for $n=3$, $0.5625$ for $n=5$, and $4$ for $n=10$. The point is that the latency of Proposition~\ref{prop:latent} has a second dimension. The defect appears as capability grows and also as the number of agents who share the objective grows, and an objective that has been adequate in every case in which it was used may become inadequate when it is adopted widely. The universalization test of the parent essay, applied to an objective, is the question whether the objective could be adopted by everyone in the position without regret, and the proposition shows that the test is not equivalent to the unilateral one.
+
+\section{Justification at three levels}\label{sec:three}
+
+The central question was whether a decision procedure can be justified when its objective is defective. The results of the preceding sections allow it to be answered by distinguishing three tests, each of which can be defined without reference to the others.
+
+\begin{definition}[Three tests]\label{def:three}
+\begin{enumerate}[label=(\alph*),nosep]
+\item $J_{\mathrm{proc}}$: the procedure was correct relative to the objective in force and the information available to it, in the sense of the parent essay.
+\item $J_{\mathrm{obj}}$: the \emph{objective discharge} condition holds. It is a condition on the record, defined as in \cite{flyxion2026stop}: every audit of the objective that the standard requires has been completed, no admissible audit that is indicated under the standard objective $W_{\mathcal P}$ remains unperformed, the audits relied on met the standard's quality requirement, and any suspected defect that the agent could not itself correct has been reported to the party that could.
+\item $J_{\mathrm{prin}}$: the standard objective $W_{\mathcal P}$, and the principles behind it, are defensible when universalized, in the sense of the parent essay and Section~\ref{sec:universal}.
+\end{enumerate}
+\end{definition}
+
+The condition $J_{\mathrm{obj}}$ is the discharge condition of the stopping paper applied to the audit of the objective. Like it, it is defined from the record and the standard and not from the conclusion that the objective is adequate, and so it does not say that the objective is adequate. It says that the agent has done what the standard of care required in inquiring into it.
+
+\begin{proposition}[Independence of the tests]\label{prop:three}
+No one of $J_{\mathrm{proc}}$, $J_{\mathrm{obj}}$, and $J_{\mathrm{prin}}$ implies another, and $J_{\mathrm{obj}}$ does not imply that the objective is adequate, $\Reg=0$.
+\end{proposition}
+
+\begin{proof}
+Use the quadratic frontier model with the numbers of Example~\ref{ex:voi}, and an audit cost $c=0.1$.
+(1) $J_{\mathrm{proc}}$ without $J_{\mathrm{obj}}$: at $X=2$ the procedure maximizes $W_0$ and uses its information correctly, but $\VOI_{\mathcal P}=0.225>c$ and no audit was made, so the objective discharge fails.
+(2) $J_{\mathrm{obj}}$ without adequacy: at $X=1$, $\VOI_{\mathcal P}=0.1\le c$, so no audit is indicated and, assuming no protocol requires one, the objective discharge holds. If the true coefficient is $\kappa=1$ then $x^*=0.5<1$ and $\Reg=0.25>0$.
+(3) $J_{\mathrm{obj}}$ without $J_{\mathrm{proc}}$: an audit is performed and reveals $\kappa$, and the objective in force is revised to the standard, but the procedure is then executed with the old intensity, so it is not correct relative to the objective now in force.
+(4) $J_{\mathrm{prin}}$ is independent of the other two: take the setting of Section~\ref{sec:universal} with a standard that scores each agent's own intensity and ignores the shared harm. An agent can satisfy both $J_{\mathrm{proc}}$ and $J_{\mathrm{obj}}$ with respect to that standard, and the standard fails universalization for $n\ge n^*$.
+\end{proof}
+
+The answer to the central question follows. A procedure that is correct relative to a defective objective is not thereby justified, and it is not thereby unjustified. Its justification depends on the second and third tests as well as the first. If the defect was unavoidable, in the sense that no admissible audit existed, or was not indicated at the time under the standard objective, then the agent's discharge condition holds and the procedure remains justified, however large the regret. If an admissible audit was indicated and was omitted, the procedure is not justified, though it was correct relative to its objective, and the omission is deficient of type D1 or D2 according to its motive. If the defect was normative, the question is not the agent's diligence but the principles, and the answer depends on who set the weights. And the standard itself may fail the universalization test even when everything else holds. The statement that the procedure was correct relative to its objective is therefore true and does not settle the matter.
+
+A question remains that the model does not settle: whether the agent \emph{should} represent the standard objective at all, since the indication of an audit requires it (Proposition~\ref{prop:sealing}). The standard of care may require agents in some roles to maintain such a representation, for example agents who design objectives for systems that affect third parties, and the corresponding investigation is the inquiry into who is affected and how. This is the establishment of the objective's domain, and it is the counterpart of establishing the informational domain in the parent essay. Whether a given role carries the duty is a question for the standard.
+
+\section{A worked case: a delivery-routing system}\label{sec:worked}
+
+A logistics platform operates a routing system that assigns schedules to drivers. The system chooses how tightly to pack each driver's day, which is the intensity $x$ of the model, with the capability $X$ the greatest tightness that the optimizer can impose. The operative objective is on-time delivery, $W_0=b(x)=x$, normalized so that one unit of intensity is one unit of benefit. The omitted feature is the strain on the drivers, taken to be $h(x)=\kappa x^2$ in the same units, and the standard objective, which counts the drivers' harm, is $W_{\mathcal P}=x-\kappa x^2$. From the evidence the operator has, $\kappa$ is either $0.25$ or $1$ with probability $\tfrac12$ each, and its true value is $1$. An audit, which consists of a review of fatigue and injury records, reveals $\kappa$ and costs $0.1$. The numbers are those of Example~\ref{ex:voi}, and they are chosen for transparency and carry no empirical claim.
+
+\subsection*{Version A: the earlier system}
+
+The earlier optimizer is modest, $X=0.5$. At this capability the operative objective and the standard agree for both values of $\kappa$, since $X=0.5\le x_2=0.5$, and the regret is $0$. The score is $0.5$ and the standard value, at the true $\kappa=1$, is $0.25$. The value of an audit is $\VOI_{\mathcal P}(0.5)=0$ and no audit is indicated. All three tests hold. The objective is defective in the sense of Section~\ref{sec:latent}, since it omits a cost that would bind at higher capability, but the defect is latent and no one has failed in anything. The objective is not at fault in this system, and no investigation of it would have found anything.
+
+\subsection*{Version B: the same objective in a more capable system}
+
+A new optimizer raises the capability to $X=2$ and the objective is unchanged. The score rises from $0.5$ to $2$, a fourfold improvement by the measure the designers watch. The standard value at the true $\kappa=1$ falls from $0.25$ to $-2$, and the regret is $\kappa(X-x^*)^2=2.25$; the expected regret over the operator's evidence is $1.125$. The audit is now indicated: $\VOI_{\mathcal P}(2)=0.225>0.1$. The capability threshold of Proposition~\ref{prop:capability} for this cost is $X_c=1$, so that the duty to audit arose at some capability between the old system and the new, and not at the system's launch. The upgrade changed what the operator was answerable for without changing the objective or anything the operator was told. The operator, whose objective is $W_0$, would find $\VOI_0(q_\kappa)=0$ at every capability and would never find the audit indicated by its own calculation (Proposition~\ref{prop:sealing}). The indication comes from the standard.
+
+If no audit is made, the omission is deficient. It is of type D1 if the operator had not considered whether the upgrade could change the adequacy of the objective, and of type D2 if the operator had a suspicion about what the records would show and left them unread. The procedure remains correct relative to the objective in force, and $J_{\mathrm{proc}}$ holds while $J_{\mathrm{obj}}$ fails.
+
+\subsection*{Version C: the objective set by a platform and operated by a depot team}
+
+Now let the objective be specified by the platform ($\Pi$), and let the system be operated by a depot team ($O$) that has the drivers' records. Either party can audit, the platform by reviewing the specification at a cost of $0.06$ and the team by reading its own records at $0.04$. Each assumes the other is attending to it. Under that assumption neither audit is indicated, since each would add nothing given the other's, and under the actual-conduct baseline both are indicated, and the efficient assignment is the team alone, with net value $0.185$ against $0.165$ for the platform alone and $0.125$ for both (Proposition~\ref{prop:guardians}). If neither audits, the team is deficient in the audit, and the information component of the expected regret, $0.225$, is attributed to it. The platform did not omit an audit that was assigned to it. It set an objective that gave the drivers' harm no weight, and the specification component, $0.9$ of the expected regret of $1.125$ (Example~\ref{ex:decomp}), is attributable to it under the principles if the standard counts the drivers' harm. The two components sum to the whole.
+
+Suppose instead that the platform controlled access to the records and had withheld them, so that the team's audit was infeasible. The team is then excused from the audit, and the platform, as the gate, inherits the team's position in the account. The expected regret is then attributed to the platform in full.
+
+\subsection*{Version D: a known harm that the objective excludes}
+
+Suppose, finally, that an audit has been completed and everyone knows that $\kappa=1$, and that the platform nonetheless keeps the objective $W_0=x$ on the ground that the drivers' strain is not the platform's concern. The value of a further audit is zero, since there is nothing left to learn, and $J_{\mathrm{obj}}$ holds. The procedure is correct relative to its objective, so $J_{\mathrm{proc}}$ holds. The expected regret is $2.25$ at $X=2$ and it is all specification component. The defect is purely normative. Whether it is a defect depends on the principles, which here give the drivers' harm weight $\lambda_{\mathcal P}=1$, and the party that answers is the one who set the weight. The team that operates the system answers for a secondary duty only, to report what it knows, and if it has reported the matter and been overruled its position is that of an agent who acted on a delegated objective with a defect of which it informed the principal.
+
+\begin{center}
+\small
+\begin{tabular}{@{}p{0.07\textwidth}p{0.17\textwidth}p{0.15\textwidth}p{0.13\textwidth}p{0.17\textwidth}p{0.17\textwidth}@{}}
+\hline
+Version & $X$, score & Regret, $\kappa=1$ & Expected regret & Audit indicated & Who answers\\
+\hline
+A & $0.5$, $0.5$ & $0$ & $0$ & no & No one\\
+B & $2$, $2$ & $2.25$ & $1.125$ & yes ($0.225>0.1$) & The operator, for the omitted audit\\
+C & $2$, $2$ & $2.25$ & $1.125$ & yes & Operator $0.225$, platform $0.9$\\
+D & $2$, $2$ & $2.25$ & $2.25$ & no ($\VOI=0$) & The platform, for the weight\\
+\hline
+\end{tabular}
+\end{center}
+
+A final observation concerns the number of depots. If the harm is borne by a driver pool that several depots share, so that it depends on the total intensity applied across them, Proposition~\ref{prop:universal} applies. With $\kappa=1$ and each depot at $X=0.25$, the objective produces no regret with one or two depots and a regret of $0.0625$ with three, $0.5625$ with five, and $4$ with ten. A review of the objective in a single depot would find nothing, and the platform's adoption of the same objective across its depots is what makes it defective. The audit that would reveal this is an audit of the objective's use at the level of the platform and not of any depot.
+
+\section{What the mathematics supplies and what the standard must supply}\label{sec:supply}
+
+\begin{center}
+\small
+\begin{tabular}{@{}p{0.31\textwidth}p{0.27\textwidth}p{0.32\textwidth}@{}}
+\hline
+Established by mathematics & Conditional on & Supplied by the standard of care\\
+\hline
+Correctness relative to the objective places no bound on regret (Prop.~\ref{prop:unbounded}) & Frontier structure & The standard objective $W_{\mathcal P}$\\
+Latent defect and the capability threshold for regret (Prop.~\ref{prop:latent}) & $b$ increasing, $V$ strictly concave & Which features $y_1$ count and how they are weighted\\
+An objective cannot audit itself (Prop.~\ref{prop:sealing}) & $W_0$ does not depend on the omitted feature & That audits be indicated under $W_{\mathcal P}$, or by a probability threshold\\
+Audit value rises with capability and has a threshold (Prop.~\ref{prop:capability}) & Prior over the harm, quadratic model & The prior, the cost of the audit and whose cost counts\\
+Specification and information components (Prop.~\ref{prop:decomp}) & The frontier model & The weight $\lambda_{\mathcal P}$\\
+Two guardians: gaps and the efficient role (Prop.~\ref{prop:guardians}) & Substitute audits, known costs & The role assignment and the tie-breaking rule\\
+Universal adoption (Prop.~\ref{prop:universal}) & Shared quadratic harm & Who counts as being in the position; the universalization test\\
+Independence of the three tests (Prop.~\ref{prop:three}) & The constructed models & Which tests the standard requires, and $J_{\mathrm{prin}}$ itself\\
+\hline
+\end{tabular}
+\end{center}
+
+The right column is, in the main, the set of things the standard objective consists of. This is the sense in which the paper's central result is a result about where the burden falls. The mathematics shows that an objective's adequacy cannot be certified from within, that its defect can be latent and capability-triggered, and that the audit that would find it has to be indicated from outside the objective. It does not supply the outside. What the objective should range over, whom its harms are to be counted for, and with what weight are normative decisions that the earlier papers placed with the principles $\mathcal P$, and nothing in the formalism makes them for the agent. The formalism does make them unavoidable, in that every procedure embodies some answer to them, and the choice not to ask is an answer.
+
+\section{Limits and conclusion}\label{sec:limits}
+
+The model is deliberately minimal. It has one omitted feature, a convex cost, a known functional form, and a two-point prior over its coefficient, and it takes the standard objective as given. Real objectives omit many features, some of them unknown to anyone, and an audit presupposes a hypothesis about what to look for. The results here do not say how to find a feature that no one has thought of, and the inquiry into who is affected, which Section~\ref{sec:three} places among the establishment duties, is a different kind of investigation from the audit of a named coefficient, and a harder one. The standard objective is also uncertain and contested, and the paper treats it as a parameter. A treatment that carried uncertainty about the standard itself, which is moral uncertainty, would need a different formalism and might change the self-sealing result, since the agent's own representation of the standard would then enter its calculation.
+
+The treatment of capability is static. The dynamics of capability growth, in which the objective, the system, and the environment change together, are not modeled, and the reopening duty of the stopping paper, which requires a renewed look when new indications arise, is the natural mechanism here: an increase in capability past the threshold of Proposition~\ref{prop:capability} is a new indication. Learned objectives, in which the operative objective is itself the output of a training process, introduce a further layer in which the party that answers for the objective may be the party that answered for the training, and the account of provenance in the earlier papers applies without the present paper developing it. The paper does not address strategic manipulation of objectives by those who set them, nor the case in which an agent chooses its own capability with knowledge of the omitted cost. Nor does it say which objectives are correct.
+
+The question was whether a decision procedure can be justified when the objective it optimizes is itself defective. The answer is that the justification has three independent parts. The procedure may be correct relative to its objective and information, and that is not enough, since correctness relative to an objective places no bound on the regret against the standard. The objective may have been audited when the standard required an audit, which is a condition on the record and does not guarantee the objective's adequacy, and the audit has to be indicated under the standard and not under the objective, because an objective cannot audit itself. And the standard may itself be defensible if generally adopted, which is a separate question from the other two. A defective objective is sometimes a defect that no one could have found, sometimes one that an indicated and omitted audit would have found, and sometimes one that no audit would have found because the harm was known and the weight was wrong. In the first case no one answers. In the second, the party who could audit answers. In the third, the party who set the weight does. The objective is a domain, and its establishment is a matter of responsibility in the same way as the informational domain, with the difference that the agent's own objective gives it no reason to look.
+
+\begin{thebibliography}{99}
+\bibitem{flyxion2026domain} Flyxion. \emph{The Domain and Its Establishment: Information Acquisition and the Boundary of Responsibility}. Unpublished manuscript, 2026.
+\bibitem{flyxion2026inputs} Flyxion. \emph{Correct Relative to Its Inputs: Responsibility for the Domain of Automated Decisions}. Unpublished manuscript, 2026.
+\bibitem{flyxion2026law} Flyxion. \emph{Deliberate Ignorance and the Law: Where Philosophical and Doctrinal Willful Blindness Diverge}. Unpublished manuscript, 2026.
+\bibitem{flyxion2026stop} Flyxion. \emph{When to Stop Looking: Sequential Inquiry and the Diligence Threshold}. Unpublished manuscript, 2026.
+\bibitem{flyxion2026shared} Flyxion. \emph{Shared Omissions: Attribution When Information Losses Interact}. Unpublished manuscript, 2026.
+\bibitem{goodhart1975problems} C.\,A.\,E.\ Goodhart. Problems of monetary management: the U.K.\ experience. In \emph{Papers in Monetary Economics}, vol.\ I. Reserve Bank of Australia, Sydney, 1975.
+\bibitem{strathern1997improving} M.\ Strathern. `Improving ratings': audit in the British university system. \emph{European Review} 5 (1997), 305--321.
+\bibitem{manheim2018categorizing} D.\ Manheim and S.\ Garrabrant. Categorizing variants of Goodhart's law. arXiv:1803.04585, 2018.
+\bibitem{hadfieldmenell2017inverse} D.\ Hadfield-Menell, S.\ Milli, P.\ Abbeel, S.\ Russell, and A.\ Dragan. Inverse reward design. \emph{Advances in Neural Information Processing Systems} 30 (2017).
+\end{thebibliography}
+
+\end{document}

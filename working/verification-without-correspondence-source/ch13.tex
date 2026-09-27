@@ -1,0 +1,64 @@
+\chapter{The Pressure-Flux Discrepancy}
+\label{ch:pressure}
+
+The discrepancy of the previous chapter was a matter of degree: one estimate was the other with an extra derivative. The second documented discrepancy is of a different kind. The two bounds depend on different quantities, the arguments that produce them differ at each step, and neither bound is a corollary of the other on the source's report. The case shows that the typing of transitions in Chapter~\ref{ch:preservation} is not a ranking by strength, and it gives the monograph its example of a lateral transition.
+
+\section{The setting and the two estimates}
+
+The discrepancy concerns the pressure-flux estimate (10.19), which occurs in the proof of the velocity-uniqueness Lemma 10.5. The setting is two solutions $(v, P)$ and $(u, p)$ with $w := v - u$ and $\pi := P - p$. A cutoff $\varphi$ satisfies $0 \le \varphi \le 1$ and equals one on the unit ball. Put $\varphi_R(x) = \varphi(x/R)$ and $\chi_R = \varphi_R^8$. Define
+\[
+A_R := \Bigl( \int \chi_R |\nabla w|^2 \Bigr)^{1/2}, \qquad B_R := \|\varphi_R^4 w\|_{L^6},
+\]
+so that $A_R$ is a localized $L^2$ gradient norm and $B_R$ a localized $L^6$ velocity norm. With $R \ge 1$, the natural-language bound (10.19) is
+\begin{equation}
+\Bigl| \int \pi\, w \cdot \nabla \chi_R \Bigr| \le \frac{C_T}{R} \Bigl[ (B_R + 1) B_R^{1/2} + R^{-3/4} B_R^{3/4} \Bigr], \quad \text{for a.e. } t \in (0, T),
+\label{eq:nl1019}
+\end{equation}
+and the Lean estimate is
+\begin{equation}
+\Bigl| \int \pi\, w \cdot \nabla \chi_R \Bigr| \le C_T \Bigl[ (B_R^{1/2} + 1) \Bigl( \frac{A_R}{R} + \frac{1}{R^2} \Bigr) + R^{-7/4} B_R^{3/4} \Bigr], \quad \forall\, t \in (0, T).
+\label{eq:lean1019}
+\end{equation}
+The natural-language bound is stated purely in terms of $B_R$, whereas the Lean estimate additionally depends on $A_R$. The cited declaration is \path{exists_uniform_actual_pressure_flux_bound}, at line 576 of \path{NavierStokes/R3/PressureFlux.lean}, with related bounds in \path{exists_uniform_canonicalCutoffFlux_bound} and \path{canonicalCutoffFlux_bound}.
+
+Equation (10.17) of the natural-language paper bounds $B_R$ using $A_R$. It cannot be used to eliminate $A_R$ from the Lean estimate so as to recover (10.19), and the source concludes that the two bounds are not directly comparable. Two features of the displays make the lack of comparability visible. The Lean bound carries an additional dependence on $A_R$ and so is, in that respect, weaker than a bound in $B_R$ alone. It holds for every $t \in (0,T)$ and not merely almost every $t$, and so is, in that respect, stronger. A bound that is weaker in one respect and stronger in another is not ordered by implication.
+
+\section{Three differences of argument}
+
+The source identifies three differences between the proofs. First, the Lean proof does not use boundedness of the Riesz transform from $L^{3/2}$ to $L^{3/2}$. It uses a Sobolev embedding to move to $L^2$, together with $L^2$ boundedness of the Riesz transform, and the extra derivative in the embedding is the reason $A_R$ appears. Second, it applies H\"older's inequality with different exponents. Third, it shows the integral to be continuous in time, which removes the qualifier ``for almost every $t$''.
+
+The divergence can be followed term by term. The natural-language proof replaces $\pi$ by
+\[
+\pi_* = \sum_{i,j} R_i R_j g_{ij}, \qquad g_{ij} = v_i v_j - u_i u_j = w_i w_j + w_i u_j + u_i w_j,
+\]
+where $R_i$ denotes the Riesz transform. It factors the integrand into $\varphi_R^4 \pi_*$ and a test function containing $\varphi_R^3$. It then uses the commutator identity (10.18),
+\[
+\varphi_R^4 \pi_* = \sum_{i,j} R_i R_j(\varphi_R^4 g_{ij}) + \sum_{i,j} [\varphi_R^4, R_i R_j]\, g_{ij},
+\]
+and bounds the first term in $L^{3/2}$ by H\"older's inequality and the $L^{3/2}$ boundedness of the Riesz transforms, citing Stein, which gives $\|R_i R_j(\varphi_R^4 g_{ij})\|_{3/2} \le C''(B_R + 1)$.
+
+The Lean proof factors out $\varphi_R^2$ instead, with test function $w \cdot \varphi_R^5 \nabla \varphi_R$. It applies H\"older with exponents $6$ and $6/5$. It bounds $\|R_i R_j(w \cdot \varphi_R^5 \nabla \varphi_R)\|_6$ by a Sobolev embedding in three dimensions, interchange of the gradient with the Riesz transform, and $L^2$ boundedness of the Riesz transforms, which produces the $A_R/R + 1/R^2$ term. It obtains the $B_R^{1/2} + 1$ factor from $\|\varphi_R^2 g_{ij}\|_{6/5}$ through the pointwise bound $|\varphi_R^2 g_{ij}| \le 2|u||w| + |\varphi_R w|^2$ and the interpolation
+\[
+\|\varphi_R w\|_{12/5} \le \|w\|_2^{3/4}\, \|\varphi_R^4 w\|_6^{1/4} \le C\, B_R^{1/4},
+\]
+a step with no counterpart in the proof of Lemma 10.5. The Lean proof also works with $w = u - v$ and $\pi = p - P$, the opposite sign convention. The two arguments share a goal and a decomposition of $\pi$ into Riesz transforms, and beyond that share little.
+
+\section{Two cautions from the source}
+
+The source adds two cautions, and the chapter preserves both. The first concerns the apparent strictness of (10.19). Since the purpose of Lemma 10.5 is to establish $w = 0$, the right-hand side of (\ref{eq:nl1019}) is eventually zero and is stricter than the Lean bound. But this is established only after the whole proof of the lemma. At the stage where the estimate is used, $w$ is not yet known to vanish, and the comparison available then is the one between the displayed expressions. The retrospective strictness cannot be used to rank the two estimates for the purpose of the argument in which they occur, and the reader should not import it into the comparison.
+
+The second caution concerns a related Lean bound in \texttt{R3StressPressureEstimate.lean}, \path{regularized_flux_Bound}. It differs from (10.19) and does not appear to be used in the proof of the final theorem. Its existence is evidence of the variety of nearby estimates in the formal development. It does not bear on the discrepancy at hand, and the monograph does not rely on it.
+
+The source also records, as in the previous chapter, that the examination is of the relation between artifacts and not of the correctness of the natural-language argument. The Lean estimate does not refute (10.19), and it does not certify it.
+
+\section{The case in the ledger}
+
+Let $o_{10.19}$ be the obligation whose content is (\ref{eq:nl1019}) and $o_{\mathrm{Lean}}$ that of (\ref{eq:lean1019}). The transition has a single successor, no discharges, and no assumptions, so the certified context of $o_{10.19}$ is $\{\varphi(o_{\mathrm{Lean}})\}$. The two relevant questions are whether $\varphi(o_{10.19}) \models \varphi(o_{\mathrm{Lean}})$ and whether $\varphi(o_{\mathrm{Lean}}) \models \varphi(o_{10.19})$, both relative to the certified background of the development in the sense of the previous chapter. The source's report is that neither entailment is available by the obvious means. The first would require passing from a bound in $B_R$ for almost every $t$ to a bound in $B_R$ and $A_R$ for every $t$, and the second would require eliminating $A_R$, which (10.17) does not permit. On that report the transition is of lateral type in the sense of Definition~\ref{def:typing}.
+
+The classification is source-supported and provisional. The monograph supplies neither a countermodel nor an analytic argument establishing both non-entailments, and the typing should be read as recording that the source's assessment places the estimates in the fourth cell of the table, subject to independent verification. If one of the entailments were established, the transition would be reclassified as a weakening or a strengthening. In either case the chapter's methodological point stands: the framework represents a discrepancy that is not a loss of content in the sense of weakening, and it does not force the discrepancy into a generic category of mistranslation.
+
+\section{Statement fidelity and argument fidelity apart}
+
+The two cases of Chapters~\ref{ch:derivative} and~\ref{ch:pressure} together illustrate the separation of the judgments that Chapter~\ref{ch:nondischarge} proves abstractly. In the derivative case, the statements differ by a shift in a parameter and the proofs diverge in a lemma used for summability. In the pressure-flux case, the statements differ in their dependence on a quantity and in their quantifier over time, and the proofs differ at almost every step. In both cases the kernel accepts the Lean declaration. In both the statement obligation against the natural-language estimate is not discharged as an equivalence. And in both the argument obligation is reported by the source to differ, a report that I record as provisional. The pressure-flux case shows more clearly than the derivative case that the failures of statement fidelity and argument fidelity can be tracked separately: the shared goal and shared decomposition of the pressure into Riesz transforms make the statements comparable in outline, while the divergence of method makes the argument obligation fail in a way that is independent of how the statement obligation is eventually resolved.
+
+The source observes that the case motivates exactly this: tracking statement fidelity and argument fidelity as separate obligations. The monograph's contribution is to supply the vocabulary for that tracking, and to attach to each discrepancy a type, a set of repairs, and a statement of what remains in the residue. As in the previous chapter, nothing in the examination bears on whether the natural-language proof is correct. What the two chapters establish is the narrower and firmer point that a formal verification can succeed in a way that leaves the relation between the verified artifact and the announced one unsettled, and that the unsettled relation can be described precisely.

@@ -1,0 +1,318 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1.15in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathpazo}
+\usepackage[T1]{fontenc}
+\usepackage{microtype}
+\usepackage{setspace}
+\usepackage{enumitem}
+\usepackage{array}
+\usepackage[colorlinks=true,linkcolor=black,citecolor=black,urlcolor=black]{hyperref}
+\onehalfspacing
+\setlength{\parindent}{1.5em}
+\setlength{\parskip}{0.2em}
+
+\newcommand{\F}{\mathcal F}
+\newcommand{\G}{\mathcal G}
+\newcommand{\Q}{\mathcal Q}
+\newcommand{\C}{\mathcal C}
+\newcommand{\N}{\mathcal N}
+\newcommand{\PP}{\mathbb P}
+\newcommand{\E}{\mathbb E}
+\newcommand{\feas}{\mathrm{feas}}
+\newcommand{\adm}{\mathrm{adm}}
+\newcommand{\app}{\mathrm{app}}
+\newcommand{\Dfc}{\mathcal D}
+\newcommand{\VOI}{\mathrm{VOI}}
+
+\theoremstyle{plain}
+\newtheorem{proposition}{Proposition}
+\newtheorem{lemma}{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{remark}{Remark}
+\newtheorem{example}{Example}
+
+\title{Arrangements and Their Authors:\\Responsibility for the Design of Institutions}
+\author{Flyxion\\Independent Researcher}
+\date{October 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent Institutions fail informationally in ways that no individual member's conduct explains. A report is made and never read, a duty is assigned to no one, a check is rewarded by nothing, and a harm that every layer could have registered is registered by none. This paper asks who answers for such failures and on what basis an arrangement can be called deficient. It treats an institution as a design, consisting of a routing structure that determines which outcomes reach a decision, a designation of roles, and a system of incentives and enforcement, chosen by those with authority over it. It proves that an organization can fail to possess what its members possess, with a loss equal to the value of the unrouted information and no deficient member; that under a design that designates no roles, an inefficient equilibrium of mutual omission has no deficient member and the whole loss lies at the level of the design; that the least subsidy that removes a complementarity trap, and the least enforcement that closes the gap between private and social value of diligence, can be computed and compared with the loss they would avoid, which makes their omission by the governors a deficient omission of the same kind as an individual's; that in a chain of constraints each of which was produced by the decision above it, the attribution of the loss passes up the chain to the first agent whose own omission was not excused; that an institution's own objective cannot register what it omits, so that the audit of an arrangement must be indicated by a level whose objective covers the omitted harm, and an institution without a covering level is unaccountable by construction; and that when an agent and a governor are both deficient and either's act would have sufficed, the restricted attribution divides the loss between them. A regional bridge-inspection regime illustrates the results in five versions. The paper identifies what the mathematics settles and what a standard of care must supply.
+\end{abstract}
+
+\section{Introduction}\label{sec:intro}
+
+The parent essay in this series, \emph{The Domain and Its Establishment} \cite{flyxion2026domain}, argues that the informational boundary within which a decision is made is partly the product of prior decisions, and that it is therefore a possible object of responsibility. It devotes a section to institutions as objects of evaluation and another to the provenance of informational constraints, and it ends by noting that an institution may be evaluated even where no individual is blameworthy. Its companions have developed the individual case at length: automated decisions and organizations \cite{flyxion2026inputs}, the law of willful blindness \cite{flyxion2026law}, the point at which inquiry may stop \cite{flyxion2026stop}, the attribution of omissions that interact \cite{flyxion2026shared}, and the responsibility for what a procedure optimizes \cite{flyxion2026objective}. This paper takes up the institutional case, which the parent deferred.
+
+The cases that motivate it share a structure. A hospital's allergy history is taken carefully and filed where the prescribing system does not read it. A regulator requires an inspection that costs the inspector more than it benefits the inspector, and the inspection is not performed. A manager cannot book the interpreter because the budget line was removed by someone who never saw the consequence. A metric is satisfied at every level of an organization, and the harm it does not measure accumulates. In each case an observer who examines the individuals one at a time finds that each acted within the constraints that applied to it, and an observer who examines the outcome finds a loss that the right arrangement would have avoided. The two observations are consistent only if the failure lies in the arrangement, and the question is who answers for an arrangement.
+
+The thesis is that an arrangement is evaluated in the same way as a procedure, because it is a decision made by someone: the governors who set its routes, roles, incentives, and constraints. Their decision has a domain, which is what they knew and could have learned about how the arrangement would operate. It has an objective, which is what they were trying to achieve and what they were not counting. And its omissions are deficient or not by the same tests as an individual's, with the difference that the objects of the decision are the constraint sets of other agents and not information about the world. The paper does not treat the institution as a bearer of beliefs or of blame. It treats the institution as an object whose arrangements have authors, and it asks how the account of the preceding papers locates those authors and measures what they owe.
+
+Six results organize the paper. An organization can fail to possess what its members possess, and the loss is the value of the information that was not routed (Proposition~\ref{prop:routing}). When a design designates no roles, an inefficient equilibrium of mutual omission contains no deficient member, so that the whole loss lies at the level of the design (Proposition~\ref{prop:blameless}). The cheapest repair of such a design, and of the divergence between private and social value of diligence, can be computed, and compared with the loss it avoids, which determines whether the governors' omission of it is deficient (Propositions~\ref{prop:subsidy} and~\ref{prop:enforce}). In a chain of constraints, the attribution passes up to the first agent whose omission was not itself excused (Proposition~\ref{prop:chain}). An institution's own objective cannot register what it omits, so an audit of its arrangement must be indicated by a level whose objective covers the harm, and where no level does, the harm is unaccountable by construction (Proposition~\ref{prop:cover}). And when an agent and a governor are both deficient and either's act would have sufficed, the restricted attribution of the earlier paper divides the loss between them (Proposition~\ref{prop:concurrent}).
+
+Section~\ref{sec:framework} recalls the framework and defines designs. Section~\ref{sec:routing} treats possession and routing, Section~\ref{sec:blameless} blameless failure, and Section~\ref{sec:incentives} incentives and enforcement. Section~\ref{sec:chain} treats chains of provenance, Section~\ref{sec:cover} covering levels, and Section~\ref{sec:concurrent} concurrent deficiency. Section~\ref{sec:worked} carries a regional bridge-inspection regime through five versions, Section~\ref{sec:supply} sorts what the mathematics supplies from what a standard of care must supply, and Section~\ref{sec:limits} states limits and conclusions.
+
+\paragraph{Sources and scope.} The propositions that are original to the paper are proved in full, and the numerical examples were computed by script from the stated definitions. The paper concerns the structure of responsibility for arrangements, takes no position on which arrangements are correct, and offers no legal advice. No legal authority is relied on, and the general remarks about institutions are not a treatment of corporate or administrative law.
+
+\section{The framework with designs}\label{sec:framework}
+
+Recall the single-agent framework. A probability space $(\Omega,\F,\PP)$ carries a filtration $(\F_t)$ with $\F_t$ the information possessed at time $t$. A decision has two stages, the choice of an investigation $q$ from $\Q_t$ and then an act using the enlarged information. The feasible investigations are $\Q^{\feas}_t$, the applicable ones $\Q^{\app}_t$ are those the standard of care calls for, and the admissible ones are $\Q^{\adm}_t=\Q^{\feas}_t\cap\Q^{\app}_t$. An omission of an admissible investigation that was indicated is deficient, of type D2 if motivated by suspicion of what the investigation would show and of type D1 otherwise, and the non-deficient omissions are of types U (unavoidable), N (not indicated), and J (justified by a competing constraint). The constraint set $\C^i_t$ of agent $i$ fixes its feasible investigations and may be the product of other agents' decisions.
+
+The shared-omission paper \cite{flyxion2026shared} represents several agents $\N=\{1,\dots,n\}$ by an acquisition game. Agent $i$ has an investigation with cost $c_i\ge0$, and for a set $S\subset\N$ of agents who investigate, $v(S)$ is the expected loss avoided, with $v(\emptyset)=0$ and $v$ monotone. The net value is $u(S)=v(S)-\sum_{i\in S}c_i$, and the net gain of adding $i$ to a configuration $B\not\ni i$ is $g_i(B)=v(B\cup\{i\})-v(B)-c_i$. An omitter is indicated under a baseline rule if $g_i$ at the baseline configuration is positive, and the paper considers the actual-conduct baseline, the reliance baseline, and the role baseline for a designated set $T$. The \emph{restricted attribution} divides among the deficient omitters $\Dfc$ the loss $A=v(S\cup\Dfc)-v(S)$ that their omissions could have avoided, with the actual investigators $S$ held fixed, and leaves a residual for the remainder of the avoidable loss. These definitions and their properties are used here without being reproved.
+
+\begin{definition}[Arrangement]\label{def:design}
+An \emph{arrangement} or \emph{design} $d$ consists of
+\begin{itemize}[nosep]
+\item a \emph{routing structure} $R_d\subset\N$, the set of agents whose investigation outcomes reach the decision point;
+\item a \emph{role designation} $T_d\subset\N$, the set of agents the standard designates to investigate, which may be empty;
+\item an \emph{incentive and enforcement schedule}, consisting of a payment $s_i\ge0$ to agent $i$ conditional on investigating, a detection probability $\rho\in[0,1]$, and a sanction $\sigma\ge0$ for an omission of an assigned investigation; and
+\item a \emph{constraint assignment}, which determines the feasible investigations of each agent.
+\end{itemize}
+The designs available to a set $\mathcal G$ of \emph{governors} are the admissible designs $\mathcal D^{\adm}$, those the governors can feasibly adopt and the standard of care applies to, each at a cost $c_{\mathcal G}(d)\ge0$.
+\end{definition}
+
+The governors are the persons with authority over the arrangement: a board, a ministry, a manager with control of a budget. The definition makes each component something that a person decides, and so something that has a domain, an objective, and a place in the structure of admissibility. When the routing is $R_d$, the information that reaches the decision point when exactly the agents in $S$ have investigated is that of $S\cap R_d$, and the value of the design's operation is $v_d(S)=v(S\cap R_d)$.
+
+The relation between agents and governors is a relation between levels. The agents decide what to investigate, within their constraint sets. The governors decide the arrangement, and in doing so they set the constraint sets and the routes, and the incentives that the agents face. A third level may in turn set the governors' own constraints. The question of the paper is how the account of responsibility applies at the second and higher levels, and the answer developed is that the same tests apply, with the object of the second-level decision being a design and not an investigation.
+
+\section{Possession without routing}\label{sec:routing}
+
+The parent and the input paper \cite{flyxion2026inputs} observe that an organization can fail to possess information that its members possess. The condition of closure requires that the information bearing on a decision reach the point at which the decision is taken, and where it does not, the organization's informational state is poorer than the union of its members'. The present section states the observation as a result and measures the loss.
+
+\begin{definition}[Organizational possession]\label{def:possession}
+Under a design with routing $R_d$ and investigators $S$, a member $i\in S$ \emph{possesses} its outcome $Z_i$, and the organization possesses the outcomes of $S\cap R_d$. The \emph{organizational filtration} at the decision point is $\G_{S\cap R_d}=\F_0\vee\bigvee_{i\in S\cap R_d}\sigma(Z_i)$. An outcome is \emph{unrouted} if it is possessed by a member and not by the organization, that is, if $i\in S\setminus R_d$.
+\end{definition}
+
+\begin{proposition}[Possession without routing]\label{prop:routing}
+For any design, the value lost by non-routing is
+\[
+\ell(S,R_d)=v(S)-v(S\cap R_d)\ge0,
+\]
+with equality if and only if the unrouted outcomes have no marginal value given the routed ones. If every member of $S$ investigated, then no member's omission contributes to this loss, and the loss is entirely a property of the design: members who investigated and had no admissible means to route the outcome are excused (type U), so $\ell(S,R_d)$ is attributable, if to anyone, to the governors who could have provided the route. The addition of a route for a member $i\in S\setminus R_d$ has value $v(S\cap(R_d\cup\{i\}))-v(S\cap R_d)$, and it is indicated at the level of the design if this exceeds its cost $c_{\mathcal G}$.
+\end{proposition}
+
+\begin{proof}
+The inequality is the monotonicity of $v$ in \cite{flyxion2026shared}, applied to $S\cap R_d\subset S$. The condition for equality is the definition of marginal value. A member who investigated has not omitted its investigation, so its omission cannot contribute to the loss. A member whose route does not exist has no admissible means of reporting, which is the case of type U for the omission of the report, and the possible secondary duty to report the limitation is itself a duty to use a route that may not exist. The last statement applies the net-gain definition of indication, with the design change in the role of the investigation.
+\end{proof}
+
+\begin{example}[An unrouted finding]\label{ex:routing}
+Take the binary model of the stopping paper \cite{flyxion2026stop}: a structure is defective with probability $0.05$, leaving a defective structure open costs $50$ and closing costs $2$, and an inspection detects a defect with probability $0.8$ and never gives a false alarm. The expected loss avoided by a routed inspection is $2-0.58=1.42$. Suppose the inspector investigates and finds a defect, and the finding is recorded in a field book that the asset registry does not read. The organization possesses nothing from the inspection, and the loss is $1.42$ in expectation. A reporting channel costing $0.3$ would have recovered it, and its net value, $1.12$, is positive, so the channel is indicated at the level of the design. No member omitted anything: the inspector inspected, and reported to the only party that could be reached.
+\end{example}
+
+The example has the form that the parent essay associated with institutional failure, in which the information exists and has been acquired by a person and is not, for the purposes of the decision, possessed. Its structure also shows what is distinctive about the second-level omission. The omitted thing is a channel, and the value of a channel is the value of the information that would pass through it. That value is computed in the same way as the value of an investigation, with the same machinery of net gain, and the omission of a channel whose net gain is positive and whose cost the governors could bear is deficient in the sense of the earlier papers, with the governors as the agents.
+
+\section{Arrangements and equilibria: failure without a deficient member}\label{sec:blameless}
+
+When a design leaves the investigators' choices to their own incentives, the profile of investigation is an equilibrium of the game among them, and the earlier paper has shown that the equilibrium need not be efficient. The question here is how the loss from an inefficient equilibrium is to be attributed when the design designates no roles.
+
+Let each agent maximize the net value of the team, so that an agent's gain from adding its investigation to the configuration $B$ of others is $g_i(B)$, and call a profile $S$ an \emph{equilibrium} if no single agent can raise $u$ by adding or dropping its own investigation. Write $u^*=\max_{S'}u(S')$.
+
+\begin{proposition}[Blameless failure]\label{prop:blameless}
+Let the design designate no roles, so that deficiency is judged against the actual-conduct baseline. At every equilibrium profile $S$ no omitter is deficient, whatever the value of $u(S)$, and the shortfall $u^*-u(S)$ is entirely at the level of the design. There are games in which the shortfall is positive, so that the design leaves a loss that no member's omission explains. In the pipeline game with $B=100$, $\lambda_1=0.5$, $\lambda_2=0.8$, $c_1=42$, $c_2=12$, the profile $S=\emptyset$ is an equilibrium with $u=0$ while $u^*=6$ at $S=\{1,2\}$, and the expected loss avoidable by joint investigation, $60$, contains no deficient agent.
+\end{proposition}
+
+\begin{proof}
+At an equilibrium, no omitter can raise $u$ by investigating, so $g_i(S)\le0$ for every $i\notin S$, and under the actual-conduct baseline no omitter is indicated. The pipeline values are $v(\{1\})=40$, $v(\{2\})=10$, $v(\{1,2\})=60$ (the pipeline example of \cite{flyxion2026shared}), so $g_1(\emptyset)=40-42=-2$ and $g_2(\emptyset)=10-12=-2$, and $u(\{1,2\})=60-54=6$.
+\end{proof}
+
+The proposition does not say that no one is responsible for the loss. It says that no \emph{member} is, relative to a design that gave the members no designated role and relied on their own incentives. Someone chose that design, or left the choice unmade, and the loss is a consequence of what the design left unsettled. The role baseline of the earlier paper shows what the design could have done: designating the efficient set $\{1,2\}$ makes each member's investigation indicated regardless of the other's conduct, so that omissions of the designated investigation are deficient. A design that fails to designate, when designation was admissible and would have closed a positive gap, leaves the governors with a deficient omission of their own.
+
+\begin{definition}[Design deficiency]\label{def:designdef}
+For a design $d$ with equilibrium conduct $S_d$ and an admissible alternative $d'\in\mathcal D^{\adm}$ with equilibrium conduct $S_{d'}$, the \emph{net gain of the change} is $G(d\to d')=u(S_{d'})-u(S_d)-c_{\mathcal G}(d')$. The governors' omission of the change is \emph{indicated} if $G(d\to d')>0$, \emph{deficient} if indicated and admissible and not made, and of type D2 if the governors' reason for not making it was suspicion of what the change would reveal, and D1 otherwise.
+\end{definition}
+
+The definition is the net-gain form of indication of the earlier papers, with the design change taking the place of the investigation and the equilibrium net value taking the place of the value of information. It inherits the structure of the objective paper in one respect that matters. The governors' own objective may not count the loss that falls on others, and then $G$ computed under the governors' own objective is not the net gain under the standard. This is the self-sealing property of the self-sealing result of \cite{flyxion2026objective} at the second level, and Section~\ref{sec:cover} returns to it.
+
+\section{Incentives and enforcement}\label{sec:incentives}
+
+The designer has instruments other than designation. It can alter the payoffs that the agents face, and it can enforce. Two cases are of particular interest, the trap in which investigations are complements and the divergence between private and social value of diligence.
+
+\begin{proposition}[The least subsidy that removes a trap]\label{prop:subsidy}
+Let two agents have $v$ supermodular, $g_i(\emptyset)\le0$ for both $i$ (so that mutual omission is an equilibrium), and $g_i(\{j\})>0$ for both (so that each would investigate if the other did). Then a payment $s_i>-g_i(\emptyset)=c_i-v(\{i\})$ to either agent $i$, conditional on investigating, makes joint investigation the unique equilibrium. The least such payment is $\min_i\bigl(c_i-v(\{i\})\bigr)$, in the sense of an infimum, and the change is indicated at the level of the design if this payment, together with any cost of administering it, is less than $u(\N)-u(\emptyset)$.
+\end{proposition}
+
+\begin{proof}
+Let the payment go to agent 1. At the profile $\emptyset$, agent 1's gain from investigating is $g_1(\emptyset)+s_1>0$, so $\emptyset$ is not an equilibrium. At $\{2\}$ agent 1's gain is $g_1(\{2\})+s_1>0$, and at $\{1\}$ agent 2's gain is $g_2(\{1\})>0$, so neither of these profiles is an equilibrium. At $\{1,2\}$ no agent gains by dropping: agent 1 loses $g_1(\{2\})+s_1>0$ and agent 2 loses $g_2(\{1\})>0$. Hence $\{1,2\}$ is the unique equilibrium. The threshold for agent $i$ is the smallest payment that makes $g_i(\emptyset)+s_i$ positive.
+\end{proof}
+
+In the pipeline game with $c_1=42$, $c_2=12$ the thresholds are $c_1-v(\{1\})=2$ and $c_2-v(\{2\})=2$, so that a payment of any amount above $2$ to either stage eliminates the trap, and the net value that is thereby recovered is $u(\{1,2\})-u(\emptyset)=6$. If the payment is treated conservatively as a cost, the net gain of the change is about $4$. The point of the proposition is the smallness of the repair relative to the loss: the trap is expensive and the means of escaping it, once the structure is understood, may be cheap. A governor who has the means to pay, who has been or could have been informed of the structure, and who does not, has omitted an indicated change.
+
+\begin{proposition}[The least enforcement that closes the private-social gap]\label{prop:enforce}
+Let agent $i$ receive a fraction $\theta\in(0,1]$ of the value of its investigation, with marginal value $m=v(S\cup\{i\})-v(S)$ and cost $c$. Then the agent investigates voluntarily if and only if $\theta m>c$, and the investigation is socially worthwhile if and only if $m>c$. In the interval $c<m\le c/\theta$ the investigation is worthwhile and is not made. Under an assigned duty with detection probability $\rho$ and sanction $\sigma$ for omission, the agent investigates if and only if $\theta m-c+\rho\sigma>0$, so that the interval is closed by any enforcement with $\rho\sigma>c-\theta m$. The enforcement is indicated at the level of the design if its cost $e$ satisfies $e<m-c$.
+\end{proposition}
+
+\begin{proof}
+An agent who investigates receives $\theta m$ and pays $c$; one who omits bears the expected sanction $\rho\sigma$. The agent investigates iff $\theta m-c>-\rho\sigma$. The social net value of the investigation is $m-c$, and enforcement that induces the investigation at cost $e$ has net gain $m-c-e$, positive iff $e<m-c$.
+\end{proof}
+
+\begin{example}[Uninternalized diligence]\label{ex:enforce}
+Let a mandated inspection have marginal social value $m=3.0$ and cost $c=1.0$, and let the inspector's organization capture a fraction $\theta=0.25$ of the value, so that its private benefit is $0.75<c$. It omits the inspection although the social net value is $2.0$. With $\rho=0.5$ the sanction needed is $\sigma>0.5$. If monitoring costs the regulator $0.3$ per inspection, the enforcement is indicated, since $0.3<2.0$.
+\end{example}
+
+The parent essay distinguishes two things that can happen to a standard: its content can be weakened, which expands the admissible set, and it can be left unenforced, which leaves the admissible set unchanged and lets the set of procedures performed drift toward the economically advantageous ones. Proposition~\ref{prop:enforce} measures the drift. The interval $(c,c/\theta]$ is the set of investigations that are admissible and worthwhile and are not performed under non-enforcement, and its extent is determined by the share $\theta$ of the value that the investigator captures. An institution whose investigators capture little of the value of their diligence has, without enforcement, a systematic shortfall that is a function of its design and not of the investigators' character. A weakening of the standard that removed the investigation from the admissible set would eliminate the shortfall's classification as a deficiency without recovering any of the loss, and the loss is then a loss that the standard has decided to tolerate, a decision that has its own authors.
+
+\section{Chains of provenance}\label{sec:chain}
+
+The parent essay distinguishes the proximate cause of an informational deficit from its provenance, and it observes that a constraint on one agent is frequently the product of another agent's decision, which was itself constrained by a third. The shared-omission paper \cite{flyxion2026shared} showed, for a single gate, that when a gate disables an agent's investigation, the gate inherits the disabled agent's position in the restricted attribution. Institutions iterate the structure. A ministry sets a budget, a regional office allocates it, a unit uses the allocation, and an inspector inspects or does not. This section determines where the attribution lands.
+
+Let the levels be indexed $0,1,\dots,m$, with level $0$ the investigating agent and level $j+1$ the author of the constraint under which level $j$ acts. At each level $j$ there is an act $a_j$ (conducting the investigation, in the case of level $0$; lifting the constraint of level $j-1$, in the case of $j\ge1$) which is \emph{sufficient} if its performance by a level that can feasibly perform it restores the investigation, with the avoided loss $L=v_S(\{\text{restoration}\})>0$, where $S$ denotes the investigations actually performed. Level $j$'s omission of $a_j$ is \emph{excused} if $a_j$ was not feasible for level $j$, because a constraint produced by level $j+1$, or by a source that is not an agent, removed it from $\C^j$. It is \emph{deficient} if $a_j$ was feasible, admissible, and indicated ($L>c_j$, where $c_j$ is the cost of the act), and no other excuse applies. Write $\Dfc\subseteq\{0,\dots,m\}$ for the set of levels whose omission is deficient.
+
+\begin{proposition}[Attribution along a chain]\label{prop:chain}
+Suppose each act $a_j$ is sufficient, so that $v_S(T)=L$ for every nonempty $T\subseteq\{0,\dots,m\}$ whose members' acts are all feasible and $v_S(T)=0$ if no member of $T$ can act. Then:
+\begin{enumerate}[label=(\alph*),nosep]
+\item The restricted attribution gives $\psi_j=L/|\Dfc|$ to each $j\in\Dfc$ and $0$ to every other level, when $\Dfc\neq\emptyset$.
+\item If the constraints of levels $0,\dots,k-1$ were each produced by the level above and each removed the act from the level it constrained, and level $k$ is the lowest level at which the act was feasible, then $\Dfc\cap\{0,\dots,k-1\}=\emptyset$, and the whole of the attributable loss lies at level $k$ if no level above $k$ can act. Intermediate levels are excused, but a level that knew of the constraint and could report it above retains the secondary duty to report, which is judged separately by the net value of the report.
+\item If the level $k$ is itself excused by a constraint whose source is not an agent (type U) or by a competing constraint (type J), and no level above can act, then $\Dfc=\emptyset$, the attributable loss is $0$, and the whole avoidable loss $L$ is residual. The account then locates the loss at no one.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(a) With $\Dfc\neq\emptyset$ the game $T\mapsto v_S(T)$ on $\Dfc$ gives $L$ to every nonempty coalition, a symmetric game, and Shapley division of the total $L$ gives each member $L/|\Dfc|$; levels outside $\Dfc$ are null players, since by definition they are not members of the game. (b) Each of the levels $0,\dots,k-1$ lacks the feasible act, which is the definition of excuse, so none is in $\Dfc$. Level $k$ has a feasible act; it is in $\Dfc$ unless it is otherwise excused, and if no level above can act, it is the only member of $\Dfc$ and part (a) gives it the whole $L$. (c) If every feasible act at level $k$ is excused and no other level can act, then $\Dfc$ is empty. The attributable loss is $v_S(\Dfc)-v_S(\emptyset)=0$, and the avoidable loss $L$ is the residual, in the terminology of the earlier paper.
+\end{proof}
+
+Part (b) is the formal content of the phrase \emph{the buck passes up}, and part (c) is the formal content of the opposite: it passes up only as far as an agent who could have acted. The construction is also a restriction of the account that deserves to be stated plainly. The account of responsibility is an account of agents' omissions, and at the top of a chain there may be a constraint no agent set, such as an appropriation fixed by an electorate's choice, or a physical limit. The account does not manufacture a deficient agent there. It reports the residual, and the question of whether the residual should have an owner is a question for the standard of care and, in the end, for those who write standards.
+
+For complementary investigations the chain composes with the gate result. If the disabled position is one of several complementary positions, the first level at which the act was feasible inherits the position, and the restricted attribution is computed over the set of positions with the inheriting levels in the places of the disabled agents.
+
+\begin{example}[A budget cut and a two-stage defence]\label{ex:chain}
+Take the pipeline game of the earlier paper with loss $B=100$, stage reliabilities $\lambda_1=0.5$, $\lambda_2=0.8$ and costs $c_1=42$, $c_2=12$, where stage~1 is the structural survey and stage~2 is the follow-up repair, and the values are $v(\{1\})=40$, $v(\{2\})=10$ and $v(\{1,2\})=60$. A ministry removes the survey budget line. The regional office, which would have funded the survey, now has no feasible way to do so, and so has the survey unit beneath it. The follow-up unit is not constrained; it omits its stage because it judged the stage not worth its cost in isolation, which is the equilibrium logic of the earlier section, and the standard designates both stages, so that under the role baseline its omission is indicated, $g_2(\{1\})=60-40-12=8>0$.
+
+The survey unit and the regional office are excused. The ministry inherits the survey position, since the lowest feasible act in the survey's chain is the ministry's. With the actual investigators $S=\emptyset$, the restricted attribution over the positions $\{\text{ministry}, \text{follow-up unit}\}$ is the Shapley division of the pipeline game: $\psi_{\text{ministry}}=45$ and $\psi_{\text{follow-up}}=15$, and the residual is $0$. If instead the cut was a statutory figure that nobody in the account could have altered in the period, so that the ministry is excused as well, the deficient set is $\{\text{follow-up}\}$ alone, the attributable loss is $v(\{2\})=10$, so that $\psi_{\text{follow-up}}=10$, and the residual is $60-10=50$, which the account assigns to no one.
+\end{example}
+
+The numbers show two features. The first is that the share of the ministry is not the whole loss, because the follow-up unit's own omission is deficient and takes part of it; a cut at the top does not erase deficiency below it, except where it removed the lower act's feasibility. The second is that the excusal of the root moves $50$ units from an attributed share to an unowned residual, but it moves only $5$ units off the follow-up unit's attributed share, from $15$ to $10$. The order of magnitude of what is lost to attribution when the root is excused is determined by the complementarity of the stages, not by the degree of the root's culpability.
+
+\section{Covering levels}\label{sec:cover}
+
+The objective paper \cite{flyxion2026objective} established that a decision procedure's operative objective may omit a feature that the standard counts, and that when it does, the value of information about the feature is zero under the operative objective, so that no audit of the omission is indicated by the procedure's own reasoning. The present section applies the result to the audit of an arrangement.
+
+Suppose a level $j$ of an institution has an operative objective $W_j$, a function of the outcome of its acts, and the standard of care has an objective $W^*$. Let $X$ be a feature of the world that bears on $W^*$ and let an audit of the arrangement reveal information about $X$ alone. Say that level $j$ \emph{covers} $X$ if $W_j$ depends on $X$: there are an act $a$ and two values $x\neq x'$ of the feature with $W_j(a,x)\neq W_j(a,x')$.
+
+\begin{proposition}[Covering levels]\label{prop:cover}
+Let the audit signal $Y$ be a function of $X$ and independent noise, with the audit costing $c_a>0$. 
+\begin{enumerate}[label=(\alph*),nosep]
+\item If level $j$ does not cover $X$, then the value of the audit under $W_j$ is $\VOI_j(Y)=0$, and the audit is not indicated by level $j$'s own objective for any $c_a>0$, however large $\VOI^*(Y)$ is under the standard.
+\item If level $j$ covers $X$, then $\VOI_j(Y)$ may be positive, and the audit is indicated by level $j$'s own objective iff $\VOI_j(Y)>c_a$.
+\item If no level covers $X$, then no level has a self-triggering path to the audit. The audit takes place only if an external duty is attached to some level by the standard, and such a duty, being a decision to impose it, has itself an author.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(a) If $W_j(a,x)$ does not depend on $x$ then $W_j(a,X)=w_j(a)$ is a constant over $X$, and the maximum over acts of $\E[w_j(a)\mid Y]$ equals $\max_a w_j(a)$ for every realization of $Y$, so the value of observing $Y$ is zero. Because the cost is positive, $0<c_a$ and the audit is not indicated. (b) is the definition of indication by net gain. (c) follows from (a) at every level.
+\end{proof}
+
+Part (a) is the self-sealing property of the objective paper at the level of arrangements, and it has an organizational form that has no analogue for a single procedure. A procedure that omits a feature from its objective may still be audited by an external party who counts the feature. An institution has levels, each of which can audit the one below it, and the property is that the audit is triggered by a level whose objective counts the feature. If every level's objective is a function of metrics that do not include the feature, then the institution can have rigorous audits at every level and none of them will concern the feature. The levels audit what they count.
+
+\begin{example}[Levels that audit what they count]\label{ex:cover}
+A region's bridges have a hidden component whose deterioration is detected only by an audit, and is not on the inspection checklist. The component is defective with probability $0.1$. If it is defective, leaving the bridge unrestricted costs $4.5$ in expectation, while restricting load costs $1.0$ whatever the state. Without information, leaving the bridge unrestricted costs $0.45$ in expectation, which is less than the cost $1.0$ of restricting, so the bridge is left unrestricted. With a perfect audit, restriction occurs only if the component is defective, at expected cost $0.1$. The value of the audit under the standard is $\VOI^*=0.45-0.1=0.35$, and with audit cost $c_a=0.2$ the net gain is $0.15$. The inspection units are rated by the number of inspections completed on schedule, and the regional office and the ministry are rated by the budget they hold, so that under their objectives the act chosen does not depend on the state of the component, and $\VOI_j=0$ at every one of the three levels. A safety board whose objective counts the expected cost of a collapse is a covering level, for which $\VOI_j=0.35>c_a=0.2$. The audit is indicated by the board, and by no one else.
+\end{example}
+
+There are three consequences for the question of who owes the audit. The first is that the omission of an audit by a non-covering level is not deficient on the strength of that level's own reasoning, and the account of deficiency must therefore look elsewhere: to the principled test of the objective paper, which asks whether a reasonable decision-maker in the level's position would have counted the feature, or to the duty the standard attaches to the level. The second is that where a covering level exists and has the means to audit, its omission is the natural candidate for deficiency, with the audit's net gain $\VOI_j-c_a$ the quantity of Definition~\ref{def:designdef} in the case where the change is the audit. The third is that the governors who designed the institution, and chose the levels and their objectives, bear a responsibility of the second order for the existence of a covering level.
+
+\begin{remark}[The decision not to look at the arrangement]\label{rem:d2design}
+A governor who declines to establish a covering level, or declines to audit when one exists, because of what the audit might reveal about the governor's own arrangement, omits an indicated change from suspicion of the result. This is the type D2 omission of the parent essay, at the level of the design, and it is treated as the law treats willful blindness \cite{flyxion2026law}: the conditions for treating it so are that the governor had indications that the arrangement was deficient and took action whose evident purpose or effect was to avoid learning whether it was. The mathematics does not decide whether those conditions hold in a case; it only describes the structure that makes them worth examining.
+\end{remark}
+
+The recursion terminates. Level $j$'s duty to audit is imposed by a level $j+1$ or by the standard itself, and the audit of the arrangement that imposes the duty is in turn the business of a level that covers the feature. Because the hierarchy is finite, the sequence of audits ends either in a covering level, which can audit by its own reasoning, or in a duty that the standard imposes without any institution's own reasoning behind it, or in nothing. In the last case the harm is \emph{unaccountable by construction}: no path from the institution's own objectives leads to its detection, and none from its duties either. It is possible for such an institution to be run with complete integrity by every person in it.
+
+\section{Concurrent deficiency}\label{sec:concurrent}
+
+The last structural case is one in which an agent and a governor are both deficient and either's act would alone have sufficed. This occurs whenever a mandated investigation is skipped by an agent who finds it unprofitable, and the governor who could have enforced it did not.
+
+\begin{proposition}[Concurrent deficiency]\label{prop:concurrent}
+Let agent $i$ and governor $g$ both be deficient, with $v_S(\{i\})=v_S(\{g\})=v_S(\{i,g\})=m>0$. Then:
+\begin{enumerate}[label=(\alph*),nosep]
+\item The but-for test assigns the loss $m$ to each, so that the assigned shares sum to $2m$.
+\item The restricted attribution of the earlier paper assigns $\psi_i=\psi_g=m/2$, and the shares sum to the attributable loss $m$.
+\item More generally, if $k$ deficient parties each have a sufficient act, each receives $m/k$, and if the standard assigns role weights $w_1,\dots,w_k>0$, the weighted Shapley division assigns $mw_i/\sum_jw_j$.
+\item The governor's deficiency does not reduce the agent's attributed share below $m/2$ unless the governor's act removed the feasibility of the agent's act, which moves the agent out of the deficient set.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(a) Holding the other's omission fixed, adding either act recovers the whole $m$. (b) The game on $\{i,g\}$ is symmetric with total $m$. (c) The symmetric game of $k$ players with total $m$ gives each $m/k$ by symmetry and efficiency; the weighted version is the standard weighted Shapley value for a game in which every nonempty coalition has value $m$ \cite{shapley1953value}. (d) Excuse is the definition of removal from $\Dfc$ and is the matter of Proposition~\ref{prop:chain}.
+\end{proof}
+
+For the uninternalized inspection of Example~\ref{ex:enforce}, with $m=3.0$, the inspector's organization and the regulator are each attributed $1.5$. The but-for test would assign $3.0$ to each and thereby exceed the loss. The restricted attribution preserves the bookkeeping that the loss is divided among those whose deficiency contributed to it. The unweighted division is the default of the mathematics and it is an approximation of what the law might do. A standard of care might weight the governor more heavily on the ground that it controlled the arrangement and the agent only a part of it, or the agent more heavily on the ground that the mandated act is its own, and the structure above determines only the form of such a weighting and not its content.
+
+\section{A regional bridge-inspection regime in five versions}\label{sec:worked}
+
+A region is responsible for its road bridges. The regime has four parts. Inspection units survey structures and record findings. A registry holds the records from which closures and load restrictions are decided. A regulator mandates inspections of a high-risk class of structures and may monitor compliance. A ministry funds the units and the regulator. Five versions of the regime differ in a single feature each, and the same account is applied to every version. The numbers are those of the preceding sections.
+
+\paragraph{Version A: a functioning regime.} Findings are routed to the registry, both stages of the two-stage defence are designated and funded, the regulator monitors the high-risk class at a cost below the gain from compliance, and a safety board whose objective counts the expected cost of a collapse audits the regime. Every omission of an indicated and admissible act is absent; the equilibrium is the efficient configuration with $u^*=6$ in the pipeline normalization; no party is deficient, the attribution is empty, and the avoidable loss is $0$. This is the control. A loss may still occur, since an inspection detects a defect with probability $0.8$ and the structure may fail, but the loss is of type U or N at every level and is not an object of responsibility.
+
+\paragraph{Version B: an unrouted finding.} The inspector finds a defect and records it in a field book which the registry does not read. As in Example~\ref{ex:routing}, the expected loss is $1.42$ per inspected structure and a channel costing $0.3$ has net value $1.12$. The inspector and the unit are excused. The governors' omission of the channel is deficient if they had indications that findings were not reaching the registry, and is then attributed $\psi_{\mathcal G}=1.42$; otherwise it is type N for want of an indication, and the loss is residual. What the governors had in front of them, such as a prior complaint, an audit finding, or the incident record, is the question, and it belongs to the standard of care. The mathematics supplies the value of the channel.
+
+\paragraph{Version C: uninternalized diligence.} For the high-risk class the marginal social value of an inspection is $m=3.0$ and its cost to the inspecting organization is $c=1.0$, but it captures only $\theta=0.25$ of the value, so that its private benefit is $0.75<1.0$. The inspection is mandated and goes unperformed. The regulator, which could monitor at cost $0.3$ and sanction with $\rho\sigma>0.5$, does not. Both omissions are deficient: the inspector's because the act was feasible and admissible and indicated ($3.0>1.0$), the regulator's because the enforcement has net gain $3.0-1.0-0.3=1.7>0$. By Proposition~\ref{prop:concurrent}, each is attributed $1.5$ of the $3.0$ lost. A standard that weights the party in control of the arrangement would tilt the division toward the regulator. If the standard instead weakened the mandate so as to remove this inspection from the admissible set, the classification as a deficiency would disappear and the loss would not.
+
+\paragraph{Version D: a budget cut.} The ministry removes the survey budget line, and the regional office and survey units are left without a feasible survey, as in Example~\ref{ex:chain}. The follow-up unit omits its repair stage. The ministry inherits the survey position, and the Shapley division gives it $45$ and the follow-up unit $15$, with no residual. If the cut was a statutory figure outside any agent's reach, the ministry is excused and the follow-up unit is attributed $10$, with $50$ unowned.
+
+\paragraph{Version E: no covering level.} The regime is as in Version A, with the exception that the safety board is absent and each level is rated by schedule compliance or budget held. A hidden component deteriorates, as in Example~\ref{ex:cover}. The audit has net gain $0.15$ under the standard and is indicated by no level. Every level performs the audits that its objective calls for and none is deficient on the strength of its own reasoning. Whether anyone is deficient depends on the duties that the standard attaches to levels, on whether the governors who designed the rating system had indications that safety was uncounted, and on whether a decision to leave the rating system as it was was taken in order to avoid learning that. In the absence of all three, the harm is unaccountable by construction.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.9cm}>{\raggedright\arraybackslash}p{3.6cm}>{\raggedright\arraybackslash}p{3.4cm}>{\raggedright\arraybackslash}p{3.6cm}@{}}
+\hline
+Ver. & Where the loss lies & Deficient parties & Attribution \\
+\hline
+A & nowhere avoidable & none & none \\
+B & unrouted finding & governors (if indicated) & $1.42$ to governors \\
+C & uninternalized diligence & inspector and regulator & $1.5$ each of $3.0$ \\
+D & budget cut and stage omission & ministry, follow-up unit & $45$ and $15$; or $10$ with $50$ unowned \\
+E & uncounted feature & depends on duties & none from own reasoning \\
+\hline
+\end{tabular}
+\caption{The five versions of the regime and the attribution in each.}
+\label{tab:versions}
+\end{table}
+
+The versions have the same surface: a structure fails, and an examination of any individual shows nothing wrong. They differ in where the account finds the loss. In B it lies in a route, in C in an incentive that the regulator could have repaired and the inspector could have ignored, in D in a chain, in E in an objective. The remedies differ accordingly, and so do the parties who owe them.
+
+\section{What the mathematics settles and what a standard must supply}\label{sec:supply}
+
+As in the earlier papers, the results sort into those that follow from the definitions and those that depend on a judgment. Table~\ref{tab:supply} lists them by topic.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{5.0cm}>{\raggedright\arraybackslash}p{5.0cm}@{}}
+\hline
+Topic & The mathematics settles & A standard must supply \\
+\hline
+Routing & the loss from non-routing and the value of a channel & what indications the governors had; what a reasonable channel costs \\
+Blameless failure & that no member is deficient under no designation; the size of the gap & whether roles had to be designated; which baseline applies \\
+Incentives & the least subsidy and the least enforcement, and their comparison with the loss & what enforcement is admissible; how much capture $\theta$ is tolerable \\
+Chains & where attribution lands given the excuses & which constraints excuse; whether a root constraint has an author \\
+Covering & that non-covering levels cannot self-trigger an audit & which harms must be covered; who owes the covering level \\
+Concurrence & that the shares sum to the attributable loss & the weights among the parties \\
+\hline
+\end{tabular}
+\caption{The division of labour between the mathematics and the standard of care.}
+\label{tab:supply}
+\end{table}
+
+Four judgments recur. The first is the identification of the governors: a board, a ministry, or a legislature may have authority over an arrangement, and the account needs a standard that says who counts as the author of which component. The second is the classification of constraints as excusing (types U and J) or not, which decides whether the attribution stops at a level or passes through it. The third is the covering requirement: which harms an institution must have a level to count. The fourth is the weighting of concurrent parties. In each case the mathematics fixes the form of the answer, and nothing in the mathematics tells a court or a regulator what to put there.
+
+\section{Limits and conclusions}\label{sec:limits}
+
+The account has several limits. It is static: designs are compared by their equilibrium net values and the transition between them is priced as a cost, with no representation of learning by the governors about the arrangement over time. It takes the governors to be a single agent, although a board or a legislature is itself an arrangement, and the attribution within it is the same problem one level further up. It treats the values $v(S)$ as given, whereas in practice they are estimates available to the governors only at some cost, and the standard of care governs the effort to form them. It assumes that the equilibrium reached under a design is known to the governors, and an equilibrium may be selected by history. And it assumes that the governors respond to the account only by repairing the arrangement, whereas they may also respond by designing arrangements that are difficult to audit, which is why Remark~\ref{rem:d2design} is not an afterthought.
+
+The account does not say which institutions should exist or how responsibility should be divided among the people in them, and it does not replace the judgments listed in the preceding section. It supplies a structure within which those judgments can be made with the quantities in view. The conclusions are as follows. An organization does not possess what its members possess unless the design routes it, and the loss from non-routing is the value of the information that was not routed. Failure can lie wholly in the design, when the design designates no roles and the equilibrium among the members is a mutual omission. The cheapest repairs of a design are computable, and a governor who omits one whose net gain is positive omits an indicated act as an individual does. Attribution passes up a chain of constraints to the first level at which the act was feasible, and stops with a residual if there is none. A level cannot audit what its objective does not count, so that an arrangement needs a covering level, and where there is none the harm is unaccountable by construction. And when parties are concurrently deficient, the loss is divided and not duplicated. The series that this paper completes has one theme throughout: responsibility for an outcome is partly responsibility for the boundary within which it was decided, and at the level of institutions the boundary has authors whose omissions can be judged as an individual's are.
+
+\begin{thebibliography}{99}
+\bibitem{flyxion2026domain} Flyxion. \emph{The Domain and Its Establishment}. Independent essay, 2026.
+\bibitem{flyxion2026inputs} Flyxion. \emph{Correct Relative to Its Inputs}. Independent essay, 2026.
+\bibitem{flyxion2026law} Flyxion. \emph{Deliberate Ignorance and the Law}. Independent essay, 2026.
+\bibitem{flyxion2026stop} Flyxion. \emph{When to Stop Looking: Sequential Inquiry and the Diligence Threshold}. Independent essay, 2026.
+\bibitem{flyxion2026shared} Flyxion. \emph{Shared Omissions: Attribution When Information Losses Interact}. Independent essay, 2026.
+\bibitem{flyxion2026objective} Flyxion. \emph{The Objective as Domain: Responsibility for What a Decision Procedure Optimizes}. Independent essay, 2026.
+\bibitem{shapley1953value} L.~S. Shapley. A value for $n$-person games. In H.~W. Kuhn and A.~W. Tucker (eds.), \emph{Contributions to the Theory of Games II}, Annals of Mathematics Studies 28, Princeton University Press, 1953, pp.~307--317.
+\bibitem{kalai1987weighted} E.~Kalai and D.~Samet. On weighted Shapley values. \emph{International Journal of Game Theory} 16 (1987), 205--222.
+\end{thebibliography}
+
+\end{document}
