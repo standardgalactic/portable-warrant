@@ -1,0 +1,68 @@
+% Tagged, accessible build. Compile with LuaLaTeX (current TeX Live / MiKTeX, LaTeX 2025-06 or later).
+% MathML-tagged formulas require LuaLaTeX with unicode-math; pdfLaTeX users should use unfinished-pdflatex.tex.
+% Tested: the document is otherwise tag-clean. amsthm theorem environments are supported by the
+% tagging code only in recent LaTeX releases; on an older distribution (e.g. TeX Live 2023) they raise
+% "tagpdf Error: there is no open structure on the stack" at each theorem end. Update the distribution if so.
+\DocumentMetadata{
+  lang        = en,
+  pdfversion  = 2.0,
+  pdfstandard = ua-2,
+  testphase   = {phase-III, title, math}
+}
+\documentclass[11pt]{article}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amsthm,mathtools}
+\usepackage{unicode-math}
+\setmainfont{Latin Modern Roman}
+\setmathfont{Latin Modern Math}
+
+
+\usepackage{microtype}
+\usepackage{booktabs}
+\usepackage[hidelinks]{hyperref}
+\hypersetup{
+  pdftitle={The Uses of the Unfinished: Continuation, Foreclosure, and the Architecture of Commitment},
+  pdfauthor={Flyxion},
+  pdfsubject={Completion as scoped withdrawal of recognized continuations; option value, irreversibility, and asymmetric closure},
+  pdfdisplaydoctitle=true,
+  pdfkeywords={completion, option value, irreversibility, continuation, modularity, choice architecture, classification, institutional design}
+}
+\usepackage{url}
+
+\newtheorem{proposition}{Proposition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\newtheorem{observation}{Observation}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}
+
+\DeclareMathOperator{\Ineq}{Ineq}
+\DeclareMathOperator{\anc}{anc}
+\DeclareMathOperator{\desc}{desc}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\KL}{D_{\mathrm{KL}}}
+
+\title{The Uses of the Unfinished:\\[0.3em]
+\large Continuation, Foreclosure, and the Architecture of Commitment}
+\author{Flyxion\\ \small Independent Researcher}
+\date{September 27, 2026}
+
+\begin{document}
+\maketitle
+
+\input{sec-abstract}
+
+\newpage
+\tableofcontents
+\bigskip
+\input{sec01-03}
+\input{sec04-06}
+\input{sec07-09}
+\input{sec10-14}
+\input{sec-appendix}
+\input{sec-bib}
+
+\end{document}

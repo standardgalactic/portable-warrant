@@ -1,0 +1,91 @@
+Disposition Lab v4 (verificationFailed state, certificates, discharge, timeout)  (max events = 7)
+admissible ledgers enumerated: 15167
+
+== Property index (bounded propositions over the class H<=7)
+  class: admissible ledgers, <= 7 records, identities {c1,c2}, principals {a1,a2}, one value, one transformation, one rule, one obligation and deadline per commitment
+  normalization: fresh identities chosen canonically (equivariance); ledgers compared as record sequences
+  P-ReplaySound              expected: holds   result: holds   checked: 15167
+      path lemma: delta* of each projection equals replay's map
+  P-TerminalExclusive        expected: holds   result: holds   checked: 15167
+      at most one terminal record per commitment, and it is last
+  P-CertificateAuthentic     expected: holds   result: holds   checked: 15167
+      every VerificationFailed record checks against its state and a verifier
+  P-FailedVerificationLive   expected: holds   result: holds   checked: 15167
+      a VerificationFailed record leaves its commitment live
+  P-NoVerifierDisposition    expected: holds   result: holds   checked: 15167
+      verification never yields a terminal state; terminal records need their authority
+  P-TraceInvariant           expected: holds   result: holds   checked: 15167
+      every linearization of the dependence order replays identically
+  P-WorldAdmissible          expected: holds   result: holds   checked: 15167
+      every configuration (downset) has a defined replay
+  linearizations replayed for P-TraceInvariant: 372961
+  not checked here (need the process or typed layer): P-RightsAgree, P-DelegationConservative; parser properties are checked by disposition_parser.py
+
+== Modal terminal exclusivity:  Refused(c) -> not <>Collapsed(c)
+  pointed worlds with a refusal tested: 15332, violations: 0
+
+== Countermodel search
+  Verified(c) -> Authorized(binder(c), verify, c)
+    smallest countermodel (1, 4, 2, 4): Pop(c1) ; Bind(a1,c1) ; Transform(c1) ; Verify(a2,c1)
+  Refused(c) -> c was never verified
+    smallest countermodel (1, 5, 2, 5): Pop(c1) ; Bind(a1,c1) ; Transform(c1) ; Verify(a2,c1) ; Refuse(a1,c1,r0)
+  Live(c) -> <>Collapsed(c)
+    smallest countermodel (1, 4, 1, 4): Pop(c1) ; Bind(a1,c1) ; Transform(c1) ; VerificationFailed(a2,c1)
+  Live(c) -> <>Terminal(c)
+    no countermodel with <= 6 events
+  Refused(c) -> not <>Collapsed(c)
+    no countermodel with <= 6 events
+
+== History twins
+  present values equal, refusals differ
+    W : Pop(c1) ; Bind(a1,c1) ; Transform(c1) ; Verify(a2,c1) ; Collapse(a1,c1)
+    W': Pop(c1) ; Bind(a1,c1) ; Pop(c2) ; Refuse(a1,c2,r0) ; Transform(c1) ; Verify(a2,c1) ; Collapse(a1,c1)
+  present values equal, collapsing principal differs
+    W : Pop(c1) ; Bind(a1,c1) ; Transform(c1) ; Verify(a2,c1) ; Collapse(a1,c1)
+    W': Pop(c1) ; Bind(a1,c1) ; Transform(c1) ; Verify(a2,c1) ; Collapse(a2,c1)
+  state kinds equal, refusals differ
+    W : Pop(c1) ; Refuse(a1,c1,r0)
+    W': Pop(c1) ; Bind(a1,c1) ; Transform(c1) ; VerificationFailed(a2,c1) ; Refuse(a1,c1,r0)
+
+== Causal shuffle example
+  ledger: Pop(c1) ; Pop(c2) ; Discharged(a2,c1) ; Bind(a1,c1)
+  4 linearizations of its dependence order, replay identical: True
+
+== Perturbation mode (one change to an admissible ledger)
+  base: Pop(c1) ; Bind(a1,c1) ; Transform(c1) ; Verify(a2,c1) ; Collapse(a1,c1)
+   - unauthorized binder at 1           -> record 1 Bind: principal a2 lacks bind authority
+   - foreign witness at 3               -> record 3 Ver: delta undefined from state transformed
+   - collapse cites wrong witness at 4  -> record 4 Col: delta undefined from state verified
+   - swap dependent records 0,1         -> record 0 Bind: delta undefined from state bottom
+   - swap dependent records 1,2         -> record 1 Trans: delta undefined from state open
+   - swap dependent records 2,3         -> record 2 Ver: delta undefined from state bound
+   - swap dependent records 3,4         -> record 3 Col: delta undefined from state transformed
+   - reuse identity c1                  -> record 5 Pop: delta undefined from state collapsed
+   - delete record 0                    -> record 0 Bind: delta undefined from state bottom
+   - delete record 1                    -> record 1 Trans: delta undefined from state open
+   - delete record 2                    -> record 2 Ver: delta undefined from state bound
+   - delete record 3                    -> record 3 Col: delta undefined from state transformed
+   - delete record 4                    -> no failure detected
+  base: Pop(c1) ; Bind(a1,c1) ; Transform(c1) ; Refuse(a1,c1,r0)
+   - delete record 0                    -> record 0 Bind: delta undefined from state bottom
+   - delete record 1                    -> record 1 Trans: delta undefined from state open
+   - delete record 2                    -> no failure detected
+   - delete record 3                    -> no failure detected
+  base: Pop(c1) ; Bind(a1,c1) ; Transform(c1) ; VerificationFailed(a2,c1) ; Refuse(a1,c1,r0)
+   - forged failure certificate at 3    -> record 3 VF: delta undefined from state transformed
+
+== Disposition control (single commitment c1)
+  target collapsed:  influence with no intervention = 1/72
+    minimal forcing set: {V+ (verification succeeds), a1 never refuses, a2 never refuses}
+  target refused:  influence with no intervention = 71/72
+    minimal forcing set: {V- (verification fails)}
+  influence without forcing (target collapsed):
+    {a1 never refuses, a2 never refuses}: 1/2  (not forcing)
+    {V+ (verification succeeds), a2 never refuses}: 1/12  (not forcing)
+    {V+ (verification succeeds), a1 never refuses}: 1/12  (not forcing)
+    {a2 never refuses}: 1/18  (not forcing)
+
+== Witness mixer
+  c1, c2 both transformed(b, v); w1 indexed to c1, w2 indexed to c2
+  verify c1 with w1: accepted=True
+  verify c1 with w2: accepted=False   (an unindexed check would accept: True)

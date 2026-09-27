@@ -1,5 +1,17 @@
 # The Portable Warrant: Evidence at the Boundary
 
+[The Calculus of Disposition](https://standardgalactic.github.io/portable-warrant/calculus-of-disposition.pdf)  — *Textbook*
+
+[Continuable Sutability](https://standardgalactic.github.io/portable-warrant/continuable-suitability.pdf)
+
+[Task Sufficient Preservation](https://standardgalactic.github.io/portable-warrant/task-sufficient-preservation.pdf)
+
+[The Uses of the Unfinished](https://standardgalactic.github.io/portable-warrant/unfinished.pdf)
+
+[Verification Boundaries](https://standardgalactic.github.io/portable-warrant/verification-boundaries.pdf)
+
+[The Portable Warrant](https://standardgalactic.github.io/portable-warrant/portable-warrant.pdf)
+
 Publication source distribution for the SCC warrant-preservation paper. The paper is explanatory; the normative software interface lives in the versioned `spec/` directory of `scc-reference`.
 
 ## Build

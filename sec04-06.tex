@@ -1,0 +1,228 @@
+%======================================================================
+\section{Selective Completion and the Architecture of Commitment}\label{sec:selective}
+%======================================================================
+
+The preceding sections established that closure has costs as well as benefits and that its timing matters. They did not say \emph{what} to close. The constructive principle of this essay is that a system should be completed at the levels that enable dependable participation and left unfinished at the levels that determine revisable purposes. This section gives that principle a precise form. The key observation is that commitments are not independent. Fixing a component is only meaningful if the components it relies upon are themselves fixed, and the value of fixing a component consists largely in the dependable work it makes possible elsewhere. The selection of closures is therefore a problem over a dependency structure, not a list of separate decisions.
+
+\subsection{Dependency graphs and effective closure}
+
+Model an artifact as a finite directed graph $G=(V,\mathcal{E})$ whose vertices are components or commitments and whose edges $i\to j$ indicate that $j$ depends on $i$: the behavior or meaning of $j$ is determinate only relative to a determinate $i$. Write $\anc(j)$ for the set of strict ancestors of $j$ and $\desc(j)$ for its strict descendants. A foundation, a load path, a file format, a unit of measure, and a legal definition sit near the sources of such a graph; a room's function, an application's workflow, a policy's substantive target, and a curriculum's choice of texts sit near its sinks.
+
+Many of the objects of this essay have circular dependencies. Legal categories shape administrative evidence, which reshapes the categories; interfaces constrain modules, while accumulated module practice changes the interface; recommendations shape the preferences on which they are trained; purposes determine which foundations are needed, while existing foundations determine which purposes appear possible. The analysis therefore does not assume that the underlying system is acyclic. It works on the \emph{condensation} of $G$, obtained by collapsing each strongly connected component into a single vertex whose weight is the sum of its members' weights. The condensation is always acyclic. Each of its vertices is a bundle of mutually dependent commitments that can only be fixed or left open together, and when every strongly connected component is a singleton the condensation is $G$ itself. Throughout this section $G$ denotes the condensation, and every result below applies to it unchanged. Closure is then decided over bundles, which is the level at which it is in fact decided when commitments co-constitute one another.
+
+A closure operator fixes a subset $S\subseteq V$ and leaves $V\setminus S$ revisable. Not every subset corresponds to an effective closure. If $j$ is declared fixed while some $i\in\anc(j)$ remains fluid, then the behavior of $j$ still varies with $i$, and the declaration is nominal rather than effective: users who rely on $j$ inherit the variability of $i$ without the right to revise either. This motivates the following requirement.
+
+\begin{definition}[Effective closure]
+A set $S\subseteq V$ is an \emph{effective closure} if it is an order ideal of $G$: whenever $j\in S$ and $i\to j$, then $i\in S$. Equivalently, $\anc(j)\subseteq S$ for every $j\in S$. Denote the family of effective closures by $\mathcal{I}(G)$.
+\end{definition}
+
+$\mathcal{I}(G)$ is closed under union and intersection and therefore forms a distributive lattice with least element $\emptyset$ (nothing fixed) and greatest element $V$ (everything fixed). The two extremes correspond to the positions this essay rejects: disintegrative openness and total completion.
+
+\subsection{Weights}
+
+Assign to each $j\in V$ three quantities. The \emph{enabling value} $E_j\geq 0$ is the value of dependable work made possible by fixing $j$. A natural specification apportions participation value across dependencies: if each vertex $v$ supports work of value $\omega_v$ that can be performed dependably once its ancestors are fixed, set
+\begin{equation}\label{eq:enabling}
+E_j\ =\ \sum_{v\,:\,j\in\anc(v)\cup\{v\}}\frac{\omega_v}{|\anc(v)|+1},
+\end{equation}
+so that each unit of participation value is shared equally among the commitments on which it rests. Vertices with many and valuable descendants receive high enabling value; call this their \emph{enabling centrality}. A sink receives only its share of its own direct use. The \emph{foreclosure cost} $F_j$ is the value, to the affected population, of the identified admissible alternatives that closing $j$ removes, assessed with the information available at closure and computed with the control-indexed valuation of Definition~\ref{def:Oij}. By Proposition~\ref{prop:whose-option} it is nonnegative when those who would exercise the alternatives are aligned with the affected population, and it may be negative when they are not. The \emph{reversal cost} $R_j\geq 0$ is the cost of undoing the closure, and the \emph{expected reversal burden} is $\bar R_j=\Pr(\text{closure of } j \text{ proves mistaken})\cdot R_j$. Keeping $F_j$ narrow in this way separates the loss of known alternatives from the risk of error under unresolved uncertainty, which $\bar R_j$ carries, so that the two are not counted twice. The net weight of closing $j$ is
+\begin{equation}
+w_j\ =\ E_j-F_j-\bar R_j,
+\end{equation}
+and the value of an effective closure is
+\begin{equation}\label{eq:J}
+J(S)\ =\ \sum_{j\in S}w_j,\qquad S\in\mathcal{I}(G).
+\end{equation}
+The linear objective is an approximation, since interactions among commitments can make foreclosure costs nonadditive, but it already captures the essential structure, and Section~\ref{sec:asymmetric} extends the weights to incorporate uncertainty and distribution.
+
+\subsection{Optimal closure is a maximum-weight ideal}
+
+\begin{proposition}\label{prop:ideal}
+The problem $\max_{S\in\mathcal{I}(G)}J(S)$ has a solution. The set of optimal effective closures is closed under union and intersection, so there exist a unique minimal optimal closure $S_\ast$ and a unique maximal optimal closure $S^\ast$. The problem is solvable in time polynomial in $|V|$.
+\end{proposition}
+
+\begin{proof}
+$\mathcal{I}(G)$ is finite and nonempty, so a maximum exists. $J$ is modular: for any $S,T$, $J(S\cup T)+J(S\cap T)=J(S)+J(T)$, because each vertex is counted the same number of times on both sides. If $S$ and $T$ are optimal with value $J^\star$, then $S\cup T$ and $S\cap T$ are ideals, each with value at most $J^\star$, and their sum is $2J^\star$, so both equal $J^\star$. Hence optimal closures form a sublattice, whose meet and join are $S_\ast$ and $S^\ast$. Finally, maximizing a vertex-weighted sum over the ideals of a directed graph is the classical maximum-weight closure problem (with edges reversed), which reduces to a minimum $s$--$t$ cut on a network with $|V|+2$ nodes and is therefore polynomial \cite{picard1976}.
+\end{proof}
+
+The lattice structure has an interpretive consequence. $S_\ast$ is the most open arrangement consistent with optimal value; $S^\ast$ the most closed. Where the two differ, closure is a matter of indifference in aggregate value, and Section~\ref{sec:asymmetric} will argue that such ties should be broken toward $S_\ast$ whenever the vertices in $S^\ast\setminus S_\ast$ determine purposes rather than foundations.
+
+\begin{proposition}[Local optimality conditions]\label{prop:local}
+Let $S$ be an optimal effective closure. Then
+\begin{enumerate}\renewcommand{\labelenumi}{(\roman{enumi})}
+\item every \emph{descendant-closed} subset $U\subseteq S$ (that is, $j\in U$ and $j\to k$ with $k\in S$ imply $k\in U$) satisfies $\sum_{j\in U}w_j\geq 0$;
+\item every \emph{ancestor-closed extension} $U\subseteq V\setminus S$ (that is, $S\cup U\in\mathcal{I}(G)$) satisfies $\sum_{j\in U}w_j\leq 0$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+For (i), $S\setminus U$ is again an ideal: if $k\in S\setminus U$ and $i\to k$, then $i\in S$, and $i\notin U$ since otherwise descendant-closure would force $k\in U$. Optimality gives $J(S\setminus U)\leq J(S)$, i.e. $\sum_{U}w_j\geq 0$. For (ii), $S\cup U$ is an ideal by assumption, and optimality gives $J(S\cup U)\leq J(S)$.
+\end{proof}
+
+Two corollaries formalize the difference between foundations and purposes.
+
+\begin{corollary}[Purposes remain open]\label{cor:purposes}
+Call a sink of $G$ a \emph{purpose vertex}. If a purpose vertex $j$ has $w_j<0$, that is, if its enabling value falls short of its foreclosure and reversal costs, then $j$ belongs to no optimal closure; if $w_j=0$, $j\notin S_\ast$. In particular, if any purpose vertex has negative net weight, total completion $S=V$ is suboptimal.
+\end{corollary}
+
+\begin{proof}
+A sink $j$ in an ideal $S$ forms a descendant-closed singleton, so by Proposition~\ref{prop:local}(i) $w_j\geq 0$ whenever $j$ lies in an optimal $S$. If $w_j=0$, removing $j$ preserves optimality, so the minimal optimum excludes it.
+\end{proof}
+
+\begin{corollary}[Foundations are closed at a price]\label{cor:foundations}
+A vertex $i$ with $w_i<0$ may belong to an optimal closure when it is a prerequisite of a descendant set whose aggregate contribution compensates for $w_i$; it belongs to every optimal closure exactly when $i\in S_\ast$. Conversely, if some source vertex has $w_i>0$, then the empty closure is suboptimal.
+\end{corollary}
+
+\begin{proof}
+Proposition~\ref{prop:local}(i) constrains the total weight of a descendant-closed set within an optimum, not the weights of its members, so negative members are permitted when their descendants compensate. Since the optimal closures form a lattice with least element $S_\ast$ (Proposition~\ref{prop:ideal}), $i$ lies in every optimum if and only if $i\in S_\ast$. For the second, $\{i\}$ is an ideal when $i$ is a source, and $J(\{i\})=w_i>0=J(\emptyset)$.
+\end{proof}
+
+Corollary~\ref{cor:foundations} explains a familiar pattern: foundations are often expensive to fix, foreclose options, and are costly to reverse, and are fixed anyway because the dependable work built on them repays the price. What the corollary adds is the condition under which this is justified. A foundation is warranted by the positive aggregate weight of what it supports, not by its position in the construction sequence. A foundation that supports only purposes the system has no standing to settle does not inherit their justification.
+
+The identification of sources with foundations and sinks with purposes is a useful approximation, not a definition. A purpose can sit upstream when it determines the architecture of everything below it, as a mission determines an organization's structure, and a component can sit downstream while serving as infrastructure for later users, as a data format does once other systems consume it. Foundation and purpose are better defined by role in the present decision. A component is foundation-like to the extent that its enabling centrality is high relative to its foreclosure and reversal burden, and purpose-like to the extent that uncertainty about its use is high, its closure is sensitive to who holds authority, and its enabling value is small. Graph position is evidence for these judgments, not their definition. Corollary~\ref{cor:purposes} is stated for sinks because a sink has no dependents to compensate for its cost; by Proposition~\ref{prop:local}(i) the same argument applies to any descendant-closed set of purpose-like components whose total weight is negative. Conversely, a structurally upstream component on which nothing of value depends is not a foundation in the relevant sense, and it inherits no justification from its position.
+
+The resulting principle is that neither maximal closure nor maximal openness generally maximizes value. Under the specification \eqref{eq:enabling}, sources tend to have high enabling centrality while sinks have little, and if foreclosure is concentrated where uncertainty about future use is greatest, which is typically at the level of purposes, the optimum is an interior ideal: firm near the sources, open near the sinks. Baldwin and Clark describe the same partition in the design of modular systems as the separation between \emph{visible design rules}, fixed early and binding on every module, and \emph{hidden design parameters}, left to the discretion of whoever works within a module \cite{baldwinclark2000}. The present result states when that partition is optimal rather than merely conventional, and it places the boundary by the weights rather than by habit.
+
+\subsection{Closure over time}
+
+Combining Proposition~\ref{prop:ideal} with Proposition~\ref{prop:delay} yields a temporal picture. Let the weights $w_j(t)$ evolve as information arrives. A development process that closes $S_\ast(t)$ at each $t$ produces a \emph{closure schedule}. Whether the schedule is monotone, so that nothing is fixed only to be unfixed at reversal cost, depends on how the weights move.
+
+\begin{lemma}[Nested closure]\label{lem:nested}
+If $w_j(t)$ is nondecreasing in $t$ for every $j$, then the minimal optimal closures are nested: $t<t'$ implies $S_\ast(t)\subseteq S_\ast(t')$.
+\end{lemma}
+
+\begin{proof}
+Let $S=S_\ast(t)$, $S'=S_\ast(t')$, and write $J_t$ for the objective with weights $w(t)$. By modularity,
+\[
+J_t(S)-J_t(S\cap S')=\sum_{j\in S\setminus S'}w_j(t)\ \leq\ \sum_{j\in S\setminus S'}w_j(t')=J_{t'}(S\cup S')-J_{t'}(S')\ \leq\ 0,
+\]
+the last inequality by optimality of $S'$ at $t'$. Hence the ideal $S\cap S'$ is optimal at $t$, and minimality of $S$ gives $S\subseteq S\cap S'\subseteq S'$.
+\end{proof}
+
+The hypothesis is substantive. Foreclosure costs typically fall as uncertainty resolves, which raises weights, but enabling values can also fall when needs shift, and pointwise reoptimization would then prescribe unfixing. Where weights are not monotone, nesting is a design policy rather than a consequence of optimization: one commits to a vertex only when its weight is expected to remain positive in the context of its dependents. The priority ratio \eqref{eq:priority} is a heuristic for traversing such a schedule. The ideal structure is what makes it coherent, because it forbids fixing a purpose before the foundations that give it meaning and forbids treating a foundation's early fixation as evidence that its dependents must also be fixed.
+
+%======================================================================
+\section{Human Development and the Temporality of Plasticity}\label{sec:development}
+%======================================================================
+
+The same structure appears in developing agents, where it has been argued for independently. Bruner proposed that the long immaturity of human young is not a delay before competence but an adaptation: extended dependence creates a protected period in which behavior can be assembled, disassembled, and recombined in play at low cost, so that the eventual repertoire is broader than one fixed early could be \cite{bruner1972}. Karmiloff-Smith argued that the modular organization of adult cognition is in large part a \emph{product} of development rather than its starting point: domain-general processes become progressively specialized, and representations are repeatedly redescribed into more explicit and more flexible formats \cite{karmiloffsmith1992}. In the vocabulary of Section~\ref{sec:selective}, development is a closure schedule. Some structure is fixed early to make learning possible at all; much is fixed late, after experience has reduced uncertainty about what the environment requires.
+
+\emph{Instantiation.} The state $\Omega$ is the agent's repertoire of competences and dispositions; the recognized continuations $A$ are the competences still learnable from it; the information $\Sigma$ is the record of behavior together with the conditions under which it was produced; the cost structure $\mathcal{K}$ is the effort and time of learning; the authority $\mathcal{W}$ is divided among the agent, caregivers, and institutions that assign environments; and $\sim_{\mathcal{R}}$ is the continuity of the person across development. The models below are stylized. They isolate mechanisms and do not explain development empirically.
+
+\subsection{The plasticity–stability trade-off}
+
+Let $\mathcal{P}\in[0,1]$ be the fraction of an agent's adaptive capacity held plastic, available to incorporate new environmental information, and $\mathcal{S}=1-\mathcal{P}$ the fraction held stable, retaining what has been learned. Adaptation requires both. Define developmental viability
+\begin{equation}\label{eq:devviability}
+V(\mathcal{P})\ =\ \mathcal{P}^{\alpha}(1-\mathcal{P})^{\beta},\qquad\alpha,\beta>0.
+\end{equation}
+
+\begin{observation}\label{obs:devinterior}
+$V$ attains its unique maximum at $\mathcal{P}^\ast=\alpha/(\alpha+\beta)\in(0,1)$. In particular neither maximal plasticity nor maximal fixity is optimal.
+\end{observation}
+
+\begin{proof}
+$\log V=\alpha\log\mathcal{P}+\beta\log(1-\mathcal{P})$ is strictly concave on $(0,1)$ and tends to $-\infty$ at both endpoints. Its derivative $\alpha/\mathcal{P}-\beta/(1-\mathcal{P})$ vanishes only at $\mathcal{P}^\ast$.
+\end{proof}
+
+The observation is a property of the chosen specification, not an empirical finding: the interior optimum has been placed in the functional form, and the formalism contributes only an exact statement of the trade-off it encodes. It is the developmental counterpart of Proposition~\ref{prop:malleability}. Openness to formation is not passive indeterminacy: an agent with $\mathcal{P}=1$ retains nothing and therefore cannot build on what it encounters, while an agent with $\mathcal{P}=0$ cannot encounter anything new.
+
+The exponents need not be constant. The value of plasticity depends on how much remains to be learned about the environment. Let $\sigma_t^2$ be the agent's residual uncertainty about environmental requirements at time $t$, nonincreasing as experience accumulates, and suppose the plasticity exponent is $\alpha_t=\alpha_0\,g(\sigma_t^2)$ for some increasing $g$. Then
+\begin{equation}
+\mathcal{P}^\ast(t)\ =\ \frac{\alpha_0 g(\sigma_t^2)}{\alpha_0 g(\sigma_t^2)+\beta}
+\end{equation}
+is nonincreasing in $t$. The optimal developmental schedule holds capacity open while uncertainty is high and closes it progressively as uncertainty resolves. This is Proposition~\ref{prop:delay} applied to a learner: irreversible specialization should follow, not precede, the information that would justify it. The model suggests one reading of critical periods, as points at which the marginal informational value of continued plasticity falls below its cost in unconsolidated competence. This is an interpretation offered by the model, not an explanation established by it. Critical periods also reflect maturational timing, metabolic constraint, circuit stabilization, and developmental cascades that the model does not represent.
+
+\subsection{Premature specification}
+
+Tools, schools, and institutions frequently infer an agent's settled capacities or preferences from behavior produced during an unfinished process and then fix an environment accordingly: a track, a stream, a diagnosis, a recommended career. Such inferences have two costs. The first is ordinary estimation error, which is larger early. The second is subtler: once the environment is fixed, subsequent behavior is produced partly by the environment, and evidence that the inference was wrong becomes harder to observe.
+
+Consider an agent of latent type $\theta\in\{a,b\}$ and an institution that assigns an environment $k\in\{a,b\}$ at time $t_0$ on the basis of observations $y_1,\dots,y_{t_0}$ with $y_s=\mu_\theta+\xi_s$, $\mu_a=\Delta_\theta/2$, $\mu_b=-\Delta_\theta/2$, $\Delta_\theta>0$, and independent Gaussian noise of variance $\sigma_\xi^2$. Assignment by the sign of the sample mean misassigns with probability
+\begin{equation}
+\epsilon(t_0)\ =\ \Phi\!\left(-\frac{\Delta_\theta\sqrt{t_0}}{2\sigma_\xi}\right),
+\end{equation}
+where $\Phi$ is the standard normal distribution function, which is decreasing in $t_0$. Early assignment is therefore more error-prone, and if misassignment reduces the agent's learnable breadth by $\Delta B>0$ the expected loss is $\epsilon(t_0)\Delta B$, again decreasing in $t_0$. This part is familiar. Now let post-assignment behavior depend on the environment: after assignment, $y_s=\mu_\theta+\gamma(\mathbf{1}[k=a]-\mathbf{1}[k=b])+\xi_s$, where $\gamma\geq 0$ is the effect of the environment on the observed measure (an agent placed in a lower track receives less of the instruction the measure rewards).
+
+\begin{proposition}[Self-confirming specification]\label{prop:selfconfirm-dev}
+Suppose the institution evaluates post-assignment behavior with the pre-assignment likelihood, ignoring the environmental effect $\gamma$, and consider a misassigned agent.
+\begin{enumerate}\renewcommand{\labelenumi}{(\roman{enumi})}
+\item If $\gamma>\Delta_\theta/2$, the agent's expected post-assignment signal is closer to the mean of the assigned (wrong) type than to that of the true type, so the expected evidence favors the assignment.
+\item If $\gamma\geq\Delta_\theta$, the expected signal is at least as extreme as the pre-assignment mean of the assigned type, so the misassigned agent is on average classified into that type at least as strongly as a correctly assigned agent observed before assignment.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+Take $\theta=a$ and $k=b$. The expected post-assignment signal is $\Delta_\theta/2-\gamma$. It is closer to $\mu_b=-\Delta_\theta/2$ than to $\mu_a=\Delta_\theta/2$ exactly when it is negative, that is when $\gamma>\Delta_\theta/2$, which gives (i). It is at most $\mu_b$ exactly when $\gamma\geq\Delta_\theta$, and since the Gaussian log-likelihood ratio in favor of $b$ is decreasing in the signal, this gives (ii). The case $\theta=b$, $k=a$ is symmetric.
+\end{proof}
+
+Part (i) says that the evidence points the wrong way; part (ii) says that the misassigned agent becomes, on average, indistinguishable from the type to which it was assigned. The proposition identifies the mechanism by which premature closure of a developing agent becomes invisible: the closure produces the behavior that is then cited as its justification. The same loop reappears in Section~\ref{sec:assist} for predictive systems, where it operates at population scale. The remedy suggested by the formalism is not to abolish assignment but to preserve legibility of the counterfactual. An institution that records the environmental effect $\gamma$, or that keeps periodic evaluation environments common to all tracks, keeps the assignment revisable in the sense of Section~\ref{sec:inert}: it maintains the information $\Sigma_t$ without which a later continuer cannot tell whether the specification was warranted.
+
+Development thus illustrates the general thesis with unusual clarity. A learner is finished well when stable competences support further learning, and finished badly when specification outruns evidence and then manufactures the evidence it lacked.
+
+%======================================================================
+\section{Tools, Interfaces, and Attachment Points}\label{sec:attachment}
+%======================================================================
+
+The term \emph{attachment point} has so far been used informally for a place at which a later participant can enter an artifact. This section gives it a definition, distinguishes nominal from effective attachment points, and states conditions under which modularity increases continuability.
+
+\emph{Instantiation.} Here $\Omega$ is the configuration space of an artifact with interfaces; $A$ is the set of transitions producible through them; $\Sigma$ is documentation and specification; $\mathcal{K}$ includes understanding, implementation, switching, and replacement costs; $\mathcal{W}$ distinguishes the designer's discretion from permissions that hold without it; and $\sim_{\mathcal{R}}$ is the artifact's identity across substitutions of components.
+
+\subsection{Definitions}
+
+\begin{definition}[Attachment point]
+An attachment point of an artifact is a pair $(\iota,\mathcal{T}_\iota)$, where $\iota$ is an interface, a designated boundary in the dependency graph across which a component may be added, substituted, or reconfigured, and $\mathcal{T}_\iota$ is the set of state transitions an external agent can produce through $\iota$ \emph{without obtaining discretionary authorization from the original designer}.
+\end{definition}
+
+The last clause is what distinguishes an attachment point from a request. A form that asks the manufacturer to enable a feature is not an attachment point; a documented socket that accepts any conforming part is. The nominal set $\mathcal{T}^{\mathrm{nom}}_\iota$ contains the transitions permitted by the interface specification and its license. The effective set $\mathcal{T}^{i}_\iota$ for agent $i$ contains those transitions that also satisfy the conditions of \eqref{eq:Ai}: they are documented well enough to be interpreted within tolerance $\tau$, interoperable with components $i$ can obtain, affordable within $\kappa$ once switching costs are included, accessible under the rights $i$ actually holds, and identity preserving under $\sim_{\mathcal{R}}$.
+
+\begin{definition}[Accessibility coefficient]
+The accessibility coefficient of attachment point $\iota$ for agent $i$ is
+\begin{equation}
+\chi_i(\iota)\ =\ \frac{B(\mathcal{T}^{i}_\iota)}{B(\mathcal{T}^{\mathrm{nom}}_\iota)}\ \in[0,1],
+\end{equation}
+the proportion of theoretically permitted extension breadth that is practically available to $i$, with the convention $\chi_i(\iota)=1$ when the nominal breadth is zero, since there is then nothing permitted for $i$ to miss.
+\end{definition}
+
+The coefficient inherits the normalization of $B$. Using the decomposition $B=\mathsf{m}^2\bar\delta$ of Section~1, it can be split into two more informative quantities: the fraction of nominal continuation mass that is reachable by $i$, and the ratio of the mean differentiation of the reachable subset to that of the nominal set. The first says how much of the permitted space $i$ can reach; the second says whether what $i$ can reach is representative of its diversity.
+
+The coefficient localizes the openness gap of Section~\ref{sec:inert} to a single interface. Repairable machinery with published schematics, standard fasteners, and available parts has $\chi$ close to one for a broad population; the same machine with glued enclosures, serialized components, and unpublished service manuals may be nominally repairable, since nothing forbids opening it, while $\chi$ approaches zero for everyone outside an authorized network.
+
+\subsection{When modularity helps}
+
+Modularity is often assumed to increase openness. It does so only under a condition on understanding costs. Let an artifact of size $n$ be either monolithic or decomposed into $m$ modules separated by interfaces. Consider a potential change $\Delta$ with value $v(\Delta)$ to agent $i$ and implementation cost $k(\Delta)$, and let $R$ be the cost of replacing the artifact outright. Let $u$ be the cost to $i$ of understanding the system well enough to make the change safely. The change is \emph{continuable} through the artifact when
+\begin{equation}\label{eq:continuable-change}
+u+k(\Delta)\ \leq\ \min\{v(\Delta),\,R\},
+\end{equation}
+since otherwise either the change is not worth making or replacement is cheaper than continuation, in which case the artifact supplies material rather than a future. Write $\mathcal{C}(u)$ for the set of continuable changes. Clearly $\mathcal{C}$ is antitone: $u\leq u'$ implies $\mathcal{C}(u')\subseteq\mathcal{C}(u)$.
+
+For a monolith, $u=\Upsilon(n)$ with $\Upsilon$ increasing. For a modular system in which changes are local to one module, $u=\Upsilon(n/m)+c(m)$, where $c(m)$ is the cost of understanding the interfaces and design rules, increasing in $m$.
+
+\begin{proposition}[Modularity and continuability]\label{prop:modularity}
+Suppose the same local changes are available under both architectures, so that modularization alters their costs but not the set of possible modifications. Then modularization weakly enlarges the set of continuable local changes if and only if $\Upsilon(n/m)+c(m)\leq \Upsilon(n)$, and it enlarges it strictly exactly when some change has $\Upsilon(n/m)+c(m)+k(\Delta)\leq\min\{v(\Delta),R\}<\Upsilon(n)+k(\Delta)$. If $\Upsilon(n/m)+c(m)>R-\min_\Delta k(\Delta)$, the modular system admits no continuable changes at all: every modification is cheaper as replacement.
+\end{proposition}
+
+\begin{proof}
+The first two claims follow from the antitonicity of $\mathcal{C}$ and the definition of \eqref{eq:continuable-change}. For the third, every $\Delta$ then has $u+k(\Delta)>R\geq\min\{v(\Delta),R\}$.
+\end{proof}
+
+In real systems modularization also changes which modifications exist, adding some and forbidding others; the proposition isolates the cost channel. If $\Upsilon$ is convex with $\Upsilon(0)=0$ and $c$ is increasing and convex, the understanding cost $\Upsilon(n/m)+c(m)$ is minimized at an interior $m^\ast$: too few modules leave each one opaque, and too many make the design rules themselves the obstacle. Modularity, like malleability in Proposition~\ref{prop:malleability}, has an interior optimum.
+
+A second advantage of modularity concerns option value directly. Baldwin and Clark observe that a modular design converts one option on the system as a whole into a portfolio of options on its modules, and that the portfolio is worth more \cite{baldwinclark2000}. The underlying inequality, that a portfolio of options is worth at least as much as an option on the portfolio, is a classical result of option pricing \cite{merton1973}; its short proof is included to show how it applies to attachment points.
+
+\begin{proposition}[Portfolio of options]\label{prop:portfolio}
+Let $X_1,\dots,X_m$ be integrable random improvements available by redesigning modules $1,\dots,m$, each adoptable only if positive. The value of independently adoptable module options weakly exceeds the value of a single option to adopt all redesigns together:
+\[
+\sum_{k=1}^m\E[\max(X_k,0)]\ \geq\ \E\Big[\max\Big(\sum_{k=1}^mX_k,\,0\Big)\Big],
+\]
+with strict inequality whenever, with positive probability, the $X_k$ are not all of the same sign.
+\end{proposition}
+
+\begin{proof}
+Pointwise, $\max(\sum_kX_k,0)\leq\sum_k\max(X_k,0)$, since the right side is nonnegative and at least $\sum_kX_k$. Taking expectations gives the inequality. If on an event of positive probability some $X_k>0$ and some $X_\ell<0$, then on that event $\sum_k\max(X_k,0)>\max(\sum_kX_k,0)$, and the inequality is strict.
+\end{proof}
+
+Proposition~\ref{prop:portfolio} is the precise sense in which modular attachment points preserve option value: they let later agents exercise the good options without being forced to take the bad ones bundled with them. Proposition~\ref{prop:modularity} states the price. The portfolio exists only for agents whose understanding costs are low enough to reach it.
+
+\subsection{Boundary objects as distributed attachment}
+
+Star and Griesemer introduced the \emph{boundary object} to describe artifacts, such as specimens, maps, and standardized forms, that are shared among communities with different aims: plastic enough to be adapted to each community's local needs, robust enough to maintain a common identity across them \cite{stargriesemer1989}. In the present terms a boundary object is an artifact whose equivalence relation $\sim_{\mathcal{R}}$ is fixed and shared, so that all communities agree it is the same object, while each community holds an attachment point with high accessibility coefficient through which it continues the object in its own direction. It is asymmetric completion distributed across social worlds: closed exactly where closure is needed for coordination and open where each participant must be free to use the object for purposes the others do not share.
+
+The same structure recurs across materially different domains. Habraken's supports fix structure, services, and access while leaving infill to occupants \cite{habraken1972}. Brand's slow layers of site and structure carry fast layers of services, space plan, and stuff that change without disturbing what lies beneath \cite{brand1994}. An application programming interface fixes signatures and semantics while leaving implementations and uses open. An open standard fixes a representation while permitting competing implementations. A reproducible scientific method fixes procedures and materials precisely enough that others can extend, vary, or refute the result: the methods section is an attachment point, and a paper without one is inertly complete however polished its conclusions. In each case what is finished is the interface, and what is left unfinished is everything the interface makes possible.
