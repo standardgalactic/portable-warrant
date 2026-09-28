@@ -1,28 +1,30 @@
-Disposition Lab v4 (verificationFailed state, certificates, discharge, timeout)  (max events = 7)
-admissible ledgers enumerated: 15167
+Disposition Lab v5 (capability ownership, verificationFailed state, certificates, discharge, timeout)  (max events = 7)
+admissible ledgers enumerated: 56397
 
 == Property index (bounded propositions over the class H<=7)
   class: admissible ledgers, <= 7 records, identities {c1,c2}, principals {a1,a2}, one value, one transformation, one rule, one obligation and deadline per commitment
   normalization: fresh identities chosen canonically (equivariance); ledgers compared as record sequences
-  P-ReplaySound              expected: holds   result: holds   checked: 15167
+  P-ReplaySound              expected: holds   result: holds   checked: 56397
       path lemma: delta* of each projection equals replay's map
-  P-TerminalExclusive        expected: holds   result: holds   checked: 15167
+  P-TerminalExclusive        expected: holds   result: holds   checked: 56397
       at most one terminal record per commitment, and it is last
-  P-CertificateAuthentic     expected: holds   result: holds   checked: 15167
+  P-CertificateAuthentic     expected: holds   result: holds   checked: 56397
       every VerificationFailed record checks against its state and a verifier
-  P-FailedVerificationLive   expected: holds   result: holds   checked: 15167
+  P-FailedVerificationLive   expected: holds   result: holds   checked: 56397
       a VerificationFailed record leaves its commitment live
-  P-NoVerifierDisposition    expected: holds   result: holds   checked: 15167
+  P-NoVerifierDisposition    expected: holds   result: holds   checked: 56397
       verification never yields a terminal state; terminal records need their authority
-  P-TraceInvariant           expected: holds   result: holds   checked: 15167
+  P-DelegationConservative   expected: holds   result: holds   checked: 56397
+      one owner per capability; delegation only from the owner; exercise only by the owner
+  P-TraceInvariant           expected: holds   result: holds   checked: 56397
       every linearization of the dependence order replays identically
-  P-WorldAdmissible          expected: holds   result: holds   checked: 15167
+  P-WorldAdmissible          expected: holds   result: holds   checked: 56397
       every configuration (downset) has a defined replay
-  linearizations replayed for P-TraceInvariant: 372961
-  not checked here (need the process or typed layer): P-RightsAgree, P-DelegationConservative; parser properties are checked by disposition_parser.py
+  linearizations replayed for P-TraceInvariant: 4358436
+  not checked here (needs the process and typed layers): P-RightsAgree; parser properties are checked by disposition_parser.py
 
 == Modal terminal exclusivity:  Refused(c) -> not <>Collapsed(c)
-  pointed worlds with a refusal tested: 15332, violations: 0
+  pointed worlds with a refusal tested: 47889, violations: 0
 
 == Countermodel search
   Verified(c) -> Authorized(binder(c), verify, c)

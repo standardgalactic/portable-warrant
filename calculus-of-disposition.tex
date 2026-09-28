@@ -5,6 +5,9 @@
 \usepackage{amsmath,amssymb,amsthm,mathtools,stmaryrd}
 \usepackage[margin=1.15in]{geometry}
 \usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
 \usepackage{enumitem}
 \usepackage[hidelinks]{hyperref}
 
@@ -40,7 +43,7 @@
 \title{\textbf{The Calculus of Disposition}\\[0.6em]
 \large Processes, Types, and Witnessed Computation}
 \author{Flyxion\\Independent Researcher}
-\date{September 2026\\[1em]\small Working draft: Preface and eleven chapters drafted,\\ remaining chapters in plan form}
+\date{September 2026\\[1em]\small Complete draft}
 
 \begin{document}
 \frontmatter
@@ -226,17 +229,13 @@ substitutes for the one above it.
 
 \section*{Status of this edition}
 
-Drafted in full: Chapters~\ref{ch:past} (Computation with a Past),
-\ref{ch:worlds} (Disposition Worlds), \ref{ch:layers} (The Kernel and the
-Disposition Layer), \ref{ch:syntax} (Syntax and Binding), \ref{ch:lts}
-(Labelled Disposition Semantics), \ref{ch:types} (The Type Algebra),
-\ref{ch:session} (Preservation, Progress, and Protocol Fidelity),
-\ref{ch:path} through \ref{ch:compensation} (Part~V), \ref{ch:replay}
-(Replay), \ref{ch:progress} (Eventual Disposition), and
-\ref{ch:typedsafety} (Typed Disposition Safety), \ref{ch:parsing}
-(Concrete Syntax and Unique Parsing), and \ref{ch:authority} (Authority as
-a Modality). The remaining chapters, chiefly the comparative ones, appear
-as plans stating what each must establish.
+Every chapter is drafted. The comparative results are summarized in
+Chapter~\ref{ch:map}, which answers the three claims above: the first
+positively with an identified residue, the second in its weak form, and
+the third in a precise form that adds an orthogonal spectrum of
+equivalences on histories to the classical spectrum on processes. The
+open questions that remain are listed in Appendix~\ref{app:open}, chief
+among them the transparent reading of the kernel translation.
 
 %===================================================================
 \mainmatter
@@ -857,7 +856,7 @@ serialization of the same world. Order is semantically necessary only
 between dependent records, and (W1) requires the world to state it. For
 the finite class $\mathcal H_{\le 7}$ of Section~\ref{sec:lab}, the
 laboratory confirms the theorem instance by instance: each of the
-$372{,}961$ linearizations of the $15{,}167$ ledgers in the class replays
+$4{,}358{,}436$ linearizations of the $56{,}397$ ledgers in the class replays
 to the same state as the ledger it came from.
 
 \section{The witness mixer}
@@ -1042,11 +1041,13 @@ they were computed for.
 Let $\mathcal H_{\le 7}$ be the class of admissible ledgers of at most
 seven records over two commitment identities, two principals, one value,
 one transformation, one observation rule, one external obligation per
-commitment with one declared deadline, and the policy stated in the
-source. For version~4 of the laboratory, whose grammar is the book's
+commitment with one declared deadline, one exclusive capability (refusal
+of $c_1$) that may be granted and delegated, and the policy stated in the
+source. For version~5 of the laboratory, whose grammar is the book's
 current record grammar, including the $\mathsf{verificationFailed}$ state,
-authenticated certificates, and discharge and timeout records,
-$|\mathcal H_{\le 7}|=15{,}167$. The laboratory reports each check as a
+authenticated certificates, discharge and timeout records, and grant and
+delegation records with capability ownership in the replay map,
+$|\mathcal H_{\le 7}|=56{,}397$. The laboratory reports each check as a
 named property with its class, search depth, normalization, expected
 result, and, when it fails, a minimized counterexample, so that it serves
 as an executable index of the proof spine. Every property below holds on
@@ -1062,26 +1063,34 @@ P-TerminalExclusive & at most one terminal record per commitment, and it is last
 P-CertificateAuthentic & every verification failure checks against its state and a verifier\\
 P-FailedVerificationLive & a verification failure leaves its commitment live\\
 P-NoVerifierDisposition & no verification record yields a terminal state\\
-P-TraceInvariant & all $372{,}961$ linearizations replay to the state of their ledger\\
+P-DelegationConservative & one owner per capability; delegation and exercise only by it\\
+P-TraceInvariant & all $4{,}358{,}436$ linearizations replay to the state of their ledger\\
 P-WorldAdmissible & every configuration has a defined replay\\
 \bottomrule
 \end{tabular}
 \end{center}
-In addition, for each of the $15{,}332$ pointed worlds in which some
+In addition, for each of the $47{,}889$ pointed worlds in which some
 commitment is refused, no admissible extension within the horizon
 collapses it. The companion module \texttt{disposition\allowbreak\_parser.py}
-checks the parser properties of Chapter~\ref{ch:parsing}. Two properties
-named in the proof spine, P-RightsAgree and P-DelegationConservative, need
-the process and typed layers, which the laboratory does not yet model;
-they are proved in Chapters~\ref{ch:session} and~\ref{ch:authority} and
-not checked here.
+checks the parser properties of Chapter~\ref{ch:parsing}, and
+\texttt{disposition\allowbreak\_es.py} checks the event-structure
+properties of Chapter~\ref{ch:eventstructures}. One property named in the
+proof spine, P-RightsAgree, needs the process and typed layers, which the
+laboratory does not model; it is proved in Chapter~\ref{ch:session} and
+not checked here. P-DelegationConservative, listed as unchecked in
+earlier versions, is checked from version~5 at the ledger level: it
+confirms that replay admits only owner-initiated delegations and
+exercises, not the typing argument of Chapter~\ref{ch:authority}.
 
 Earlier versions checked earlier grammars, and their figures apply to
 those grammars only: version~1 ($1{,}230$ ledgers), version~2 with
-certificates and discharge ($6{,}305$), and version~3 with timeout and
-automatic refusal on failed verification ($14{,}608$). The countermodels,
-twins, and control figures are unchanged across versions, with one
-deliberate exception: the countermodel to
+certificates and discharge ($6{,}305$), version~3 with timeout and
+automatic refusal on failed verification ($14{,}608$), and version~4 with
+the $\mathsf{verificationFailed}$ state and no capabilities ($15{,}167$,
+with $372{,}961$ linearizations). The larger count in version~5 comes from
+the grant and delegation records, which interleave freely with the
+records of $c_2$. The countermodels, twins, and control figures are
+unchanged across versions, with one deliberate exception: the countermodel to
 $\mathsf{Live}(c)\rightarrow\Diamond\mathsf{Collapsed}(c)$, which exists
 only once a failed verification leaves its commitment live. The
 laboratory's value is not in the counts. It is in finding the smallest
@@ -1484,12 +1493,188 @@ commitment.
 
 \chapter{Encodings and Their Criteria}
 \label{ch:encodings}
-\plan{Gorla's five criteria (compositionality, name invariance,
-operational correspondence, divergence reflection, success sensitivity)
-and full abstraction, with examples meeting some and failing others. Three
-possible outcomes of any comparison: equivalence, strict inclusion,
-incomparability. Why Turing completeness says almost nothing about
-expressiveness in the sense needed here.}
+
+A comparison between calculi is only as good as the translation it rests
+on. Informal analogies between operators are easy to produce and hard to
+refute, and the literature on process calculi has developed a discipline
+for doing better: state a translation, state the criteria it satisfies,
+and state what it fails to preserve. This chapter fixes the criteria used
+throughout the book and the three outcomes a comparison can have.
+
+\section{Calculi and translations}
+
+For the purposes of comparison, a \emph{calculus} is a set of terms with a
+labelled transition relation $\xrightarrow{\mu}$, a set of names occurring
+in terms, a distinguished internal label $\tau$, and a \emph{success}
+predicate $S\Downarrow$, meaning that $S$ can reach a term exhibiting a
+designated success observable. Write $\Rightarrow$ for the reflexive and
+transitive closure of internal steps, and $\xRightarrow{\mu}$ for
+$\Rightarrow\xrightarrow{\mu}\Rightarrow$.
+
+A \emph{translation} $\llbracket\cdot\rrbracket$ from a source calculus to a
+target calculus comes with a \emph{renaming policy} $\varphi$ that assigns
+to each source name a tuple of target names, and, when the comparison is
+labelled, an \emph{action translation} $\widehat\mu$ taking each source
+label to a target label or to $\tau$.
+
+Gorla's framework is stated for reduction semantics. The book compares
+calculi that are most naturally presented as labelled transition systems,
+so it uses the labelled forms of his criteria below. Where the difference
+matters, the chapter concerned says so.
+
+\section{The criteria}
+
+\begin{description}[leftmargin=1.5em,style=nextline]
+\item[Compositionality.] For each source operator $\mathrm{op}$ of arity
+$k$ and each finite set of names $N$ there is a target context
+$C^N_{\mathrm{op}}$ with $k$ holes such that
+$\llbracket\mathrm{op}(S_1,\ldots,S_k)\rrbracket=
+C^N_{\mathrm{op}}(\llbracket S_1\rrbracket,\ldots,\llbracket S_k\rrbracket)$
+whenever the free names of the $S_i$ are $N$. A translation is
+\emph{homomorphic} on an operator when the context is that operator
+itself, a strictly stronger requirement.
+\item[Name invariance.] For every injective renaming $\sigma$ of source
+names there is a target renaming $\sigma'$ with
+$\varphi\circ\sigma=\sigma'\circ\varphi$ and
+$\llbracket\sigma S\rrbracket=\sigma'\llbracket S\rrbracket$.
+\item[Operational correspondence.] \emph{Completeness}: if
+$S\xRightarrow{\mu}S'$ then
+$\llbracket S\rrbracket\xRightarrow{\widehat\mu}\;\asymp\;\llbracket S'\rrbracket$.
+\emph{Soundness}: if $\llbracket S\rrbracket\xRightarrow{\nu}T$ then there
+are $S'$ and $\mu$ with $\widehat\mu=\nu$, $S\xRightarrow{\mu}S'$, and
+$T\Rightarrow\;\asymp\;\llbracket S'\rrbracket$. Here $\asymp$ is a fixed
+equivalence on target terms, used to absorb administrative residue.
+\item[Divergence reflection.] If $\llbracket S\rrbracket$ has an infinite
+sequence of internal steps, so has $S$.
+\item[Success sensitiveness.] $S\Downarrow$ if and only if
+$\llbracket S\rrbracket\Downarrow$.
+\end{description}
+
+Compositionality and name invariance are structural; the other three
+concern behaviour. A translation that satisfies none of the structural
+criteria can relate any two Turing-complete calculi, by compiling one
+into an interpreter for the other, which is why the structural criteria
+are what give a comparison its content.
+
+\begin{description}[leftmargin=1.5em,style=nextline]
+\item[Full abstraction.] For chosen equivalences $\approx_s$ on source
+terms and $\approx_t$ on target terms, $S_1\approx_s S_2$ if and only if
+$\llbracket S_1\rrbracket\approx_t\llbracket S_2\rrbracket$.
+\end{description}
+
+Full abstraction is not one of Gorla's criteria, and it is not a
+consequence of them. It depends entirely on the two equivalences chosen,
+and a translation may be fully abstract for one pair and not for another.
+Every claim of full abstraction in the book names its equivalences.
+
+\section{The criteria are independent}
+
+Each criterion rules out translations that the others admit, and it is
+worth seeing this concretely, since a comparison that states some criteria
+and not others is claiming exactly the ones it states. The examples are
+translations of CCS into itself, with success a designated action
+$\checkmark$ reached by internal steps.
+
+\begin{description}[leftmargin=1.5em,style=nextline]
+\item[Complete but not sound.] Translate choice as parallel composition,
+$\llbracket S+T\rrbracket=\llbracket S\rrbracket\mid\llbracket T\rrbracket$,
+and every other operator homomorphically. The translation is
+compositional and name invariant, and it is operationally complete:
+whatever $S+T$ does, one side of the parallel composition can do. It is
+not sound. The translation of $a.\mathbf 0+b.\mathbf 0$ can perform $a$
+and then $b$, which the source cannot, because the source discards $b$ when
+it performs $a$. Completeness alone admits a translation that adds
+behaviour.
+\item[Success sensitive but not compositional.] Let
+$\llbracket S\rrbracket=\checkmark$ if $S\Downarrow$ and $\mathbf 0$
+otherwise. It is success sensitive by construction. It is not
+compositional, and the proof is short. Suppose $\llbracket S\mid
+T\rrbracket=C(\llbracket S\rrbracket,\llbracket T\rrbracket)$ for a fixed
+context $C$ at the name set $\{a\}$. Then $a.\checkmark\mid\bar a.\mathbf
+0$ succeeds and $a.\checkmark\mid\mathbf 0$ does not, while
+$\llbracket a.\checkmark\rrbracket=\llbracket\bar a.\mathbf
+0\rrbracket=\llbracket\mathbf 0\rrbracket=\mathbf 0$, so $C(\mathbf
+0,\mathbf 0)$ would have to both succeed and fail. This is the
+interpreter of the structural criteria's motivation reduced to one bit:
+success sensitiveness alone can be met by computing the answer and
+outputting it.
+\item[Compositional but not success sensitive.] Let $\llbracket
+S\rrbracket=\mathbf 0$ for every $S$, the context for each operator
+discarding its holes. It is compositional, name invariant, divergence
+reflecting, and vacuously sound, since the target never moves. It is
+neither complete nor success sensitive. Structure alone is cheap.
+\item[Operationally corresponding but not divergence reflecting.]
+Translate each internal prefix through a retry loop,
+$\llbracket\tau.P\rrbracket=(\nu r)\bigl(\bar r\mid
+!\,r.(\tau.\bar r+\tau.\llbracket P\rrbracket)\bigr)$, and every other
+operator homomorphically. Up to weak equivalence the translation is
+complete and sound, and it preserves success, but $\llbracket\tau.\mathbf
+0\rrbracket$ has an infinite internal run that $\tau.\mathbf 0$ does
+not. This is the failure that an untyped encoding of the disposition
+calculus into the $\pi$-calculus would suffer (Chapter~\ref{ch:pi}), and
+divergence reflection is the criterion that detects it.
+\end{description}
+
+So none of the criteria follows from the others, and every theorem in the
+book that asserts an encoding names the criteria it meets. When it
+asserts a separation, it names the criteria whose conjunction is
+impossible; Theorem~\ref{thm:ccssep}, for example, uses only
+compositionality and success sensitiveness, and the second example above
+shows why both are needed.
+
+\section{Encodings and erasures}
+
+The book translates in both directions, and the two directions answer
+different questions.
+
+An \emph{encoding} takes a classical calculus into the disposition
+calculus. A good encoding shows that the disposition calculus can express
+what the classical calculus expresses, and the criteria it fails show
+where it cannot.
+
+An \emph{erasure} takes the disposition calculus to a classical calculus
+by forgetting structure: annotations, authority, evidence, the ledger.
+An erasure with good forward correspondence shows that the classical
+calculus captures the \emph{shape} of disposition behaviour; the pairs of
+configurations that it identifies but the disposition calculus
+distinguishes show what the classical calculus forgets. Erasures are
+expected to fail full abstraction, and the interesting output is the
+smallest pair that shows it.
+
+\section{Three outcomes}
+
+Every comparison in Parts~III and VI ends in one of three outcomes, and
+states which.
+\begin{itemize}[leftmargin=1.5em]
+\item \emph{Equivalence}: translations in both directions satisfying the
+stated criteria.
+\item \emph{Strict inclusion}: a translation in one direction satisfying
+the criteria, and a \emph{separation result} in the other, a proof that no
+translation satisfying stated criteria exists, in the manner of
+Palamidessi's separation of the synchronous and asynchronous
+$\pi$-calculi.
+\item \emph{Incomparability}: separation results in both directions, or a
+demonstration that the two calculi answer different questions about
+different objects, in which case the book says so rather than forcing a
+verdict.
+\end{itemize}
+A separation result is a statement that no translation meeting the stated
+criteria can exist, not a report that none has been found. Where the book
+has only the second, it says so and lists the question in
+Appendix~\ref{app:open}.
+
+\section{Why Turing completeness says little}
+
+The kernel inherits Turing completeness from its encoding of the lambda
+calculus, and the disposition calculus inherits it from its lambda layer
+through fixed points. Neither fact bears on any comparison in this book.
+Turing completeness is a statement about the functions a calculus can
+compute, and it is preserved by translations that are neither
+compositional nor name invariant. The comparisons here are about
+structure: whether synchronization, refusal, fresh names, causality, and
+observation are expressed by corresponding constructs, and what a
+translation must add or forget to make them correspond. Two calculi can
+both be Turing complete and be separated by every one of those questions.
 
 %===================================================================
 \part{Terms and Names}
@@ -1648,7 +1833,7 @@ recorded event or identify distinct commitment identities. Structural
 congruence rearranges a process before an event occurs; it does not
 rewrite the history afterward.
 
-\begin{theorem}[Equivariance]
+\begin{theorem}[Equivariance]\label{thm:equiv}
 For every capture-avoiding permutation of names $\rho$,
 \[
 C\xrightarrow{\alpha}C'
@@ -1888,49 +2073,505 @@ Theorem~\ref{thm:parse}, which rests on the LL(1) property and not on the
 enumeration.
 
 \chapter{The Lambda Layer}
-\plan{Reduction and big-step evaluation $e\Downarrow v$ for the value
-language, which the transformation and verification rules consume as a
-premise. Compares the kernel encodings of abstraction and application with
-the lambda layer's own, and asks what a history retains that a normal form
-discards.}
+\label{ch:lambda}
+
+Transformations and verifiers are lambda terms, and the operational rules
+consume their evaluation as a premise, $f\,b\Downarrow v$. This chapter
+fixes that evaluation relation, proves the two properties of it the rest
+of the book depends on, determinism and the dichotomy between evaluation
+and divergence for well-typed terms, and asks what a history retains that
+a normal form does not.
+
+\section{Terms and types}
+
+Transformations and verifiers are closed terms of the unrestricted
+fragment of the expression language of Chapter~\ref{ch:syntax}, extended
+with constants, primitive operations, and a fixed-point operator. Types
+and terms are
+\[
+\begin{aligned}
+A,B ::= {}& \iota \mid A\to B \mid A\times B \mid A+B,\\
+e ::= {}& x \mid \kappa \mid p\;e \mid \lambda x{:}A.e \mid e\,e
+\mid \langle e,e\rangle \mid \pi_1 e \mid \pi_2 e\\
+&\mid \mathsf{inl}\;e \mid \mathsf{inr}\;e
+\mid \mathsf{case}\;e\;\mathsf{of}\;\mathsf{inl}\,x\Rightarrow e\mid
+\mathsf{inr}\,y\Rightarrow e
+\mid \mathsf{fix}\,x{:}A.e,
+\end{aligned}
+\]
+where $\iota$ ranges over base types (natural numbers, strings, the unit
+type $\mathbf 1$ with its one constant $\ast$), $\kappa$ over constants of
+base type, and $p$ over primitive operations, each with a fixed type
+$\iota_1\to\iota_2$ or $\iota_1\times\iota_2\to B$ and a total function
+$\hat p$ on constants of its argument type. Booleans are $\mathbf
+1+\mathbf 1$, with $\mathsf{inl}\,\ast$ for true. The typing rules are the
+standard ones:
+{\small
+\[
+\begin{gathered}
+\frac{x{:}A\in\Gamma}{\Gamma\vdash x:A}
+\qquad
+\frac{\kappa\text{ of type }\iota}{\Gamma\vdash\kappa:\iota}
+\qquad
+\frac{p:A\to B\quad\Gamma\vdash e:A}{\Gamma\vdash p\;e:B}
+\\[1.2ex]
+\frac{\Gamma,x{:}A\vdash e:B}{\Gamma\vdash\lambda x{:}A.e:A\to B}
+\qquad
+\frac{\Gamma\vdash e_1:A\to B\quad\Gamma\vdash e_2:A}{\Gamma\vdash e_1\,e_2:B}
+\\[1.2ex]
+\frac{\Gamma\vdash e_1:A_1\quad\Gamma\vdash e_2:A_2}
+{\Gamma\vdash\langle e_1,e_2\rangle:A_1\times A_2}
+\qquad
+\frac{\Gamma\vdash e:A_1\times A_2}{\Gamma\vdash\pi_i\,e:A_i}
+\\[1.2ex]
+\frac{\Gamma\vdash e:A}{\Gamma\vdash\mathsf{inl}\;e:A+B}
+\qquad
+\frac{\Gamma\vdash e:B}{\Gamma\vdash\mathsf{inr}\;e:A+B}
+\\[1.2ex]
+\frac{\Gamma\vdash e:A+B\quad\Gamma,x{:}A\vdash e_1:C\quad
+\Gamma,y{:}B\vdash e_2:C}
+{\Gamma\vdash\mathsf{case}\;e\;\mathsf{of}\;\mathsf{inl}\,x\Rightarrow
+e_1\mid\mathsf{inr}\,y\Rightarrow e_2:C}
+\\[1.2ex]
+\frac{\Gamma,x{:}A\to B\vdash e:A\to B}{\Gamma\vdash\mathsf{fix}\,x{:}A\to
+B.e:A\to B}
+\end{gathered}
+\]
+}
+The fixed-point operator is restricted to function types, the usual
+choice for a call-by-value language: it makes $\mathsf{fix}$ a way of
+defining recursive functions rather than a way of writing a divergent
+value of any type. A transformation from $A$ to $B$ is a closed term of
+type $A\to B$; a verifier's decision procedure is a closed term returning
+a boolean, with the witness or certificate it produces computed alongside.
+
+\section{Why big-step}
+
+The operational rules of the process layer do not watch a computation;
+they consume its result. The premise of the transformation rule is a
+judgement $f\,b\Downarrow v$, and the record it appends,
+$\Transform(c,f,b,v)$, names the function, the input, and the output, and
+nothing in between. A big-step relation is the relation of exactly that
+shape. A small-step presentation would define intermediate terms that the
+process layer never sees and the ledger never holds, and it would then
+need a second definition, the reflexive-transitive closure to a value, to
+state the premise the process rules actually use. Big-step semantics
+states that premise directly.
+
+The choice has a price, and it is paid below. A big-step relation says
+what happens when evaluation succeeds and is silent otherwise. A term with
+no derivation might be one whose evaluation runs forever or one whose
+evaluation reaches a configuration no rule covers, and the relation alone
+does not distinguish them. The distinction matters here, because the two
+failures mean different things for a commitment: divergence leaves a
+$\mathsf{transform}$ prefix permanently disabled, which is a liveness
+failure the book assigns to Hypothesis~\ref{hyp:total}; getting stuck
+would be a type error, which the book rules out. The lemma at the end of
+this chapter shows that for closed well-typed terms only the first can
+occur.
+
+The choice also fixes what the opaque reading of Chapter~\ref{ch:layers}
+means. Under that reading a transformation is atomic: its derivation is
+evidence the implementation may keep, but not a history the calculus
+records. The transparent reading would record the derivation, and a
+small-step presentation is the natural one for that purpose.
+
+\section{Evaluation}
+
+Values are
+\[
+u ::= \kappa\mid\lambda x{:}A.e \mid \langle u,u\rangle \mid
+\mathsf{inl}\;u \mid \mathsf{inr}\;u.
+\]
+Evaluation is call by value, left to right, and its rules are
+{\small
+\[
+\begin{gathered}
+\textsc{E-Val}\;\frac{}{u\Downarrow u}
+\qquad
+\textsc{E-Prim}\;\frac{e\Downarrow\kappa}{p\;e\Downarrow\hat p(\kappa)}
+\qquad
+\textsc{E-PrimPair}\;\frac{e\Downarrow\langle\kappa_1,\kappa_2\rangle}
+{p\;e\Downarrow\hat p(\kappa_1,\kappa_2)}
+\\[1.2ex]
+\textsc{E-App}\;\frac{e_1\Downarrow\lambda x{:}A.e\quad e_2\Downarrow u_2\quad
+e[u_2/x]\Downarrow u}{e_1\,e_2\Downarrow u}
+\qquad
+\textsc{E-Pair}\;\frac{e_1\Downarrow u_1\quad e_2\Downarrow u_2}
+{\langle e_1,e_2\rangle\Downarrow\langle u_1,u_2\rangle}
+\qquad
+\textsc{E-Proj}_i\;\frac{e\Downarrow\langle u_1,u_2\rangle}{\pi_i\,e\Downarrow u_i}
+\\[1.2ex]
+\textsc{E-Inl}\;\frac{e\Downarrow u}{\mathsf{inl}\;e\Downarrow\mathsf{inl}\;u}
+\qquad
+\textsc{E-Inr}\;\frac{e\Downarrow u}{\mathsf{inr}\;e\Downarrow\mathsf{inr}\;u}
+\qquad
+\textsc{E-Fix}\;\frac{}{\mathsf{fix}\,x{:}T.e\Downarrow
+\lambda z{:}A.\,(e[\mathsf{fix}\,x{:}T.e/x])\,z}
+\\[1.2ex]
+\textsc{E-CaseL}\;\frac{e\Downarrow\mathsf{inl}\;u\quad e_1[u/x]\Downarrow u'}
+{\mathsf{case}\;e\;\mathsf{of}\;\mathsf{inl}\,x\Rightarrow e_1\mid
+\mathsf{inr}\,y\Rightarrow e_2\;\Downarrow u'}
+\qquad
+\textsc{E-CaseR}\;\frac{e\Downarrow\mathsf{inr}\;u\quad e_2[u/y]\Downarrow u'}
+{\mathsf{case}\;e\;\mathsf{of}\;\mathsf{inl}\,x\Rightarrow e_1\mid
+\mathsf{inr}\,y\Rightarrow e_2\;\Downarrow u'}
+\end{gathered}
+\]
+}
+where in \textsc{E-Fix} the type $T$ is $A\to B$ and $z$ is fresh. The
+fixed point unfolds to an abstraction, which is a value, so a recursive
+function is unfolded once per call rather than eagerly; that is what
+restricting $\mathsf{fix}$ to function types buys.
+
+\section{A complete derivation}
+
+Let $\mathit{lt}:\mathbb N\times\mathbb N\to\mathbf 1+\mathbf 1$ be the
+primitive comparison, and let
+\[
+f=\lambda x{:}\mathbb N\times\mathbb N.\;
+\mathsf{case}\;\mathit{lt}\;x\;\mathsf{of}\;
+\mathsf{inl}\,y\Rightarrow\pi_2\,x\mid\mathsf{inr}\,z\Rightarrow\pi_1\,x,
+\]
+the transformation that returns the larger component of a pair. It has
+type $\mathbb N\times\mathbb N\to\mathbb N$: the scrutinee has type
+$\mathbf 1+\mathbf 1$ by the primitive rule, both branches have type
+$\mathbb N$ by projection from $x$, and the abstraction rule closes the
+derivation. Its evaluation on $b=\langle 3,5\rangle$ is the following
+derivation, read from the leaves down; each line cites its rule and the
+lines it uses as premises.
+{\small
+\[
+\begin{array}{rll}
+(1) & f\Downarrow f & \textsc{E-Val}\\
+(2) & \langle 3,5\rangle\Downarrow\langle 3,5\rangle & \textsc{E-Val}\\
+(3) & \mathit{lt}\;\langle 3,5\rangle\Downarrow\mathsf{inl}\,\ast
+    & \textsc{E-PrimPair}\ (2),\ \widehat{\mathit{lt}}(3,5)=\mathsf{inl}\,\ast\\
+(4) & \pi_2\,\langle 3,5\rangle\Downarrow 5 & \textsc{E-Proj}_2\ (2)\\
+(5) & \mathsf{case}\;\mathit{lt}\,\langle 3,5\rangle\;\mathsf{of}\;
+      \mathsf{inl}\,y\Rightarrow\pi_2\,\langle 3,5\rangle\mid
+      \mathsf{inr}\,z\Rightarrow\pi_1\,\langle 3,5\rangle\;\Downarrow 5
+    & \textsc{E-CaseL}\ (3),(4)\\
+(6) & f\;\langle 3,5\rangle\Downarrow 5 & \textsc{E-App}\ (1),(2),(5)
+\end{array}
+\]
+}
+In line (4) the substitution $(\pi_2\,\langle 3,5\rangle)[\ast/y]$ is the
+identity, since $y$ does not occur in the branch. Line (5) is the body of
+$f$ with $\langle 3,5\rangle$ substituted for $x$, which is the third
+premise \textsc{E-App} requires. The process step that consumes this
+derivation is
+\[
+\mathsf{transform}\;c\;\mathsf{with}\;f,
+\qquad
+\mathsf{bound}(q,\langle 3,5\rangle)\;\longrightarrow\;
+\mathsf{transformed}(\langle 3,5\rangle,5),
+\]
+and the record it appends is $\Transform(c,f,\langle 3,5\rangle,5)$. The
+six lines above are what the opaque reading discards and the transparent
+reading would keep.
+
+\section{Evaluation, divergence, and being stuck}
+
+There are three ways for a closed term $e$ to relate to evaluation. It
+may \emph{evaluate}, $e\Downarrow u$ for some $u$. It may \emph{diverge},
+written $e\Uparrow$, defined coinductively by the rules
+{\small
+\[
+\begin{gathered}
+\frac{e_1\Uparrow}{e_1\,e_2\Uparrow}
+\qquad
+\frac{e_1\Downarrow u_1\quad e_2\Uparrow}{e_1\,e_2\Uparrow}
+\qquad
+\frac{e_1\Downarrow\lambda x{:}A.e\quad e_2\Downarrow u_2\quad
+e[u_2/x]\Uparrow}{e_1\,e_2\Uparrow}
+\qquad
+\frac{e_1\Uparrow}{\langle e_1,e_2\rangle\Uparrow}
+\qquad
+\frac{e_1\Downarrow u_1\quad e_2\Uparrow}{\langle e_1,e_2\rangle\Uparrow}
+\\[1.2ex]
+\frac{e\Uparrow}{\pi_i\,e\Uparrow}
+\qquad
+\frac{e\Uparrow}{p\;e\Uparrow}
+\qquad
+\frac{e\Uparrow}{\mathsf{inl}\;e\Uparrow}
+\qquad
+\frac{e\Uparrow}{\mathsf{inr}\;e\Uparrow}
+\qquad
+\frac{e\Uparrow}{\mathsf{case}\;e\;\mathsf{of}\cdots\Uparrow}
+\\[1.2ex]
+\frac{e\Downarrow\mathsf{inl}\;u\quad e_1[u/x]\Uparrow}
+{\mathsf{case}\;e\;\mathsf{of}\;\mathsf{inl}\,x\Rightarrow e_1\mid\cdots\Uparrow}
+\qquad
+\frac{e\Downarrow\mathsf{inr}\;u\quad e_2[u/y]\Uparrow}
+{\mathsf{case}\;e\;\mathsf{of}\cdots\mid\mathsf{inr}\,y\Rightarrow e_2\Uparrow}
+\end{gathered}
+\]
+}
+read as the greatest relation closed under them, so that an infinite
+derivation is allowed. The recursive function
+$\Omega=\mathsf{fix}\,g{:}\mathbb N\to\mathbb N.\,\lambda n{:}\mathbb
+N.\,g\,n$ gives $\Omega\,0\Uparrow$: the third application rule applies
+with the body again an application of the unfolded $\Omega$ to $0$, and
+the derivation repeats forever. Finally, $e$ may be \emph{stuck}: neither
+evaluating nor diverging. The term $\pi_1\,(\lambda x{:}\iota.x)$ is
+stuck, since its subterm evaluates to an abstraction and no projection
+rule applies to one; so is $\mathsf{case}\;\langle 3,5\rangle\;\mathsf{of}
+\cdots$. Both are ill typed, and that is not a coincidence.
+
+\begin{lemma}[Evaluation or divergence]\label{lem:evdiv}
+Let $e$ be closed with $\vdash e:A$. Then exactly one of the following
+holds: $e\Downarrow u$ for a unique value $u$, and then $\vdash u:A$; or
+$e\Uparrow$. In particular no closed well-typed term is stuck.
+\end{lemma}
+
+\begin{proof}
+\emph{At most one.} Uniqueness of $u$ is Lemma~\ref{lem:det} below. That
+$e\Downarrow u$ and $e\Uparrow$ exclude each other follows by induction on
+the derivation of $e\Downarrow u$: in each rule, every divergence rule for
+the same term form requires some premise to diverge that the evaluation
+derivation shows to evaluate, or, when the rules select different
+branches, a scrutinee to evaluate to a different injection, which
+determinism forbids.
+
+\emph{At least one.} Let $D$ be the set of closed well-typed terms that
+have no evaluation derivation. It suffices to show that every $e\in D$ is
+the conclusion of some divergence rule whose divergent premise is again in
+$D$ and whose evaluation premises hold; then $D$ is closed under the rules
+read backwards, and by coinduction every member of $D$ diverges. Values
+evaluate, so $e$ is not a value, and it is not a variable, being closed.
+Suppose $e=e_1\,e_2$. If $e_1\in D$ the first rule applies. Otherwise
+$e_1\Downarrow u_1$, and by preservation, proved as in
+Chapter~\ref{ch:types} from the substitution lemmas, $\vdash u_1:A\to B$,
+so by canonical forms $u_1=\lambda x{:}A.e'$. If $e_2\in D$ the second
+rule applies. Otherwise $e_2\Downarrow u_2$ with $\vdash u_2:A$, and
+$e'[u_2/x]$ is closed and well typed by substitution; it has no evaluation
+derivation, or \textsc{E-App} would give one for $e$, so it is in $D$ and
+the third rule applies. The pair, projection, injection, and primitive
+cases are the same argument with fewer premises; for projections and
+primitives, canonical forms at product and base type guarantee that the
+evaluated subterm has the shape the evaluation rule needs, and totality of
+$\hat p$ guarantees a result. For $\mathsf{case}$, if the scrutinee is in
+$D$ the first case rule applies; otherwise it evaluates to a value of sum
+type, which is $\mathsf{inl}\,u$ or $\mathsf{inr}\,u$ by canonical forms,
+and the corresponding branch, after substitution, is closed, well typed,
+and in $D$. A fixed point always evaluates by \textsc{E-Fix}, so it is not
+in $D$.
+\end{proof}
+
+The lemma is the reason the book states its liveness hypothesis in the
+form it does. For a well-typed transformation, ``evaluation of $f\,b$
+terminates'' in Hypothesis~\ref{hyp:total} is exactly the negation of
+$f\,b\Uparrow$, and there is no third case to exclude. A
+$\mathsf{transform}$ prefix whose function diverges on the bound value is
+not an error: the configuration simply has no step of that prefix, forever,
+and the commitment waits. Whether that is acceptable is a property of the
+function supplied, and the typed calculus can say precisely which
+functions it is: those for which the dichotomy of the lemma falls on the
+side of evaluation.
+
+\begin{lemma}[Determinism]\label{lem:det}
+If $e\Downarrow u$ and $e\Downarrow u'$ then $u=u'$.
+\end{lemma}
+
+\begin{proof}
+By induction on the derivation of $e\Downarrow u$. For each form of $e$
+there is one rule, except that a primitive has one rule for a constant
+argument and one for a pair of constants, selected by the shape of the
+argument's value; case analysis has one rule per injection, selected by
+the value of the scrutinee; and a pair or injection of values is covered
+both by \textsc{E-Val} and by its own rule, which give the same result. In
+each rule the premises are evaluations of subterms or of substitution
+instances determined by earlier premises, and so are determined by the
+induction hypothesis, and the conclusion is a function of their results.
+\end{proof}
+
+Determinism is what the book uses. Persistence in the proof of eventual
+disposition, the stability of replay, and the soundness of the
+$\pi$-encoding all rely on the fact that a transformation, once enabled,
+has one result. Type preservation for closed terms was established in
+Chapter~\ref{ch:types} from the substitution lemmas.
+
+\section{Termination}
+
+Without $\mathsf{fix}$, every well-typed closed term evaluates: this is
+strong normalization of the simply typed lambda calculus with products
+and sums, proved by Tait's method of reducibility and cited here without
+re-derivation. With $\mathsf{fix}$ the layer is Turing complete, and some
+evaluations diverge. The book takes the second option and pays for it
+explicitly: the eventual-disposition theorem assumes that the particular
+transformations and verifiers an execution invokes terminate
+(Hypothesis~\ref{hyp:total} and Theorem~\ref{thm:eventual}), rather than
+assuming termination of the layer as a whole. A system that wants the
+assumption discharged can restrict transformations to the $\mathsf{fix}$-free
+fragment and inherit it from strong normalization.
+
+\section{What a history keeps that a normal form discards}
+
+A normal form is the end of a computation and says nothing about how it
+was reached. Many terms reduce to the same value, and once reduced they
+are indistinguishable. A ledger keeps more, and exactly how much more
+depends on which of the history equivalences of
+Chapter~\ref{ch:spectrum} the observer uses.
+
+\begin{proposition}[Transformations are recorded intensionally]
+\label{prop:intensional}
+Let $f$ and $f'$ be distinct terms with $f\,b\Downarrow v$ and
+$f'\,b\Downarrow v$. The histories that differ only in
+$\Transform(c,f,b,v)$ versus $\Transform(c,f',b,v)$ are related by
+$\approx_{\mathrm{st}}$ and not by $\approx_{\mathrm{tr}}$.
+\end{proposition}
+
+\begin{proof}
+The state after either record is $\mathsf{transformed}(b,v)$, and the
+rest of the histories agree. The records differ, so the histories are not
+trace equivalent.
+\end{proof}
+
+The state keeps the result; the ledger keeps which function produced it.
+An auditor can tell two extensionally equal transformations apart; a
+state observer cannot; and by Theorem~\ref{thm:ext} no future
+continuation of the ledger can depend on the difference. Under the opaque
+reading of Chapter~\ref{ch:layers} this is all the history keeps: the
+function applied and its result, not the evaluation that connected them.
+Under the transparent reading, if it can be established, the kernel would
+also hold the reduction sequence, and the history would keep the whole
+derivation of $v$.
 
 \chapter{Combinators, Erasure, and Linear Resource}
-\plan{Uses combinatory logic to test how much depends on names, and the
-discarding combinator to ask whether erasure must be recorded. Introduces
-linear logic as the resource discipline Part~IV needs, and compares kernel
-$\Pop$'s removal of an option with linear consumption of a hypothesis.}
+\label{ch:combinators}
+
+This chapter asks two structural questions about the value layer and the
+kernel. How much of the calculus depends on names? And what does the
+calculus do with resources that are discarded or duplicated? The first
+question is answered by combinatory logic, the second by linear logic, and
+the answers fix the resource discipline Part~IV builds on.
+
+\section{Names}
+
+Combinatory logic shows that bound variables are dispensable in the value
+layer. Bracket abstraction translates every lambda term into a term built
+from the combinators $\mathsf S$ and $\mathsf K$ by application alone, and
+the translation is correct: a term and its translation behave alike under
+application to arguments. This is standard and is cited without
+re-derivation. The lambda layer can therefore be presented without
+variables at all.
+
+A small case shows the mechanism. Bracket abstraction $[x]$ is defined by
+$[x]x=\mathsf I$, where $\mathsf I=\mathsf S\mathsf K\mathsf K$;
+$[x]M=\mathsf K\,M$ when $x$ does not occur in $M$; and
+$[x](M\,N)=\mathsf S\,([x]M)\,([x]N)$ otherwise. For the first projection
+of a curried pair, $\lambda x.\lambda y.x$,
+\[
+[y]x=\mathsf K\,x,
+\qquad
+[x](\mathsf K\,x)=\mathsf S\,([x]\mathsf K)\,([x]x)=\mathsf S\,(\mathsf K\mathsf K)\,\mathsf I,
+\]
+and on arguments $a$ and $b$,
+\[
+\mathsf S\,(\mathsf K\mathsf K)\,\mathsf I\,a\,b
+\;\to\;\mathsf K\mathsf K\,a\,(\mathsf I\,a)\,b
+\;\to\;\mathsf K\,(\mathsf I\,a)\,b
+\;\to\;\mathsf I\,a
+\;\to^{*}\;a,
+\]
+where $\mathsf I\,a=\mathsf S\mathsf K\mathsf K\,a\to\mathsf K\,a\,(\mathsf
+K\,a)\to a$. The variable has gone, and in its place are two uses of
+$\mathsf K$: one discards the $a$ passed to the outer $\mathsf K\mathsf K$,
+which is recomputed through $\mathsf I$, and one discards $b$. The next
+section is about the second.
+
+Commitment identities are not variables, and nothing analogous removes
+them. A bound variable is a placeholder, and any consistent renaming of it
+changes nothing. A commitment identity is \emph{generated}: $\mathsf{pop}$
+must produce a name distinct from every name already in use, and that
+requirement refers to the current state, not to the structure of a term.
+Combinatory reduction is a function of terms alone and has no state to
+consult, so it has nothing that can play the role of a fresh name. Fresh
+identities are therefore a feature of the process layer, supplied by
+restriction in the $\pi$-calculus (Chapter~\ref{ch:pi}) and by the
+freshness premise here, and not of the functional core.
+
+\section{Erasure}
+
+The combinator $\mathsf K$ discards its second argument:
+$\mathsf K\,x\,y\to x$. Under the opaque reading of
+Chapter~\ref{ch:layers}, such internal discarding is not recorded. A
+transformation record keeps the function, its input, and its result, so
+the ledger knows that $f$ was applied to $b$ and gave $v$, but not which
+parts of $b$ the computation ignored. Recording erasure inside evaluation
+would require the transparent reading, in which the kernel holds the
+reduction itself.
+
+At the level of commitments, discarding is exactly what the calculus
+forbids, and the linear type discipline is how it forbids it.
+
+\section{Linear resource}
+
+Recall the three kinds of assumption of Chapter~\ref{ch:types}: rights,
+which may be neither duplicated nor discarded; tokens, which may be
+discarded but not duplicated; and facts, which may be used any number of
+times. In the terminology of substructural logic these are linear,
+affine, and exponential ($!$) assumptions. The kernel has its own
+discipline, and it is a different one.
+
+\begin{proposition}[The kernel is affine in options]\label{prop:affine}
+Kernel admissibility allows each option to be popped at most once and
+allows options never to be popped. Read as a resource discipline on
+options, it therefore admits weakening and forbids contraction: it is
+affine, not linear.
+\end{proposition}
+
+\begin{proof}
+The admissibility condition of $\Pop(x)$ in Chapter~\ref{ch:layers}
+requires $x$ not already popped, which forbids using an option twice.
+Nothing requires an option to be popped, which permits leaving it unused.
+\end{proof}
+
+The typed disposition calculus strengthens this. A live commitment's right
+is linear, because \textsc{T-Nil} refuses to let a process end while
+holding one: a commitment must be advanced, refused, or waited for, never
+silently dropped. That is the static form of the principle that a refusal
+must be recorded rather than left implicit. The kernel, which only
+documents what happens, can afford weakening; a discipline that promises
+every commitment a disposition cannot.
+
+The absence of weakening is visible in the functions the value layer can
+express over linear resources.
+
+\begin{proposition}[No linear discarding]\label{prop:nok}
+For distinct atomic types $A$ and $B$, no closed term of the purely
+linear fragment, without $!$, has type $A\multimap B\multimap A$.
+\end{proposition}
+
+\begin{proof}
+Such a term would be a proof of $A\multimap(B\multimap A)$ in
+multiplicative linear logic. Every provable sequent of that logic is
+\emph{balanced}: each atom occurs as often positively as negatively. In
+$A\multimap(B\multimap A)$ the atom $B$ occurs once, negatively, and never
+positively. This is a standard property of multiplicative linear logic,
+cited without re-derivation.
+\end{proof}
+
+So the linear analogue of $\mathsf K$ does not exist: a function cannot
+consume a right and return without using it. With the exponential the
+type $A\multimap\,!B\multimap A$ is inhabited, which is why facts, which
+may be ignored, are exponential, and rights, which may not, are not.
+
+\section{The three disciplines together}
+
+The calculus thus uses three resource disciplines at once, each where it
+belongs. Options in the kernel are affine: committed to at most once,
+possibly never. Rights to advance a commitment are linear: exactly one
+holder, never dropped. Facts, the authority policy and the terminality
+of finished commitments, are exponential: consulted freely, never
+consumed. The ledger itself is outside all three. It is not a resource at
+all but a record, and it neither shrinks when resources are consumed nor
+grows when they are duplicated.
 
 %===================================================================
 \part{Processes and Labelled Transitions}
 %===================================================================
-
-\chapter{CCS: Synchronization and Binding}
-\plan{A finite CCS fragment encoded into disposition histories and the
-converse examined. The central question is whether binding is
-synchronization or something weaker, since a CCS handshake consumes both
-complementary actions in one step. The worked encoding of
-Appendix~\ref{app:worked} belongs here.}
-
-\chapter{CSP and the Two Refusals}
-\plan{Sets failures-semantics refusal sets against recorded refusal. The
-chapter's target is the weakened claim of the Preface: that recorded
-refusal is not represented by the standard failures model without an
-added internal event or instrumentation. It gives the instrumented
-encoding and then tries to prove the separation, that uninstrumented
-failures equivalence identifies histories differing only in recorded
-refusals; the history twins of Chapter~\ref{ch:worlds} are the candidate
-witnesses. The sequence of a certified verification failure followed by
-a separately authorized refusal gives a sharp test case: a refusal whose
-grounds are recorded evidence, for which a refusal set has no slot at
-all.}
-
-\chapter{The Pi-Calculus: Restriction and Fresh Commitments}
-\label{ch:pi}
-\plan{Name passing, scope extrusion, and restriction. Develops the remark
-of Chapter~\ref{ch:lts} that restriction here scopes naming but not
-visibility, and asks whether this makes the disposition calculus's
-$(\nu c)$ closer to a capability discipline than to $\pi$-calculus
-privacy.}
 
 \chapter{Labelled Disposition Semantics}
 \label{ch:lts}
@@ -2501,14 +3142,827 @@ changes what any principal may do. It becomes a substantive result once
 delegation is added in Chapter~\ref{ch:authority}, where authority can grow, and the claim
 is that it grows only through a delegation record.
 
+\chapter{CCS: Synchronization and Binding}
+\label{ch:ccs}
+
+The calculus of communicating systems is organized around one idea: two
+agents synchronize when one performs an action $a$ and the other its
+complement $\bar a$, and the pair becomes a single internal step $\tau$.
+The disposition calculus has an operator called binding, and a natural
+first guess is that binding is its synchronization. This chapter shows
+that the guess is wrong, and in a strong sense: in the typed calculus,
+parallel components do not interact at all. That fact yields a separation
+result in one direction and a forward correspondence in the other.
+
+\section{Erasure into CCS}
+
+Let the erasure $\mathcal E$ send a disposition process to a CCS process
+over an alphabet of actions that record the kind of each act and its
+subject but nothing else:
+\[
+\begin{aligned}
+\mathcal E(\mathbf 0)&=\mathbf 0, &
+\mathcal E(\pi.P)&=\lambda(\pi).\mathcal E(P),\\
+\mathcal E(P\mid Q)&=\mathcal E(P)\mid\mathcal E(Q), &
+\mathcal E(P+Q)&=\mathcal E(P)+\mathcal E(Q),\\
+\mathcal E((\nu c)P)&=\mathcal E(P), &
+\mathcal E(!P)&=\,!\,\mathcal E(P),
+\end{aligned}
+\]
+with the two-branch forms sent to sums,
+\[
+\begin{aligned}
+\mathcal E(\mathsf{verify}_a\;c\;\mathsf{using}\;g\;\mathsf{then}\;P\;\mathsf{else}\;Q)
+&=\mathsf{ver}^{+}_c.\mathcal E(P)+\mathsf{ver}^{-}_c.\mathcal E(Q),\\
+\mathcal E(\mathsf{await}_a\;c\;\omega.P\;\mathsf{within}_b\;t\;\mathsf{else}\;Q)
+&=\mathsf{dis}_c.\mathcal E(P)+\mathsf{to}_c.\mathcal E(Q),
+\end{aligned}
+\]
+and $\lambda$ giving $\mathsf{pop}$, $\mathsf{comp}_d$, $\mathsf{bind}_c$,
+$\mathsf{trans}_c$, $\mathsf{refuse}_c$, $\mathsf{collapse}_c$, or
+$\mathsf{dis}_c$ for the other prefixes. No action has a complement, so no
+two erased components ever synchronize, and CCS restriction, which matters
+only for complementary actions, is not needed. The same map sends each
+disposition label $\alpha$ to $\lambda(\alpha)$ by forgetting its
+annotations.
+
+\begin{proposition}[Forward correspondence]\label{prop:ccsfwd}
+If $\langle P,S,A,O,H\rangle\xrightarrow{\alpha}\langle P',S',A',O',H'\rangle$
+then $\mathcal E(P)\xrightarrow{\lambda(\alpha)}\;\equiv\;\mathcal E(P')$.
+\end{proposition}
+
+\begin{proof}
+By induction on the transition derivation. Each primitive rule fires a
+prefix whose erasure is $\lambda(\alpha)$ followed by the erasure of its
+continuation; for pop, the fresh name chosen by the rule is an
+$\alpha$-variant of the bound one. The parallel, sum, and restriction
+rules lift directly, and the congruence rule uses the fact that
+$\mathcal E$ maps each structural law of Chapter~\ref{ch:syntax} to a
+structural law of CCS.
+\end{proof}
+
+The converse fails, and the way it fails is instructive.
+
+\begin{proposition}[What the erasure forgets]\label{prop:ccsforget}
+\begin{enumerate}[label=(\alph*)]
+\item $\mathcal E$ is not sound: there is a configuration with no
+transition whose erasure has one.
+\item $\mathcal E$ is not fully abstract for any equivalence on
+configurations that distinguishes refusal reasons or acting principals:
+there are configurations whose processes have identical erasures and
+whose executions produce histories that differ.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(a) With $A(c)=\mathsf{open}(q)$, the process
+$\mathsf{collapse}_{a,k}\;c.\mathbf 0$ has no transition, while its
+erasure $\mathsf{collapse}_c.\mathbf 0$ does. The erasure forgets the
+commitment map, which is what gates enabledness. (b) From the same
+configuration, $\mathsf{refuse}_a\;c\;\mathsf{because}\;r_1.\mathbf 0$ and
+$\mathsf{refuse}_b\;c\;\mathsf{because}\;r_2.\mathbf 0$ both erase to
+$\mathsf{refuse}_c.\mathbf 0$, and their executions end in
+$\mathsf{refused}(r_1)$ and $\mathsf{refused}(r_2)$ with records naming
+different principals.
+\end{proof}
+
+So CCS captures the shape of disposition behaviour, the order and branching
+of kinds of act, and forgets both what gates it and what it records.
+
+\section{Typed components do not interact}
+
+The converse direction turns on a fact about the typed calculus that the
+book has used without naming.
+
+\begin{lemma}[Pruning]\label{lem:prune}
+Let $C[X,Y]$ be a closed well-typed configuration built from a context $C$
+with two holes, filled by $X$ and $Y$, and suppose $C[X,Z]$ is well typed
+too. If $\xi$ is an execution of $C[X,Y]$, then deleting from $\xi$ every
+step fired by a prefix originating in $Y$ leaves an execution of $C[X,Z]$.
+\end{lemma}
+
+\begin{proof}
+Every prefix in the term $C[X,Y]$ originates in exactly one of $C$, $X$,
+and $Y$, and descendants of a prefix's continuation originate where the
+prefix did. We check that each remaining step is still enabled, in order.
+Its lifecycle and data premises concern commitments whose rights its own
+occurrence holds (Lemma~\ref{lem:inv} and condition (C3)); rights live in
+the text of one occurrence and are never transferred, so no step from $Y$
+ever wrote those commitments. Its freshness premise is satisfied by the
+same name, since deleting steps only shrinks the set of names in use. Its
+authority premise is a fixed fact, or an exclusive capability held in its
+own text. A terminal fact in its typing context comes either from the
+initial configuration or from a terminal step in its own text, so a
+compensation premise does not depend on $Y$. Evaluation and verification
+are deterministic. A step from $Y$ that resolved a sum discarded the other
+summands, so no remaining step lies in them; after the deletion the sum is
+simply unresolved. Finally, the deleted records are exactly the records
+of commitments owned by $Y$'s occurrence, together with records appended
+after the context handed $Y$ a right, so every remaining projection is an
+unchanged path or a prefix of one, and replay remains defined. In
+$C[X,Z]$ the hole occupied by $Z$ never steps.
+\end{proof}
+
+The form in which pruning is used is a decomposition of contexts.
+Write $D\Downarrow$ when some execution of $D$ appends a record of a
+designated success kind.
+
+\begin{corollary}[Context decomposition]\label{cor:decomp}
+Let $C$ be a two-hole context, and let $X,Y$ be such that $C[X,Y]$ is
+closed and well typed. If $C[X,Y]\Downarrow$, then
+\[
+\begin{gathered}
+C[X,Z]\Downarrow\ \text{for every $Z$ with $C[X,Z]$ well typed,}\\
+\text{or}\\
+C[W,Y]\Downarrow\ \text{for every $W$ with $C[W,Y]$ well typed.}
+\end{gathered}
+\]
+This holds for every context, including contexts that allocate
+commitments by $\mathsf{pop}$ and distribute their rights to the holes,
+and contexts that place the holes under sums or replication.
+\end{corollary}
+
+\begin{proof}
+Take a successful execution $\xi$ of $C[X,Y]$ and the prefix that
+appended the success record; it originates in exactly one of $C$, $X$,
+and $Y$. If it originates in $C$ or $X$, delete from $\xi$ every step
+originating in $Y$; by Lemma~\ref{lem:prune} the result is an execution of
+$C[X,Z]$ for any well-typed choice of $Z$, and it keeps the success
+record, which no deleted step appended. If it originates in $Y$, delete
+every step originating in $X$ and apply the lemma with the roles of the
+holes exchanged. The lemma's proof already covers contexts that allocate
+commitments and hand rights to a hole, since a right handed to a hole is
+held in that hole's text from then on, and the records written with it
+are among those deleted when that hole is pruned. A sum in the context
+that the execution resolved into a hole is resolved the same way in the
+pruned execution, because the resolving step originates in the hole that
+is kept or in the context, never in the pruned hole.
+\end{proof}
+
+The disjunction is the whole point. Success in a composite never needs
+both holes: one of them can always be replaced by anything, and the
+composite still succeeds. That is the opposite of synchronization, where
+success needs both partners.
+
+Pruning says that a well-typed component's behaviour never depends on
+another's. Two components can race for nothing, pass nothing, and wait
+for nothing but the environment. That is the formal content of the answer
+to this chapter's opening question: binding couples a commitment to a
+value; it does not couple two agents.
+
+\section{A separation}
+
+Consider CCS with a success action $\checkmark$, in the reduction semantics
+Gorla uses, where $S\Downarrow$ means that $S$ reaches a term that can
+perform $\checkmark$ by internal steps only. For the target take closed
+well-typed configurations, with success meaning that some record of a
+designated kind, say a collapse under a rule $k_\checkmark$, can be
+appended.
+
+\begin{theorem}[No compositional encoding of synchronization]\label{thm:ccssep}
+There is no translation from CCS into closed well-typed disposition
+configurations that is compositional and success sensitive.
+\end{theorem}
+
+\begin{proof}
+Suppose $\llbracket\cdot\rrbracket$ is such a translation and let $C$ be
+its context for parallel composition at the name set $\{a\}$. The three
+source terms
+\[
+a.\checkmark\mid\bar a.\mathbf 0,\qquad
+a.\checkmark\mid\mathbf 0,\qquad
+\mathbf 0\mid\bar a.\mathbf 0
+\]
+all have free names $\{a\}$, so their translations are
+$C[\llbracket a.\checkmark\rrbracket,\llbracket\bar a.\mathbf 0\rrbracket]$,
+$C[\llbracket a.\checkmark\rrbracket,\llbracket\mathbf 0\rrbracket]$, and
+$C[\llbracket\mathbf 0\rrbracket,\llbracket\bar a.\mathbf 0\rrbracket]$. The
+first source term succeeds, after one synchronization; the other two do
+not, since neither has any internal step. By success sensitiveness the
+first translation succeeds. By Corollary~\ref{cor:decomp}, either
+$C[\llbracket a.\checkmark\rrbracket,Z]$ succeeds for every well-typed
+$Z$, in particular for $Z=\llbracket\mathbf 0\rrbracket$, or
+$C[W,\llbracket\bar a.\mathbf 0\rrbracket]$ succeeds for every well-typed
+$W$, in particular for $W=\llbracket\mathbf 0\rrbracket$. The
+translations of the second and third source terms are well typed, being
+translations, so either way a translation of a term that does not succeed
+succeeds, contradicting success sensitiveness.
+\end{proof}
+
+The theorem needs neither operational correspondence nor name invariance.
+Compositionality and success sensitiveness suffice, because what the
+typed calculus lacks is not a particular construct but interaction itself.
+Two remarks limit its scope.
+
+First, it concerns the typed calculus. In the untyped calculus components
+can interact through the shared commitment map: if one component holds
+$\mathsf{bind}_a\;c\;\mathsf{to}\;b$ and another holds
+$\mathsf{transform}\;c\;\mathsf{with}\;f$, the second is enabled only after
+the first acts. This is a one-shot, asynchronous, one-way signal, closer to
+a write-once variable than to a handshake, and whether it suffices to
+encode asynchronous CCS with single-use channels is listed in
+Appendix~\ref{app:open}. The typing discipline removes it deliberately,
+since it is exactly the cross-component dependence that makes ownership,
+persistence, and eventual disposition provable.
+
+Second, it concerns closed configurations. Interaction through the
+environment, one component's act prompting an outside party to discharge
+another component's obligation, is outside the calculus by design.
+
+\section{Outcome}
+
+The comparison with CCS is a separation in one direction. CCS
+synchronization cannot be compositionally encoded in the typed
+disposition calculus (Theorem~\ref{thm:ccssep}), and the natural erasure
+the other way is complete but neither sound nor fully abstract
+(Propositions~\ref{prop:ccsfwd} and~\ref{prop:ccsforget}). With finitely
+many values, each commitment is a finite-state machine and could be
+represented as a CCS agent synchronizing with the prefixes that act on it,
+which would give a sound translation in the other direction; that
+construction is standard in outline and is not carried out here. The
+honest summary is that the two calculi answer different questions. CCS is
+a calculus of communication. The typed disposition calculus deliberately
+has none, and its contribution lies in what it records about
+non-communicating acts.
+
+\chapter{CSP and the Two Refusals}
+\label{ch:csp}
+
+The failures model of CSP gives the word ``refusal'' a precise technical
+meaning, and it is a different meaning from the one this book uses. This
+chapter makes the difference exact. The result is the weakened form of the
+second comparative claim, now proved: recorded refusal is not represented
+by the standard failures model unless an event is added to carry it, and
+the two notions of refusal classify different objects.
+
+\section{The failures model}
+
+For a process with a labelled transition system over visible events
+$\Sigma$ and internal $\tau$, a state is \emph{stable} when it has no
+$\tau$ transition. A pair $(s,X)$, with $s$ a trace of visible events and
+$X\subseteq\Sigma$, is a \emph{failure} of the process if it can perform
+$s$ and reach a stable state in which no event of $X$ is possible. The
+failures model identifies processes with the same traces, failures, and
+divergences. A CSP refusal is thus a property of a stable state relative
+to a set of offered events: an observation, made from outside, of what the
+process cannot do next.
+
+A recorded refusal is a different kind of thing. It is an event in a
+commitment's history, appended by an authorized principal for a stated
+reason, and it ends the commitment.
+
+\section{Reading disposition processes in CSP}
+
+Erase a disposition process into CSP as in Chapter~\ref{ch:ccs}, with one
+refinement. The disposition calculus distinguishes two sources of choice.
+When a principal's process holds several enabled prefixes, which one fires
+is up to that process, not to anyone outside it; that is internal choice,
+$\sqcap$. When a process awaits an obligation under a deadline, which
+branch is taken depends on the environment, discharge or certified
+expiry; that is external choice, $\Box$. So
+\[
+\mathcal E(P+Q)=\mathcal E(P)\sqcap\mathcal E(Q),\qquad
+\mathcal E(\mathsf{await}\ldots\mathsf{within}\ldots)=
+\mathsf{dis}_c\to\mathcal E(P)\;\Box\;\mathsf{to}_c\to\mathcal E(Q),
+\]
+and the two outcomes of verification are an internal choice, since the
+verifier decides. Every other prefix becomes a visible event, as before.
+Let $\mathsf R$ be the set of refusal events $\mathsf{refuse}_c$.
+
+\section{The two refusals come apart}
+
+\begin{proposition}[Refusal sets and refusal records are independent]
+\label{prop:twofusals}
+Let $A(c)=\mathsf{open}(q)$.
+\begin{enumerate}[label=(\alph*)]
+\item The process $\mathsf{refuse}_a\;c\;\mathsf{because}\;r.\mathbf 0$ records
+a refusal of $c$, yet its erasure has no initial failure refusing
+$\mathsf{refuse}_c$: the only initial stable state offers it.
+\item The untyped process $\mathbf 0$ never records anything about $c$,
+yet its erasure has the failure $(\langle\rangle,\Sigma)$: it stably
+refuses $\mathsf{bind}_c$ and every other event.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+Both are immediate from the definition of failures. In (a) the initial
+state is stable and has the transition $\mathsf{refuse}_c$, so no failure
+with the empty trace contains that event. In (b) the erasure is
+$\mathit{STOP}$.
+\end{proof}
+
+A CSP refusal can hold where no refusal was recorded, and a refusal can be
+recorded where CSP reports none. In the failures model the recorded
+refusal appears, if at all, as the visible event $\mathsf{refuse}_c$, an
+ordinary event in a trace. That is instrumentation: the event had to be
+added to the alphabet to be seen.
+
+\begin{theorem}[Hiding removes the record]\label{thm:csp}
+Let $P_1=\mathsf{refuse}_a\;c\;\mathsf{because}\;r.\mathbf 0$ and
+$P_2=\mathbf 0$, both run from a configuration with
+$A(c)=\mathsf{open}(q)$. Then $\mathcal E(P_1)\setminus\mathsf R$ and
+$\mathcal E(P_2)$ are equivalent in the failures-divergences model, while
+the histories their executions produce differ in exactly one refusal
+record.
+\end{theorem}
+
+\begin{proof}
+$\mathcal E(P_1)\setminus\mathsf R$ performs one internal step and stops;
+its initial state is unstable, so its only failures are those of the
+stopped state, $(\langle\rangle,X)$ for every $X$, and it has no
+divergence. That is exactly the failures-divergences semantics of
+$\mathit{STOP}=\mathcal E(P_2)$. The execution of $P_1$ appends
+$\Refuse(a,c,r)$; $P_2$ appends nothing.
+\end{proof}
+
+So the failures model, without an added event, identifies a configuration
+in which a commitment was refused, by whom and why, with one in which
+nothing happened. Its refusal sets have no slot for the record, because
+they describe what a stable state cannot do, not what was decided. The
+same example extends to a sequence: a certified verification failure
+followed by a separately authorized refusal is, after hiding, again
+indistinguishable from silence, although the ledger holds both the
+evidence and the decision.
+
+\section{Declining is not refusing}
+
+Proposition~\ref{prop:twofusals}(b) used an untyped process, and for a
+reason. In the typed calculus a process holding a live right cannot be
+$\mathbf 0$ (\textsc{T-Nil}); it can only act on the commitment or wait,
+and a wait names its obligation and who is expected to discharge it. The
+typed counterpart of ``merely declining'' is therefore
+$\mathsf{await}_e\;c\;\omega.P$ with an environment that never offers
+$\mathsf{dis}_c$. Its erasure offers $\mathsf{dis}_c$, and the stable
+refusal of everything is a failure of the \emph{composition} with an
+environment that refuses to discharge. The typed calculus thus moves
+declining out of the process and onto the environment, where the failures
+model is at home: the environment's refusal to discharge is a genuine CSP
+refusal, and it is not a disposition. A commitment that is declined in
+this sense stays live, and Theorem~\ref{thm:eventual} names the hypothesis,
+responsiveness, whose failure it is.
+
+\section{Outcome}
+
+The second comparative claim is settled in its weak form. Recorded refusal
+is not represented by the failures model without instrumentation
+(Theorem~\ref{thm:csp}), and CSP refusal sets and recorded refusals are
+independent notions, neither implying the other
+(Proposition~\ref{prop:twofusals}). This is not a claim that the
+disposition calculus is more expressive than CSP. With the refusal
+events left visible, CSP carries the fact that a refusal happened, and
+with a rich enough alphabet it could carry the reason and the principal
+as well. The difference is in what each formalism treats as primary. The
+failures model is a theory of what a process can be observed not to do.
+The ledger is a record of what was decided. They classify different
+semantic objects, and a comparison that merged them would lose the
+distinction the book exists to keep.
+
+\chapter{The Pi-Calculus: Restriction and Fresh Commitments}
+\label{ch:pi}
+
+The $\pi$-calculus supplies what the disposition calculus most obviously
+resembles: fresh names, created by restriction and scoped lexically.
+Commitment identities behave like restricted names, and $\mathsf{pop}$
+behaves like $(\nu c)$. This chapter turns the resemblance into an
+encoding of the typed calculus into the $\pi$-calculus that satisfies all
+of the criteria of Chapter~\ref{ch:encodings}, and then shows exactly
+where the two calculi differ: not in expressive power, where, relative
+to the criteria used here, the $\pi$-calculus is strictly stronger, but in
+how they protect the integrity of a commitment's state.
+
+One point about the target must be stated at the outset, since the
+encoding leans on it throughout. The lifecycle step $\delta$, certificate
+checking, verifier execution, signature checking, and the observation
+functions $\mathsf{observe}_k$ are not implemented in the $\pi$-calculus.
+They are operations of the target's data theory, available in
+continuations as the conditionals and data expressions are. The encoding
+shows that the \emph{process structure} of the disposition calculus is
+$\pi$-expressible given those operations; it does not show that the
+$\pi$-calculus computes them, and nothing here depends on whether it
+could.
+
+\section{The target}
+
+The target is the polyadic $\pi$-calculus with data values and
+conditionals, asynchronous output, and choice between guarded processes:
+\[
+T ::= \mathbf 0 \mid x\langle\tilde e\rangle \mid \textstyle\sum_i G_i
+\mid T\mid T \mid (\nu x)T \mid\; !T,
+\qquad
+G ::= x(\tilde y).T \mid \tau.T,
+\]
+where expressions $e$ range over names and data, and conditionals and
+case analysis on data are available in continuations. Its reduction
+relation is the usual one: an output $x\langle\tilde e\rangle$ reacts with
+an input guard $x(\tilde y).T$ in a sum, discarding the other summands. The
+choice used here is \emph{separate}: summands are guarded by inputs or by
+$\tau$, never by outputs.
+
+The encoding covers the \emph{guarded} fragment of the typed calculus, in
+which every summand of a sum begins with a prefix. Every example in the
+book lies in it.
+
+\section{The encoding}
+
+A commitment $c$ becomes a restricted name and a \emph{cell}: an output
+$c\langle s,n\rangle$ holding its lifecycle state $s$ and the number $n$ of
+records written for it so far. The ledger becomes a multiset of outputs on
+a channel $\mathit{log}$, each tagged with its position in its commitment's
+projection, and observations become outputs on $\mathit{obs}$. For a
+configuration,
+\[
+\begin{aligned}
+\llbracket\langle P,S,A,O,H\rangle\rrbracket=
+(\nu\,\dom(A))\Bigl(&\prod_{c}c\langle A(c),|H|_c|\rangle\;\Big|\;
+\prod_{\rho\in H}\mathit{log}\langle\rho,\iota(\rho)\rangle\\
+&\Big|\;\prod_{(c,k,o)\in O}\mathit{obs}\langle c,k,o\rangle\;\Big|\;
+\llbracket P\rrbracket\Bigr),
+\end{aligned}
+\]
+where $\iota(\rho)$ is the position of $\rho$ in its projection,
+extended for a compensation record by the length its predecessor's
+projection had when the record was appended. Processes are encoded
+homomorphically on $\mathbf 0$, $\mid$, $+$, $(\nu c)$, and $!$, and a
+prefix that advances $c$ reads its cell, writes it back, and logs:
+\[
+\begin{aligned}
+\llbracket\mathsf{pop}\;q\;\mathsf{as}\;c.P\rrbracket
+&=\tau.(\nu c)\bigl(c\langle\mathsf{open}(q),1\rangle\mid
+\mathit{log}\langle\Pop(c,q),0\rangle\mid\llbracket P\rrbracket\bigr),\\
+\llbracket\mathsf{bind}_a\;c\;\mathsf{to}\;b.P\rrbracket
+&=c(s,n).\bigl(c\langle\delta(s,\rho),n+1\rangle\mid
+\mathit{log}\langle\rho,n\rangle\mid\llbracket P\rrbracket\bigr)
+\quad\text{with }\rho=\Bind(a,c,b),
+\end{aligned}
+\]
+and transformation, refusal, and collapse likewise, the record computed
+from the state read and, for collapse, an $\mathit{obs}$ output added.
+Verification reads the cell, runs the verifier on the value in it, and
+branches on the result into the successful or failed state and the
+corresponding continuation. Compensation reads the predecessor's cell and
+writes it back unchanged before creating the successor. An await first
+inputs a certificate on the environment channel $\omega$ and then updates
+the cell; the deadline form is a sum of two such environment inputs.
+
+Three features are worth noticing. Freshness of commitment identities is
+restriction, with nothing added. The lifecycle checks of the operational
+rules have disappeared: in a well-typed configuration the prefix reading a
+cell always finds the state its rule requires (Lemma~\ref{lem:canon}), so
+the encoding simply applies $\delta$. And the ledger has become a
+multiset, with order kept only within each commitment.
+
+\begin{proposition}[The ledger as a trace]\label{prop:pitrace}
+From the $\mathit{log}$ outputs of $\llbracket C\rrbracket$, order two
+records when they have the same subject and smaller position, or when one
+is a compensation whose predecessor position covers the other. Every
+linearization of this order is trace equivalent to $H$.
+\end{proposition}
+
+\begin{proof}
+Within a subject, positions are the order of $H|_c$. A compensation record
+depends exactly on the records of its predecessor that precede it, and
+its recorded length identifies them. Records related by neither clause are
+independent (Definition~\ref{def:dependence}). So the order is the
+dependence order of $H$, whose linearizations are its trace.
+\end{proof}
+
+The encoding recovers the history only up to trace equivalence, which by
+Proposition~\ref{prop:commute} is everything replay needs. It is the first
+comparison in the book in which the total order of the ledger is not
+merely unnecessary but absent.
+
+\section{The criteria}
+
+\begin{theorem}[Encoding into the $\pi$-calculus]\label{thm:pienc}
+On the guarded fragment of the typed calculus, with success taken to be a
+$\mathit{log}$ output of a designated kind, the encoding is
+\begin{enumerate}[label=(\roman*)]
+\item compositional, and homomorphic on every operator but the prefixes;
+\item name invariant, with commitment names mapped to themselves;
+\item operationally complete: each step $C\xrightarrow{\alpha}C'$ is
+matched by one reduction, or by two for a discharge or timeout, reaching a
+term structurally congruent to $\llbracket C'\rrbracket$;
+\item operationally sound: each reduction of $\llbracket C\rrbracket$ is
+the first of such a matching sequence for some step of $C$, provided the
+computations it starts terminate (Hypothesis~\ref{hyp:total});
+\item divergence reflecting; and
+\item success sensitive.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(i) and (ii) are immediate from the definition, since the translation of a
+prefix mentions only its own names. (iii) By cases on the step: a pop is
+the $\tau$ of its encoding; a step on $c$ is the reaction of the prefix
+with $c$'s cell, after which the new cell, the new $\mathit{log}$ output,
+and the continuation are the encoding of $C'$; a discharge or timeout is
+an environment input followed by the cell reaction. (iv) A reduction of
+$\llbracket C\rrbracket$ is a $\tau$ of an encoded pop, a reaction between
+an encoded prefix and a cell, or an environment input. In the second case
+either the prefix is a compensation reading its predecessor's cell, which
+by its typing premise holds a terminal state that it writes back
+unchanged, or the prefix occurrence holds the right for the cell's
+commitment, since in the typed calculus only the holder has an advancing
+prefix on it, and by canonical forms the cell holds the state that prefix
+requires; so the corresponding
+disposition step is enabled, and when its computation terminates the
+result is the encoding of its target. (v) No reduction is administrative
+beyond the one environment input in (iii), and there are no retry loops,
+because no prefix in a well-typed configuration waits for a state it does
+not already have. (vi) Success records correspond one to one.
+\end{proof}
+
+Two things in this proof depend on types, and they are the reason the
+encoding is stated for the typed calculus. Soundness needs the reading
+prefix to find the right state; in the untyped calculus a prefix may reach
+its cell early, and a faithful encoding would have to put the state back
+and retry, which introduces divergence and breaks (v). And the absence of
+a lock on cells is safe only because no two components ever act on one
+commitment.
+
+\begin{corollary}[Strict inclusion]\label{cor:pistrict}
+The typed disposition calculus encodes into the $\pi$-calculus with data
+and separate choice, and the $\pi$-calculus does not encode into it
+compositionally and success sensitively.
+\end{corollary}
+
+\begin{proof}
+The first half is Theorem~\ref{thm:pienc}. For the second, CCS embeds into
+the $\pi$-calculus homomorphically, so an encoding of the $\pi$-calculus
+into the typed disposition calculus would compose to one of CCS,
+contradicting Theorem~\ref{thm:ccssep}.
+\end{proof}
+
+Relative to these criteria and this fragment, the comparison therefore
+comes out against the disposition calculus. Every behaviour of the guarded
+typed fragment, with exclusive capabilities left out, has a
+compositional, name-invariant, operationally corresponding, divergence
+reflecting, and success sensitive counterpart in the $\pi$-calculus with
+data and separate choice, built from restriction, cells, and a log, and
+using $\delta$, the verifier, certificate checking, and the observation
+functions as operations of the data theory. Three qualifications keep the
+statement honest. It is relative to the criteria of
+Chapter~\ref{ch:encodings}, and a stricter criterion, such as full
+abstraction for a chosen equivalence, would need its own argument. It
+covers the guarded fragment only. And it does not cover delegation of
+exclusive capabilities, whose encoding would add a cell for each
+capability key $(c,\kappa)$ holding its owner, read by every exercise and
+written by grants and delegations; that extension is routine in outline
+but has not been checked against the criteria here.
+
+\section{Where the difference lies: integrity}
+
+The encoding is correct in a closed world, where every commitment name
+remains restricted. Its correctness depends on that.
+
+\begin{proposition}[Scope versus authority]\label{prop:scope}
+Let $A(c)=\mathsf{open}(q)$.
+\begin{enumerate}[label=(\alph*)]
+\item There is a $\pi$-process $\mathit{Att}$ such that, if the name $c$ is
+extruded to $\mathit{Att}$, then $\llbracket C\rrbracket\mid\mathit{Att}$
+reduces to a term whose decoded ledger has no defined replay.
+\item For every disposition process $Q$ whose principals hold no
+authority over $c$, typed or not, every execution of $C$ with $Q$ in
+parallel appends only authorized records for $c$ and keeps its ledger
+consistent.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(a) Take $\mathit{Att}=c(s,n).(c\langle\mathsf{collapsed}(o),n+1\rangle\mid
+\mathit{log}\langle\Collapse(e,c,k,w,o),n\rangle)$. It reads the cell and
+logs a collapse of an open commitment, which $\delta$ rejects. (b) By
+Theorem~\ref{thm:auth} every record for $c$ is attributed to a principal
+holding the required authority, which the principals of $Q$ do not, so
+$Q$ appends none; and every execution preserves consistency
+(Proposition~\ref{prop:consistent}), whoever runs it.
+\end{proof}
+
+The $\pi$-calculus protects a commitment's state by keeping its name
+secret. Whoever learns the name can write the cell. The disposition
+calculus protects it by authority and replay, and knowing a name confers
+nothing: this is the precise sense of the remark in
+Chapter~\ref{ch:lts} that restriction there scopes naming but not
+visibility. Scope extrusion, the $\pi$-calculus's defining feature, is
+exactly the operation under which its encoding of the disposition
+invariants fails.
+
+The encoding can be hardened. Cells can check authority before writing,
+and the log can carry signatures that a decoder verifies. But each such
+check is a protocol written in the $\pi$-calculus rather than a guarantee
+the calculus supplies, and its correctness has to be proved for each
+protocol against each context. The disposition calculus builds those
+checks into its rules, and the safety theorems of Part~V hold for every
+execution without a protocol proof.
+
+\section{Outcome}
+
+Strict inclusion in expressive power: the typed calculus is a
+sub-calculus of the $\pi$-calculus up to an encoding meeting every
+criterion (Corollary~\ref{cor:pistrict}). The residue is not a construct
+but a guarantee. The $\pi$-calculus offers integrity through secrecy of
+names; the disposition calculus offers it through authority and an
+authenticated, replayable record, independently of who can name what
+(Proposition~\ref{prop:scope}).
+
 \chapter{Choice, Actors, and the Arbiter}
 \label{ch:choice}
-\plan{The known separation results for mixed choice, and where a choice
-resolved by a recording arbiter falls relative to them. The choice rule of
-Chapter~\ref{ch:lts} leaves no record of the discarded summand; the
-chapter asks whether a variant that records the road not taken is more
-expressive, or only more informative. Contrasts the actor model's
-unordered arrival with total causal order.}
+
+Palamidessi showed that the $\pi$-calculus with mixed choice can elect a
+leader in a symmetric network, and that its separate-choice and
+asynchronous fragments cannot; from that she derived that no uniform
+encoding of the first into the second preserves a reasonable semantics.
+Choice, in that result, is where the power to break symmetry lives. This
+chapter asks where that power lives in the disposition calculus, and finds
+that it is not in choice at all.
+
+\section{Choice in the disposition calculus}
+
+The sum rule of Chapter~\ref{ch:lts} resolves $P+Q$ in favour of
+whichever summand acts first. No partner takes part: summands are
+guarded by acts of the process's own principals, not by communications.
+The $\pi$ encoding of Chapter~\ref{ch:pi} accordingly uses only
+separate choice. By Palamidessi's result, then, whatever symmetry breaking
+the calculus can do does not come from its choice operator.
+
+\section{One race at three levels}
+
+The same race looks different at each level of the calculus, and it is
+worth following it through all three before stating anything about
+symmetry breaking. Let $A(c)=\mathsf{open}(q)$, and let principals $a_1$ and
+$a_2$ each hold refusal authority over $c$.
+
+\paragraph{Level one: an untyped race on an unprotected map.} Suppose
+the commitment map is shared by two replicas and updated without a
+linearization point. Each replica runs
+$\mathsf{refuse}_{a_i}\;c\;\mathsf{because}\;r_i.\mathbf 0$. Both read
+$\mathsf{open}(q)$, both premises hold, and both append. The merged ledger
+\[
+\Pop(c,q)\,;\Refuse(a_1,c,r_1)\,;\Refuse(a_2,c,r_2)
+\]
+is not replay-defined: the second refusal meets a terminal state, and
+$\delta$ is undefined there. Ledger-level exclusivity survives, in the
+sense that replay rejects the history; operational exclusivity does not,
+since two components each proceeded as though it had refused. Nothing in
+the calculus has gone wrong. The execution simply violated
+Hypothesis~\ref{hyp:atomic}, and the violation is detectable after the
+fact by any auditor who replays.
+
+\paragraph{Level two: an atomic map elects a winner.} With the
+hypothesis in force the race has a winner, and the network need not be
+asymmetric for it to have one.
+
+\begin{proposition}[Election by race]\label{prop:race}
+Let principals $a_1,\ldots,a_n$ each hold refusal authority over $c$, with
+$A(c)=\mathsf{open}(q)$. Under Hypothesis~\ref{hyp:atomic}, every
+maximal execution of the untyped process
+\[
+\prod_{i=1}^{n}\mathsf{refuse}_{a_i}\;c\;\mathsf{because}\;r.\,W_i
+\]
+appends exactly one refusal of $c$, attributed to one principal $a_j$,
+after which $W_j$ runs and no other $W_i$ ever starts.
+\end{proposition}
+
+\begin{proof}
+Each component's prefix is enabled while $c$ is live. The first to fire
+makes $c$ terminal, which disables every other prefix permanently by
+lifecycle monotonicity. Operational terminal exclusivity rests on the
+atomicity of the commitment map.
+\end{proof}
+
+As stated, the losers do not learn that they lost; they are simply
+blocked. They can be made to learn it. Compensation's premise is that its
+predecessor is terminal, and a compensation prefix is therefore a test of
+terminality that becomes enabled exactly when the race is over.
+
+\begin{proposition}[Losers can detect the loss]\label{prop:loser}
+Let each $a_i$ also hold compensation authority on $c$, and let
+\[
+R_i=\mathsf{refuse}_{a_i}\;c\;\mathsf{because}\;r.\,W_i
+\;+\;
+\mathsf{pop}_{a_i}\;q_i\;\mathsf{as}\;c_i\;\mathsf{after}\;c.\,L_i.
+\]
+Under Hypothesis~\ref{hyp:atomic}, in every execution of
+$\prod_i R_i$ the first act on $c$ is a refusal by some $a_j$, after which
+$W_j$ runs, and every other component can only take its second summand;
+under weak fairness each of them does, and runs $L_i$.
+\end{proposition}
+
+\begin{proof}
+While $c$ is live no compensation premise holds, so the first act is a
+refusal. After it, every other refusal prefix is disabled forever and
+every other compensation prefix is enabled forever, because terminal
+states are final. The names $c_i$ are fresh by the generative binder, so
+the compensations are independent of one another and of $W_j$.
+\end{proof}
+
+So the atomic map, used this way, is a test-and-set object: one caller
+receives ``won'' and every other caller eventually receives ``lost''. The
+successors $c_i$ are the competing compensations of
+Appendix~\ref{app:open}, admitted by replay and a question for policy.
+
+\paragraph{Level three: the typed calculus rejects the race.}
+
+\begin{corollary}[The typed calculus cannot race]\label{cor:norace}
+No well-typed program contains the race of
+Proposition~\ref{prop:race} or Proposition~\ref{prop:loser}, and no
+well-typed program elects a leader among its own parallel components.
+\end{corollary}
+
+\begin{proof}
+Typing $R_1\mid R_2$ splits the context, $\Delta=\Delta_1\uplus\Delta_2$,
+and the refusal prefix of each $R_i$ needs the linear right
+$\Commit\langle c,A,\mathsf{Open}\rangle$ in its own part. A linear right
+lies in at most one part of a split, so one of the two premises fails and
+no derivation exists (Lemma~\ref{lem:own}). More generally, by
+Lemma~\ref{lem:prune} no component's behaviour depends on another's, so no
+component can learn that it lost.
+\end{proof}
+
+\section{What the race does and does not give}
+
+The comparison with Herlihy's hierarchy needs care, because the
+calculus is not the shared-memory model in which that hierarchy is
+stated. In that model test-and-set has consensus number two: together
+with read/write registers it solves wait-free consensus among two
+processes and not among three. The atomic commitment map provides the
+test-and-set part. It does not provide the registers. A disposition
+process cannot read the commitment map; it can only attempt acts whose
+premises consult it, and learn, by which prefix fires, one bit about the
+state. In particular a loser in Proposition~\ref{prop:loser} learns that
+$c$ is terminal, and, since terminality here can only come from a
+refusal, that someone else refused. It does not learn who, or for what
+reason, since no premise of any rule exposes the refusing principal or
+the reason to a process.
+
+Three consequences follow, stated with their scope. Leader election among
+any number of components is solvable by this mechanism, in the weak form
+that each component learns whether it is the leader. Consensus on
+proposed values is not solvable by this mechanism alone, even between two
+components, because the loser has no way to read the winner's proposal;
+a calculus that let processes read replay state, or that carried values
+over channels as the $\pi$-calculus does, would recover the usual
+construction. And the claim ``the commitment map has consensus number
+two'' should not be made of the calculus as it stands, since consensus
+number is defined relative to an object together with registers, and the
+calculus has no readable registers. What can be said is that the
+atomic map is a test-and-set object and that its symmetry-breaking power,
+in the form leader election needs, is exercised by the untyped race.
+
+In a single-sequencer implementation this object is the arbiter. So the
+arbiter, not the choice operator, is what breaks symmetry; the kernel's
+single-sequencer assumption is doing real work in the untyped calculus.
+
+The typed discipline confines the arbiter's power to a place where it is
+never exercised. That is the same fact, seen from the other side, as the
+coordination-free convergence of Theorem~\ref{thm:coordfree}: programs
+that never race need no arbiter.
+
+\section{Recording the road not taken}
+
+When $P+Q$ is resolved in favour of $P$, nothing records that $Q$ was
+available. A variant rule could append, on the annotation channel, the
+first prefixes of the discarded summands. Since annotations take part in
+no causal reduction, the variant changes nothing that replay, the path
+lemma, or any safety theorem consults, and none of the criteria of
+Chapter~\ref{ch:encodings}, which do not observe annotations, can tell the
+variants apart. The variant is more informative, telling an auditor what
+alternatives were open, and not more expressive.
+
+\section{Actors and the order of arrival}
+
+In the actor model a mailbox receives messages in an order no one
+chooses. When a disposition ledger records an actor-like system, an
+arbiter fixes that order. The Causal Shuffle theorem says which parts of
+the fixed order carry meaning.
+
+\begin{proposition}[Order artifacts]\label{prop:artifact}
+A lens on histories that reports the relative order of two independent
+records is not invariant under trace equivalence, and so is not a
+function of the execution. Every lens that factors through replay is.
+\end{proposition}
+
+\begin{proof}
+Exchanging the two records gives a trace-equivalent history on which the
+first lens differs. The second part is Proposition~\ref{prop:commute}.
+\end{proof}
+
+``Which message arrived first'' is therefore meaningful only for messages
+about the same commitment, where the order is a dependency the ledger
+must keep. For messages about different commitments it is an artifact of
+the serialization the arbiter chose, and a system that makes decisions on
+it is deciding on the arbiter's convenience rather than on anything that
+happened.
+
+\section{Outcome}
+
+The disposition calculus's choice is separate choice, and it breaks no
+symmetry. The untyped calculus breaks symmetry anyway, through its atomic
+commitment map, which is the arbiter; the typed calculus never uses that
+power. The comparison with Palamidessi's hierarchy is therefore not a
+statement about choice. It is a statement about where a calculus keeps
+its shared, atomically updated state, and the typed discipline's answer is
+that it keeps none that two components can contend for.
 
 %===================================================================
 \part{Linear and Session Types}
@@ -3288,14 +4742,37 @@ the delegator, moves ownership, and appends an authenticated record:
 H\cdot\mathsf{Delegate}(a,b,c,\kappa,\sigma)\rangle\end{array}}.
 \]
 }
-Replay reconstructs $\mathsf{Own}$ from grant and delegation records and
-accepts $\mathsf{Delegate}(a,b,c,\kappa,\sigma)$ only if, at that point in
-the ledger, $a$ owns $(c,\kappa)$, the signature authenticates the record,
-and the commitment and kind match the signed payload. Because ownership
+Ownership belongs to the replay state, not beside it. The capability
+key $(c,\kappa)$ is a key of the replay map $A$ in its own right, alongside
+the commitments, and its value is the current owner:
+\[
+\begin{aligned}
+\delta(\bot,\mathsf{Grant}(g,a,c,\kappa,\sigma))&=\mathsf{owner}(a),\\
+\delta(\mathsf{owner}(a),\mathsf{Delegate}(a,b,c,\kappa,\sigma))
+&=\mathsf{owner}(b)\qquad\text{if }\mathsf{checkSig}(\sigma,a,\langle b,c,\kappa\rangle),
+\end{aligned}
+\]
+and once $(c,\kappa)$ has been granted, replay accepts an act of kind
+$\kappa$ on $c$ only from the principal it holds as owner. Grant and
+delegation records write the capability key and belong to its
+projection; an exercise of a grantable kind reads it, before a grant as
+well as after (Definition~\ref{def:dependence}). So
+$\replay(H)=\langle A,O\rangle$ keeps its form, with $\mathsf{Own}$ the
+restriction of $A$ to capability keys, and the ledger path lemma holds for
+capability keys by the same argument as for commitments. Replay accepts
+$\mathsf{Delegate}(a,b,c,\kappa,\sigma)$ only if, at that point in the
+ledger, $a$ owns $(c,\kappa)$, the signature authenticates the record, and
+the commitment and kind match the signed payload. Because ownership
 moves, a delegation cannot be replayed a second time by its former owner:
-after it, $a$ no longer owns what it would be delegating. Scope and
-expiry constraints, where a policy uses them, are further conjuncts of
-the same check.
+after it, $a$ no longer owns what it would be delegating. Scope and expiry
+constraints, where a policy uses them, are further conjuncts of the same
+check.
+
+Placing ownership in the replay map has a consequence worth stating
+now, because Chapter~\ref{ch:spectrum} depends on it. The principal who
+performed a completed act is part of the history only; the principal who
+currently holds an unconsumed exclusive capability is part of the state,
+and every future authority check consults it.
 
 \section{Results}
 
@@ -3656,10 +5133,20 @@ dependence order of Definition~\ref{def:dependence}, and note that every
 ancestry chain proved in this Part lies within a single projection $H|_c$,
 where ledger order and $\prec_H$ agree.
 
-\chapter{Refusal, Binding, and Evidence}
+\chapter{Consequences of the Ledger Path Lemma}
 \label{ch:rbe}
 
-Throughout this chapter and the next, $C_0$ is ledger consistent,
+The ledger path lemma says that each commitment's projection is a legal
+path of $\delta$ from $\bot$ to its current state. Every local safety
+property of the untyped calculus is a reading of that fact at one
+particular state, and this chapter derives them in turn: refusal
+preservation, binding integrity, witness ancestry, and collapse soundness
+with terminal exclusivity. The first three are short and are given in
+proof-note form. Collapse soundness is the principal theorem, and it is
+followed by an analysis of its boundary: what it does not claim, and
+which premise each of its conclusions rests on.
+
+Throughout this chapter $C_0$ is ledger consistent,
 $C_0\to^{*}C=\langle P,S,A,O,H\rangle$, and Hypothesis~\ref{hyp:stable}
 holds. Write $\mathsf{Open}(c,q)$ for either opening record, $\Pop(c,q)$
 or $\Compensates(a,c,q,d)$.
@@ -3759,8 +5246,8 @@ issues valid witnesses too liberally; the calculus guarantees provenance
 of evidence, not the quality of the predicate, and that limit is stated
 here so that no later chapter is read as claiming otherwise.
 
-\chapter{Collapse Soundness and Terminal Exclusivity}
-\label{ch:collapse}
+\section{Collapse soundness and terminal exclusivity}
+\label{sec:collapse}
 
 This is the principal local safety theorem of the untyped calculus.
 
@@ -3827,6 +5314,106 @@ observations, and the ledger says which rule produced which. Whether this
 is more than a relabelling of a family of observational equivalences is
 the question of Chapter~\ref{ch:spectrum}.
 \end{remark}
+
+\section{The boundary of collapse soundness}
+
+Collapse soundness is easy to over-read. Its conclusion is a statement
+about a ledger, and each of its clauses rests on a particular premise of
+$\delta$ or on a particular hypothesis. This section separates what the
+theorem says from what it might be taken to say, and, for each premise,
+gives the smallest history showing what fails without it.
+
+\paragraph{Validity is not truth.} The theorem concludes $\valid(w,c,v)$:
+the witness is acceptable, under the verifier whose version it records,
+as evidence for the value $v$ at commitment $c$. It does not conclude that
+$v$ is correct about anything outside the calculus. A verifier that
+accepts too liberally produces valid witnesses for false values, and every
+theorem of this book continues to hold for them. Collapse soundness is a
+theorem about the provenance of evidence, and the quality of the evidence
+predicate is a separate question, answered, if at all, outside the
+calculus (see the remark after Corollary~\ref{cor:witness}).
+
+\paragraph{Soundness of collapse is not adequacy of the observation
+rule.} The theorem concludes $o=\mathsf{observe}_k(v)$: the observation is
+what rule $k$ computes from the verified value. Whether rule $k$ is a good
+reading of $v$ for the consumer's purpose, whether it loses information
+the consumer needed or rounds in a way the consumer did not expect, is
+adequacy of the rule, and the calculus neither states nor checks it. What
+it guarantees is that the ledger names the rule, so that an observer who
+disputes the rule can see which one was applied and re-apply another to
+the same $v$.
+
+\paragraph{History exclusivity, operational exclusivity, static
+exclusivity.} Three results are easily confused.
+Corollary~\ref{cor:terminal-history} holds for every replay-defined
+ledger with no further hypothesis: replay rejects a second terminal
+record. Operational exclusivity, that no execution ever \emph{produces} a
+second terminal record, needs Hypothesis~\ref{hyp:atomic}; without it,
+two replicas that each read $\mathsf{verified}(v,w)$ can append
+\[
+\Collapse(a,c,k,w,o)\quad\text{and}\quad\Refuse(a',c,r)
+\]
+concurrently, and the merged ledger, seven records including the four of
+the verified path, is simply not replay-defined. That is the minimal
+countermodel for dropping atomicity: the history form survives, as a
+rejection, and the operational form fails. Static exclusivity, that no
+program even \emph{contains} two components able to race, is the typed
+result of Corollary~\ref{cor:norace}.
+
+\paragraph{What each premise of $\delta$ buys.} Consider variants of
+$\delta$, each dropping one condition, and in each the smallest history
+the variant accepts and the actual $\delta$ rejects. Write $V$ for the
+four-record verified path
+$\Pop(c,q)\,;\Bind(a,c,b)\,;\Transform(c,f,b,v)\,;\Verify(a',c,v,w)$.
+\begin{itemize}[leftmargin=1.5em]
+\item \emph{Dropping commitment indexing}, so that verification checks
+$\valid(w,v)$ rather than $\valid(w,c,v)$. The countermodel is $V$ with
+$w$ issued for a different commitment $c'$ with the same value. It has
+four records, and it breaks the conclusion that the witness was produced
+for this commitment. A certificate issued for one applicant's file then
+certifies any other file that happens to contain the same data.
+\item \emph{Dropping value indexing}, so that verification checks
+$\valid(w,c)$. The countermodel is $V$ with $w$ issued for $(c,v')$,
+$v'\ne v$, again four records. The witness then certifies the commitment
+rather than the result, and a later transformation could not be
+distinguished from the one verified; in this calculus there is no later
+transformation, but the conclusion $\valid(w,c,v)$ fails.
+\item \emph{Dropping witness matching at collapse}, so that the collapse
+record may carry any witness. The countermodel is
+$V\,;\Collapse(a'',c,k,w',o)$ with $w'\ne w$ and $w'$ valid for nothing, five records. The collapse
+record then names evidence with no ancestry in the ledger, and an auditor
+who checks the record against its own witness is misled.
+\item \emph{Dropping the observation check.} The countermodel is $V$
+followed by a collapse whose observation $o'$ differs from
+$\mathsf{observe}_k(v)$, five records in all, and the conclusion
+$o=\mathsf{observe}_k(v)$ fails.
+\item \emph{Allowing records after a terminal state.} The countermodel is
+$V$ followed by a correct collapse and then a refusal of $c$, six records
+in all, with two terminal records for one commitment: history exclusivity fails, and
+refusal preservation fails in the other order.
+\end{itemize}
+None of these is exotic. Each is the form a plausible simplification of
+$\delta$ would take, and each is caught by exactly one premise. The
+premises are independent: in each countermodel every other premise
+holds.
+
+\paragraph{Stability of the observation rule.} Hypothesis~\ref{hyp:stable}
+fixes $\mathsf{observe}_k$ for the duration of an execution relative to
+recorded versions. If rule $k$ is redefined between the collapse and a
+later audit, so that $\mathsf{observe}'_k(v)=o'\ne o$, then replay under
+the new rule rejects a collapse that was correct when it happened; if the
+rule is redefined so that it agrees with a wrong $o$, replay accepts a
+collapse that was not. The minimal countermodel is the five-record
+successful history itself, replayed under a changed rule. The practical
+reading is that a rule index names a version, and the ledger that records
+$k$ records enough to re-run the rule that was actually used.
+
+\paragraph{Atomic update.} The collapse rule reads $\mathsf{verified}(v,w)$
+and writes $\mathsf{collapsed}(o)$ in one step. Its soundness does not
+depend on atomicity, since the history form is checked by replay whatever
+the interleaving; its exclusivity does, as above. This division, soundness
+from the fold and exclusivity from the map, is the one that the replicated
+setting of Chapter~\ref{ch:sequencer} makes precise.
 
 \chapter{Compensation}
 \label{ch:compensation}
@@ -4175,9 +5762,22 @@ question is whether distinct records may arrive in a different order.
 
 \begin{definition}[Independence and dependence order]
 \label{def:dependence}
-Records $\rho$ and $\sigma$ are \emph{independent}, written $\rho\,I\,\sigma$,
-when $\subj(\rho)\neq\subj(\sigma)$ and neither is a compensation record
-whose predecessor is the other's subject. Two histories are \emph{trace
+Each record \emph{writes} one key, $\mathrm{wr}(\rho)$, and \emph{reads}
+a set of further keys, $\mathrm{rd}(\rho)$. Keys are commitments and, once
+exclusive authority is in use, capability keys $(c,\kappa)$
+(Chapter~\ref{ch:authority}). A record writes its subject, or, for a grant
+or delegation, its capability key. A compensation reads its predecessor;
+an act of kind $\kappa$ on $c$ reads $(c,\kappa)$ whenever $\kappa$ is a
+grantable kind, whether or not a grant has yet occurred; no other record
+reads anything. The read is unconditional for a reason: an ungated
+exercise made before a grant must not commute past the grant, after which
+the same exercise by a non-owner would be rejected. Records $\rho$ and $\sigma$ are
+\emph{independent}, written $\rho\,I\,\sigma$, when
+$\mathrm{wr}(\rho)\ne\mathrm{wr}(\sigma)$, $\mathrm{wr}(\rho)\notin
+\mathrm{rd}(\sigma)$, and $\mathrm{wr}(\sigma)\notin\mathrm{rd}(\rho)$:
+neither writes a key the other reads or writes. Without capability keys
+this says that the subjects differ and neither is a compensation of the
+other's subject. Two histories are \emph{trace
 equivalent}, $H\sim_I H'$, when one can be obtained from the other by
 finitely many exchanges of adjacent independent records. The
 \emph{dependence order} $\prec_H$ is the transitive closure of the relation
@@ -4193,10 +5793,9 @@ is, and when defined they are equal.
 \begin{proof}
 It suffices to treat one exchange, $H=H_1\cdot\rho\cdot\sigma\cdot H_2$ and
 $H'=H_1\cdot\sigma\cdot\rho\cdot H_2$ with $\rho\,I\,\sigma$. From the
-state reached after $H_1$, applying $\rho$ reads and writes the map at
-$\subj(\rho)$, and if $\rho$ is a compensation record, also reads it at the
-predecessor. By independence, $\sigma$ writes neither of these keys, and
-symmetrically. So each application is defined, and produces the same
+state reached after $H_1$, applying $\rho$ writes the map at
+$\mathrm{wr}(\rho)$ and consults it only there and at $\mathrm{rd}(\rho)$.
+By independence, $\sigma$ writes none of these keys, and symmetrically. So each application is defined, and produces the same
 update, whether it comes first or second. The observation components are
 unions of sets and commute. The remainder $H_2$ is then applied to equal
 states.
@@ -4205,7 +5804,7 @@ states.
 \begin{corollary}
 The disposition and observation state recoverable from a ledger is a
 function of its Mazurkiewicz trace $[H]_{\sim_I}$. Every ancestry chain of
-Chapters~\ref{ch:rbe} and \ref{ch:collapse} is a $\prec_H$-chain.
+Chapter~\ref{ch:rbe} is a $\prec_H$-chain.
 \end{corollary}
 
 \begin{proof}
@@ -4226,24 +5825,495 @@ information is for, given that replay does not need it.
 
 \chapter{Petri Nets, Traces, and Event Structures}
 \label{ch:eventstructures}
-\plan{Occurrence nets, Mazurkiewicz traces, and prime event structures with
-causality and conflict. Starting from Proposition~\ref{prop:commute},
-constructs an event structure from a ledger: events are records,
-causality is $\prec_H$, and conflict is the relation between two terminal
-records for one subject, which Corollary~\ref{cor:terminal-history}
-already shows can never both occur. Tests the first comparative claim and
-isolates the residue: whether refusal is exactly conflict, and what
-role the reasons and witnesses play, which an event structure does not
-carry.}
+
+The first comparative claim of the Preface is that the calculus's nearest
+formal relative is the theory of event structures. This chapter settles
+it. It does so by building two event structures from the calculus, one
+from a single history and one from all the continuations a configuration
+admits, and proving that the second is a prime event structure whose
+configurations are exactly the executions up to trace equivalence. The
+residue that ordinary event structures do not carry is then isolated by a
+separation result.
+
+The two constructions must be kept apart, because a single ledger contains
+only the branch that happened. Conflict describes alternatives that did
+not happen, and no ledger can record those. So the occurrence structure
+$\mathcal O(H)$ of one history has no conflict at all, while the branching
+structure $\mathcal W(C)$ of a configuration is where conflict lives.
+
+\section{The occurrence structure of a history}
+
+\begin{definition}[Occurrence structure]
+For a history $H$ with $\replay(H)$ defined, let
+\[
+\mathcal O(H)=\langle E_H,\le_H,\varnothing,\lambda_H,\eta_H\rangle,
+\]
+where $E_H$ is the set of positions of $H$ (record occurrences); $\le_H$ is
+the reflexive closure of the dependence order $\prec_H$ of
+Definition~\ref{def:dependence}; the conflict relation is empty;
+$\lambda_H(i)$ is the action kind and subject of the record at position
+$i$; and $\eta_H(i)$ is the rest of the record: principal, request, value,
+witness, certificate, reason, observation rule, and obligation, as the
+record kind has them.
+\end{definition}
+
+Events are occurrences rather than record values as a matter of principle,
+but within one replayable history the distinction is harmless: no record
+occurs twice (Lemma~\ref{lem:once}). Across branches it is not harmless,
+since the same record value can occur after different pasts, and the
+branching construction below identifies events by their pasts for that
+reason.
+
+\begin{theorem}[Trace invariance of occurrence structures]\label{thm:otrace}
+If $H\sim_I H'$ then $\mathcal O(H)\cong\mathcal O(H')$ by an isomorphism
+that preserves $\le$, $\lambda$, and $\eta$, though not ledger positions.
+\end{theorem}
+
+\begin{proof}
+It suffices to treat one exchange of adjacent independent records at
+positions $i,i+1$. Map each position to the position of the same record
+in $H'$, which swaps $i$ and $i+1$ and fixes the rest. Labels and
+annotations are preserved because the records are. Independence is a
+relation on records, so the pair $(i,i+1)$ is unrelated in both orders,
+and every other pair of records keeps its relative order, so the
+dependence relation, and with it its transitive closure, corresponds.
+\end{proof}
+
+This is the event-structural form of Proposition~\ref{prop:commute}. Replay
+depends only on the trace, and the occurrence structure is the trace
+presented as a partial order.
+
+\section{The branching structure of a configuration}
+
+Fix a consistent configuration $C$ with history $H_0$. Call a finite
+sequence of records $K$ an \emph{admissible extension} if
+$\replay(H_0\cdot K)$ is defined. Replay here is the extended replay of
+Chapter~\ref{ch:authority}: its map is keyed by commitments and, once
+exclusive authority is in use, by capability keys $(c,\kappa)$, whose
+values record the current owner, and dependence is the read/write
+dependence of Definition~\ref{def:dependence}. Without that extension a
+grant followed by a delegation would be invisible to replay, and two
+exercises of one capability by different principals could both appear
+admissible. This is the ledger-level semantics of
+Chapter~\ref{ch:layers}, the behaviour of the universal process; a
+particular program realizes a subset of it.
+
+\begin{definition}[Branching disposition structure]\label{def:wc}
+An admissible extension $K$ is \emph{prime} if its last record is the
+unique maximal element of its dependence order. The events of
+$\mathcal W(C)$ are prime extensions up to trace equivalence. For an
+admissible extension $K$ and a position $i$ of $K$, write $\partial_K(i)$
+for the event given by the $\prec_K$-downset of $i$, listed in any order
+compatible with $\prec_K$. Then
+\begin{itemize}[leftmargin=1.5em]
+\item $e\le e'$ when $e=\partial_K(i)$ and $e'=\partial_K(j)$ for some
+admissible $K$ with $i\preceq_K j$;
+\item $e\,\#\,e'$ when no admissible extension contains both, that is,
+there is no $K$ with $e=\partial_K(i)$ and $e'=\partial_K(j)$;
+\item $\lambda(e)$ and $\eta(e)$ are those of the last record of $e$.
+\end{itemize}
+For an admissible $K$, write $\mathrm{ev}(K)=\{\partial_K(i)\mid i\text{ a
+position of }K\}$.
+\end{definition}
+
+A record value may be the last record of several events, with different
+pasts: a binding record after an ordinary opening and the same binding
+record after a compensating opening are different events, and in
+conflict. This is the reason events are prime extensions rather than
+records.
+
+\begin{lemma}[Same key, same chain]\label{lem:chain}
+Let $X$ be a finite set of events that is downward closed and pairwise
+non-conflicting. Then any two events of $X$ whose last records are
+dependent are $\le$-comparable. In particular, for each key $x$, a
+commitment or a capability key, the events of $X$ whose last record writes
+$x$ form a chain, and every event whose last record reads $x$ is comparable
+with each of them.
+\end{lemma}
+
+\begin{proof}
+Take $e,e'\in X$ with dependent last records. They do not conflict, so
+some admissible $K$ has $e=\partial_K(i)$ and $e'=\partial_K(j)$. The
+records at $i$ and $j$ are dependent, so they are $\prec_K$-ordered, say
+$i\prec_K j$, whence $e\le e'$. Two records that write the same key are
+dependent, and so are a record that writes a key and a record that reads
+it.
+\end{proof}
+
+\begin{theorem}[Binary consistency]\label{thm:binary}
+$\mathcal W(C)$ is a labelled prime event structure: $\le$ is a partial
+order with finite downsets, and $\#$ is irreflexive, symmetric, and
+hereditary. Moreover, a finite set of events $X$ is a configuration,
+downward closed and pairwise non-conflicting, if and only if
+$X=\mathrm{ev}(K)$ for some admissible extension $K$; and
+$\mathrm{ev}(K)=\mathrm{ev}(K')$ if and only if $K\sim_I K'$.
+\end{theorem}
+
+\begin{proof}
+\emph{Order and conflict.} Every event is a finite prime extension, so its
+downset is finite. Antisymmetry holds because $e\le e'$ makes $e$ a
+prefix of $e'$ up to trace equivalence, and prefixes in both directions
+are equal. Conflict is irreflexive and symmetric by definition. It is
+hereditary because if $e'\le e''$ and some $K$ contained $e$ and $e''$,
+then $K$ would contain the prefix $e'$ of $e''$ too.
+
+\emph{Configurations from executions.} $\mathrm{ev}(K)$ is downward closed,
+since the downset of a downset is contained in it, and pairwise
+non-conflicting, since $K$ contains all of it.
+
+\emph{Executions from configurations.} Let $X$ be a configuration and
+list its events in any order compatible with $\le$, taking the last
+record of each. Call the result $K$. We show $\replay(H_0\cdot K)$ is
+defined by checking each clause of $\delta$ where it is applied. Fix a
+key $x$, a commitment or a capability key. By Lemma~\ref{lem:chain} the
+events of $X$ that write $x$ form a chain, so the $x$-projection of $K$
+lists them in chain order. The greatest of them, $e_{\max}$, is a prime
+extension whose own $x$-projection contains every earlier write of $x$ it
+depends on, which is all of them; since each event of the chain is a
+prefix of $e_{\max}$, those records are exactly the $x$-writing events of
+$X$. So the $x$-projection of $K$ is the $x$-projection of $e_{\max}$,
+which is a legal path because $e_{\max}$ is admissible.
+
+It remains to check the clauses of $\delta$ that consult a key other than
+the one written. There are two: a compensation reads its predecessor $d$
+and needs it terminal, and an act of grantable kind $\kappa$ on $c$
+reads $(c,\kappa)$ and needs the key either ungranted or owned by its own
+principal. The argument is the same for both. Let
+$e$ be the reading event and $x$ the key read. The reading record depends
+on every write of $x$, so every write of $x$ that preceded it in the
+admissible extension defining $e$ is in $e$'s past; by downward closure
+those writes are in $X$ and precede $e$ in $K$. Any other write of $x$ in
+$X$ is, by Lemma~\ref{lem:chain}, comparable with $e$ and not below it, so
+it lies above $e$ and follows it in $K$. Hence at $e$'s position in $K$ the
+value of $x$ is exactly the value it had when $e$ was admissible: a
+terminal state of $d$ in the first case, and either $\bot$ or
+$\mathsf{owner}(p)$ for $e$'s principal $p$ in the second. For compensation there is no later write,
+since terminal states are final; for capabilities there may be one, a
+delegation away from $p$, and the argument places it after the exercise.
+The settled-obligation sets are part of each subject's own state and are
+covered by the path argument. Hence $K$ is admissible. Its events are
+$X$: the past of each position of $K$ is the corresponding event's past,
+because by Lemma~\ref{lem:chain} dependent events of $X$ are comparable,
+so the dependence order of $K$ restricted to each event's downset is that
+event's own order.
+
+\emph{Uniqueness up to trace.} Two linearizations of $X$ compatible with
+$\le$ order every comparable pair alike and, by Lemma~\ref{lem:chain},
+every dependent pair is comparable, so they differ only in the order of
+independent records, which is trace equivalence. Conversely, trace
+equivalent extensions have the same downsets, hence the same events.
+\end{proof}
+
+The theorem's content is in the word \emph{binary}. A set of events that
+is consistent pair by pair is consistent as a whole. That is not automatic:
+a constraint such as ``at most two commitments may be refused'' is
+consistent pair by pair and inconsistent in threes, and a calculus with
+such a constraint would need a general event structure with a consistency
+predicate on sets, not a prime one. The proof shows why the calculus has
+no such constraint: every clause of $\delta$ reads the path of the key it
+writes, together with at most one other key's current value, a
+predecessor's terminality or a capability's owner, and each of these is
+fixed by the chain of writes to that key, which pairwise comparability
+already orders.
+
+\begin{corollary}[Claim 1, positive part]\label{cor:claim1}
+At the ledger level, the semantics of a configuration is a labelled prime
+event structure: its configurations are its executions up to trace
+equivalence, and the Causal Shuffle theorem (Theorem~\ref{thm:shuffle})
+is the statement that replay is a function on configurations.
+\end{corollary}
+
+\section{The residue}
+
+The labels of $\mathcal W(C)$ carry more than an ordinary event structure
+needs. Write
+\[
+U\langle E,\le,\#,\lambda,\eta\rangle=\langle E,\le,\#,\lambda\rangle
+\]
+for the reduct that forgets the annotations, keeping only action kinds and
+subjects.
+
+\begin{proposition}[Forgetting the annotations]\label{prop:forget}
+There are histories $H_1,H_2$ with $U(\mathcal O(H_1))\cong
+U(\mathcal O(H_2))$ and $\mathcal O(H_1)\not\cong\mathcal O(H_2)$, which
+differ only in the observation rule of a collapse, and whose collapses
+produce the same observed value.
+\end{proposition}
+
+\begin{proof}
+Let $\mathsf{observe}_{k_1}(v)=\mathsf{observe}_{k_2}(v)=o$ for rules
+$k_1\ne k_2$, and let $H_i$ be the successful history of
+Chapter~\ref{ch:lts} ending in $\Collapse(a,c,k_i,w,o)$. Both reducts are a
+chain of five events with the same kinds and subject. Any isomorphism of
+the full structures must match the collapse events, whose annotations
+differ in the rule.
+\end{proof}
+
+The same construction separates histories that differ only in a refusal
+reason, a verification certificate, an acting principal, or the chain of
+delegations behind an act. The reduct therefore preserves causality,
+conflict, concurrency, and the kind of each act, and forgets exactly the
+material on which the book's guarantees rest: who acted and with what
+authority (Theorem~\ref{thm:auth}), which evidence a verification rests on
+and for which commitment (Corollary~\ref{cor:witness}), why a refusal was
+made, and under which rule an observation was produced
+(Chapter~\ref{ch:lts}).
+
+It would be a mistake to state the residue as ``event structures cannot
+carry witnesses''. They can carry any labels one likes. The accurate
+statement has two parts. First, the ordinary reduct forgets these
+distinctions, and the enriched structure keeps them. Second, the
+calculus supplies something an event structure does not: the rule that
+generates $\mathcal W(C)$. Which events exist depends on the annotations,
+through $\valid$, $\mathsf{checkCert}$, $\mathsf{observe}_k$, and the
+authority policy, which are predicates over unbounded data. An event
+structure is a description of a behaviour; the calculus is a way of
+producing one from evidence and authority.
+
+\section{Petri nets}
+
+The same picture has a net reading. A single commitment is a state-machine
+net with one token: places are lifecycle state kinds and transitions are
+record kinds, with the data carried by states and records as colours, so
+that the net is coloured. Its unfolding in the sense of Nielsen, Plotkin,
+and Winskel is an occurrence net whose event structure is the part of
+$\mathcal W(C)$ with that subject.
+
+Compensation adds one kind of arc between the nets of different
+commitments: the successor's opening transition tests the predecessor's
+terminal place without consuming its token. Nets with such read arcs,
+contextual nets, unfold in general not to prime but to asymmetric event
+structures, because an event that reads a place must precede any event
+that later consumes the token there. That complication does not arise
+here. Terminal places are never consumed, since nothing follows a
+terminal state, so no reading event ever competes with a consuming one,
+and the prime structure of Theorem~\ref{thm:binary} suffices. The
+calculus sits, in net terms, at the simple end of the contextual-net
+spectrum, and it does so because terminality is final.
+
+\section{Bounded checks}
+
+The laboratory builds $\mathcal W$ from the empty configuration, with
+events computed as prime extensions and identified by a canonical
+linearization of their pasts, and checks four bounded propositions over
+the admissible ledgers of at most six records: every ledger's event set
+is a configuration (P-ESRealized); every configuration of at most six
+events replays (P-ESComplete); conflict is hereditary (P-ESHeredity); and
+all linearizations of each ledger yield the same events with the same
+order (P-ESTraceIso). The run uses laboratory version~5, whose replay
+includes capability ownership, grants, and delegations, with read/write
+dependence. The class has $11{,}032$ ledgers, $605$ events, $162{,}702$
+conflicting pairs, $1{,}819$ configurations, and $334{,}871$
+linearizations, and all four hold.
+
+The checker needed one correction worth recording. Its first version
+approximated compatibility of two events by asking only whether the union
+of their pasts replays. That is weaker than the definition: two events
+can have jointly replayable pasts while containing dependent records that
+neither past orders, so that no single execution contains both with the
+pasts they claim. With the approximation, P-ESHeredity failed on $418$
+pairs at five records. The corrected checker also requires every
+dependent pair in the union of the pasts to be causally ordered, which is
+what Definition~\ref{def:wc} says, and heredity then holds. The failure
+was the checker's, not the theorem's, and it is recorded because it is the
+kind of error a bounded check is liable to: a plausible approximation of a
+definition that the definition does not license.
+
+Two further observations came out of the run. As a negative control,
+adding the ternary constraint ``at most two refusals'' to replay, with
+three commitment identities available and the authority and settlement
+records disabled, makes P-ESComplete fail on eight of $774$
+configurations, as Theorem~\ref{thm:binary}'s discussion predicts; the
+check detects the failure of binary consistency it exists to detect. And
+only $1{,}622$ of the $1{,}819$ configurations are realized by a ledger the
+enumerator produced. The rest, such as the single event $\Pop(c_2)$, are
+perfectly admissible but use a commitment name the enumerator, which
+always picks the least fresh name, never chooses first. The event
+structure is closed under renaming where the enumerator is not, which is
+a small, concrete instance of why events should be identified up to trace
+and name rather than by the ledger that happened to produce them.
 
 \chapter{Logical Clocks, CRDTs, and the Single Sequencer}
 \label{ch:sequencer}
-\plan{Relates happened-before and its linear extensions to the arbiter's
-sequence. Given that replay depends only on the trace, asks what the total
-order is needed for: event identity assignment
-(Hypothesis~\ref{hyp:coherence}), freshness of commitment identities
-across replicas, and the arbitration of competing compensations. Asks which
-disposition programs admit a conflict-free replicated implementation.}
+
+The kernel assumes a single sequencer, an arbiter that assigns every event
+a place in one total order. Replay does not need that order
+(Proposition~\ref{prop:commute}), and the event-structure semantics does
+not contain it (Theorem~\ref{thm:binary}). This chapter asks what the
+total order is for, and answers with a theorem: typed programs whose
+commitments are statically owned converge under replication without any
+replica waiting for agreement, and every obligation that does need
+agreement can be named.
+
+\section{Happened-before}
+
+Lamport's happened-before relation on a distributed execution orders two
+events when they occur in sequence at one site or are linked by a
+message. The dependence order $\prec_H$ of a ledger is the part of
+happened-before that replay consults: two records are ordered by it
+exactly when one writes a key the other reads or writes
+(Definition~\ref{def:dependence}), that is, when they concern the same
+commitment, one is a compensation of the other's commitment, or they
+touch the same capability key. Any linear extension of happened-before is
+therefore a linearization of the dependence order, and by the Causal
+Shuffle theorem every such linearization replays to the same state. A
+Lamport clock, which yields one such linear extension, is enough to
+produce a ledger an auditor can replay; nothing finer is needed for that
+purpose.
+
+\section{Convergence without consensus}
+
+Consider an execution distributed over replicas $R_1,\ldots,R_m$. The
+word \emph{coordination} is used here in a local, checkable sense.
+
+\begin{definition}[Coordination-free production]\label{def:coordfree}
+A replicated execution is \emph{coordination free} when no replica, in
+order to append a record, waits for a message from or agreement with any
+other replica. Communication is limited to dissemination: a replica
+sends the records it appends and applies the records it receives, and
+neither step blocks the production of new records at the sender.
+\end{definition}
+
+Causal delivery may delay the \emph{application} of a received record,
+but not the production of any record, so it is compatible with the
+definition.
+
+\begin{definition}[Static ownership]\label{def:ownership}
+A replicated execution has \emph{static ownership} when each commitment
+$c$ has an owner replica $\mathrm{own}(c)$, fixed when $c$ is introduced,
+such that
+\begin{enumerate}[label=(\roman*)]
+\item every record with subject $c$, and every grant or delegation of a
+capability key $(c,\kappa)$, is appended first at $\mathrm{own}(c)$, in
+the order of a single execution there; that is,
+$\mathrm{own}((c,\kappa))=\mathrm{own}(c)$;
+\item each replica draws new commitment names and event identities from
+its own namespace, for instance pairs of the replica's name and a local
+counter;
+\item records are disseminated with causal delivery: a replica applies a
+received record only after every record it depends on in the dependence
+order.
+\end{enumerate}
+\end{definition}
+
+Typed programs fit the definition naturally. A commitment's right is
+held by one occurrence in the program text (Lemma~\ref{lem:own}), so
+placing that occurrence at a replica makes the replica the commitment's
+owner, and a pop executed there creates a commitment it owns.
+
+\begin{theorem}[Coordination-free convergence under static ownership]
+\label{thm:coordfree}
+Under static ownership, the execution is coordination free in the sense
+of Definition~\ref{def:coordfree}, and at every moment:
+\begin{enumerate}[label=(\alph*)]
+\item each replica's local ledger, the records it has applied in the order
+it applied them, has a defined replay;
+\item two replicas that have applied the same set of records have the
+same replay state; and
+\item that state is the replay of any linearization of the global
+dependence order restricted to that set.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Let $X$ be the set of records a replica has applied. By causal delivery
+$X$ is downward closed in the global dependence order, and the replica
+applied them in an order compatible with it: records writing one key,
+a commitment or one of its capability keys, were produced in order at a
+single owner and are delivered in that order, and a record that reads a
+key, a compensation or an exercise of a granted kind, is applied only
+after the writes of that key it depends on. The
+global execution's ledger is replay-defined, and $X$ is a downset of its
+dependence order, so some linearization of the global ledger begins with a
+linearization of $X$, whose replay is defined as a prefix of a defined
+fold. Every linearization of $X$ is trace equivalent to that one, since
+they agree on all dependent pairs, and so replays identically
+(Proposition~\ref{prop:commute}). This gives (a) and (c), and (b) follows
+from (c). Freshness and identity coherence hold without coordination
+because each replica draws from its own namespace. Coordination freedom
+holds because every check a record must pass at production time consults
+only keys owned by the producing replica, or, for compensation, the
+terminal state of a predecessor, which the producer has already applied
+and which no later record can change.
+\end{proof}
+
+In the vocabulary of replicated data types, the ledger under static
+ownership is a grow-only set of records whose merge is union, and
+convergence follows from the independence of records of distinct
+commitments rather than from any property of a merge function. It is also
+an instance of the principle, stated by Hellerstein and Alvaro, that
+programs whose outputs grow monotonically with their inputs need no
+coordination. A ledger only grows, a commitment's state is a function of
+its own records, and the only read across replicas, compensation's test of
+a predecessor's terminality, is of a fact that never becomes false. The
+reads of capability keys are not monotone, since ownership moves, but they
+are local: the key and every exercise that reads it live at the same
+owner replica.
+
+\section{What needs coordination}
+
+The theorem locates the need for coordination exactly, by listing what
+static ownership rules out.
+
+\begin{itemize}[leftmargin=1.5em]
+\item \emph{Two replicas acting on one commitment.} Operational terminal
+exclusivity relies on the atomic commitment map
+(Hypothesis~\ref{hyp:atomic}). Under static ownership that hypothesis is
+local to the owner, where it holds trivially. Without it, two replicas can
+each read a live state and append incompatible terminal records, and some
+consensus object, a lease, or a single sequencer for that commitment is
+needed. The typed calculus never requires this, since only the owner of a
+right can act on its commitment; the untyped race of
+Chapter~\ref{ch:choice} does.
+\item \emph{Moving ownership.} Failover that transfers a commitment to a
+new owner is a handoff that two replicas must agree on, and it is a
+consensus problem in general.
+\item \emph{Delegation} does not need consensus. A delegation record is
+appended at the owner replica of the commitment, where the capability key
+lives, and every later use of the capability reads that key at the same
+replica, so the check is local.
+\item \emph{Competing compensations} do not need consensus either. Two
+successors of one terminal commitment have distinct subjects and are
+independent of each other; both are admitted, and whether a policy should
+forbid this is a question about policy, not about consistency
+(Appendix~\ref{app:open}).
+\item \emph{Completeness anchors} need a sequence to hash, but not a
+global one. Each owner can chain its own records, and a checkpoint can
+consist of the vector of per-replica chain heads
+(Proposition~\ref{prop:anchor}).
+\end{itemize}
+
+The two kinds of ownership in the delegation bullet should not be
+confused. \emph{Principal delegation} moves the exclusive capability for
+$(c,\kappa)$ from one principal to another; it is a record like any other,
+appended where $c$ lives. \emph{Replica ownership transfer} moves the
+place where records of $c$ are produced; it changes $\mathrm{own}(c)$ and
+leaves static ownership. The first is coordination free because it does
+not change which replica checks it. The second is not, because two
+replicas must agree on which of them now checks. A delegate principal who
+sits at another replica submits its exercises to $\mathrm{own}(c)$; it
+does not thereby become the replica that owns $c$.
+
+What the total order of the kernel's single sequencer provides, beyond
+these, is a presentation: one ledger that can be handed to an auditor. By
+the Causal Shuffle theorem any linearization serves equally well, so the
+sequencer's order is a convenience of presentation, not part of the
+semantics.
+
+\section{Outcome}
+
+The purpose of the single sequencer, asked in Appendix~\ref{app:open}, is
+answered. It is needed for exactly one thing the semantics cares about:
+atomicity of competing acts on one commitment, which the typed calculus
+never performs. For typed programs with statically owned commitments,
+record production never waits for agreement and replicas converge
+(Theorem~\ref{thm:coordfree}), and the total order is a choice of
+presentation. The result is scoped to static ownership: replica
+ownership transfer and competing acts on one commitment remain agreement
+problems. The single-sequencer assumption
+of the kernel is therefore stronger than the calculus needs, and the gap
+between the two is precisely the gap between the untyped and the typed
+calculus.
 
 \chapter{Eventual Disposition}
 \label{ch:progress}
@@ -4337,6 +6407,28 @@ inert and every commitment is terminal. Either way, $c$ is eventually
 terminal.
 \end{proof}
 
+\begin{remark}[The well-founded measure]
+The descent step is where a worry about unbounded waiting is answered, and
+it is worth making the measure explicit. Suppose a commitment enters
+$\mathsf{verificationFailed}$ and its owner, instead of refusing, waits on
+an obligation $\omega_0$, then on a fresh $\omega_1$, and so on. Each
+obligation is eventually discharged, so responsiveness holds, and yet $c$
+is never disposed of. This cannot happen in a well-typed program, and
+the reason is the measure $\|O_j\|$, the number of prefixes in the owner
+of $c$ that are not beneath a replication. Every await is a prefix of the
+owner, and every step of the owner, an await's discharge included,
+removes at least one prefix. The owner cannot replenish itself: the right
+for $c$ is never under a replication (\textsc{T-Rep}), and the calculus
+has no other form of recursion. So a commitment can wait on only as many
+obligations as its owner's text contains, and an infinite succession
+$\omega_0,\omega_1,\ldots$ for one commitment would need an infinite
+term. The protocol reading of the same fact is that the session type of a
+commitment (Section~\ref{sec:fidelity}) is finite and every path through it
+ends in $\mathsf{refuse}$ or $\mathsf{collapse}$. If the calculus is later
+extended with recursion that can hold a right, this measure disappears,
+and ``well-founded waiting'' becomes a hypothesis of its own.
+\end{remark}
+
 The proof uses the type system at every step. Ownership is linearity.
 Persistence depends on ownership: no other component can disable the
 owner's prefix. Descent depends on \textsc{T-Rep}: rights are never
@@ -4410,7 +6502,13 @@ The last example does not need a hypothesis of its own. In a well-typed
 program the continuation after a failed verification holds the right, and
 \textsc{T-Nil} forbids it to stop holding it, so it must either refuse
 directly, in which case fairness makes the refusal happen, or wait on an
-obligation, in which case responsiveness does. What some presentations
+obligation. In the second case responsiveness only ends the wait: it
+guarantees that the await is eventually discharged or timed out, and
+nothing more. That the refusal after it then happens follows from
+responsiveness together with the finite descent of the proof of
+Theorem~\ref{thm:eventual}, since settling the wait strictly decreases
+the size of the owner of $c$, and fairness, which makes that
+continuation's enabled refusal fire. What some presentations
 would state separately as ``failed-verification obligations receive an
 authorized response'' is, here, the instance of
 $\mathsf{AllObligationsResponsive}$ for the obligation the failed branch
@@ -4433,23 +6531,359 @@ can express but does not make.
 
 \chapter{Bisimulation and the Spectrum as Collapse Rules}
 \label{ch:spectrum}
-\plan{Recasts bisimilarity, and then trace, failures, testing, and ready
-equivalences, as collapse rules over histories, and compares the result
-with van Glabbeek's spectrum. Settles the third comparative claim, using
-the rule-indexed collapse records of Chapter~\ref{ch:lts} as the test
-case.}
+
+The third comparative claim is that rule-indexed collapse changes the
+theory of equivalence rather than relocating it. This chapter settles it
+by defining the equivalences explicitly before arranging them, proving
+inclusions only where they hold, and giving a smallest separating pair
+for each strict one. The result is not one spectrum but two, one of
+equivalences on histories and one on processes, and a theorem that says
+exactly where they meet.
+
+\section{Equivalences on histories}
+
+Each of the following is a collapse rule in the sense of
+Chapter~\ref{ch:worlds}: a lens on replay-defined histories, and the
+equivalence it induces.
+\begin{center}
+\small
+\begin{tabular}{lll}
+\toprule
+Relation & $H_1$ and $H_2$ are related when & Observer\\
+\midrule
+$\approx_{\mathrm{led}}$ & they are the same sequence & ledger custodian\\
+$\approx_{\mathrm{tr}}$ & they are trace equivalent, $H_1\sim_I H_2$ & auditor of causal history\\
+$\approx_{\mathrm{st}}$ & $\replay(H_1)=\replay(H_2)$ & state observer\\
+$\approx_{\mathrm{ext}}$ & no extension distinguishes them (below) & future experimenter\\
+$\approx_{\mathrm{obs}}$ & they have the same observation set $O$ & consumer of observations\\
+$\approx_{\mathrm{lab}}$ & same multiset of labels $\langle k,o\rangle$ & observer blind to identities\\
+$\approx_{\mathrm{val}}$ & same multiset of observed values $o$ & observer blind to rules\\
+\bottomrule
+\end{tabular}
+\end{center}
+Here $H_1\approx_{\mathrm{ext}}H_2$ holds when, for every sequence of
+records $K$, $\replay(H_1K)$ is defined exactly when $\replay(H_2K)$ is,
+and when both are defined their observation sets agree. It is a testing
+equivalence in the sense of De Nicola and Hennessy, with ledger
+extensions as tests and validity together with observation as the
+outcome.
+
+\begin{proposition}[The history spectrum]\label{prop:hspec}
+\[
+\approx_{\mathrm{led}}\;\subsetneq\;\approx_{\mathrm{tr}}\;\subsetneq\;
+\approx_{\mathrm{st}}\;\subsetneq\;\approx_{\mathrm{ext}}\;\subsetneq\;
+\approx_{\mathrm{obs}}\;\subsetneq\;\approx_{\mathrm{lab}}\;\subsetneq\;
+\approx_{\mathrm{val}}.
+\]
+\end{proposition}
+
+\begin{proof}
+The inclusions: equal sequences are trace equivalent; trace equivalent
+histories replay alike (Proposition~\ref{prop:commute}); histories with
+the same replay state have the same future, since replay is a fold, and
+the same observations; the empty extension shows
+$\approx_{\mathrm{ext}}\subseteq\approx_{\mathrm{obs}}$; the last two
+inclusions forget first commitments and then rules. The separating pairs,
+each minimal:
+\begin{itemize}[leftmargin=1.5em]
+\item $\approx_{\mathrm{tr}}$ but not $\approx_{\mathrm{led}}$:
+$\Pop(c_1,q)\,;\Pop(c_2,q)$ and $\Pop(c_2,q)\,;\Pop(c_1,q)$.
+\item $\approx_{\mathrm{st}}$ but not $\approx_{\mathrm{tr}}$:
+$\Pop(c,q)\,;\Refuse(a,c,r)$ and
+$\Pop(c,q)\,;\Bind(a,c,b)\,;\Refuse(a,c,r)$, which both leave $c$
+refused for reason $r$.
+\item $\approx_{\mathrm{ext}}$ but not $\approx_{\mathrm{st}}$:
+$\Pop(c,q)\,;\Refuse(a,c,r_1)$ and $\Pop(c,q)\,;\Refuse(a,c,r_2)$. By
+Theorem~\ref{thm:ext} below, no extension distinguishes them.
+\item $\approx_{\mathrm{obs}}$ but not $\approx_{\mathrm{ext}}$: the empty
+history and $\Pop(c,q)$, distinguished by the extension $\Bind(a,c,b)$.
+\item $\approx_{\mathrm{lab}}$ but not $\approx_{\mathrm{obs}}$: two
+successful histories that collapse $c_1$ and $c_2$ respectively, with the
+same rule and value.
+\item $\approx_{\mathrm{val}}$ but not $\approx_{\mathrm{lab}}$: two
+successful histories collapsing under rules $k_1\ne k_2$ to the same value
+(Proposition~\ref{prop:forget}).\qedhere
+\end{itemize}
+\end{proof}
+
+\section{Congruence under extension}
+
+A history equivalence $\approx$ is an \emph{extension congruence} when
+$H_1\approx H_2$ implies, for every $K$, that $H_1K$ and $H_2K$ are both
+replay-defined or both not, and $H_1K\approx H_2K$ when they are.
+
+\begin{proposition}\label{prop:extcong}
+$\approx_{\mathrm{led}}$, $\approx_{\mathrm{tr}}$, $\approx_{\mathrm{st}}$,
+and $\approx_{\mathrm{ext}}$ are extension congruences;
+$\approx_{\mathrm{obs}}$, $\approx_{\mathrm{lab}}$, and
+$\approx_{\mathrm{val}}$ are not. Moreover $\approx_{\mathrm{ext}}$ is the
+coarsest extension congruence contained in $\approx_{\mathrm{obs}}$.
+\end{proposition}
+
+\begin{proof}
+Appending $K$ preserves equality and trace equivalence, and replay is a
+fold, which handles the first three. For $\approx_{\mathrm{ext}}$,
+extensions of extensions are extensions. The empty history and $\Pop(c,q)$
+have the same observations and differ after $\Bind(a,c,b)$, which refutes
+the last three. If $\approx$ is an extension congruence contained in
+$\approx_{\mathrm{obs}}$ and $H_1\approx H_2$, then for every $K$ the
+extensions are defined together and related by $\approx$, hence have equal
+observations, so $H_1\approx_{\mathrm{ext}}H_2$.
+\end{proof}
+
+So among the equivalences an observer of outputs might adopt, only those
+at least as fine as $\approx_{\mathrm{ext}}$ can be used compositionally.
+An observer who identifies histories by their observations alone will be
+surprised by the future.
+
+\section{What the future can see}
+
+The coarsest usable equivalence has an exact description. Let $\alpha$
+forget, from each lifecycle state, the data that no later record consults:
+\[
+\begin{gathered}
+\alpha(\mathsf{open}(q))=\mathsf{open},\quad
+\alpha(\mathsf{bound}(q,b))=\mathsf{bound}(b),\quad
+\alpha(\mathsf{transformed}(b,v))=\mathsf{transformed}(v),\\
+\alpha(\mathsf{verified}(v,w))=\mathsf{verified}(v,w),\quad
+\alpha(\mathsf{verificationFailed}(v,\varphi))=\mathsf{verificationFailed},\\
+\alpha(\mathsf{refused}(r))=\mathsf{refused},\quad
+\alpha(\mathsf{collapsed}(o))=\mathsf{collapsed}(o),
+\end{gathered}
+\]
+keeping the set of settled obligations beside each state. On a
+capability key, $\alpha$ is the identity: $\alpha(\mathsf{owner}(a))=
+\mathsf{owner}(a)$. The current holder of an exclusive capability is
+consulted by every later exercise and delegation of it, so it cannot be
+forgotten.
+
+\begin{hypothesis}[Separation of values]\label{hyp:sep}
+For every commitment $c$ and value $v$, verification of $(c,v)$ can
+decide: some witness is valid for it or some authentic failure certificate
+exists for it. For values $v\ne v'$, some witness is valid for $(c,v)$ and
+not for $(c,v')$, and for every witness valid for both, some rule $k$ has
+$\mathsf{observe}_k(v)\ne\mathsf{observe}_k(v')$. At least one observation
+rule exists, every obligation admits an authentic discharge
+certificate, and, where exclusive authority is in use, every principal can
+authenticate a delegation of what it owns and at least two principals
+exist.
+\end{hypothesis}
+
+The hypothesis says only that the evidence and observation predicates are
+rich enough to tell different values apart. Without it, values the
+future cannot tell apart are, for the future, the same value, and the
+theorem below holds with $\alpha$ taken modulo that identification.
+
+\begin{theorem}[Extension full abstraction]\label{thm:ext}
+Under Hypothesis~\ref{hyp:sep}, for replay-defined histories,
+\[
+H_1\approx_{\mathrm{ext}}H_2
+\quad\Longleftrightarrow\quad
+\dom(A_1)=\dom(A_2),\;\;\alpha\circ A_1=\alpha\circ A_2,\;\;O_1=O_2,
+\]
+where $\langle A_i,O_i\rangle=\replay(H_i)$ is the extended replay, whose
+map is keyed by commitments and capability keys
+(Chapter~\ref{ch:authority}). In particular the two histories have the
+same current owner for every granted capability key.
+\end{theorem}
+
+\begin{proof}
+($\Leftarrow$) Each clause of $\delta$ is defined or undefined, and
+produces a state whose $\alpha$-image is determined, from the
+$\alpha$-image of the incoming state and the record alone: binding needs
+the open kind; transformation needs the bound value $b$; verification
+and its failure need the value $v$ and the evidence predicate; refusal
+needs a live kind; discharge and timeout need a live kind and the settled
+set; collapse needs $v$ and $w$, and its observation is
+$\mathsf{observe}_k(v)$; compensation needs the predecessor's kind; pop
+needs the name to be absent; a grant needs the capability key absent; a
+delegation, and an exercise of a granted kind, need the current owner,
+which $\alpha$ keeps. So by induction on $K$ the two extensions are
+defined together, keep equal $\alpha$-images, and add equal observations.
+
+($\Rightarrow$) If $O_1\ne O_2$ the empty extension distinguishes. Suppose
+the observations agree but some key differs. Suppose first it is a
+capability key $(c,\kappa)$. If it is granted on one side only, a grant of
+it is valid on exactly one side. If it is granted on both, to owners
+$a\ne b$, an authenticated delegation from $a$ to a third party, or to $b$,
+is valid on exactly one side. Otherwise the key is a commitment $c$. If
+$c$ is in one domain only, $\Pop(c,q)$ is valid on exactly one side. If the kinds differ and
+both are live, the rows of the refusal completion table for distinct live
+kinds have distinct non-refusal entries, and the corresponding record,
+which exists by the hypothesis, is valid on exactly one side. If one kind
+is live and the other terminal, a refusal is valid on exactly one side.
+Two terminal kinds with equal observations are both refused, since a
+collapse contributes its triple to $O$. If the kinds agree and the
+$\alpha$-data differ: bound values are distinguished by a transformation
+record naming one of them; transformed values by a verification with a
+witness valid for one and not the other; verified states by a collapse
+carrying one witness, or, if the witnesses agree, by a collapse under a
+rule that separates the values; settled sets by a discharge of an
+obligation settled on one side only.
+\end{proof}
+
+The theorem's content is in what $\alpha$ forgets. The request that
+opened a commitment, the input of its transformation once transformed, the
+certificate of a failed verification, and the reason for a refusal are all
+invisible to every possible future. So, in general, are the principals who
+acted: the binder, the refuser, the verifier, and the granter of a
+capability are recorded in the history and consulted by nothing after. No
+continuation of the ledger can depend on them. They are \emph{purely
+historical}: visible to an auditor reading the past, through
+$\approx_{\mathrm{tr}}$ or $\approx_{\mathrm{led}}$, and to no one else.
+
+The exception is exact. Historical principals are extension-invisible
+except where their identity survives in current authority state, and it
+survives there in one way only: as the current owner of an unconsumed
+exclusive capability. The smallest separating pair is
+\[
+H_1=\Pop(c,q)\,;\mathsf{Grant}(g,a,c,\kappa,\sigma),\qquad
+H_2=H_1\,;\mathsf{Delegate}(a,b,c,\kappa,\sigma').
+\]
+Their commitment states agree and neither has observations, yet a
+delegation from $a$ to a third principal $d$ is valid after $H_1$ and not
+after $H_2$, and an exercise of $\kappa$ on $c$ by $b$ is valid
+after $H_2$ and not after $H_1$. The granter $g$ is invisible in both;
+the grantee is not. Past attribution may be observationally inert;
+current authority never is. In the fragment without exclusive
+capabilities, where authority is a fixed policy, no principal's identity
+survives in the state and every principal is purely historical.
+
+\section{Equivalences on processes}
+
+The classical spectrum is a spectrum of equivalences on processes, all of
+which compare possible futures: trace equivalence, failures equivalence,
+the testing equivalences, ready simulation, bisimilarity, and the rest of
+van Glabbeek's linear-time/branching-time spectrum. Through the erasure of
+Chapter~\ref{ch:ccs}, each applies to disposition processes as it applies
+to CCS terms, and nothing about the disposition calculus changes that
+spectrum.
+
+The two spectra are independent.
+
+\begin{proposition}[Past and future are orthogonal]\label{prop:orth}
+There are configurations with identical histories whose processes are
+not trace equivalent, and configurations whose processes are strongly
+bisimilar and whose histories are related by none of the history
+equivalences finer than $\approx_{\mathrm{val}}$.
+\end{proposition}
+
+\begin{proof}
+For the first, take the same history with processes $\mathbf 0$ and
+$\mathsf{pop}\;q\;\mathsf{as}\;c.\mathbf 0$. For the second, take process
+$\mathbf 0$ with two histories that collapse the same commitment under
+different rules to the same value.
+\end{proof}
+
+An observer's notion of ``the same computation'' is therefore a pair: an
+equivalence on pasts and an equivalence on futures. A ledger auditor, a
+state observer, and a process observer are different points in this
+product and need not identify the same executions.
+
+\section{Outcome}
+
+The third comparative claim is settled, in a precise form. The classical
+spectrum is untouched: it is a spectrum of equivalences on futures, and
+rule-indexed collapse does not add to it. What rule-indexed collapse adds
+is a second axis, a spectrum of equivalences on pasts
+(Proposition~\ref{prop:hspec}), orthogonal to the first
+(Proposition~\ref{prop:orth}). The two meet at one point:
+$\approx_{\mathrm{ext}}$, the coarsest past-equivalence compatible with
+extension, is exactly equality of the future-relevant part of the state
+(Theorem~\ref{thm:ext}), and it is strictly coarser than state equality.
+Each individual lens is an ordinary equivalence relation, and none of the
+mathematics here is new. What is new is the arrangement: the insistence
+that equivalence of computations be indexed by which of these observers
+is asking, and the theorem that shows the reasons for decisions are
+visible to exactly one of them.
 
 \chapter{Checking the Layer Translation}
 \label{ch:layers-back}
-\plan{With forward simulation and backward adequacy proved at the level
-of ledgers in Chapter~\ref{ch:layers}, this chapter checks the translation
-against Gorla's encodability criteria, where compositionality and name
-invariance are expected to hold and divergence reflection turns on the
-reading of transformation. It then attacks the transparent-reading
-conjecture: that the kernel's encoding of application agrees with
-evaluation in the lambda layer. A failure there would not undo the ledger
-theorems; it would locate precisely the computational content that the
-kernel does not itself supply.}
+
+Chapter~\ref{ch:layers} proved forward simulation and backward adequacy
+for the translation of disposition records into kernel histories. This
+chapter checks the translation against the remaining criteria of
+Chapter~\ref{ch:encodings} and states precisely the one question it
+leaves open.
+
+\section{The criteria}
+
+The translation is a translation of ledgers, not of processes, so the
+criteria are read with ledgers as terms, appending a record as the only
+operator, and replay-definedness as the admissibility of a term.
+
+\begin{description}[leftmargin=1.5em,style=nextline]
+\item[Compositionality, in the form appropriate to histories.] The
+translation of $H\cdot\rho$ is $\llbracket H\rrbracket$ followed by
+$\llbracket\rho\rrbracket_H$, and $\llbracket\rho\rrbracket_H$ depends on
+$H$ only through the last record of each commitment involved and the set
+of options of the subject not yet popped. It is therefore not
+compositional in Gorla's sense, which asks for one fixed context per
+operator, but it is a \emph{transducer}: a fixed kernel program for each
+record kind, reading the current state of the kernel histories it
+touches. For translations of histories, whose meaning is a fold, this is
+the natural form of compositionality, and the book claims no more.
+\item[Name invariance.] For every permutation $\sigma$ of commitment
+names, $\llbracket\sigma H\rrbracket=\sigma\llbracket H\rrbracket$, since
+options are records and permutations act on records pointwise, and the
+guards are equivariant because they are the premises of rules that are
+(Theorem~\ref{thm:equiv}).
+\item[Operational correspondence.] Forward simulation and backward
+adequacy (Theorems~\ref{thm:fwd} and~\ref{thm:bwd}).
+\item[Divergence reflection.] Each record translates to at most three
+kernel events, so a translated history of finite length has finite
+translation, and under the opaque reading nothing in the kernel diverges
+on behalf of a record.
+\item[Success sensitiveness.] With success a collapse under a designated
+rule, a ledger contains a success record exactly when its translation
+pops a committed observation under that rule.
+\item[Injectivity.] Decoding a translation recovers the ledger, so the
+translation is injective and fully abstract for $\approx_{\mathrm{led}}$
+on the disposition side and equality on the kernel side. Full abstraction
+for coarser equivalences would need a kernel analogue of trace
+equivalence, which the kernel's own specification would have to supply.
+\end{description}
+
+Under the opaque reading and at the level of ledgers, the translation
+therefore meets every criterion, compositionality in the transducer form.
+The disposition calculus is a conservative guarded presentation of the
+kernel in the sense Chapter~\ref{ch:layers} claimed.
+
+\section{The transparent reading}
+
+What the criteria do not show is that the kernel performs the
+computations the guards check. Under the opaque reading, the value of a
+transformation enters as recorded data whose correctness the guard
+asserts; the kernel commits to it without computing it. The transparent
+reading would have the kernel compute it.
+
+\begin{hypothesis}[Transparent reading, conjectured]\label{hyp:transparent}
+Let $\mathrm{Enc}$ be the kernel's encoding of lambda terms, with
+abstraction as $\Bind(x,\Omega)$ and application as
+$\Collapse_{\mathrm{subst}}(\Bind(u,x))$. For closed terms $f$, $b$ and
+every value $v$,
+\[
+\Collapse_{\mathrm{subst}}^{*}\bigl(\Bind(\mathrm{Enc}\,f,\mathrm{Enc}\,b)\bigr)
+=\mathrm{Enc}\,v
+\quad\Longleftrightarrow\quad f\,b\Downarrow v,
+\]
+where $\Collapse^{*}_{\mathrm{subst}}$ iterates substitution collapse to
+a normal form, and the left side is undefined exactly when $f\,b$
+diverges.
+\end{hypothesis}
+
+The canonical specification states a theorem relating its substitution
+collapse to a single $\beta$-step. The conjecture asks for more in three
+respects: that iterating the collapse follows the call-by-value strategy
+of Chapter~\ref{ch:lambda} rather than some other; that it agrees with
+evaluation on products, sums, and fixed points, not only on pure
+abstraction and application; and that it diverges exactly when
+evaluation does. A proof would turn the conservative guarded presentation
+into a formalization in the full sense, with the kernel computing what the
+guard now asserts. A failure would not disturb any ledger theorem of this
+book. It would locate precisely the computational content the kernel does
+not supply, and would make the lambda layer a genuine addition to the
+kernel rather than a presentation of part of it.
 
 \chapter{Typed Disposition Safety}
 \label{ch:typedsafety}
@@ -4523,9 +6957,147 @@ abandoned, and that no well-typed program contains a competitor for a
 commitment it does not own.
 
 \chapter{A Map of Positions}
-\plan{One table collecting every comparison: calculus, direction of
-encoding, criteria met, outcome, and grade of assertion. Answers the three
-comparative claims in their final form.}
+\label{ch:map}
+
+This chapter collects the comparisons of the book in one place and
+answers the three claims of the Preface in their final form.
+
+\section{The comparisons}
+
+\begin{center}
+\small
+\begin{tabular}{L{2.8cm}L{3.6cm}L{4.4cm}L{1.6cm}}
+\toprule
+Comparison & Result & Outcome & Grade\\
+\midrule
+Kernel (ledger level) &
+Thms.~\ref{thm:fwd}, \ref{thm:bwd}; Ch.~\ref{ch:layers-back} &
+conservative guarded presentation, opaque reading &
+proved\\
+Kernel computes &
+Hyp.~\ref{hyp:transparent} &
+transparent reading &
+conjecture\\
+Lambda layer &
+Lem.~\ref{lem:det}; normalization &
+deterministic; terminating without $\mathsf{fix}$ &
+proved; cited\\
+Linear logic &
+Props.~\ref{prop:affine}, \ref{prop:nok} &
+kernel affine, rights linear, facts exponential &
+proved; cited\\
+CCS into typed calculus &
+Thm.~\ref{thm:ccssep} &
+separation: no compositional, success-sensitive encoding &
+proved\\
+Communication-free CCS &
+App.~\ref{app:worked} &
+all criteria, fully abstract (weak bisimilarity) &
+proved\\
+Typed calculus to CCS &
+Props.~\ref{prop:ccsfwd}, \ref{prop:ccsforget} &
+erasure complete, not sound, not fully abstract &
+proved\\
+CSP failures model &
+Prop.~\ref{prop:twofusals}, Thm.~\ref{thm:csp} &
+refusal notions independent; record invisible without instrumentation &
+proved\\
+$\pi$-calculus &
+Thm.~\ref{thm:pienc}, Cor.~\ref{cor:pistrict} &
+strict inclusion: typed calculus encodes into $\pi$, not conversely &
+proved\\
+$\pi$-calculus, integrity &
+Prop.~\ref{prop:scope} &
+scope versus authority: $\pi$ loses invariants on extrusion &
+proved\\
+Choice hierarchy &
+Prop.~\ref{prop:race}, Cor.~\ref{cor:norace} &
+separate choice; symmetry broken by the arbiter, untyped only &
+proved\\
+Event structures &
+Thm.~\ref{thm:binary}, Prop.~\ref{prop:forget} &
+ledger semantics is a labelled prime event structure; residue $\eta$ &
+proved\\
+Replicated data types &
+Thm.~\ref{thm:coordfree} &
+coordination free under static ownership &
+proved\\
+Equivalence spectrum &
+Prop.~\ref{prop:hspec}, Thm.~\ref{thm:ext}, Prop.~\ref{prop:orth} &
+second, orthogonal spectrum on pasts; meets futures at $\approx_{\mathrm{ext}}$ &
+proved (Hyp.~\ref{hyp:sep})\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{The three claims}
+
+\paragraph{First claim: event structures are the nearest relative.}
+Settled positively, with a residue. At the ledger level the semantics of a
+configuration is a labelled prime event structure whose configurations
+are its executions up to trace equivalence, and consistency in it is
+binary (Theorem~\ref{thm:binary}). The residue has two parts. The ordinary
+reduct forgets the annotations on which authority, evidence, and
+observation provenance depend (Proposition~\ref{prop:forget}), and the
+calculus supplies something no event structure contains: the rule that
+generates the structure from evidence and authority predicates over
+unbounded data.
+
+\paragraph{Second claim: recorded refusal has no classical counterpart.}
+Settled in its weak form only. The failures model of CSP does not
+represent a recorded refusal without an added event, and the CSP and
+disposition notions of refusal are independent, neither implying the
+other (Theorem~\ref{thm:csp}, Proposition~\ref{prop:twofusals}). The
+stronger reading, that no formalism can carry a recorded refusal, is
+false and was never claimed: with a rich enough alphabet any
+trace-based formalism can carry it as an event.
+
+\paragraph{Third claim: rule-indexed collapse changes the theory of
+equivalence.} Settled in a precise form. The classical spectrum, a
+spectrum of equivalences on futures, is unchanged. Rule-indexed collapse
+adds a second spectrum, of equivalences on pasts, orthogonal to the first
+(Propositions~\ref{prop:hspec} and~\ref{prop:orth}). The two meet at
+$\approx_{\mathrm{ext}}$, the coarsest past-equivalence compatible with
+extension, which is strictly coarser than equality of state: reasons,
+requests, failure certificates, and past principals are visible to no
+future (Theorem~\ref{thm:ext}), except that the current holder of an
+unconsumed exclusive capability is part of the state and is visible to
+every future. Past attribution may be observationally inert; current
+authority never is.
+
+\section{The position}
+
+In expressive power the typed disposition calculus is modest. It is a
+sub-calculus of the $\pi$-calculus with data and separate choice up to an
+encoding meeting every criterion, and it cannot encode synchronization,
+because its parallel components do not interact
+(Lemma~\ref{lem:prune}). Its semantics is a labelled prime event
+structure. Nothing it computes lies outside the lambda calculus, and
+nothing it communicates lies outside CCS.
+
+What it adds lies elsewhere, and the comparisons locate it. Refusal is
+recorded, attributed, and reasoned, as an object distinct from a CSP
+refusal set. Integrity rests on authority and replay rather than on the
+secrecy of names, so it survives the scope extrusion under which the
+$\pi$-encoding fails. Verification classifies evidence without disposing
+of anything, and every disposition traces to a principal entitled to make
+it. Equivalence is indexed by the observer, and the reasons for decisions
+are visible to exactly one kind of observer, the one who reads the past.
+Under static ownership, typed programs converge without consensus,
+because they never contend. These are guarantees about every execution rather than
+capabilities some programs can exercise, and they are what the book set
+out to establish.
+
+\paragraph{What rests on what.} Proved in the book: every result in the
+table marked ``proved''. Cited without re-derivation, and load-bearing
+where used: Gorla's encodability framework; Palamidessi's separation
+result; strong normalization of the simply typed calculus; balance of
+multiplicative linear logic; correctness of bracket abstraction; the
+failures semantics of CSP; Herlihy's hierarchy; and the security of
+signatures and hash functions behind certificates and anchors.
+Conjectural: the transparent reading, the untyped calculus's encoding of
+asynchronous single-use CCS, and the sound translation of the typed
+calculus with finite data into CCS, which is sketched but not carried out.
 
 %===================================================================
 \appendix
@@ -4543,12 +7115,12 @@ separately because it requires fairness, responsive external dependencies,
 terminating transformations, and decidable verification. Safety holds for
 every finite execution without those assumptions.
 
-\begin{center}
-\small
-\begin{tabular}{lll}
+{\small
+\begin{longtable}{L{6.2cm}L{4.4cm}l}
 \toprule
 Result & Status & Location\\
 \midrule
+\endhead
 Unique tokenization & proved & Lem.~\ref{lem:lex}\\
 Unique parsing & proved (LL(1)) & Thm.~\ref{thm:parse}\\
 Printer adequacy & proved & Thm.~\ref{thm:adequacy}\\
@@ -4579,7 +7151,27 @@ Modal terminal exclusivity & proved & Prop.~\ref{prop:modal-terminal}\\
 No cycles, one re-entry & proved & Prop.~\ref{prop:reentry}\\
 Kernel translation: forward simulation & proved (ledger level) & Thm.~\ref{thm:fwd}\\
 Kernel translation: backward adequacy & proved (ledger, universal process) & Thm.~\ref{thm:bwd}\\
-Kernel translation: transparent reading & conjecture & Ch.~\ref{ch:layers-back}\\
+Kernel translation: remaining criteria & proved (transducer form) & Ch.~\ref{ch:layers-back}\\
+Kernel translation: transparent reading & conjecture & Hyp.~\ref{hyp:transparent}\\
+Determinism of evaluation & proved & Lem.~\ref{lem:det}\\
+Evaluation or divergence (no stuck terms) & proved & Lem.~\ref{lem:evdiv}\\
+Kernel affine, no linear discarding & proved; cited & Props.~\ref{prop:affine}, \ref{prop:nok}\\
+Occurrence structures trace invariant & proved & Thm.~\ref{thm:otrace}\\
+Binary consistency of $\mathcal W(C)$ (extended replay) & proved & Thm.~\ref{thm:binary}\\
+Forgetting annotations & proved & Prop.~\ref{prop:forget}\\
+CCS erasure: forward, not sound & proved & Props.~\ref{prop:ccsfwd}, \ref{prop:ccsforget}\\
+Pruning (typed non-interference) & proved & Lem.~\ref{lem:prune}\\
+Context decomposition & proved & Cor.~\ref{cor:decomp}\\
+No encoding of CCS synchronization & proved & Thm.~\ref{thm:ccssep}\\
+CSP: refusal notions independent & proved & Prop.~\ref{prop:twofusals}, Thm.~\ref{thm:csp}\\
+Encoding into the $\pi$-calculus & proved & Thm.~\ref{thm:pienc}, Cor.~\ref{cor:pistrict}\\
+Scope versus authority & proved & Prop.~\ref{prop:scope}\\
+Election by race; typed cannot race & proved & Prop.~\ref{prop:race}, Cor.~\ref{cor:norace}\\
+Losers detect the loss (test-and-set) & proved & Prop.~\ref{prop:loser}\\
+Coordination-free convergence (static ownership) & proved & Thm.~\ref{thm:coordfree}\\
+History spectrum and congruence & proved & Props.~\ref{prop:hspec}, \ref{prop:extcong}\\
+Extension full abstraction, with capability keys & proved (Hyp.~\ref{hyp:sep}) & Thm.~\ref{thm:ext}\\
+Communication-free CCS, fully abstract & proved & Prop.~\ref{prop:workedfa}\\
 Value substitution, linear and unrestricted & proved & Ch.~\ref{ch:types}\\
 Canonical forms for rights & proved & Lem.~\ref{lem:canon}\\
 Preservation & proved & Thm.~\ref{thm:sr}\\
@@ -4593,45 +7185,318 @@ Conservation of exclusive capabilities & proved & Prop.~\ref{prop:conserve}\\
 Preservation under transfer & proved & Prop.~\ref{prop:delpres}\\
 Delegation chain soundness & proved & Prop.~\ref{prop:chain}\\
 \bottomrule
-\end{tabular}
-\end{center}
+\end{longtable}
+}
 
 \chapter{Complete Syntax, Typing, and Transition Rules}
-\plan{The full grammar of both layers, all typing rules, all labelled
-transition rules, and the replay clause paired with each.}
+\label{app:rules}
+
+This appendix collects the definitions of the calculus in one place, in
+tabular form, with a pointer to where each is stated and discussed.
+
+\section{Syntax}
+
+The concrete grammar is in Chapter~\ref{ch:parsing}; the abstract
+grammar of processes, expressions, and types is in
+Chapters~\ref{ch:syntax}, \ref{ch:lambda}, and~\ref{ch:types}. Lifecycle
+states:
+\[
+\begin{aligned}
+&\mathsf{open}(q),\ \mathsf{bound}(q,b),\ \mathsf{transformed}(b,v),\
+\mathsf{verified}(v,w),\ \mathsf{verificationFailed}(v,\varphi)
+&&\text{(live)},\\
+&\mathsf{refused}(r),\ \mathsf{collapsed}(o)&&\text{(terminal)}.
+\end{aligned}
+\]
+
+\section{Prefixes, records, and authority}
+
+\begin{center}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{L{3.6cm}L{4.0cm}L{3.0cm}L{2.0cm}}
+\toprule
+Prefix & Record appended & From state & Authority\\
+\midrule
+$\mathsf{pop}\;q\;\mathsf{as}\;c$ & $\Pop(c,q)$ & $c$ fresh & none\\
+$\mathsf{pop}_a\;q\;\mathsf{as}\;c\;\mathsf{after}\;d$ & $\Compensates(a,c,q,d)$ & $c$ fresh, $d$ terminal & compensate on $d$\\
+$\mathsf{bind}_a\;c\;\mathsf{to}\;b$ & $\Bind(a,c,b)$ & open & bind\\
+$\mathsf{transform}\;c\;\mathsf{with}\;f$ & $\Transform(c,f,b,v)$ & bound, $f\,b\Downarrow v$ & none\\
+$\mathsf{verify}_a\ldots$, success & $\Verify(a,c,v,w)$ & transformed, $g\Downarrow\mathsf{ok}(w)$ & verify\\
+$\mathsf{verify}_a\ldots$, failure & $\mathsf{VerificationFailed}(a,c,v,\varphi)$ & transformed, $g\Downarrow\mathsf{fail}(\varphi)$ & verify\\
+$\mathsf{refuse}_a\;c\;\mathsf{because}\;r$ & $\Refuse(a,c,r)$ & any live & refuse\\
+$\mathsf{collapse}_{a,k}\;c$ & $\Collapse(a,c,k,w,o)$ & verified, $o=\mathsf{observe}_k(v)$ & collapse\\
+$\mathsf{await}_a\;c\;\omega$ & $\mathsf{Discharged}(a,c,\omega,\varphi)$ & live, certificate & discharge on $\omega$\\
+$\ldots\mathsf{within}_b\;t$, expiry & $\mathsf{TimedOut}(b,c,\omega,t,\varphi)$ & live, certificate & clock on $\omega$\\
+$\mathsf{delegate}_{a\to b}\langle c,\kappa\rangle$ & $\mathsf{Delegate}(a,b,c,\kappa,\sigma)$ & $a$ owns $(c,\kappa)$ & ownership\\
+\bottomrule
+\end{tabular}
+\end{center}
+Every rule is in Chapter~\ref{ch:lts}, except delegation, in
+Chapter~\ref{ch:authority}. Each appends exactly the record shown and
+updates the commitment map at its subject by the corresponding clause of
+$\delta$ (Definition~\ref{def:delta}); collapse also adds $(c,k,o)$ to
+the observation set, and delegation updates the ownership map. The
+contextual rules for parallel composition, choice, restriction, and
+structural congruence are in Chapter~\ref{ch:lts}.
+
+\section{Replay clauses}
+
+Replay (Chapter~\ref{ch:replay}) applies each record to the reconstructed
+state by the clause of $\delta$ for its kind, which is the table above
+read from the ``From state'' column, with the evaluation and verification
+premises replaced by the checks that can be made from the record alone:
+for verification, $\valid(w,c,v)$; for its failure, discharge, and
+timeout, $\mathsf{checkCert}$ on the certificate carried; for collapse,
+$o=\mathsf{observe}_k(v)$ and the witness held in the state; for
+compensation, terminality of the predecessor; for delegation, current
+ownership and the signature. Transformation is checked only for agreement
+of $b$ with the bound state: the result $v$ is taken from the record,
+which is the opaque reading of Chapter~\ref{ch:layers}.
+
+\section{Typing}
+
+\begin{center}
+\small
+\begin{tabular}{lll}
+\toprule
+Rule & Consumes & Produces for the continuation\\
+\midrule
+\textsc{T-Pop} & nothing (fresh $c$ added to $\Sigma$) & $\Commit\langle c,A,\mathsf{Open}\rangle$\\
+\textsc{T-Comp} & fact $\mathsf{Terminal}\langle d,t\rangle$ consulted & $\Commit\langle c,A,\mathsf{Open}\rangle$\\
+\textsc{T-Bind} & $\Commit\langle c,A,\mathsf{Open}\rangle$ & $\Commit\langle c,A,\mathsf{Bound}\rangle$\\
+\textsc{T-Trans} & $\Commit\langle c,A,\mathsf{Bound}\rangle$ & $\Commit\langle c,B,\mathsf{Transformed}\rangle$\\
+\textsc{T-Ver}, success & $\Commit\langle c,B,\mathsf{Transformed}\rangle$ & $\Commit\langle c,B,\mathsf{Verified}\rangle$\\
+\textsc{T-Ver}, failure & $\Commit\langle c,B,\mathsf{Transformed}\rangle$ & $\Commit\langle c,B,\mathsf{VerificationFailed}\rangle$, fact\\
+\textsc{T-Ref} & $\Commit\langle c,A,s\rangle$, $s$ live & token $\mathsf{Refusal}\langle c,A,s\rangle$, terminal fact\\
+\textsc{T-Col} & $\Commit\langle c,B,\mathsf{Verified}\rangle$ & token $\mathsf{Observed}\langle c,B,k\rangle$, terminal fact\\
+\textsc{T-Await}, \textsc{T-Deadline} & nothing & the same right, in each branch\\
+delegation & $\mathsf{Cap}\langle a,c,\kappa\rangle$ & $\mathsf{Cap}\langle b,c,\kappa\rangle$\\
+\textsc{T-Nil} & tokens only; no rights & \\
+\textsc{T-Par} & $\Delta_1\uplus\Delta_2$ split & each side its part\\
+\textsc{T-Sum} & $\Delta$ & $\Delta$ in each summand\\
+\textsc{T-Res}, \textsc{T-Rep} & $\Delta$; empty for replication & unchanged\\
+\bottomrule
+\end{tabular}
+\end{center}
+Every attributed prefix also requires its authority fact in $\Gamma$, or,
+for exclusive authority, the capability in $\Delta$. The full rules are
+in Chapters~\ref{ch:types} and~\ref{ch:authority}; the configuration
+invariant tying them to the runtime is Definition~\ref{def:wtconf}.
 
 \chapter{Encodability Criteria, Stated Formally}
-\plan{Formal statements of the criteria of Chapter~\ref{ch:encodings},
-with notation fixed for the whole book.}
+\label{app:criteria}
+
+This appendix collects the notation of Chapter~\ref{ch:encodings}.
+
+\paragraph{Calculi.} A calculus is a tuple
+$\mathcal L=\langle\mathcal T,\mathcal N,\mathcal A,\to,\Downarrow\rangle$
+of terms, names, labels with a distinguished $\tau\in\mathcal A$, a
+labelled transition relation ${\to}\subseteq\mathcal T\times\mathcal
+A\times\mathcal T$, and a success predicate $\Downarrow\subseteq\mathcal
+T$. Weak transitions: ${\Rightarrow}=(\xrightarrow{\tau})^{*}$ and
+$\xRightarrow{\mu}={\Rightarrow}\xrightarrow{\mu}{\Rightarrow}$ for
+$\mu\ne\tau$, $\xRightarrow{\tau}={\Rightarrow}$.
+
+\paragraph{Translations.} A translation from $\mathcal L_s$ to
+$\mathcal L_t$ is a triple $\langle\llbracket\cdot\rrbracket,\varphi,
+\widehat{\cdot}\rangle$ with $\llbracket\cdot\rrbracket:\mathcal T_s\to
+\mathcal T_t$, a renaming policy $\varphi:\mathcal N_s\to\mathcal N_t^{+}$
+injective on distinct names with pairwise disjoint images, and an action
+translation $\widehat{\cdot}:\mathcal A_s\to\mathcal A_t$ with
+$\widehat\tau=\tau$. It is equipped with an equivalence
+$\asymp\subseteq\mathcal T_t\times\mathcal T_t$.
+
+\paragraph{Criteria.}
+\begin{enumerate}[label=(E\arabic*),leftmargin=2.5em]
+\item \emph{Compositionality}: for every $k$-ary operator $\mathrm{op}$
+and finite $N\subseteq\mathcal N_s$ there is $C^N_{\mathrm{op}}$ such that
+for all $S_1,\ldots,S_k$ with $\bigcup\mathrm{fn}(S_i)=N$,
+$\llbracket\mathrm{op}(S_1,\ldots,S_k)\rrbracket=
+C^N_{\mathrm{op}}(\llbracket S_1\rrbracket,\ldots,\llbracket S_k\rrbracket)$.
+\item \emph{Name invariance}: for every injective
+$\sigma:\mathcal N_s\to\mathcal N_s$ there is $\sigma'$ with
+$\varphi(\sigma(n))=\sigma'(\varphi(n))$ for all $n$ and
+$\llbracket\sigma S\rrbracket=\sigma'\llbracket S\rrbracket$.
+\item \emph{Completeness}: $S\xRightarrow{\mu}S'$ implies
+$\llbracket S\rrbracket\xRightarrow{\widehat\mu}T\asymp\llbracket
+S'\rrbracket$ for some $T$.
+\item \emph{Soundness}: $\llbracket S\rrbracket\xRightarrow{\nu}T$
+implies there are $\mu,S',T'$ with $\widehat\mu=\nu$,
+$S\xRightarrow{\mu}S'$, $T\Rightarrow T'$, and $T'\asymp\llbracket
+S'\rrbracket$.
+\item \emph{Divergence reflection}: if $\llbracket S\rrbracket$ has an
+infinite $\tau$-sequence, so has $S$.
+\item \emph{Success sensitiveness}: $S\Downarrow\iff\llbracket
+S\rrbracket\Downarrow$.
+\item \emph{Full abstraction} with respect to $\approx_s,\approx_t$:
+$S_1\approx_s S_2\iff\llbracket S_1\rrbracket\approx_t\llbracket
+S_2\rrbracket$.
+\end{enumerate}
+
+\paragraph{Homomorphism.} A translation is homomorphic on
+$\mathrm{op}$ when $C^N_{\mathrm{op}}=\mathrm{op}$ for every $N$.
+
+\paragraph{Separation.} $\mathcal L_s$ is separated from $\mathcal L_t$
+with respect to a set of criteria when no translation satisfies all of
+them. The standard source of such results is Palamidessi's separation of
+mixed-choice from asynchronous $\pi$-calculus; the book's separations
+(Chapters~\ref{ch:ccs} and~\ref{ch:csp}) are stated relative to the
+criteria they name, and the criteria are the load-bearing part of each
+statement.
 
 \chapter{A Worked Encoding: A CCS Fragment into the Calculus}
 \label{app:worked}
-\plan{A full translation of a small CCS fragment with each criterion
-checked explicitly.}
+
+Theorem~\ref{thm:ccssep} rules out a compositional encoding of CCS
+synchronization into the typed calculus. This appendix gives the encoding
+that remains possible once synchronization is set aside, and checks each
+criterion of Appendix~\ref{app:criteria} explicitly.
+
+\section{The fragment}
+
+Let $\mathrm{CCS}_0$ be the communication-free fragment:
+\[
+S ::= \mathbf 0 \mid a.S \mid S+S \mid S\mid S,
+\]
+over action names $a$, with a designated action $\checkmark$, and the
+labelled transitions
+\[
+a.S\xrightarrow{a}S,\qquad
+\frac{S\xrightarrow{a}S'}{S+T\xrightarrow{a}S'},\qquad
+\frac{S\xrightarrow{a}S'}{S\mid T\xrightarrow{a}S'\mid T},
+\]
+with the symmetric rules for $+$ and $\mid$. No action has a complement
+here, so there are no internal steps, and $S\Downarrow$ means that $S$ can
+perform $\checkmark$ after some sequence of actions. Restriction is left
+out: without communication its only effect is to block actions of the
+restricted names, which a compositional translation cannot do without
+inspecting its argument.
+
+\section{The translation}
+
+Fix a principal $\star$ with a uniform policy granting it refusal
+authority over every commitment. Define
+\[
+\begin{aligned}
+\llbracket\mathbf 0\rrbracket&=\mathbf 0, &
+\llbracket a.S\rrbracket&=\mathsf{pop}\;a\;\mathsf{as}\;c.\,
+\mathsf{refuse}_\star\;c\;\mathsf{because}\;\texttt{"done"}.\,\llbracket S\rrbracket,\\
+\llbracket S+T\rrbracket&=\llbracket S\rrbracket+\llbracket T\rrbracket, &
+\llbracket S\mid T\rrbracket&=\llbracket S\rrbracket\mid\llbracket T\rrbracket,
+\end{aligned}
+\]
+with $c$ fresh for $\llbracket S\rrbracket$. An action becomes a
+commitment opened with the action's name as its request and then refused,
+so that the ledger records each action and leaves no commitment live. The
+action translation sends $a$ to the label $\mathsf{pop}(\cdot,a)$,
+ignoring the fresh name, and treats refusal labels as internal. Success in
+the target is a $\Pop$ record with request $\checkmark$. For $\asymp$ take
+equality of processes, ignoring the refused commitments and the tokens the
+translation leaves behind.
+
+Every image is well typed from the empty configuration. The pop gives the
+open right, the refusal consumes it (\textsc{T-Ref}, with the uniform
+authority fact), and the continuation holds only tokens, which
+\textsc{T-Nil}, \textsc{T-Sum}, and \textsc{T-Par} accept. Every summand
+of an image begins with a prefix, so the images are in the guarded
+fragment of Chapter~\ref{ch:pi} as well.
+
+\section{The criteria}
+
+\begin{description}[leftmargin=1.5em,style=nextline]
+\item[(E1) Compositionality.] Homomorphic on $\mathbf 0$, $+$, and
+$\mid$; for prefixing the context is
+\[
+\mathsf{pop}\;a\;\mathsf{as}\;c.\,\mathsf{refuse}_\star\;c\;\mathsf{because}\;\texttt{"done"}.[\cdot].
+\]
+\item[(E2) Name invariance.] Action names become requests, which are
+values. A renaming $\sigma$ of action names is matched by the same
+renaming of requests, and $\llbracket\sigma S\rrbracket=\sigma\llbracket
+S\rrbracket$ by induction on $S$.
+\item[(E3) Completeness.] By induction on the derivation of
+$S\xrightarrow{a}S'$: the prefix case fires the pop and then the refusal,
+reaching $\llbracket S'\rrbracket$; the sum and parallel cases lift
+through the corresponding rules of Chapter~\ref{ch:lts}.
+\item[(E4) Soundness.] A visible target step is a pop in some summand
+path of the image, which corresponds to an initial action of $S$; the
+refusal that follows it is enabled and reaches the image of the
+corresponding derivative. Pending refusals in other components commute
+with everything, so they are absorbed by $\Rightarrow$.
+\item[(E5) Divergence reflection.] Every internal step of an image is a
+refusal, and each refusal consumes a right created by a preceding pop.
+There are never more internal steps than visible ones, so there is no
+infinite internal sequence.
+\item[(E6) Success sensitiveness.] $S$ can perform $\checkmark$ exactly
+when its image can append $\Pop(c,\checkmark)$, by (E3) and (E4).
+\end{description}
+
+\begin{proposition}[Full abstraction]\label{prop:workedfa}
+For $\mathrm{CCS}_0$ terms, $S_1$ and $S_2$ are strongly bisimilar if and
+only if their images are weakly bisimilar, with visible labels
+$\mathsf{pop}(\cdot,a)$ compared by their requests and refusals internal.
+\end{proposition}
+
+\begin{proof}
+Say a target process is a \emph{pending image} of $S$ if it is
+$\llbracket S\rrbracket$ with some components preceded by a pending
+refusal prefix. A pending refusal is an internal step that is always
+enabled, commutes with every other step, and cannot be preempted, so each
+pending image is weakly bisimilar to $\llbracket S\rrbracket$.
+From left to right, if $\mathcal R$ is a strong bisimulation on
+$\mathrm{CCS}_0$, then relating pending images of $S_1$ and $S_2$ for each
+$(S_1,S_2)\in\mathcal R$ is a weak bisimulation, by (E3) and (E4). From
+right to left, the source has no internal steps, so a weak bisimulation
+between images, restricted to images of source terms and projected back,
+matches each visible step of one source term by a single visible step of
+the other, which is a strong bisimulation.
+\end{proof}
+
+\section{What the example shows}
+
+The encoding meets every criterion and is fully abstract, and it is
+nearly trivial, which is the point. Once synchronization is removed, CCS
+is interleaving of independent sequential agents, and the typed calculus
+expresses exactly that. What the translation adds is not behaviour but
+record: each action leaves a pop and a refusal in the ledger, attributed
+and replayable. The appendix is the positive half of the CCS comparison;
+Theorem~\ref{thm:ccssep} is the negative half, and between them they
+locate the boundary at synchronization precisely.
 
 \chapter{Open Problems}
 \label{app:open}
+
+Questions raised in earlier drafts and answered in this one are listed
+at the end, with the result that answered each.
+
 \begin{enumerate}[leftmargin=1.5em]
-\item \emph{The transparent reading.} The layer translation is proved
-under the opaque reading, where evaluation and verification results are
-guard data. Whether the kernel's encoding of application agrees with
-evaluation in the lambda layer, so that the kernel itself performs the
-computation, is open (Chapter~\ref{ch:layers-back}).
+\item \emph{The transparent reading.} Whether the kernel's encoding of
+application agrees with call-by-value evaluation in the lambda layer,
+including on divergence (Hypothesis~\ref{hyp:transparent},
+Chapter~\ref{ch:layers-back}).
+\item \emph{Asynchronous CCS in the untyped calculus.} In the untyped
+calculus, one component's act can enable another's through the shared
+commitment map, a one-shot, one-way signal (Chapter~\ref{ch:ccs}). Does
+it suffice to encode asynchronous CCS with single-use channels, and what
+does the encoding cost in the criteria?
+\item \emph{The finite-data translation into CCS.} With finitely many
+values each commitment is a finite-state agent, which suggests a sound
+translation of the typed calculus into CCS (Chapter~\ref{ch:ccs}). It is
+sketched, not proved.
+\item \emph{A hardened $\pi$-encoding.} Cells that check authority and a
+log that carries signatures would protect the $\pi$-encoding against
+contexts that learn commitment names (Proposition~\ref{prop:scope}). A
+proof of correctness for such a protocol against arbitrary contexts is
+open.
 \item \emph{Verifier versioning.} The theorems of Part~V assume
 Hypothesis~\ref{hyp:stable}. With versioned verifiers, the version must be
 recorded and witness ancestry restated relative to it; whether an old
 verification remains evidence under a new version is a policy question the
 calculus should make explicit rather than decide.
 \item \emph{Competing compensations.} Two authorized principals may
-compensate one terminal commitment. Should the calculus forbid this,
-record both and require a later arbitration, or leave it to a collapse
-rule?
-\item \emph{Recording the road not taken.} The choice rule leaves no
-record of the discarded summand. A variant that records it may or may not
-be more expressive (Chapter~\ref{ch:choice}).
-\item \emph{Restriction and visibility.} Restriction scopes naming but not
-visibility. Whether a scoped ledger is desirable, and what it would do to
-replay, is open (Chapter~\ref{ch:pi}).
+compensate one terminal commitment, and both successors are admitted; no
+consistency question arises (Chapter~\ref{ch:sequencer}). Whether a policy
+should forbid this, or a later act arbitrate between successors, is open.
 \item \emph{Mutable store.} Replay correspondence excludes $S$. The exact
 recording obligations under which $S$ becomes reconstructible remain to
 be stated.
@@ -4640,15 +7505,45 @@ leaves no record. Recording $\mathsf{DeniedAttempt}$ on the annotation
 channel would make attempted overreach auditable without making it causal;
 who records it, and whether an untrusted component can flood that channel,
 is open.
-\item \emph{Anchoring the ledger's end.} Replay cannot detect removal of a
-ledger's final records (Chapter~\ref{ch:worlds}). The sequencer must
-publish an anchor; which anchor suffices under which failure model is
+\item \emph{Moving ownership and revocation.} Failover that transfers a
+commitment to a new owner, and revocation of a delegated capability, both
+require agreement on an order between competing acts
+(Chapters~\ref{ch:sequencer} and~\ref{ch:authority}). Neither is in the
+core calculus.
+\item \emph{Recursion that holds a right.} Eventual disposition rests on a
+well-founded measure that disappears if a right can be held under
+recursion (Chapter~\ref{ch:progress}). An extension with such recursion
+would need well-founded waiting as a hypothesis or a proof.
+\item \emph{Encoding delegation into the $\pi$-calculus.} The encoding of
+Chapter~\ref{ch:pi} omits exclusive capabilities. Adding a cell per
+capability key, read by exercises and written by grants and delegations,
+is the evident extension; checking it against the criteria is open.
+\item \emph{Consensus with readable state.} The atomic commitment map is
+a test-and-set object, but processes cannot read the map, so consensus on
+values is not solvable by the race alone (Chapter~\ref{ch:choice}). What a
+read primitive on replay state would add, and at what cost to pruning, is
 open.
-\item \emph{The purpose of total order.} Replay depends only on the trace
-(Proposition~\ref{prop:commute}). Which guarantees, if any, require the
-sequencer's total order beyond identity assignment and freshness
-(Chapter~\ref{ch:sequencer})?
 \end{enumerate}
+
+\paragraph{Answered in this edition.}
+\begin{itemize}[leftmargin=1.5em]
+\item \emph{Verification authority and refusal}: resolved by the
+$\mathsf{verificationFailed}$ state (Chapter~\ref{ch:authority}).
+\item \emph{Recording the road not taken}: more informative, not more
+expressive (Chapter~\ref{ch:choice}).
+\item \emph{Restriction and visibility}: restriction is lexical scope;
+integrity rests on authority, not secrecy (Proposition~\ref{prop:scope}).
+\item \emph{Anchoring the ledger's end}: relative completeness from a
+signed checkpoint retained independently (Proposition~\ref{prop:anchor}),
+per replica if need be (Chapter~\ref{ch:sequencer}).
+\item \emph{The purpose of total order}: atomicity of competing acts on one
+commitment, which typed programs never perform, and replica ownership
+transfer, which static ownership excludes
+(Theorem~\ref{thm:coordfree}).
+\item \emph{Principals and the future}: past principals are
+extension-invisible; the current owner of an exclusive capability is not
+(Theorem~\ref{thm:ext}).
+\end{itemize}
 
 %===================================================================
 \backmatter
@@ -4659,13 +7554,18 @@ sequencer's total order beyond identity assignment and freshness
 \bibitem{cousot} P.~Cousot and R.~Cousot. Abstract interpretation: a unified lattice model for static analysis of programs. \emph{POPL}, 1977.
 \bibitem{girard} J.-Y.~Girard. Linear logic. \emph{Theoretical Computer Science} 50, 1987.
 \bibitem{gorla} D.~Gorla. Towards a unified approach to encodability and separation results for process calculi. \emph{Information and Computation} 208(9), 2010.
+\bibitem{calm} J.~M.~Hellerstein and P.~Alvaro. Keeping CALM: when distributed consistency is easy. \emph{Communications of the ACM} 63(9), 2020.
+\bibitem{herlihy} M.~Herlihy. Wait-free synchronization. \emph{ACM Transactions on Programming Languages and Systems} 13(1), 1991.
 \bibitem{hewitt} C.~Hewitt, P.~Bishop, and R.~Steiger. A universal modular ACTOR formalism for artificial intelligence. \emph{IJCAI}, 1973.
 \bibitem{hoare} C.~A.~R.~Hoare. \emph{Communicating Sequential Processes}. Prentice Hall, 1985.
+\bibitem{hindley} J.~R.~Hindley and J.~P.~Seldin. \emph{Lambda-Calculus and Combinators: An Introduction}. Cambridge University Press, 2008.
 \bibitem{honda} K.~Honda. Types for dyadic interaction. \emph{CONCUR}, 1993.
 \bibitem{lamport} L.~Lamport. Time, clocks, and the ordering of events in a distributed system. \emph{Communications of the ACM} 21(7), 1978.
 \bibitem{mazurkiewicz} A.~Mazurkiewicz. Concurrent program schemes and their interpretations. DAIMI Report PB-78, Aarhus University, 1977.
 \bibitem{milner} R.~Milner. \emph{A Calculus of Communicating Systems}. LNCS 92, Springer, 1980.
 \bibitem{mpw} R.~Milner, J.~Parrow, and D.~Walker. A calculus of mobile processes, I and II. \emph{Information and Computation} 100(1), 1992.
+\bibitem{montanari-rossi} U.~Montanari and F.~Rossi. Contextual nets. \emph{Acta Informatica} 32(6), 1995.
+\bibitem{baldan} P.~Baldan, A.~Corradini, and U.~Montanari. Contextual Petri nets, asymmetric event structures, and processes. \emph{Information and Computation} 171(1), 2001.
 \bibitem{npw} M.~Nielsen, G.~Plotkin, and G.~Winskel. Petri nets, event structures and domains, part I. \emph{Theoretical Computer Science} 13, 1981.
 \bibitem{palamidessi} C.~Palamidessi. Comparing the expressive power of the synchronous and asynchronous $\pi$-calculi. \emph{Mathematical Structures in Computer Science} 13(5), 2003.
 \bibitem{park} D.~Park. Concurrency and automata on infinite sequences. \emph{Theoretical Computer Science}, LNCS 104, 1981.
@@ -4676,10 +7576,12 @@ sequencer's total order beyond identity assignment and freshness
 \bibitem{rfc6962} B.~Laurie, A.~Langley, and E.~Kasper. Certificate Transparency. RFC 6962, 2013.
 \bibitem{tait} W.~W.~Tait. Intensional interpretations of functionals of finite type I. \emph{Journal of Symbolic Logic} 32(2), 1967.
 \bibitem{pierce} B.~C.~Pierce. \emph{Types and Programming Languages}. MIT Press, 2002.
+\bibitem{roscoe} A.~W.~Roscoe. \emph{The Theory and Practice of Concurrency}. Prentice Hall, 1997.
 \bibitem{shapiro} M.~Shapiro, N.~Pregui\c{c}a, C.~Baquero, and M.~Zawirski. Conflict-free replicated data types. \emph{SSS}, 2011.
 \bibitem{vanglabbeek} R.~J.~van Glabbeek. The linear time--branching time spectrum I. In \emph{Handbook of Process Algebra}, Elsevier, 2001.
 \bibitem{wadler} P.~Wadler. Propositions as sessions. \emph{ICFP}, 2012.
 \bibitem{winskel} G.~Winskel. Event structures. In \emph{Advances in Petri Nets}, LNCS 255, Springer, 1987.
+\bibitem{denicola} R.~De~Nicola and M.~Hennessy. Testing equivalences for processes. \emph{Theoretical Computer Science} 34(1--2), 1984.
 \bibitem{flyxion-spec} Flyxion. Spherepop specification. Unpublished manuscript, 2025--2026.
 \bibitem{flyxion-binding} Flyxion. The algebra of binding. Unpublished manuscript, 2026.
 \bibitem{flyxion-witness} Flyxion. The witness plane: admissibility, verification, and commitment in event systems. Unpublished manuscript, 2026.

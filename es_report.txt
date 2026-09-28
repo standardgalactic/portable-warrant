@@ -1,0 +1,8 @@
+Event-structure checks over ledgers with <= 6 records
+  ledgers: 11032   events of W: 605
+  P-ESRealized    holds
+  P-ESTraceIso    holds over 334871 linearizations
+  P-ESHeredity    holds  (162702 conflicting pairs)
+  P-ESComplete    holds over 1819 configurations
+  configurations realized by an enumerated ledger: 1622 of 1819
+    example not enumerated (canonical naming), but replayable: Pop(c2)

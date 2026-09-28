@@ -29,6 +29,7 @@ POLICY = {
     ("a1", "clock"),
 }
 T = "t1"           # the single declared deadline interval
+CAP = ("cap", "c1", "refuse")   # the single exclusive capability key: refusal of c1
 OMEGA = "w1"       # the single external obligation each commitment may await
 IDS = ("c1", "c2")
 Q = "q"
@@ -97,14 +98,26 @@ def may(a, kind):
 # ("Dis", a, c, omega, phi) records an authenticated discharge on c.
 
 def subj(rec):
+    """The key a record writes: a commitment, or a capability key."""
+    if rec[0] in ("Grant", "Deleg"):
+        return CAP
     return rec[1] if rec[0] in ("Pop", "Trans") else rec[2]   # VF, TO, Dis: rec[2]
+
+
+def reads(rec):
+    """Keys a record reads besides the one it writes."""
+    if rec[0] == "Comp":
+        return {rec[4]}
+    if rec[0] == "Ref" and rec[2] == CAP[1]:
+        return {CAP}             # refusing c1 consults the capability owner
+    return set()
 
 
 def pred(rec):
     return rec[4] if rec[0] == "Comp" else None
 
 
-LAB_VERSION = "4 (verificationFailed state, certificates, discharge, timeout)"
+LAB_VERSION = "5 (capability ownership, verificationFailed state, certificates, discharge, timeout)"
 
 
 def is_vf(r):
@@ -120,6 +133,10 @@ def delta(state, rec):
     """The lifecycle step function of the Ledger Path Lemma chapter.
     States are tuples (kind, data...). Returns the new state or None (undefined)."""
     tag = rec[0]
+    if tag == "Grant":
+        return ("owner", rec[4]) if state is None else None
+    if tag == "Deleg":
+        return ("owner", rec[2]) if state == ("owner", rec[1]) else None
     if state is None:
         if tag == "Pop":
             return ("open", rec[2])
@@ -164,13 +181,15 @@ def apply(X, rec):
         d = pred(rec)
         if d not in A or A[d][0] not in TERMINAL:
             return None
+    if rec[0] == "Ref" and CAP in reads(rec) and CAP in A and A[CAP] != ("owner", rec[1]):
+        return None              # once granted, only the current owner may refuse c1
     new = delta(A.get(s), rec)
     if new is None:
         return None
     A[s] = new
     if rec[0] == "Col":
         O.add((s, rec[3], rec[5]))
-    return (tuple(sorted(A.items())), frozenset(O), frozenset(D))
+    return (tuple(sorted(A.items(), key=repr)), frozenset(O), frozenset(D))
 
 
 EMPTY = ((), frozenset(), frozenset())
@@ -202,7 +221,14 @@ def enabled(X):
                     if may(a, "compensate"):
                         out.append(("Comp", a, c, Q, d))
     D = X[2]
+    if CAP not in A:
+        out.append(("Grant", "g", CAP[1], CAP[2], "a1"))
+    else:
+        owner = A[CAP][1]
+        out += [("Deleg", owner, b, CAP[1], CAP[2]) for b in PRINCIPALS if b != owner]
     for c, st in A.items():
+        if not isinstance(c, str):
+            continue
         kind = st[0]
         if kind in LIVE and (c, OMEGA) not in D:
             out += [("Dis", a, c, OMEGA, discharge_certificate(c, OMEGA))
@@ -226,7 +252,8 @@ def enabled(X):
             v, w = st[1], st[2]
             out += [("Col", a, c, K, w, observe(K, v)) for a in PRINCIPALS if may(a, "collapse")]
         if kind in LIVE:
-            out += [("Ref", a, c, R) for a in PRINCIPALS if may(a, "refuse")]
+            out += [("Ref", a, c, R) for a in PRINCIPALS if may(a, "refuse")
+                    and not (c == CAP[1] and CAP in A and A[CAP] != ("owner", a))]
     return out
 
 
@@ -249,12 +276,9 @@ def all_ledgers(n):
 # -------------------------------------------------- dependence and linearization
 
 def independent(r1, r2):
+    """Read/write independence: neither writes a key the other reads or writes."""
     s1, s2 = subj(r1), subj(r2)
-    if s1 == s2:
-        return False
-    if pred(r1) == s2 or pred(r2) == s1:
-        return False
-    return True
+    return s1 != s2 and s1 not in reads(r2) and s2 not in reads(r1)
 
 
 def dependence_order(H):
@@ -319,7 +343,7 @@ class World:
         return set(self.state[1])
 
     def commitments(self):
-        return sorted({subj(r) for r in self.H})
+        return sorted({subj(r) for r in self.H if isinstance(subj(r), str)})
 
     def principals(self):
         return sorted({r[1] for r in self.H if r[0] in ("Comp", "Bind", "Ver", "Ref", "Col")})
@@ -477,6 +501,25 @@ def vf_unforgeable(H):
                     and check_failure(r[4], r[2], st[2])):
                 return False
         X = apply(X, r)
+    return True
+
+
+def capability_conservative(H):
+    """P-DelegationConservative: the capability for refusing c1 has at most one
+    owner at every point; each delegation comes from the current owner; once
+    granted, every refusal of c1 is by the current owner."""
+    owner = None
+    for r in H:
+        if r[0] == "Grant":
+            if owner is not None:
+                return False
+            owner = r[4]
+        elif r[0] == "Deleg":
+            if owner != r[1]:
+                return False
+            owner = r[2]
+        elif r[0] == "Ref" and r[2] == CAP[1] and owner is not None and r[1] != owner:
+            return False
     return True
 
 
@@ -685,6 +728,10 @@ def fmt(H):
             return "Collapse(%s,%s)" % (r[1], r[2])
         if t == "Dis":
             return "Discharged(%s,%s)" % (r[1], r[2])
+        if t == "Grant":
+            return "Grant(%s->%s)" % (r[1], r[4])
+        if t == "Deleg":
+            return "Delegate(%s->%s)" % (r[1], r[2])
         if t == "TO":
             return "TimedOut(%s,%s)" % (r[1], r[2])
     return " ; ".join(f(r) for r in H)
@@ -717,6 +764,7 @@ def main(n):
         ("P-CertificateAuthentic", "every VerificationFailed record checks against its state and a verifier", vf_unforgeable),
         ("P-FailedVerificationLive", "a VerificationFailed record leaves its commitment live", failed_verification_live),
         ("P-NoVerifierDisposition", "verification never yields a terminal state; terminal records need their authority", no_verifier_disposition),
+        ("P-DelegationConservative", "one owner per capability; delegation only from the owner; exercise only by the owner", capability_conservative),
         ("P-TraceInvariant", "every linearization of the dependence order replays identically", shuffle_prop),
         ("P-WorldAdmissible", "every configuration (downset) has a defined replay", downsets_ok),
     ]
@@ -729,8 +777,8 @@ def main(n):
         if cm is not None:
             print("      minimized counterexample: %s" % fmt(cm))
     print("  linearizations replayed for P-TraceInvariant: %d" % total_lins)
-    print("  not checked here (need the process or typed layer): P-RightsAgree, "
-          "P-DelegationConservative; parser properties are checked by disposition_parser.py")
+    print("  not checked here (needs the process and typed layers): P-RightsAgree; "
+          "parser properties are checked by disposition_parser.py")
     print()
 
     print("== Modal terminal exclusivity:  Refused(c) -> not <>Collapsed(c)")
