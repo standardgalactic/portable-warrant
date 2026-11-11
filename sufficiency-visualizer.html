@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sufficiency Without Standing | Audio</title>
+<style>
+:root{color-scheme:dark;--ink:#c9d7c5;--muted:#768777;--signal:#b5e3ad;--line:#344538;--bg:#080d0b}
+*{box-sizing:border-box}body{margin:0;min-height:100svh;background:var(--bg);color:var(--ink);font:13px/1.55 ui-monospace,SFMono-Regular,Consolas,monospace;display:flex;align-items:center;justify-content:center;padding:24px}
+main{width:min(780px,100%)}header{display:flex;justify-content:space-between;gap:18px;align-items:baseline;border-bottom:1px solid var(--line);padding-bottom:13px;margin-bottom:24px}h1{font-size:clamp(16px,3vw,23px);font-weight:400;letter-spacing:.08em;margin:0}small,.muted{color:var(--muted);font-size:11px;letter-spacing:.1em}.screen{position:relative;background:radial-gradient(ellipse at center,#101d15,#060a08 80%);border:1px solid #425848;aspect-ratio:2.4/1;overflow:hidden;box-shadow:inset 0 0 45px #0009}canvas{display:block;width:100%;height:100%}.screen:after{content:"";pointer-events:none;position:absolute;inset:0;background:repeating-linear-gradient(0deg,#0000 0px,#0000 3px,#0003 4px);opacity:.65}.screen-label{position:absolute;top:12px;left:16px;color:#94ad95;font-size:10px;letter-spacing:.16em;pointer-events:none}.controls{display:flex;align-items:center;gap:15px;margin-top:19px}button{background:transparent;border:1px solid #69836b;color:var(--signal);font:inherit;min-width:78px;padding:8px 12px;cursor:pointer}button:hover,button:focus-visible{background:#203124}button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(--signal);outline-offset:4px}input[type=range]{flex:1;min-width:0;accent-color:var(--signal);cursor:pointer}#clock{min-width:100px;text-align:right;color:var(--muted);font-size:11px;white-space:nowrap}#captions{min-height:72px;display:grid;place-items:center;text-align:center;font-size:clamp(13px,2vw,16px);padding:15px 8px;margin:15px 0;border-top:1px solid #25342a;border-bottom:1px solid #25342a}footer{display:flex;justify-content:space-between;gap:20px;align-items:center;font-size:11px;color:var(--muted)}a{color:var(--signal);text-decoration:none;border-bottom:1px solid #617d62}a:hover{text-decoration:underline}#status{letter-spacing:.08em}@media(max-width:560px){header,footer{flex-direction:column;align-items:flex-start;gap:8px}.screen{aspect-ratio:1.5}.controls{gap:9px}#clock{min-width:83px;font-size:10px}body{padding:15px}}
+</style>
+</head>
+<body><main>
+<header><h1>SUFFICIENCY WITHOUT STANDING</h1><small>ARCHIVE / SIGNAL 01</small></header>
+<div class="screen"><canvas id="scope" aria-label="Live audio oscilloscope"></canvas><div class="screen-label">EVIDENCE ≠ AUTHORITY</div></div>
+<div class="controls"><button id="toggle" type="button">PLAY</button><input id="seek" type="range" min="0" max="1000" step="1" value="0" aria-label="Seek through recording"><span id="clock">00:00 / 00:00</span></div>
+<div id="captions" aria-live="off">Loading subtitles…</div>
+<footer><span id="status">STANDBY</span><a href="sufficiency-without-standing.pdf" target="_blank" rel="noopener">READ THE ESSAY ↗</a></footer>
+<audio id="audio" preload="metadata" src="How_Corporate_Law_Sold_Twitter.mp3"></audio>
+<script>
+'use strict';
+const audio=document.querySelector('#audio'),button=document.querySelector('#toggle'),seek=document.querySelector('#seek'),clock=document.querySelector('#clock'),status=document.querySelector('#status'),captions=document.querySelector('#captions'),canvas=document.querySelector('#scope'),pen=canvas.getContext('2d');
+let context,analyser,data,cues=[],dragging=false,seekPending=null,seekTimer=null,lastCaption='';
+const fmt=t=>{if(!Number.isFinite(t))return '00:00';t=Math.max(0,Math.floor(t));return String(Math.floor(t/60)).padStart(2,'0')+':'+String(t%60).padStart(2,'0')};
+function audioSetup(){if(context)return;context=new (window.AudioContext||window.webkitAudioContext)();analyser=context.createAnalyser();analyser.fftSize=2048;analyser.smoothingTimeConstant=.6;data=new Uint8Array(analyser.fftSize);const source=context.createMediaElementSource(audio);source.connect(analyser);analyser.connect(context.destination)}
+button.onclick=async()=>{try{audioSetup();await context.resume();if(audio.paused)await audio.play();else audio.pause()}catch(e){console.error(e);status.textContent='PLAYBACK ERROR'}};
+audio.addEventListener('play',()=>{button.textContent='PAUSE';status.textContent='PLAYING'});
+audio.addEventListener('pause',()=>{button.textContent='PLAY';if(!audio.ended)status.textContent='PAUSED'});
+audio.addEventListener('ended',()=>{button.textContent='REPLAY';status.textContent='COMPLETE'});
+audio.addEventListener('error',()=>{status.textContent='AUDIO FILE ERROR'});
+function requestedTime(){return Number(seek.value)/1000*audio.duration}
+function commitSeek(){if(!Number.isFinite(audio.duration)||audio.duration<=0){status.textContent='WAITING FOR AUDIO METADATA';return}const t=Math.max(0,Math.min(audio.duration,requestedTime()));seekPending=t;try{audio.currentTime=t;status.textContent='SEEKING'}catch(e){console.error(e);status.textContent='SEEK UNAVAILABLE';seekPending=null}updateCaption(t);updateClock(t);clearTimeout(seekTimer);seekTimer=setTimeout(()=>{if(seekPending!==null){status.textContent='SEEK NOT CONFIRMED';seekPending=null}},2500)}
+seek.addEventListener('pointerdown',()=>{dragging=true});
+seek.addEventListener('input',()=>{dragging=true;if(Number.isFinite(audio.duration)){const t=requestedTime();updateClock(t);updateCaption(t)}});
+seek.addEventListener('change',()=>{commitSeek();dragging=false});
+seek.addEventListener('pointerup',()=>{if(dragging){commitSeek();dragging=false}});
+seek.addEventListener('keydown',e=>{if(['ArrowLeft','ArrowRight','Home','End','PageUp','PageDown'].includes(e.key)){dragging=true;requestAnimationFrame(()=>{commitSeek();dragging=false})}});
+audio.addEventListener('seeked',()=>{seekPending=null;clearTimeout(seekTimer);status.textContent=audio.paused?'PAUSED':'PLAYING';sync()});
+audio.addEventListener('loadedmetadata',sync);audio.addEventListener('durationchange',sync);audio.addEventListener('timeupdate',sync);
+function updateClock(t){clock.textContent=fmt(t)+' / '+fmt(audio.duration)}
+function sync(){if(dragging)return;const t=audio.currentTime;if(seekPending!==null&&Math.abs(t-seekPending)>1)return;seekPending=null;if(Number.isFinite(audio.duration)&&audio.duration>0)seek.value=String(Math.round(1000*t/audio.duration));updateClock(t);updateCaption(t)}
+function stamp(s){const a=s.replace(',','.').split(':').map(Number);if(a.some(v=>!Number.isFinite(v)))return NaN;return a.length===3?a[0]*3600+a[1]*60+a[2]:a.length===2?a[0]*60+a[1]:NaN}
+async function subtitles(){try{const r=await fetch('How_Corporate_Law_Sold_Twitter.vtt',{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);const txt=(await r.text()).replace(/^\uFEFF/,'').replace(/\r\n?/g,'\n');for(const block of txt.split(/\n\s*\n/)){const lines=block.trim().split('\n'),idx=lines.findIndex(x=>x.includes('-->'));if(idx<0)continue;const times=lines[idx].split('-->'),start=stamp(times[0].trim()),end=stamp(times[1].trim().split(/\s+/)[0]),text=lines.slice(idx+1).join(' ').replace(/<[^>]*>/g,'').replace(/\s+/g,' ').trim();if(Number.isFinite(start)&&Number.isFinite(end)&&end>start&&text)cues.push({start,end,text})}cues.sort((a,b)=>a.start-b.start);captions.textContent=cues.length?'SUBTITLES READY':'NO SUBTITLE CUES';lastCaption=captions.textContent}catch(e){console.warn('VTT:',e);captions.textContent='SUBTITLES UNAVAILABLE';lastCaption=captions.textContent}}
+function updateCaption(t){if(!cues.length)return;let text='';for(const cue of cues){if(cue.start>t)break;if(t>=cue.start&&t<cue.end)text=cue.text}if(text!==lastCaption){captions.textContent=text;lastCaption=text}}
+subtitles();
+function render(){const rect=canvas.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,2),w=Math.round(rect.width*dpr),h=Math.round(rect.height*dpr);if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h}pen.clearRect(0,0,w,h);pen.lineWidth=dpr;pen.strokeStyle='#344b39';for(let i=1;i<10;i++){const x=w*i/10;pen.beginPath();pen.moveTo(x,0);pen.lineTo(x,h);pen.stroke()}for(let i=1;i<6;i++){const y=h*i/6;pen.beginPath();pen.moveTo(0,y);pen.lineTo(w,y);pen.stroke()}pen.strokeStyle='#56755b';pen.beginPath();pen.moveTo(0,h/2);pen.lineTo(w,h/2);pen.stroke();if(analyser){analyser.getByteTimeDomainData(data);pen.beginPath();for(let i=0;i<data.length;i++){const x=i/(data.length-1)*w,y=h/2+(data[i]-128)/128*h*.38;if(i===0)pen.moveTo(x,y);else pen.lineTo(x,y)}pen.strokeStyle='#b5e3ad';pen.lineWidth=1.5*dpr;pen.shadowBlur=9*dpr;pen.shadowColor='#8fe09b';pen.stroke();pen.shadowBlur=0}else{pen.beginPath();pen.moveTo(0,h/2);pen.lineTo(w,h/2);pen.strokeStyle='#b5e3ad';pen.stroke()}requestAnimationFrame(render)}render();
+</script></main></body></html>

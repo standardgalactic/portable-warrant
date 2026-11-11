@@ -1,5 +1,15 @@
 # The Portable Warrant: Evidence at the Boundary
 
+[Proof Abundance](https://standardgalactic.github.io/portable-warrant/proof-abundance.pdf)
+
+* [Why Automated Verification Does Not Equal Understanding](https://standardgalactic.github.io/portable-warrant/proof-abundance-oscilloscope.html)
+
+[Sufficiency Without Standing](https://standardgalactic.github.io/portable-warrant/sufficiency-without-standing.pdf)
+
+* [How Corporate Law Sold Twitter](https://standardgalactic.github.io/portable-warrant/sufficiency-visualizer.html)
+
+[Fold Visualizer](https://standardgalactic.github.io/portable-warrant/fold-visualizer.html)
+
 [The Calculus of Disposition](https://standardgalactic.github.io/portable-warrant/calculus-of-disposition.pdf)  — *Textbook*
 
 [Continuable Sutability](https://standardgalactic.github.io/portable-warrant/continuable-suitability.pdf)
@@ -29,4 +39,3 @@
 [The Objective as Domain](https://standardgalactic.github.io/portable-warrant/working/shared-omissions.pdf)
 
 [Arrangements and their Authors](https://standardgalactic.github.io/portable-warrant/working/arrangements-and-their-authors.pdf)
-~                                                                                                                                    
